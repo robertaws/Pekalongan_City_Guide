@@ -3,11 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/hp/Desktop/PekalonganCityGuide/app/src/main/res/layout/activity_home.xml" value="0.209375" />
         <entry key="..\:/Users/hp/Desktop/PekalonganCityGuide/app/src/main/res/layout/activity_main.xml" value="0.209375" />
+        <entry key="..\:/Users/hp/Desktop/PekalonganCityGuide/app/src/main/res/layout/activity_splash.xml" value="0.2046875" />
+        <entry key="..\:/Users/hp/Desktop/PekalonganCityGuide/app/src/main/res/layout/fragment_conversation.xml" value="0.209375" />
+        <entry key="..\:/Users/hp/Desktop/PekalonganCityGuide/app/src/main/res/layout/fragment_destination.xml" value="0.209375" />
+        <entry key="..\:/Users/hp/Desktop/PekalonganCityGuide/app/src/main/res/layout/fragment_home.xml" value="0.209375" />
+        <entry key="..\:/Users/hp/Desktop/PekalonganCityGuide/app/src/main/res/menu/bottom_nav.xml" value="0.20364583333333333" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
