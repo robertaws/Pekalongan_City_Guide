@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tran"
     android:layout_width="match_parent"
@@ -24,13 +23,14 @@
                 android:layout_height="wrap_content"
                 android:text="Daily conversation examples:"
                 android:textSize="24dp"
+                android:layout_marginBottom="20dp"
                 android:textStyle="bold"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/convo_rv"
-                tools:listitem="@layout/list_convo"/>
+                tools:listitem="@layout/list_convo" />
 
             <TextView
                 android:layout_width="match_parent"
