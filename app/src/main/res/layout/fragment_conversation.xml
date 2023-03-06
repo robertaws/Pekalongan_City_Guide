@@ -5,35 +5,49 @@
     android:id="@+id/tran"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".ConversationFragment">
+    tools:context=".ConversationFragment"
+    android:layout_marginTop="5dp">
 
     <!-- TODO: Update blank fragment layout -->
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Daily conversation examples:"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/convo_rv"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Daily conversation examples:"
+                android:textSize="24dp"
+                android:textStyle="bold"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Frequent phrases:"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/convo_rv"
+                tools:listitem="@layout/list_convo"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/dict_rv"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Frequent phrases:"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"/>
 
-    </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/phrases_rv"
+                tools:listitem="@layout/list_phrases"/>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </FrameLayout>
