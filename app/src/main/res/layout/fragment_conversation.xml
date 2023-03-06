@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context=".ConversationFragment"
-    android:layout_marginTop="5dp">
+    android:layout_margin="15dp">
 
     <!-- TODO: Update blank fragment layout -->
 

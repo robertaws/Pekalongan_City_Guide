@@ -11,8 +11,18 @@
         android:icon="@drawable/destination">
     </item>
     <item
+        android:id="@+id/bookmark_nav"
+        android:title="Saved Items"
+        android:icon="@drawable/bookmark">
+    </item>
+    <item
         android:id="@+id/conversation_nav"
         android:title="Conversation"
         android:icon="@drawable/conversation">
+    </item>
+    <item
+        android:id="@+id/profile_nav"
+        android:title="Profile"
+        android:icon="@drawable/profile">
     </item>
 </menu>
