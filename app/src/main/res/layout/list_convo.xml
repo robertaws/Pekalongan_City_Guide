@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/palette_3"
+    android:layout_marginTop="20dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Thomas"
+        android:textSize="18dp"
+        android:textColor="@color/palette_1"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="꧋ꦲꦭꦺꦴꦧꦸꦢꦶ"
+        android:textSize="18dp"
+        android:textColor="@color/palette_1"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Halo Budi"
+        android:textSize="18dp"
+        android:textColor="@color/palette_1"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hello Budi"
+        android:textSize="18dp"
+        android:textColor="@color/palette_1"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Halo Budi"
+        android:textSize="18dp"
+        android:textColor="@color/palette_1"/>
+
+</LinearLayout>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    >
+
+    <ImageView
+        android:id="@+id/phrase_img"
+        android:src="@drawable/logo"
+        android:layout_width="95dp"
+        android:layout_height="95dp" />
+    <TextView
+        android:id="@+id/phrase_aksara"
+        android:justificationMode="inter_word"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/phrase_img"
+        android:layout_toEndOf="@+id/phrase_img"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:text="꧋ꦱꦺꦭꦩꦠ꧀ꦥꦒꦶ"/>
+
+    <TextView
+        android:maxLines="2"
+        android:id="@+id/phrase_latin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/phrase_aksara"
+        android:layout_alignStart="@id/phrase_aksara"
+        android:layout_alignLeft="@id/phrase_aksara"
+        android:justificationMode="inter_word"
+        android:text="Sugeng enjing"
+        android:textSize="16dp"/>
+
+    <TextView
+        android:id="@+id/phrase_english"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/phrase_latin"
+        android:layout_alignStart="@id/phrase_latin"
+        android:layout_alignLeft="@id/phrase_latin"
+        android:justificationMode="inter_word"
+        android:text="Good Morning"
+        android:textSize="16dp"/>
+
+    <TextView
+        android:maxLines="2"
+        android:id="@+id/phrase_indo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/phrase_english"
+        android:layout_alignStart="@id/phrase_english"
+        android:layout_alignLeft="@id/phrase_english"
+        android:justificationMode="inter_word"
+        android:text="Selamat pagi"
+        android:textSize="16dp"/>
+
+</RelativeLayout>
