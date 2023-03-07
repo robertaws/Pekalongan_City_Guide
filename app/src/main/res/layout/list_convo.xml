@@ -4,17 +4,19 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@color/palette_3"
-    android:layout_marginTop="15dp">
+    android:padding="8dp">
 
     <TextView
+        android:id="@+id/convo_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Thomas"
         android:textSize="18dp"
         android:textColor="@color/palette_1"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/convo_aksara"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="꧋ꦲꦭꦺꦴꦧꦸꦢꦶ"
@@ -22,6 +24,7 @@
         android:textColor="@color/palette_1"/>
 
     <TextView
+        android:id="@+id/convo_latin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Halo Budi"
@@ -29,6 +32,7 @@
         android:textColor="@color/palette_1"/>
 
     <TextView
+        android:id="@+id/convo_english"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Hello Budi"
@@ -36,6 +40,7 @@
         android:textColor="@color/palette_1"/>
 
     <TextView
+        android:id="@+id/convo_indo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Halo Budi"

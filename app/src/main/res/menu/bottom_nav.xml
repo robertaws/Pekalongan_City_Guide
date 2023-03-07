@@ -18,8 +18,7 @@
     <item
         android:id="@+id/conversation_nav"
         android:title="Conversation"
-        android:icon="@drawable/conversation">
-    </item>
+        android:icon="@drawable/chat"></item>
     <item
         android:id="@+id/profile_nav"
         android:title="Profile"
