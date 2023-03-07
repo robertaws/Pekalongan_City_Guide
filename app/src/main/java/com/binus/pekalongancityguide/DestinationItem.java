@@ -13,4 +13,12 @@ public class DestinationItem {
             "desti 3",
             "desti 4"
     };
+
+    static String[] destiname2 = {
+            "desti 1",
+            "desti 2",
+            "desti 3",
+            "desti 4"
+    };
+
 }

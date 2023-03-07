@@ -1,14 +1,13 @@
 package com.binus.pekalongancityguide;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
@@ -29,7 +28,8 @@ public class DestinationFragment extends Fragment {
         for (int i = 0; i < DestinationItem.destiimage.length; i++) {
             destiData.add(new Destination(
                     DestinationItem.destiimage[i],
-                    DestinationItem.destiname[i]
+                    DestinationItem.destiname[i],
+                    DestinationItem.destiname2[i]
             ));
         }
         destiRVAdapter = new DestinationAdapter(destiData);

@@ -30,6 +30,7 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
         Destination item1 = item.get(position);
         holder.layoutBg.setBackgroundResource(item1.getDestiImage());
         holder.destinameTV.setText(item1.getDestiName());
+        holder.destinameTV2.setText(item1.getDestiName2());
     }
 
     @Override
@@ -38,11 +39,13 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView destinameTV;
+        TextView destinameTV, destinameTV2;
         RelativeLayout layoutBg;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             destinameTV = itemView.findViewById(R.id.loc_name);
+            destinameTV2 = itemView.findViewById(R.id.loc_name2);
             layoutBg = itemView.findViewById(R.id.layoutImage);
         }
     }
