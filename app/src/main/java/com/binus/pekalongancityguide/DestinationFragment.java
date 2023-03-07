@@ -19,8 +19,9 @@ public class DestinationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_destination, container, false);
+        View view =  inflater.inflate(R.layout.fragment_destination, container, false);
         destiRV = view.findViewById(R.id.desti_rv);
+
         destiRVLayoutManager = new LinearLayoutManager(getContext());
         destiRV.setLayoutManager(destiRVLayoutManager);
 
@@ -32,6 +33,7 @@ public class DestinationFragment extends Fragment {
                     DestinationItem.destiname2[i]
             ));
         }
+
         destiRVAdapter = new DestinationAdapter(destiData);
         destiRV.setAdapter(destiRVAdapter);
         return view;
