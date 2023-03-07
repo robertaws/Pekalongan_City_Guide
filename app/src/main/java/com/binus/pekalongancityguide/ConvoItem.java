@@ -3,8 +3,8 @@ package com.binus.pekalongancityguide;
 public class ConvoItem {
 
     static String[] name = {
-            "Money Heist",
-            "Suicide Squad",
+            "Tommy",
+            "Budi",
             "Avenger Endgame",
             "Avenger Infinity War",
             "Squid Game",

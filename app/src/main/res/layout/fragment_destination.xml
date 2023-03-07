@@ -5,11 +5,28 @@
     android:layout_height="match_parent"
     tools:context=".DestinationFragment"
     android:layout_marginTop="5dp">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Destination Fragment" />
+        android:background="@color/palette_4"
+        android:orientation="vertical">
+        <SearchView
+            android:id="@+id/search_desti"
+            android:alpha="0.75"
+            android:background="@color/palette_3"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+        </SearchView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/desti_rv"
+            android:layout_width="match_parent"
+            tools:listitem="@layout/list_destination"
+            android:layout_height="wrap_content">
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
+
 
 </FrameLayout>
