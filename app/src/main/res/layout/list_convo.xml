@@ -35,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="Aksara    : "
+                android:text="Aksara        : "
                 android:textColor="@color/palette_1"
                 android:textSize="18dp" />
 
@@ -60,7 +60,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Jawa       : "
+                android:text="Jawa          : "
                 android:textColor="@color/palette_1"
                 android:textSize="18dp" />
 
@@ -73,9 +73,17 @@
                 android:text="Halo Budi"
                 android:textColor="@color/palette_1"
                 android:textSize="18dp" />
-
         </LinearLayout>
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="English       : "
+            android:textColor="@color/palette_1"
+            android:textSize="18dp" />
         <TextView
             android:id="@+id/convo_english"
             android:layout_width="match_parent"
@@ -83,7 +91,18 @@
             android:text="Hello Budi"
             android:textSize="18dp"
             android:textColor="@color/palette_1"/>
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Indonesian : "
+            android:textColor="@color/palette_1"
+            android:textSize="18dp" />
         <TextView
             android:id="@+id/convo_indo"
             android:layout_width="match_parent"
@@ -91,6 +110,7 @@
             android:text="Halo Budi"
             android:textSize="18dp"
             android:textColor="@color/palette_1"/>
+    </LinearLayout>
     </LinearLayout>
 
 
