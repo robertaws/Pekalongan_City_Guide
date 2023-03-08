@@ -3,7 +3,6 @@ package com.binus.pekalongancityguide;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,10 +28,11 @@ public class ConvoAdapter extends RecyclerView.Adapter<ConvoAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Conversations item1 = item.get(position);
         holder.nameTV.setText(item1.getName());
-        holder.aksaraTV.setText("Aksara : " + item1.getAksara());
-        holder.latinTV.setText("Jawa : " + item1.getLatin());
-        holder.englishTV.setText("English : " + item1.getEnglish());
-        holder.indoTV.setText("Indonesian : " + item1.getIndo());
+        holder.aksaraTV.setText(item1.getAksara());
+        holder.latinTV.setText(item1.getLatin());
+        holder.englishTV.setText(item1.getEnglish());
+        holder.indoTV.setText(item1.getIndo());
+        //holder.aksIV.setBackgroundResource(item1.getAksImg());
     }
 
     @Override
@@ -43,6 +43,8 @@ public class ConvoAdapter extends RecyclerView.Adapter<ConvoAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView nameTV, aksaraTV, latinTV, englishTV, indoTV;
 
+        //ImageView aksIV;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTV = itemView.findViewById(R.id.convo_name);
@@ -50,6 +52,7 @@ public class ConvoAdapter extends RecyclerView.Adapter<ConvoAdapter.ViewHolder> 
             latinTV = itemView.findViewById(R.id.convo_latin);
             englishTV = itemView.findViewById(R.id.convo_english);
             indoTV = itemView.findViewById(R.id.convo_indo);
+            //aksIV = itemView.findViewById(R.id.convo_aks_img);
         }
     }
 }

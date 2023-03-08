@@ -44,6 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/phrases_rv"
+                android:layout_marginBottom="20dp"
                 tools:listitem="@layout/list_phrases"/>
 
         </LinearLayout>

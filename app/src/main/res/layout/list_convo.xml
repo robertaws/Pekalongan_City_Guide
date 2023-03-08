@@ -3,18 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardElevation="20dp"
+    app:cardElevation="3dp"
     app:cardCornerRadius="4dp"
     app:cardBackgroundColor="@color/white"
     app:cardMaxElevation="5dp"
     android:layout_marginHorizontal="5dp"
     android:layout_marginVertical="5dp">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/palette_3"
         android:padding="10dp"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/convo_name"
             android:layout_width="match_parent"
@@ -24,21 +26,55 @@
             android:textColor="@color/palette_1"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/convo_aksara"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="꧋ꦲꦭꦺꦴꦧꦸꦢꦶ"
-            android:textSize="18dp"
-            android:textColor="@color/palette_1"/>
+            android:layout_height="145dp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/convo_latin"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Aksara    : "
+                android:textColor="@color/palette_1"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/convo_aksara"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:gravity="center_vertical"
+                android:justificationMode="inter_word"
+                android:text="꧋ꦱꦺꦭꦩꦠ꧀ꦥꦒꦶ"
+                android:textColor="@color/palette_1"
+                android:textSize="18dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Halo Budi"
-            android:textSize="18dp"
-            android:textColor="@color/palette_1"/>
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Jawa       : "
+                android:textColor="@color/palette_1"
+                android:textSize="18dp" />
+
+
+            <TextView
+                android:id="@+id/convo_latin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="Halo Budi"
+                android:textColor="@color/palette_1"
+                android:textSize="18dp" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/convo_english"
