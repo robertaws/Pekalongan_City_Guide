@@ -28,27 +28,28 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="145dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Aksara        : "
+                android:text="Aksara\t\t\t: "
                 android:textColor="@color/palette_1"
                 android:textSize="18dp" />
 
             <TextView
                 android:id="@+id/convo_aksara"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:gravity="center_vertical"
+                android:gravity="top"
                 android:justificationMode="inter_word"
-                android:text="꧋ꦱꦺꦭꦩꦠ꧀ꦥꦒꦶ"
+                android:text="ꦥꦏ꧀‌ꦏꦶꦠꦧꦣꦺꦠꦸꦩ꧀ꦧꦱ꧀ꦥꦸꦤꦶꦏꦶ꧉ꦥꦶꦤ꧀ꦠꦺꦤ꧀ꦫꦺꦒꦶꦤꦶꦥꦸꦤ꧀ꦔ꧀ꦒꦶꦃ?"
                 android:textColor="@color/palette_1"
-                android:textSize="18dp" />
+                android:textSize="18dp"
+                android:paddingBottom="10dp"/>
 
         </LinearLayout>
 
@@ -60,7 +61,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Jawa          : "
+                android:text="Jawa\t\t\t\t: "
                 android:textColor="@color/palette_1"
                 android:textSize="18dp" />
 
@@ -72,7 +73,8 @@
                 android:layout_marginStart="5dp"
                 android:text="Halo Budi"
                 android:textColor="@color/palette_1"
-                android:textSize="18dp" />
+                android:textSize="18dp"
+                android:justificationMode="inter_word"/>
         </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -81,7 +83,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="English       : "
+            android:text="English\t\t: "
             android:textColor="@color/palette_1"
             android:textSize="18dp" />
         <TextView
@@ -90,7 +92,9 @@
             android:layout_height="wrap_content"
             android:text="Hello Budi"
             android:textSize="18dp"
-            android:textColor="@color/palette_1"/>
+            android:textColor="@color/palette_1"
+            android:layout_marginStart="5dp"
+            android:justificationMode="inter_word"/>
     </LinearLayout>
 
     <LinearLayout
@@ -100,7 +104,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Indonesian : "
+            android:text="Bahasa\t\t: "
             android:textColor="@color/palette_1"
             android:textSize="18dp" />
         <TextView
@@ -109,7 +113,9 @@
             android:layout_height="wrap_content"
             android:text="Halo Budi"
             android:textSize="18dp"
-            android:textColor="@color/palette_1"/>
+            android:textColor="@color/palette_1"
+            android:layout_marginStart="5dp"
+            android:justificationMode="inter_word"/>
     </LinearLayout>
     </LinearLayout>
 

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context=".ConversationFragment"
-    android:background="@color/palette_4">
+    android:background="@color/bg">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -23,7 +23,8 @@
                 android:text="Daily conversation examples:"
                 android:textSize="24dp"
                 android:layout_marginBottom="20dp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:textColor="@color/palette_1"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
@@ -37,7 +38,8 @@
                 android:text="Frequent phrases:"
                 android:textSize="24dp"
                 android:textStyle="bold"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:textColor="@color/palette_1"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
