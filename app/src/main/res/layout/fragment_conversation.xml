@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context=".ConversationFragment"
-    android:layout_margin="15dp">
+    android:background="@color/palette_4">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -15,6 +15,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="15dp"
             android:orientation="vertical">
 
             <TextView

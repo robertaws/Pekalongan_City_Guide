@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/palette_4"
     tools:context=".desti_detail">
 
     <!-- TODO: Update blank fragment layout -->
@@ -12,16 +13,18 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:orientation="vertical"
             android:padding="5dp">
 
             <TextView
+                android:layout_marginStart="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Destination Details"
                 android:textSize="20dp"
+                android:textColor="@color/palette_1"
                 android:textStyle="bold" />
 
             <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -53,22 +56,42 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
                     <TextView
+                        android:textSize="18dp"
                         android:id="@+id/ddname"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Desti 1"
+                        android:text="Destination Name"
+                        android:textColor="@color/palette_1"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:layout_marginTop="10dp"
                         android:id="@+id/dddesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Lorem ipsum Lorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsum orem ipsumLorem  ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem
-Read More ->" />
+                        android:textColor="@color/palette_2"
+                        android:text="Destination Description" />
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/ddadd"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Destination Address"
+                        android:textColor="@color/palette_2" />
+                    <Button
+                        android:id="@+id/save_btn"
+                        android:drawableTint="@color/palette_1"
+                        android:drawableLeft="@drawable/bookmark"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/palette_1"
+                        android:textAlignment="center"
+                        android:text="Save Item">
+                    </Button>
 
                 </LinearLayout>
 

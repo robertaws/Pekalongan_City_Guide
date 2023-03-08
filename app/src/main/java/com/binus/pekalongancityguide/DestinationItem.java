@@ -8,17 +8,17 @@ public class DestinationItem {
             R.drawable.desti4
     };
     static String[] destiname = {
-            "desti 1",
-            "desti 2",
-            "desti 3",
-            "desti 4"
+            "Alun-alun Kota Pekalongan",
+            "Kawasan Lapangan Jetayu",
+            "Museum Batik Pekalongan",
+            "Kawasan Wisata Taman Mangrove"
     };
 
     static String[] destiname2 = {
-            "desti 1",
-            "desti 2",
-            "desti 3",
-            "desti 4"
+            "Alun-alun Kota Pekalongan",
+            "Kawasan Lapangan Jetayu",
+            "Museum Batik Pekalongan",
+            "Kawasan Wisata Taman Mangrove"
     };
 
 }
