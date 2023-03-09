@@ -1,15 +1,13 @@
 package com.binus.pekalongancityguide;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
@@ -33,8 +31,8 @@ public class HomeFragment extends Fragment {
         slideModels.add(new SlideModel(R.drawable.desti4, ScaleTypes.FIT));
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
 
-        foodRV = view.findViewById(R.id.foodRv);
-        foodRVLayoutManager = new LinearLayoutManager(getContext());
+        foodRV = view.findViewById(R.id.food_rv);
+        foodRVLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
         foodRV.setLayoutManager(foodRVLayoutManager);
 
         foodData = new ArrayList<>();

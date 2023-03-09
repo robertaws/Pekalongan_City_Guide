@@ -49,8 +49,8 @@
                 android:id="@+id/spotlight"
                 app:iss_auto_cycle="true"
                 app:iss_delay="1000"
-                app:iss_period="1000"
-                app:iss_corner_radius="20"/>
+                app:iss_corner_radius="20"
+                app:iss_period="3000" />
         </androidx.cardview.widget.CardView>
         <TextView
             android:layout_width="match_parent"
@@ -80,7 +80,7 @@
             android:layout_marginLeft="10dp"
             android:textColor="@color/palette_1"/>
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/foodRv"
+            android:id="@+id/food_rv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:listitem="@layout/list_culinary">

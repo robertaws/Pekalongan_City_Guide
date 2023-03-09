@@ -18,8 +18,7 @@
             android:id="@+id/phrase_img"
             android:layout_width="75dp"
             android:layout_height="75dp"
-            android:src="@drawable/logo">
-        </ImageView>
+            android:src="@drawable/logo" />
 
         <LinearLayout
             android:layout_toEndOf="@+id/phrase_img"
