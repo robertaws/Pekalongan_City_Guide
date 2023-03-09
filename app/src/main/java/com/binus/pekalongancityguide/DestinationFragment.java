@@ -30,7 +30,9 @@ public class DestinationFragment extends Fragment {
             destiData.add(new Destination(
                     DestinationItem.destiimage[i],
                     DestinationItem.destiname[i],
-                    DestinationItem.destiname2[i]
+                    DestinationItem.destiname2[i],
+                    DestinationItem.destidesc[i],
+                    DestinationItem.destiaddress[i]
             ));
         }
 
