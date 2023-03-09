@@ -32,7 +32,6 @@ public class ConvoAdapter extends RecyclerView.Adapter<ConvoAdapter.ViewHolder> 
         holder.latinTV.setText(item1.getLatin());
         holder.englishTV.setText(item1.getEnglish());
         holder.indoTV.setText(item1.getIndo());
-        //holder.aksIV.setBackgroundResource(item1.getAksImg());
     }
 
     @Override
@@ -43,8 +42,6 @@ public class ConvoAdapter extends RecyclerView.Adapter<ConvoAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView nameTV, aksaraTV, latinTV, englishTV, indoTV;
 
-        //ImageView aksIV;
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTV = itemView.findViewById(R.id.convo_name);
@@ -52,7 +49,6 @@ public class ConvoAdapter extends RecyclerView.Adapter<ConvoAdapter.ViewHolder> 
             latinTV = itemView.findViewById(R.id.convo_latin);
             englishTV = itemView.findViewById(R.id.convo_english);
             indoTV = itemView.findViewById(R.id.convo_indo);
-            //aksIV = itemView.findViewById(R.id.convo_aks_img);
         }
     }
 }
