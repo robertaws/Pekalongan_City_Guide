@@ -6,37 +6,37 @@
     android:layout_margin="8dp"
     app:cardCornerRadius="10dp"
     app:cardElevation="3dp">
-
     <RelativeLayout
-        android:id="@+id/layoutImage"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:background="@drawable/test"
+        android:id="@+id/layoutfoodImage"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:background="@drawable/food1"
         android:backgroundTint="@color/palette_4"
         android:backgroundTintMode="multiply">
 
         <TextView
-            android:id="@+id/loc_name"
+            android:id="@+id/food_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="21.5dp"
-            android:layout_marginBottom="19dp"
-            android:text="Monumen Nasional"
+           android:layout_marginHorizontal="30dp"
+            android:layout_marginBottom="12dp"
+            android:text="Nasi Padang"
             android:textColor="@color/alfa"
             android:textSize="24dp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/loc_name2"
+            android:id="@+id/food_name2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginBottom="20dp"
-            android:text="Monumen Nasional"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginBottom="10dp"
+            android:text="Nasi Padang"
             android:textColor="@color/white"
             android:textSize="24dp"
             android:textStyle="bold" />
     </RelativeLayout>
+
 </androidx.cardview.widget.CardView>

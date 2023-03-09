@@ -36,12 +36,22 @@
             android:textSize="24dp"
             android:layout_marginLeft="10dp"
             android:textColor="@color/palette_1"/>
-        <ImageView
-            android:src="@drawable/test"
+        <androidx.cardview.widget.CardView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/palette_2"
-            android:layout_margin="10dp"/>
+            android:layout_height="200dp"
+            android:layout_margin="15dp"
+            app:cardElevation="20dp"
+            app:cardCornerRadius="20dp">
+            <com.denzcoskun.imageslider.ImageSlider
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/spotlight"
+                app:iss_auto_cycle="true"
+                app:iss_delay="1000"
+                app:iss_period="1000"
+                app:iss_corner_radius="20"/>
+        </androidx.cardview.widget.CardView>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -69,11 +79,13 @@
             android:textSize="24dp"
             android:layout_marginLeft="10dp"
             android:textColor="@color/palette_1"/>
-        <androidx.cardview.widget.CardView
-            android:layout_margin="10dp"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_gravity="center"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/foodRv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/list_culinary">
+
+        </androidx.recyclerview.widget.RecyclerView>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
