@@ -1,10 +1,10 @@
 package com.binus.pekalongancityguide;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class DestinationDetails extends AppCompatActivity {
     ImageView dImage;
@@ -23,9 +23,9 @@ public class DestinationDetails extends AppCompatActivity {
         dAddress = findViewById(R.id.ddadd);
     }
     void getData(){
-        dImage.setImageResource(this.getIntent().getIntExtra("gambar",R.drawable.desti1));
+        dImage.setBackgroundResource(this.getIntent().getIntExtra("gambar", R.drawable.desti1));
         dName.setText(this.getIntent().getStringExtra("nama"));
-        dDesc.setText(this.getIntent().getStringExtra("detil"));
+        dDesc.setText("\t\t\t\t\t" + this.getIntent().getStringExtra("detil"));
         dAddress.setText(this.getIntent().getStringExtra("alamat"));
     }
 }
