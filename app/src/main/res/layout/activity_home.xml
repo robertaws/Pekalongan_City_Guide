@@ -33,6 +33,6 @@
         app:sk_defaultIconColor="@color/palette_2"
         app:sk_rippleColor="#2f424242"
         app:sk_selectedIconColor="@color/palette_1"
-        app:sk_shadowColor="#1f212121"></com.sagarkoli.chetanbottomnavigation.chetanBottomNavigation>
+        app:sk_shadowColor="#1f212121" />
 
 </RelativeLayout>

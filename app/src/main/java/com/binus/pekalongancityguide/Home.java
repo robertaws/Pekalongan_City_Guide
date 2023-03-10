@@ -57,7 +57,6 @@ public class Home extends AppCompatActivity {
         bottomNavigationView.add(new chetanBottomNavigation.Model(convo, R.drawable.chat));
         bottomNavigationView.add(new chetanBottomNavigation.Model(pr, R.drawable.profile));
 
-        bottomNavigationView.setCount(convo, "69");
         bottomNavigationView.setOnShowListener(new chetanBottomNavigation.ShowListener() {
             @Override
             public void onShowItem(chetanBottomNavigation.Model item) {
@@ -77,7 +76,6 @@ public class Home extends AppCompatActivity {
 
                     case convo:
                         getSupportFragmentManager().beginTransaction().replace(R.id.container, conversationFragment).commit();
-                        bottomNavigationView.clearCount(convo);
                         break;
 
                     case pr:
