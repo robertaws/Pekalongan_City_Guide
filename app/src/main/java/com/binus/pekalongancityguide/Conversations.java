@@ -2,8 +2,6 @@ package com.binus.pekalongancityguide;
 
 public class Conversations {
 
-    //int aksImg;
-
     String name, aksara, latin, english, indo;
 
     public Conversations(String name, String aksara, String latin, String english, String indo) {
@@ -12,16 +10,7 @@ public class Conversations {
         this.latin = latin;
         this.english = english;
         this.indo = indo;
-        //this.aksImg = aksImg;
     }
-
-//    public int getAksImg() {
-//        return aksImg;
-//    }
-//
-//    public void setAksImg(int aksImg) {
-//        this.aksImg = aksImg;
-//    }
 
     public String getName() {
         return name;
