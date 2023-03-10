@@ -12,12 +12,27 @@
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_navi" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
+    <!--        android:id="@+id/bottom_navi"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_alignParentBottom="true"-->
+    <!--        app:menu="@menu/bottom_nav"-->
+    <!--        android:background="@color/palette_4"-->
+    <!--        app:itemIconTint="@drawable/bottom_nav_item_color"/>-->
+
+    <com.sagarkoli.chetanbottomnavigation.chetanBottomNavigation
         android:id="@+id/bottom_navi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:menu="@menu/bottom_nav"></com.google.android.material.bottomnavigation.BottomNavigationView>
-
+        app:sk_backgroundBottomColor="@color/palette_4"
+        app:sk_circleColor="@color/palette_4"
+        app:sk_countBackgroundColor="#ff6f00"
+        app:sk_countTextColor="#ffffff"
+        app:sk_defaultIconColor="@color/palette_2"
+        app:sk_rippleColor="#2f424242"
+        app:sk_selectedIconColor="@color/palette_1"
+        app:sk_shadowColor="#1f212121"></com.sagarkoli.chetanbottomnavigation.chetanBottomNavigation>
 
 </RelativeLayout>

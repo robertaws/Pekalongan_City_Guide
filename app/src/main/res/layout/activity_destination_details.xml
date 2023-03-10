@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/palette_4"
+    tools:context=".DestinationDetails">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_marginStart="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Destination Details"
+            android:textSize="20dp"
+            android:textColor="@color/palette_1"
+            android:textStyle="bold" />
+
+        <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="5dp">
+
+            <ImageView
+                android:id="@+id/ddimg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/desti4" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:cardBackgroundColor="@color/palette_3"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="5dp"
+            app:contentPaddingBottom="10dp"
+            app:contentPaddingLeft="20dp"
+            app:contentPaddingRight="20dp"
+            app:contentPaddingTop="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:textSize="18dp"
+                    android:id="@+id/ddname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Destination Name"
+                    android:textColor="@color/palette_1"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/save_btn"
+                    android:drawableTint="@color/palette_4"
+                    android:drawableLeft="@drawable/bookmark"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/palette_4"
+                    android:textAlignment="center"
+                    android:layout_marginTop="5dp"
+                    android:text="Save Item" />
+
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/ddadd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Destination Address"
+                    android:justificationMode="inter_word"
+                    android:textColor="@color/palette_1" />
+
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/dddesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:justificationMode="inter_word"
+                    android:text="Destination Description"
+                    android:textColor="@color/palette_1" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+</ScrollView>

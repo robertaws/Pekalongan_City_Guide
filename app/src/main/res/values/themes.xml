@@ -2,12 +2,12 @@
     <!-- Base application theme. -->
     <style name="Theme.PekalonganCityGuide" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#b28035</item>
-        <item name="colorPrimaryVariant">#ffb74d</item>
-        <item name="colorOnPrimary">#ffc570</item>
+        <item name="colorPrimary">@color/palette_1</item>
+        <item name="colorPrimaryVariant">@color/palette_4</item>
+        <item name="colorOnPrimary">@color/palette_3</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">#79955a</item>
-        <item name="colorSecondaryVariant">#aed581</item>
+        <item name="colorSecondary">@color/palette_1</item>
+        <item name="colorSecondaryVariant">@color/palette_1</item>
         <item name="colorOnSecondary">#bedd9a</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorOnPrimary</item>

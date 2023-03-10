@@ -1,60 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp">
+    android:backgroundTint="@color/palette_3"
+    app:cardElevation="8dp"
+    app:cardCornerRadius="4dp"
+    android:layout_marginHorizontal="5dp"
+    android:layout_marginVertical="5dp">
 
-    <ImageView
-        android:id="@+id/phrase_img"
-        android:src="@drawable/logo"
-        android:layout_width="95dp"
-        android:layout_height="95dp" />
-    <TextView
-        android:id="@+id/phrase_aksara"
-        android:justificationMode="inter_word"
-        android:textSize="18dp"
-        android:textStyle="bold"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/phrase_img"
-        android:layout_toEndOf="@+id/phrase_img"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:text="꧋ꦱꦺꦭꦩꦠ꧀ꦥꦒꦶ"/>
+        android:layout_margin="8dp">
 
-    <TextView
-        android:maxLines="2"
-        android:id="@+id/phrase_latin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/phrase_aksara"
-        android:layout_alignStart="@id/phrase_aksara"
-        android:layout_alignLeft="@id/phrase_aksara"
-        android:justificationMode="inter_word"
-        android:text="Sugeng enjing"
-        android:textSize="16dp"/>
+        <ImageView
+            android:id="@+id/phrase_img"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/logo" />
 
-    <TextView
-        android:id="@+id/phrase_english"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/phrase_latin"
-        android:layout_alignStart="@id/phrase_latin"
-        android:layout_alignLeft="@id/phrase_latin"
-        android:justificationMode="inter_word"
-        android:text="Good Morning"
-        android:textSize="16dp"/>
+        <LinearLayout
+            android:layout_toEndOf="@+id/phrase_img"
+            android:id="@+id/phrase_aksara"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="8dp">
 
-    <TextView
-        android:maxLines="2"
-        android:id="@+id/phrase_indo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/phrase_english"
-        android:layout_alignStart="@id/phrase_english"
-        android:layout_alignLeft="@id/phrase_english"
-        android:justificationMode="inter_word"
-        android:text="Selamat pagi"
-        android:textSize="16dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Aksara\t\t\t: "
+                android:textColor="@color/palette_1"
+                android:textSize="18dp" />
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/phrase_aksara_value"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:justificationMode="inter_word"
+                android:text="꧋ꦱꦺꦭꦩꦠ꧀ꦥꦒꦶ"
+                android:textColor="@color/palette_1"
+                android:textSize="18dp"
+                android:paddingBottom="10dp"
+                android:layout_marginStart="5dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/phrase_aksara"
+            android:layout_alignStart="@id/phrase_aksara"
+            android:id="@+id/phrase_latin">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Jawa\t\t\t\t: "
+                android:textColor="@color/palette_1"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/phrase_latin_value"
+                android:textColor="@color/palette_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:justificationMode="inter_word"
+                android:text="Sugeng enjing"
+                android:textSize="16dp"
+                android:layout_marginStart="5dp"
+                android:paddingBottom="5dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/phrase_latin"
+            android:layout_alignStart="@id/phrase_latin"
+            android:id="@+id/phrase_english">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="English\t\t: "
+                android:textColor="@color/palette_1"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/phrase_english_value"
+                android:textColor="@color/palette_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:justificationMode="inter_word"
+                android:text="Good Morning"
+                android:textSize="16dp"
+                android:layout_marginStart="5dp"
+                android:paddingBottom="5dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/phrase_english"
+            android:layout_alignStart="@id/phrase_english"
+            android:id="@+id/phrase_indo">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Bahasa\t\t: "
+                android:textColor="@color/palette_1"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/phrase_indo_value"
+                android:textColor="@color/palette_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:justificationMode="inter_word"
+                android:text="Selamat pagi"
+                android:textSize="16dp"
+                android:layout_marginStart="5dp"
+                android:paddingBottom="5dp"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

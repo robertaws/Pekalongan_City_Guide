@@ -47,6 +47,7 @@ public class ConversationFragment extends Fragment {
                     ConvoItem.latinText[i],
                     ConvoItem.engText[i],
                     ConvoItem.indoText[i]
+                    //ConvoItem.aksImg[i]
             ));
         }
 

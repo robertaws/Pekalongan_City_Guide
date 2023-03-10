@@ -28,10 +28,10 @@ public class ConvoAdapter extends RecyclerView.Adapter<ConvoAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Conversations item1 = item.get(position);
         holder.nameTV.setText(item1.getName());
-        holder.aksaraTV.setText("Aksara : " + item1.getAksara());
-        holder.latinTV.setText("Jawa : " + item1.getLatin());
-        holder.englishTV.setText("English : " + item1.getEnglish());
-        holder.indoTV.setText("Indonesian : " + item1.getIndo());
+        holder.aksaraTV.setText(item1.getAksara());
+        holder.latinTV.setText(item1.getLatin());
+        holder.englishTV.setText(item1.getEnglish());
+        holder.indoTV.setText(item1.getIndo());
     }
 
     @Override

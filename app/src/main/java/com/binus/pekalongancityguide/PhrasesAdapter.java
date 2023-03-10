@@ -27,10 +27,10 @@ public class PhrasesAdapter extends RecyclerView.Adapter<PhrasesAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull PhrasesAdapter.ViewHolder holder, int position) {
         Phrases item1 = item.get(position);
-        holder.aksaraTV.setText("Aksara : " + item1.getAksara());
-        holder.latinTV.setText("Jawa : " + item1.getLatin());
-        holder.englishTV.setText("English : " + item1.getEnglish());
-        holder.indoTV.setText("Indonesian : " + item1.getIndo());
+        holder.aksaraTV.setText(item1.getAksara());
+        holder.latinTV.setText(item1.getLatin());
+        holder.englishTV.setText(item1.getEnglish());
+        holder.indoTV.setText(item1.getIndo());
     }
 
     @Override
@@ -43,10 +43,10 @@ public class PhrasesAdapter extends RecyclerView.Adapter<PhrasesAdapter.ViewHold
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            aksaraTV = itemView.findViewById(R.id.phrase_aksara);
-            latinTV = itemView.findViewById(R.id.phrase_latin);
-            englishTV = itemView.findViewById(R.id.phrase_english);
-            indoTV = itemView.findViewById(R.id.phrase_indo);
+            aksaraTV = itemView.findViewById(R.id.phrase_aksara_value);
+            latinTV = itemView.findViewById(R.id.phrase_latin_value);
+            englishTV = itemView.findViewById(R.id.phrase_english_value);
+            indoTV = itemView.findViewById(R.id.phrase_indo_value);
         }
     }
 
