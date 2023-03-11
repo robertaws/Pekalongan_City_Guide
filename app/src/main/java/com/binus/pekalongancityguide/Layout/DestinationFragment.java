@@ -1,4 +1,4 @@
-package com.binus.pekalongancityguide;
+package com.binus.pekalongancityguide.Layout;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,6 +8,11 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
+import com.binus.pekalongancityguide.ItemList.DestinationItem;
+import com.binus.pekalongancityguide.ItemTemplate.Destination;
+import com.binus.pekalongancityguide.R;
 
 import java.util.ArrayList;
 

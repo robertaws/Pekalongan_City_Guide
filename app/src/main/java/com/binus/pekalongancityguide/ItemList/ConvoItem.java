@@ -1,8 +1,8 @@
-package com.binus.pekalongancityguide;
+package com.binus.pekalongancityguide.ItemList;
 
 public class ConvoItem {
 
-    static String[] name = {
+    public static String[] name = {
             "Tommy",
             "Budi",
             "Tommy",
@@ -28,7 +28,7 @@ public class ConvoItem {
             "Budi"
     };
 
-    static String[] aksara = {
+    public static String[] aksara = {
             "ꦢꦶꦤ꧀ꦠꦺꦤ꧀ꦥꦸꦤꦶꦏꦶꦄꦗꦺꦁꦤꦺꦣꦥꦸꦤꦥꦧꦸꦢꦶ?",
             "ꦏꦸꦭꦧꦣꦺꦤꦺꦣꦄꦪꦩ꧀ꦒꦺꦴꦫꦺꦁꦥꦏ꧀ꦒꦺꦩ꧀ꦧꦸꦱ꧀",
             "ꦱꦶꦪꦥ꧀\u200Cꦠꦺꦁꦒꦏꦸꦭꦄꦢꦸꦱ꧀ꦱꦺꦏꦺꦣꦥ꧀",
@@ -54,7 +54,7 @@ public class ConvoItem {
             "ꦥꦸꦤꦶꦏꦶꦄꦂꦠꦤꦶꦥꦸꦤ꧀ꦔ꧀ꦒꦶꦃꦥꦏ꧀\u200Cꦩꦠꦸꦂꦤꦸꦮꦸꦤ꧀"
     };
 
-    static String[] latinText = {
+    public static String[] latinText = {
             "dinten puniki ajeng nedha punapa budi?",
             "kula badhe nedha ayam goreng pak gembus",
             "siap, tengga kula adus sekedhap",
@@ -80,7 +80,7 @@ public class ConvoItem {
             "puniki artanipun nggih pak, matur nuwun"
     };
 
-    static String[] engText = {
+    public static String[] engText = {
             "What do you want to eat today, Budi ?",
             "I want to eat Pak Gembus fried Chicken",
             "Got it, wait im gonna take a bath",
@@ -106,7 +106,7 @@ public class ConvoItem {
             "here is the money sir, thank you"
     };
 
-    static String[] indoText = {
+    public static String[] indoText = {
             "hari ini mau makan apa budi ?",
             "saya ingin makan ayam goreng pak Gembus",
             "siap, tunggu saya mandi sebentar",

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg"
-    tools:context=".HomeFragment">
+    tools:context=".Layout.HomeFragment">
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -83,9 +83,7 @@
             android:id="@+id/food_rv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:listitem="@layout/list_culinary">
-
-        </androidx.recyclerview.widget.RecyclerView>
+            tools:listitem="@layout/list_culinary"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,24 +92,12 @@
             android:textSize="24dp"
             android:layout_marginLeft="10dp"
             android:textColor="@color/palette_1"/>
-        <ImageView
-            android:src="@drawable/test"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/news_list"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/palette_2"
-            android:layout_margin="10dp"/>
-        <ImageView
-            android:src="@drawable/test"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/palette_2"
-            android:layout_margin="10dp"/>
-        <ImageView
-            android:src="@drawable/test"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/palette_2"
-            android:layout_margin="10dp"/>
+            android:layout_height="match_parent"
+            tools:listitem="@layout/news_item"
+            android:padding="16dp"/>
     </LinearLayout>
 </ScrollView>
 

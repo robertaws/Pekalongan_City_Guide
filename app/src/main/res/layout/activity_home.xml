@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Home">
+    tools:context=".Layout.Home">
 
     <FrameLayout
         android:id="@+id/container"
@@ -33,6 +33,6 @@
         app:sk_defaultIconColor="@color/palette_2"
         app:sk_rippleColor="#2f424242"
         app:sk_selectedIconColor="@color/palette_1"
-        app:sk_shadowColor="#1f212121"></com.sagarkoli.chetanbottomnavigation.chetanBottomNavigation>
+        app:sk_shadowColor="#1f212121" />
 
 </RelativeLayout>

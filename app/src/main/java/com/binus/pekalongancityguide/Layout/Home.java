@@ -1,9 +1,10 @@
-package com.binus.pekalongancityguide;
+package com.binus.pekalongancityguide.Layout;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.binus.pekalongancityguide.R;
 import com.sagarkoli.chetanbottomnavigation.chetanBottomNavigation;
 
 public class Home extends AppCompatActivity {
@@ -27,29 +28,6 @@ public class Home extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
 
-//        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                switch (item.getItemId()) {
-//                    case R.id.home_nav:
-//                        getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
-//                        return true;
-//                    case R.id.destination_nav:
-//                        getSupportFragmentManager().beginTransaction().replace(R.id.container, destinationFragment).commit();
-//                        return true;
-//                    case R.id.conversation_nav:
-//                        getSupportFragmentManager().beginTransaction().replace(R.id.container, conversationFragment).commit();
-//                        return true;
-//                    case R.id.bookmark_nav:
-//                        getSupportFragmentManager().beginTransaction().replace(R.id.container, bookmarkFragment).commit();
-//                        return true;
-//                    case R.id.profile_nav:
-//                        getSupportFragmentManager().beginTransaction().replace(R.id.container, profileFragment).commit();
-//                        return true;
-//                }
-//                return false;
-//            }
-//        });
 
         bottomNavigationView.add(new chetanBottomNavigation.Model(home, R.drawable.ic_home));
         bottomNavigationView.add(new chetanBottomNavigation.Model(desti, R.drawable.destination));
@@ -57,7 +35,6 @@ public class Home extends AppCompatActivity {
         bottomNavigationView.add(new chetanBottomNavigation.Model(convo, R.drawable.chat));
         bottomNavigationView.add(new chetanBottomNavigation.Model(pr, R.drawable.profile));
 
-        bottomNavigationView.setCount(convo, "69");
         bottomNavigationView.setOnShowListener(new chetanBottomNavigation.ShowListener() {
             @Override
             public void onShowItem(chetanBottomNavigation.Model item) {
@@ -77,7 +54,6 @@ public class Home extends AppCompatActivity {
 
                     case convo:
                         getSupportFragmentManager().beginTransaction().replace(R.id.container, conversationFragment).commit();
-                        bottomNavigationView.clearCount(convo);
                         break;
 
                     case pr:

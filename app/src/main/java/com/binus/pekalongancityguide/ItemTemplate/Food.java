@@ -1,4 +1,4 @@
-package com.binus.pekalongancityguide;
+package com.binus.pekalongancityguide.ItemTemplate;
 
 public class Food {
     int foodImage;

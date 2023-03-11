@@ -1,10 +1,12 @@
-package com.binus.pekalongancityguide;
+package com.binus.pekalongancityguide.Layout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
+import com.binus.pekalongancityguide.R;
 
 public class Splash extends AppCompatActivity {
 

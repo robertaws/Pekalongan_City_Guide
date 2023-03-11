@@ -1,14 +1,23 @@
-package com.binus.pekalongancityguide;
+package com.binus.pekalongancityguide.ItemTemplate;
 
-public class Phrases {
+public class Conversations {
 
-    String aksara, latin, english, indo;
+    String name, aksara, latin, english, indo;
 
-    public Phrases(String aksara, String latin, String english, String indo) {
+    public Conversations(String name, String aksara, String latin, String english, String indo) {
+        this.name = name;
         this.aksara = aksara;
         this.latin = latin;
         this.english = english;
         this.indo = indo;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAksara() {

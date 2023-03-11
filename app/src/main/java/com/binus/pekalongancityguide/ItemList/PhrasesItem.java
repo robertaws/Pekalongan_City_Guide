@@ -1,7 +1,7 @@
-package com.binus.pekalongancityguide;
+package com.binus.pekalongancityguide.ItemList;
 
 public class PhrasesItem {
-    static String[] aksara = {
+    public static String[] aksara = {
             "ꦱꦸꦒꦺꦁꦌꦚ꧀ꦗꦶꦁ",
             "ꦱꦸꦒꦺꦁꦱꦶꦪꦁ",
             "ꦱꦸꦒꦺꦁꦢꦭꦸ",
@@ -22,7 +22,7 @@ public class PhrasesItem {
             "ꦧꦫꦔꦶꦥꦸꦤ꧀ꦱꦌ"
     };
 
-    static String[] latinText = {
+    public static String[] latinText = {
             "Sugeng Enjing",
             "Sugeng Siyang",
             "Sugeng Dalu",
@@ -43,7 +43,7 @@ public class PhrasesItem {
             "barangipun sae"
     };
 
-    static String[] engText = {
+    public static String[] engText = {
             "Good Morning",
             "Good afternoon",
             "Good Evening/Good Night",
@@ -64,7 +64,7 @@ public class PhrasesItem {
             "The Item is good"
     };
 
-    static String[] indoText = {
+    public static String[] indoText = {
             "Selamat Pagi",
             "Selamat Siang",
             "Selamat Malam",

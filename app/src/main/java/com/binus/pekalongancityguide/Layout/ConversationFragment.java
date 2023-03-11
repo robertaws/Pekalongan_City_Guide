@@ -1,4 +1,4 @@
-package com.binus.pekalongancityguide;
+package com.binus.pekalongancityguide.Layout;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -10,6 +10,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.binus.pekalongancityguide.Adapter.ConvoAdapter;
+import com.binus.pekalongancityguide.Adapter.PhrasesAdapter;
+import com.binus.pekalongancityguide.ItemList.ConvoItem;
+import com.binus.pekalongancityguide.ItemList.PhrasesItem;
+import com.binus.pekalongancityguide.ItemTemplate.Conversations;
+import com.binus.pekalongancityguide.ItemTemplate.Phrases;
+import com.binus.pekalongancityguide.R;
 
 import java.util.ArrayList;
 
@@ -47,7 +55,6 @@ public class ConversationFragment extends Fragment {
                     ConvoItem.latinText[i],
                     ConvoItem.engText[i],
                     ConvoItem.indoText[i]
-                    //ConvoItem.aksImg[i]
             ));
         }
 

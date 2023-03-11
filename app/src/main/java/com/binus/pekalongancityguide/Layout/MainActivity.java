@@ -1,8 +1,10 @@
-package com.binus.pekalongancityguide;
+package com.binus.pekalongancityguide.Layout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.binus.pekalongancityguide.R;
 
 public class MainActivity extends AppCompatActivity {
 

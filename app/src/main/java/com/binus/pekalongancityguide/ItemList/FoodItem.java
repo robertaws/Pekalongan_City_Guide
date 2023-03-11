@@ -1,20 +1,22 @@
-package com.binus.pekalongancityguide;
+package com.binus.pekalongancityguide.ItemList;
+
+import com.binus.pekalongancityguide.R;
 
 public class FoodItem {
-    static int[] foodimage = {
+    public static int[] foodimage = {
             R.drawable.food1,
             R.drawable.food2,
             R.drawable.food3,
             R.drawable.food4
     };
-    static String[] foodname = {
+    public static String[] foodname = {
             "Garang Asem",
             "Nasi Megono",
             "Soto Tauto",
             "Pindang Tetel"
     };
 
-    static String[] foodname2 = {
+    public static String[] foodname2 = {
             "Garang Asem",
             "Nasi Megono",
             "Soto Tauto",

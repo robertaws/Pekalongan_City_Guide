@@ -1,4 +1,4 @@
-package com.binus.pekalongancityguide;
+package com.binus.pekalongancityguide.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -13,6 +13,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.binus.pekalongancityguide.ItemTemplate.Destination;
+import com.binus.pekalongancityguide.Layout.DestinationDetails;
+import com.binus.pekalongancityguide.R;
 
 import java.util.List;
 
@@ -41,7 +45,7 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
         holder.layoutBg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(),DestinationDetails.class);
+                Intent intent = new Intent(v.getContext(), DestinationDetails.class);
                 intent.putExtra("gambar",item.get(position).getDestiImage());
                 intent.putExtra("nama",item.get(position).getDestiName());
                 intent.putExtra("detil",item.get(position).getDestiDesc());
