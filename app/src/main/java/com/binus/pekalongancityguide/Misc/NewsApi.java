@@ -5,6 +5,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 public interface NewsApi {
     @GET("v2/everything")
-    Call<NewsResponse> getNews(@Query("q") String query, @Query("apiKey") String apiKey);
+    Call<NewsApiResponse> getNews(@Query("q") String query, @Query("apiKey") String apiKey);
 }
 
