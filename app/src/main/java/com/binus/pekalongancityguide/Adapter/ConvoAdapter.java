@@ -1,4 +1,4 @@
-package com.binus.pekalongancityguide;
+package com.binus.pekalongancityguide.Adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +8,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.binus.pekalongancityguide.ItemTemplate.Conversations;
+import com.binus.pekalongancityguide.R;
+
 import java.util.List;
 
-/*public class ConvoAdapter extends RecyclerView.Adapter<ConvoAdapter.ViewHolder> {
+public class ConvoAdapter extends RecyclerView.Adapter<ConvoAdapter.ViewHolder> {
     private List<Conversations> item;
 
     public ConvoAdapter(List<Conversations> items) {
@@ -27,8 +30,11 @@ import java.util.List;
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Conversations item1 = item.get(position);
-        holder.titleTextView.setText("Title : "+item1.getTitle());
-        holder.bodyTextView.setText("Body : "+item1.getBody());
+        holder.nameTV.setText(item1.getName());
+        holder.aksaraTV.setText(item1.getAksara());
+        holder.latinTV.setText(item1.getLatin());
+        holder.englishTV.setText(item1.getEnglish());
+        holder.indoTV.setText(item1.getIndo());
     }
 
     @Override
@@ -37,13 +43,15 @@ import java.util.List;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView titleTextView;
-        TextView bodyTextView;
+        TextView nameTV, aksaraTV, latinTV, englishTV, indoTV;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            titleTextView = itemView.findViewById(R.id.item_title);
-            bodyTextView = itemView.findViewById(R.id.item_body);
+            nameTV = itemView.findViewById(R.id.convo_name);
+            aksaraTV = itemView.findViewById(R.id.convo_aksara);
+            latinTV = itemView.findViewById(R.id.convo_latin);
+            englishTV = itemView.findViewById(R.id.convo_english);
+            indoTV = itemView.findViewById(R.id.convo_indo);
         }
     }
-}*/
+}

@@ -3,13 +3,102 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment"
-    android:layout_marginTop="5dp">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    android:background="@color/bg"
+    tools:context=".Layout.HomeFragment">
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Home Fragment"/>
+        android:orientation="vertical">
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/logo"/>
+        <TextView
+            android:background="@color/palette_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:padding="10dp"
+            android:justificationMode="inter_word"
+            android:text="Pekalongan is a city of Central Java, Indonesia. It was formerly the seat of Pekalongan Regency on the northern coast of the province, but is now an independent municipality within the province. The city is Central Java's most important port, and is known for its batik."
+            android:textColor="@color/white"
+            android:textSize="16dp"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Spotlight"
+            android:textStyle="bold"
+            android:textSize="24dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/palette_1"/>
+        <androidx.cardview.widget.CardView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_margin="15dp"
+            app:cardElevation="20dp"
+            app:cardCornerRadius="20dp">
+            <com.denzcoskun.imageslider.ImageSlider
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/spotlight"
+                app:iss_auto_cycle="true"
+                app:iss_delay="1000"
+                app:iss_corner_radius="20"
+                app:iss_period="3000" />
+        </androidx.cardview.widget.CardView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="History"
+            android:textStyle="bold"
+            android:textSize="24dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/palette_1"/>
+        <TextView
+            android:background="@color/palette_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:justificationMode="inter_word"
+            android:text="Pekalongan is a city of Central Java, Indonesia. It was formerly the seat of Pekalongan Regency on the northern coast of the province, but is now an independent municipality within the province. The city is Central Java's most important port, and is known for its batik.\n\n\nRead More ->"
+            android:textColor="@color/white"
+            android:textSize="16dp"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Culinary"
+            android:textStyle="bold"
+            android:textSize="24dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/palette_1"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/food_rv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/list_culinary"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Breaking News"
+            android:textStyle="bold"
+            android:textSize="24dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/palette_1"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/news_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/news_item"
+            android:padding="16dp"/>
+    </LinearLayout>
+</ScrollView>
 
 </FrameLayout>

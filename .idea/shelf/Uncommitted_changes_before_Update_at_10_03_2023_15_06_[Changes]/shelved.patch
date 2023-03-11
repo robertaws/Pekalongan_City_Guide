@@ -1,0 +1,23 @@
+Index: app/src/main/res/layout/list_destination.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.cardview.widget.CardView xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"wrap_content\"\r\n    android:layout_margin=\"8dp\"\r\n    app:cardCornerRadius=\"10dp\"\r\n    app:cardElevation=\"3dp\"\r\n    android:clickable=\"true\">\r\n\r\n    <RelativeLayout\r\n        android:id=\"@+id/layoutImage\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"250dp\"\r\n        android:background=\"@drawable/test\"\r\n        android:backgroundTint=\"@color/palette_4\"\r\n        android:backgroundTintMode=\"multiply\"\r\n        >\r\n        <TextView\r\n            android:id=\"@+id/loc_name\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_alignParentBottom=\"true\"\r\n            android:layout_marginStart=\"21.5dp\"\r\n            android:layout_marginBottom=\"19dp\"\r\n            android:text=\"Monumen Nasional\"\r\n            android:textColor=\"@color/alfa\"\r\n            android:textSize=\"24dp\"\r\n            android:textStyle=\"bold\" />\r\n\r\n        <TextView\r\n            android:id=\"@+id/loc_name2\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_alignParentBottom=\"true\"\r\n            android:layout_marginStart=\"20dp\"\r\n            android:layout_marginBottom=\"20dp\"\r\n            android:text=\"Monumen Nasional\"\r\n            android:textColor=\"@color/white\"\r\n            android:textSize=\"24dp\"\r\n            android:textStyle=\"bold\" />\r\n        <TextView\r\n            android:id=\"@+id/loc_desc\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"/>\r\n        <TextView\r\n            android:id=\"@+id/loc_address\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"/>\r\n    </RelativeLayout>\r\n</androidx.cardview.widget.CardView>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/list_destination.xml b/app/src/main/res/layout/list_destination.xml
+--- a/app/src/main/res/layout/list_destination.xml	(revision e1c3faef7163ae1114b041bc781a569754f205e9)
++++ b/app/src/main/res/layout/list_destination.xml	(date 1678429164604)
+@@ -40,10 +40,12 @@
+             android:textSize="24dp"
+             android:textStyle="bold" />
+         <TextView
++            android:visibility="invisible"
+             android:id="@+id/loc_desc"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"/>
+         <TextView
++            android:visibility="invisible"
+             android:id="@+id/loc_address"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"/>
