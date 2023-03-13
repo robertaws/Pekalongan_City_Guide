@@ -16,7 +16,17 @@
         android:backgroundTintMode="screen"
         android:foregroundTint="@color/palette_4"
         android:foregroundTintMode="multiply"
-        tools:context=".Layout.MainActivity">
+        tools:context=".Layout.Register">
+
+        <ImageButton
+
+            android:background="#0000"
+            android:id="@+id/backtoLogin"
+            android:layout_margin="5dp"
+            android:padding="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back_icon"></ImageButton>
 
         <ImageView
             android:layout_marginTop="15dp"
@@ -27,23 +37,33 @@
             android:src="@drawable/logo" />
 
         <EditText
-            android:id="@+id/login_email"
+            android:id="@+id/regis_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="10dp"
+            android:background="@drawable/et_style"
+            android:hint="Enter Username"
+            android:padding="14dp" />
+
+        <EditText
+            android:id="@+id/regis_email"
             android:padding="14dp"
-            android:layout_marginVertical="24dp"
+            android:layout_marginVertical="10dp"
             android:layout_marginHorizontal="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter E-mail"
-            android:background="@drawable/et_style"></EditText>
+            android:background="@drawable/et_style" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/loginpass_til"
+            android:id="@+id/regispass_til"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:passwordToggleEnabled="true">
 
             <EditText
-                android:id="@+id/login_pass"
+                android:id="@+id/regis_pass"
                 android:layout_marginVertical="10dp"
                 android:layout_marginHorizontal="20dp"
                 android:layout_width="match_parent"
@@ -54,49 +74,34 @@
                 android:background="@drawable/et_style" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/regiscpass_til"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:passwordToggleEnabled="true">
+
+            <EditText
+                android:id="@+id/regis_cpass"
+                android:layout_marginVertical="10dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Confirm Your Password"
+                android:padding="14dp"
+                android:inputType="textPassword"
+                android:background="@drawable/et_style" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
         <Button
-            android:id="@+id/login_btn"
+            android:id="@+id/regis_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="50dp"
             android:layout_marginHorizontal="20dp"
             android:background="@drawable/et_style"
-            android:text="Login"
+            android:text="Register"
             android:textSize="16dp"
             android:padding="10dp" />
-
-        <Button
-            android:id="@+id/no_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:background="@drawable/et_style"
-            android:text="Continue without Login"
-            android:textSize="16dp"
-            android:padding="10dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/palette_1"
-                android:textSize="14dp"
-                android:text="Dont have any account?"></TextView>
-
-            <TextView
-                android:layout_marginStart="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textColor="@color/palette_3"
-                android:textSize="16dp"
-                android:text="REGISTER NOW"></TextView>
-        </LinearLayout>
-
     </LinearLayout>
 </layout>
