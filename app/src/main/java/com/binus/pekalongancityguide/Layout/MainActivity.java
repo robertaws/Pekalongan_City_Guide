@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     Button login, noLogin;
     EditText email, pass;
-    TextInputLayout til;
+    TextInputLayout til,etil;
     FirebaseAuth firebaseAuth;
     ProgressDialog progressDialog;
     TextView register;
@@ -62,10 +62,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        register.setOnClickListener(new View.OnClickListener() {
+        binding.mainRegis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, Register.class));
+                Intent regisIntent = new Intent(MainActivity.this, Register.class);
+                startActivity(regisIntent);
             }
         });
 
@@ -80,14 +81,18 @@ public class MainActivity extends AppCompatActivity {
         til = findViewById(R.id.loginpass_til);
         firebaseAuth = FirebaseAuth.getInstance();
         register = findViewById(R.id.main_regis);
+        etil = findViewById(R.id.loginemail_til);
     }
     void validate(){
         Email = binding.loginEmail.getText().toString().trim();
         Password = binding.loginPass.getText().toString().trim();
         if(!Patterns.EMAIL_ADDRESS.matcher(Email).matches()){
-            Toast.makeText(this, "Invalid Email Address!", Toast.LENGTH_SHORT).show();
+            etil.setError("Invalid Email Address!");
+           // Toast.makeText(this, "Invalid Email Address!", Toast.LENGTH_SHORT).show();
         }else if(Email.isEmpty() || Password.isEmpty()){
-            Toast.makeText(this, "All field must not be empty!", Toast.LENGTH_SHORT).show();
+            etil.setError("All field must not be empty!");
+            til.setError("All field must not be empty!");
+          //  Toast.makeText(this, "All field must not be empty!", Toast.LENGTH_SHORT).show();
         }else{
             tryLogin();
         }

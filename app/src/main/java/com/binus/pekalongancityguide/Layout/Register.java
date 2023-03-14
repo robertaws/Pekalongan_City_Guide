@@ -30,7 +30,7 @@ public class Register extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     ImageButton back;
     EditText user,email,pass,cpass;
-    TextInputLayout til,ctil;
+    TextInputLayout til,ctil,etil,util;
     Button register;
     ProgressDialog progressDialog;
     private ActivityRegisterBinding binding;
@@ -71,15 +71,23 @@ public class Register extends AppCompatActivity {
         register = findViewById(R.id.regis_btn);
         cpass = findViewById(R.id.regis_cpass);
         ctil = findViewById(R.id.regiscpass_til);
+        etil = findViewById(R.id.regisemail_til);
+        util = findViewById(R.id.regisuser_til);
         firebaseAuth = FirebaseAuth.getInstance();
     }
     void validate(){
         if(Username.isEmpty() || Email.isEmpty() || Password.isEmpty()){
-            Toast.makeText(this, "All field must not be empty!", Toast.LENGTH_SHORT).show();
+            etil.setError("All field must not be empty!");
+            util.setError("All field must not be empty!");
+            ctil.setError("All field must not be empty!");
+            til.setError("All field must not be empty!");
+           // Toast.makeText(this, "All field must not be empty!", Toast.LENGTH_SHORT).show();
         }else if(!Patterns.EMAIL_ADDRESS.matcher(Email).matches()){
-            Toast.makeText(this, "Invalid email address!", Toast.LENGTH_SHORT).show();
+            etil.setError("Invalid Email Address!");
+          //  Toast.makeText(this, "Invalid email address!", Toast.LENGTH_SHORT).show();
         }else if(!Password.equals(Cfmpass)){
-            Toast.makeText(this, "Password doesn't match!", Toast.LENGTH_SHORT).show();
+            ctil.setError("Password doesn't match!");
+          //  Toast.makeText(this, "Password doesn't match!", Toast.LENGTH_SHORT).show();
         }else{
             createUser();
         }
