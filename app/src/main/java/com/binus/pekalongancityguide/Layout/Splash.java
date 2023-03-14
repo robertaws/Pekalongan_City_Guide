@@ -25,8 +25,6 @@ public class Splash extends AppCompatActivity {
             getSupportActionBar().hide();
         }
         firebaseAuth = FirebaseAuth.getInstance();
-
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -38,7 +36,7 @@ public class Splash extends AppCompatActivity {
     private void checkUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if(firebaseUser == null){
-            startActivity (new Intent(Splash.this, Home.class));
+            startActivity (new Intent(Splash.this, MainActivity.class));
             finish();
         }else {
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
