@@ -1,16 +1,18 @@
 package com.binus.pekalongancityguide.Layout;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityMainBinding;
@@ -28,11 +30,13 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
-    Button login,noLogin;
-    EditText email,pass;
+    Button login, noLogin;
+    EditText email, pass;
     TextInputLayout til;
     FirebaseAuth firebaseAuth;
     ProgressDialog progressDialog;
+    TextView register;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         binding.noLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,Home.class));
+                startActivity(new Intent(MainActivity.this, Home.class));
             }
         });
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +61,14 @@ public class MainActivity extends AppCompatActivity {
                 validate();
             }
         });
+
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, Register.class));
+            }
+        });
+
     }
 
     String Email, Password;
@@ -67,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         pass = findViewById(R.id.login_pass);
         til = findViewById(R.id.loginpass_til);
         firebaseAuth = FirebaseAuth.getInstance();
+        register = findViewById(R.id.main_regis);
     }
     void validate(){
         Email = binding.loginEmail.getText().toString().trim();
@@ -94,7 +107,13 @@ public class MainActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MainActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            public void run() {
+                                progressDialog.dismiss();
+                            }
+                        }, 2000);
                     }
                 });
     }
