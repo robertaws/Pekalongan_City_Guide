@@ -1,8 +1,5 @@
 package com.binus.pekalongancityguide.Layout;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +9,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityRegisterBinding;
@@ -24,25 +24,29 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
-import java.util.regex.Pattern;
 
 public class Register extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     ImageButton back;
-    EditText user,email,pass,cpass;
-    TextInputLayout til,ctil,etil,util;
+    EditText user, email, pass, cpass;
+    String Username, Email, Password, Cfmpass;
+    TextInputLayout til, ctil, etil, util;
     Button register;
     ProgressDialog progressDialog;
     private ActivityRegisterBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please Wait");
         progressDialog.setCanceledOnTouchOutside(false);
+
         init();
-        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
+
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,12 +60,33 @@ public class Register extends AppCompatActivity {
                 validate();
             }
         });
+        til.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    // The user has clicked on the text input layout
+                    til.setPasswordVisibilityToggleEnabled(true);
+                } else {
+                    // The user has left the text input layout
+                }
+            }
+        });
+
+        ctil.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    // The user has clicked on the text input layout
+                    ctil.setPasswordVisibilityToggleEnabled(true);
+                } else {
+                    // The user has left the text input layout
+                }
+            }
+        });
+
     }
 
-    String Username = binding.regisUser.getText().toString().trim();
-    String Email = binding.regisEmail.getText().toString().trim();
-    String Password = binding.regisPass.getText().toString().trim();
-    String Cfmpass = binding.regisCpass.getText().toString().trim();
+
     void init(){
         back = findViewById(R.id.backtoLogin);
         user = findViewById(R.id.regis_user);
@@ -74,19 +99,27 @@ public class Register extends AppCompatActivity {
         etil = findViewById(R.id.regisemail_til);
         util = findViewById(R.id.regisuser_til);
         firebaseAuth = FirebaseAuth.getInstance();
+
+        Username = binding.regisUser.getText().toString().trim();
+        Email = binding.regisEmail.getText().toString().trim();
+        Password = binding.regisPass.getText().toString().trim();
+        Cfmpass = binding.regisCpass.getText().toString().trim();
     }
     void validate(){
-        if(Username.isEmpty() || Email.isEmpty() || Password.isEmpty()){
-            etil.setError("All field must not be empty!");
-            util.setError("All field must not be empty!");
-            ctil.setError("All field must not be empty!");
-            til.setError("All field must not be empty!");
-           // Toast.makeText(this, "All field must not be empty!", Toast.LENGTH_SHORT).show();
+        if(Username.isEmpty() || Email.isEmpty() || Password.isEmpty()) {
+            til.setPasswordVisibilityToggleEnabled(false);
+            ctil.setPasswordVisibilityToggleEnabled(false);
+            user.setError("All field must not be empty!");
+            email.setError("All field must not be empty!");
+            pass.setError("All field must not be empty!");
+            cpass.setError("All field must not be empty!");
+
+            // Toast.makeText(this, "All field must not be empty!", Toast.LENGTH_SHORT).show();
         }else if(!Patterns.EMAIL_ADDRESS.matcher(Email).matches()){
-            etil.setError("Invalid Email Address!");
+            email.setError("Invalid Email Address!");
           //  Toast.makeText(this, "Invalid email address!", Toast.LENGTH_SHORT).show();
         }else if(!Password.equals(Cfmpass)){
-            ctil.setError("Password doesn't match!");
+            cpass.setError("Password doesn't match!");
           //  Toast.makeText(this, "Password doesn't match!", Toast.LENGTH_SHORT).show();
         }else{
             createUser();

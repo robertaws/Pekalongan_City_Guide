@@ -4,12 +4,13 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +29,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -59,14 +63,29 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 validate();
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
         });
 
         binding.mainRegis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(TAG, "mainRegis is not null: " + (binding.mainRegis != null));
                 Intent regisIntent = new Intent(MainActivity.this, Register.class);
                 startActivity(regisIntent);
+            }
+        });
+
+        til.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    // The user has clicked on the text input layout
+                    til.setPasswordVisibilityToggleEnabled(true);
+                } else {
+                    // The user has left the text input layout
+                }
             }
         });
 
@@ -83,17 +102,18 @@ public class MainActivity extends AppCompatActivity {
         register = findViewById(R.id.main_regis);
         etil = findViewById(R.id.loginemail_til);
     }
-    void validate(){
+    void validate() {
         Email = binding.loginEmail.getText().toString().trim();
         Password = binding.loginPass.getText().toString().trim();
-        if(!Patterns.EMAIL_ADDRESS.matcher(Email).matches()){
-            etil.setError("Invalid Email Address!");
-           // Toast.makeText(this, "Invalid Email Address!", Toast.LENGTH_SHORT).show();
-        }else if(Email.isEmpty() || Password.isEmpty()){
-            etil.setError("All field must not be empty!");
-            til.setError("All field must not be empty!");
-          //  Toast.makeText(this, "All field must not be empty!", Toast.LENGTH_SHORT).show();
-        }else{
+        if (Email.isEmpty() || Password.isEmpty()) {
+            til.setPasswordVisibilityToggleEnabled(false);
+            email.setError("All field must not be empty!");
+            pass.setError("All field must not be empty!");
+            //  Toast.makeText(this, "All field must not be empty!", Toast.LENGTH_SHORT).show();
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
+            email.setError("Invalid Email Address!");
+            //Toast.makeText(this, "Invalid Email Address!", Toast.LENGTH_SHORT).show();
+        } else {
             tryLogin();
         }
     }
@@ -112,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MainActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Snackbar.make(binding.getRoot(), e.getMessage(), Snackbar.LENGTH_SHORT).show();
                         Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
                             public void run() {
