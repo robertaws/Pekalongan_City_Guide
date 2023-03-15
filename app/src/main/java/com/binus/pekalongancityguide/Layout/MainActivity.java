@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     void validate() {
         Email = binding.loginEmail.getText().toString().trim();
         Password = binding.loginPass.getText().toString().trim();
-        if (Email.isEmpty() || Password.isEmpty()) {
+        if (Email.isEmpty()) {
             til.setPasswordVisibilityToggleEnabled(false);
             email.setError("All field must not be empty!");
         }else if(Password.isEmpty()){
