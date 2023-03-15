@@ -106,9 +106,9 @@ public class MainActivity extends AppCompatActivity {
         Email = binding.loginEmail.getText().toString().trim();
         Password = binding.loginPass.getText().toString().trim();
         if (Email.isEmpty()) {
-            til.setPasswordVisibilityToggleEnabled(false);
             email.setError("All field must not be empty!");
         }else if(Password.isEmpty()){
+            til.setPasswordVisibilityToggleEnabled(false);
             pass.setError("All field must not be empty!");
         }else if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
             email.setError("Invalid Email Address!");
