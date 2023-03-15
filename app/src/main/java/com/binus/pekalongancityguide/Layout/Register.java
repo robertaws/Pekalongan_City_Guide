@@ -30,7 +30,6 @@ public class Register extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     ImageButton back;
     EditText user, email, pass, cpass;
-    String Username, Email, Password, Cfmpass;
     TextInputLayout til, ctil, etil, util;
     Button register;
     ProgressDialog progressDialog;
@@ -65,28 +64,21 @@ public class Register extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    // The user has clicked on the text input layout
                     til.setPasswordVisibilityToggleEnabled(true);
                 } else {
-                    // The user has left the text input layout
                 }
             }
         });
 
-        ctil.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    // The user has clicked on the text input layout
-                    ctil.setPasswordVisibilityToggleEnabled(true);
-                } else {
-                    // The user has left the text input layout
-                }
+        ctil.getEditText().setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                ctil.setPasswordVisibilityToggleEnabled(true);
+            } else {
             }
         });
 
     }
-
+    String Username, Email, Password, Cfmpass;
     void init(){
         back = findViewById(R.id.backtoLogin);
         user = findViewById(R.id.regis_user);
@@ -99,14 +91,13 @@ public class Register extends AppCompatActivity {
         etil = findViewById(R.id.regisemail_til);
         util = findViewById(R.id.regisuser_til);
         firebaseAuth = FirebaseAuth.getInstance();
+    }
 
+    void validate() {
         Username = binding.regisUser.getText().toString().trim();
         Email = binding.regisEmail.getText().toString().trim();
         Password = binding.regisPass.getText().toString().trim();
         Cfmpass = binding.regisCpass.getText().toString().trim();
-    }
-
-    void validate() {
         if(Username.isEmpty()){
             user.setError("Username cannot be empty!");
         }else if(Username.length()<3 || Username.length()>12){
@@ -130,19 +121,11 @@ public class Register extends AppCompatActivity {
         progressDialog.setMessage("Creating account...");
         progressDialog.show();
         firebaseAuth.createUserWithEmailAndPassword(Email,Password)
-                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        progressDialog.dismiss();
-                        addUser();
-                    }
+                .addOnSuccessListener(authResult -> {
+                    progressDialog.dismiss();
+                    addUser();
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(Register.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .addOnFailureListener(e -> Toast.makeText(Register.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     private void addUser() {
@@ -156,23 +139,16 @@ public class Register extends AppCompatActivity {
         hashMap.put("profileImage","");
         hashMap.put("userType","user");
         hashMap.put("timestamp", timestamp);
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        DatabaseReference databaseReference = database.getReference("Users");
         databaseReference.child(uid)
                 .setValue(hashMap)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        progressDialog.dismiss();
-                        Toast.makeText(Register.this, "Account created!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(Register.this,Home.class));
-                        finish();
-                    }
+                .addOnSuccessListener(unused -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(Register.this, "Account created!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(Register.this,MainActivity.class));
+                    finish();
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(Register.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .addOnFailureListener(e -> Toast.makeText(Register.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 }

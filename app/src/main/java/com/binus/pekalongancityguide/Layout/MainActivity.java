@@ -53,19 +53,11 @@ public class MainActivity extends AppCompatActivity {
 
         init();
 
-        binding.noLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, Home.class));
-            }
-        });
-        binding.loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                validate();
-                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-            }
+        binding.noLogin.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, Home.class)));
+        binding.loginBtn.setOnClickListener(v -> {
+            validate();
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         });
 
         binding.mainRegis.setOnClickListener(new View.OnClickListener() {
@@ -77,15 +69,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        til.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    // The user has clicked on the text input layout
-                    til.setPasswordVisibilityToggleEnabled(true);
-                } else {
-                    // The user has left the text input layout
-                }
+        til.getEditText().setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                // The user has clicked on the text input layout
+                til.setPasswordVisibilityToggleEnabled(true);
+            } else {
+                // The user has left the text input layout
             }
         });
 
@@ -122,30 +111,23 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.show();
 
         firebaseAuth.signInWithEmailAndPassword(Email,Password)
-                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        checkUser();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Snackbar.make(binding.getRoot(), e.getMessage(), Snackbar.LENGTH_SHORT).show();
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            public void run() {
-                                progressDialog.dismiss();
-                            }
-                        }, 2000);
-                    }
+                .addOnSuccessListener(authResult -> checkUser())
+                .addOnFailureListener(e -> {
+                    Snackbar.make(binding.getRoot(), e.getMessage(), Snackbar.LENGTH_SHORT).show();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            progressDialog.dismiss();
+                        }
+                    }, 2000);
                 });
     }
 
     private void checkUser() {
         progressDialog.setMessage("Checking user..");
         FirebaseUser firebaseUser =firebaseAuth.getCurrentUser();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        DatabaseReference databaseReference = database.getReference("Users");
         databaseReference.child(firebaseUser.getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

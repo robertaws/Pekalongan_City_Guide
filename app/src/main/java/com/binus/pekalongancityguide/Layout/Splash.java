@@ -39,7 +39,8 @@ public class Splash extends AppCompatActivity {
             startActivity (new Intent(Splash.this, MainActivity.class));
             finish();
         }else {
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+            FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
+            DatabaseReference databaseReference = database.getReference("Users");
             databaseReference.child(firebaseUser.getUid())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
