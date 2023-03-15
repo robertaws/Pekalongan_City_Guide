@@ -107,12 +107,12 @@ public class MainActivity extends AppCompatActivity {
         Password = binding.loginPass.getText().toString().trim();
         if (Email.isEmpty()) {
             email.setError("All field must not be empty!");
-        }else if(Password.isEmpty()){
-            til.setPasswordVisibilityToggleEnabled(false);
-            pass.setError("All field must not be empty!");
         }else if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
             email.setError("Invalid Email Address!");
-        } else {
+        }else if(Password.isEmpty()){
+            pass.setError("All field must not be empty!");
+            til.setPasswordVisibilityToggleEnabled(false);
+        }else{
             tryLogin();
         }
     }

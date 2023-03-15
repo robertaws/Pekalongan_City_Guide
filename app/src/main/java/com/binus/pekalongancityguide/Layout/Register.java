@@ -105,49 +105,25 @@ public class Register extends AppCompatActivity {
         Password = binding.regisPass.getText().toString().trim();
         Cfmpass = binding.regisCpass.getText().toString().trim();
     }
-    private boolean isUsernameValid(String username) {
-        // Username should be at least 4 characters long
-        return username.length() >= 4;
-    }
-
-    private boolean isEmailValid(String email) {
-        // Email should be a valid email address
-        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-    private boolean isPasswordValid(String password) {
-        // Password should be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character
-        boolean hasUppercase = !password.equals(password.toLowerCase());
-        boolean hasLowercase = !password.equals(password.toUpperCase());
-        boolean hasNumber = password.matches(".*\\d.*");
-        boolean hasSpecialChar = !password.matches("[A-Za-z0-9]*");
-        return (password.length() >= 8 && hasUppercase && hasLowercase && hasNumber && hasSpecialChar);
-    }
 
     void validate() {
-
-        if (!isUsernameValid(Username)) {
-            user.setError("Username must be at least 4 characters long.");
-            return;
+        if(Username.isEmpty()){
+            user.setError("Username cannot be empty!");
+        }else if(Username.length()<3 || Username.length()>12){
+            user.setError("Username must be between 3-12 characters!");
+        }else if(Email.isEmpty()){
+            email.setError("Email cannot be empty!");
+        }else if(!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
+            email.setError("Invalid Email Address!");
+        }else if(Password.isEmpty()){
+            pass.setError("Password cannot be empty!");
+        }else if(Password.length()<8){
+            pass.setError("password must be more than 8 characters!");
+        }else if(!Cfmpass.equals(Password)){
+            cpass.setError("Password does not match!");
+        }else{
+            createUser();
         }
-
-        if (!isEmailValid(Email)) {
-            email.setError("Please enter a valid email address.");
-            return;
-        }
-
-        if (!isPasswordValid(Password)) {
-            pass.setError("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.");
-            return;
-        }
-
-        if (!Password.equals(Cfmpass)) {
-            cpass.setError("Passwords do not match.");
-            return;
-        }
-
-        // All validation rules pass, create user
-        createUser();
     }
 
     private void createUser(){
