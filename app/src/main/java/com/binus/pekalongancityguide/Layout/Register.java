@@ -3,6 +3,7 @@ package com.binus.pekalongancityguide.Layout;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -106,24 +107,39 @@ public class Register extends AppCompatActivity {
         Cfmpass = binding.regisCpass.getText().toString().trim();
     }
     void validate(){
-        if(Username.isEmpty() || Email.isEmpty() || Password.isEmpty()) {
-            til.setPasswordVisibilityToggleEnabled(false);
-            ctil.setPasswordVisibilityToggleEnabled(false);
-            user.setError("All field must not be empty!");
-            email.setError("All field must not be empty!");
-            pass.setError("All field must not be empty!");
-            cpass.setError("All field must not be empty!");
+        boolean isEmpty = false;
+        EditText[] textFields = new EditText[] {user, email, pass, cpass};
 
-            // Toast.makeText(this, "All field must not be empty!", Toast.LENGTH_SHORT).show();
-        }else if(!Patterns.EMAIL_ADDRESS.matcher(Email).matches()){
+        for (EditText textfield : textFields) {
+            if (TextUtils.isEmpty(textfield.getText().toString())) {
+                isEmpty = true;
+                textfield.setError("All fields must not be empty!");
+                if (textfield == pass || textfield == cpass) {
+                    til.setPasswordVisibilityToggleEnabled(false);
+                    ctil.setPasswordVisibilityToggleEnabled(false);
+                }
+            }
+        }if (isEmpty) {
+            return;
+        }else if(Username.length()<3 || Username.length()>12){
+            user.setError("Username must be between 3-12 characters!");
+        }else if(!checkPass(Password)){
+                pass.setError("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.");
+        } else if(!Patterns.EMAIL_ADDRESS.matcher(Email).matches()){
             email.setError("Invalid Email Address!");
-          //  Toast.makeText(this, "Invalid email address!", Toast.LENGTH_SHORT).show();
         }else if(!Password.equals(Cfmpass)){
             cpass.setError("Password doesn't match!");
-          //  Toast.makeText(this, "Password doesn't match!", Toast.LENGTH_SHORT).show();
         }else{
             createUser();
         }
+    }
+    public boolean checkPass(String Password) {
+        boolean hasUppercase = !Password.equals(Password.toLowerCase());
+        boolean hasLowercase = !Password.equals(Password.toUpperCase());
+        boolean hasNumber = Password.matches(".*\\d.*");
+        boolean hasSpecialChar = !Password.matches("[A-Za-z0-9]*");
+
+        return (Password.length() >= 8 && hasUppercase && hasLowercase && hasNumber && hasSpecialChar);
     }
 
     private void createUser(){

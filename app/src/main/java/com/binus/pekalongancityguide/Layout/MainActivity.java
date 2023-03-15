@@ -108,11 +108,10 @@ public class MainActivity extends AppCompatActivity {
         if (Email.isEmpty() || Password.isEmpty()) {
             til.setPasswordVisibilityToggleEnabled(false);
             email.setError("All field must not be empty!");
+        }else if(Password.isEmpty()){
             pass.setError("All field must not be empty!");
-            //  Toast.makeText(this, "All field must not be empty!", Toast.LENGTH_SHORT).show();
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
+        }else if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
             email.setError("Invalid Email Address!");
-            //Toast.makeText(this, "Invalid Email Address!", Toast.LENGTH_SHORT).show();
         } else {
             tryLogin();
         }
