@@ -1,7 +1,9 @@
 package com.binus.pekalongancityguide.Layout;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -12,7 +14,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityMainBinding;
@@ -30,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int REQUEST_CAMERA_PERMISSION = 200;
     private ActivityMainBinding binding;
     Button login, noLogin;
     EditText email, pass;
@@ -41,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -51,12 +58,23 @@ public class MainActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         FirebaseApp.initializeApp(this);
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         FirebaseDatabase.getInstance().getReference().keepSynced(true);
 
         DatabaseReference myRef = database.getReference("path/to/data");
 
         init();
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+            // Camera permission is granted
+            Log.d("PERMISSION", "GRANTED");
+        } else {
+            // Camera permission is not granted
+            Log.d("PERMISSION", "DENIED");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+
+        }
+
 
         binding.noLogin.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, Home.class)));
         binding.loginBtn.setOnClickListener(v -> {
@@ -145,14 +163,39 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(new Intent(MainActivity.this,Home.class));
                             finish();
                         }else if(userType.equals("admin")){
-                            startActivity(new Intent(MainActivity.this,Home.class));
+                            startActivity(new Intent(MainActivity.this, Home.class));
                             finish();
                         }
                     }
+
                     @Override
                     public void onCancelled(DatabaseError error) {
 
                     }
                 });
     }
+
+    // Request the camera permission
+    private void requestCameraPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+    }
+
+    // Check if the camera permission is granted
+    private boolean isCameraPermissionGranted() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    // Handle the permission request result
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, do something
+            } else {
+                // Permission denied, show a message or something
+            }
+        }
+    }
+
 }

@@ -40,8 +40,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
                 android:hint="Enter E-mail"
-                android:background="@drawable/et_style"
-                android:inputType="textEmailAddress" />
+                android:background="@drawable/et_style" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

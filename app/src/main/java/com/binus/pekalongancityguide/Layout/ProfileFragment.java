@@ -1,21 +1,15 @@
 package com.binus.pekalongancityguide.Layout;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.binus.pekalongancityguide.EditProfile;
 import com.binus.pekalongancityguide.R;
@@ -66,20 +60,28 @@ public class ProfileFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String email = ""+snapshot.child("Email").getValue();
                         String name = ""+snapshot.child("Username").getValue();
-                        String profile_img = ""+snapshot.child("profileImage").getValue();
-                        String timestamp = ""+snapshot.child("timestamp").getValue();
-                        String userId = ""+snapshot.child("uid").getValue();
+                        String profile_img = "" + snapshot.child("profileImage").getValue();
+                        String timestamp = "" + snapshot.child("timestamp").getValue();
+                        String userId = "" + snapshot.child("uid").getValue();
                         String formatDate = MyApplication.formatTimeStamp(Long.parseLong(timestamp));
-                        String type = ""+snapshot.child("userType").getValue();
+                        String type = "" + snapshot.child("userType").getValue();
 
                         binding.profileEmail.setText(email);
                         binding.profileUser.setText(name);
                         binding.profileJoined.setText(formatDate);
                         binding.profileType.setText(type);
-                        Glide.with(ProfileFragment.this)
-                                .load(profile_img)
-                                .placeholder(R.drawable.person)
-                                .into(binding.profileImg);
+                        if (isAdded()) {
+                            String imageUrl = snapshot.child("photo_url").getValue(String.class);
+                            if (imageUrl != null) {
+                                Glide.with(ProfileFragment.this)
+                                        .load(profile_img)
+                                        .placeholder(R.drawable.person)
+                                        .centerCrop()
+                                        .into(binding.profileImg);
+
+                            }
+                        }
+
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
