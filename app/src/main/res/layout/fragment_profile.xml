@@ -20,13 +20,14 @@
             <View
                 android:id="@+id/view"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="150dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="50dp"
                 android:backgroundTint="@color/palette_1"
                 android:backgroundTintMode="screen"
                 android:background="@drawable/batik"/>
+
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/profileImg"
                 android:layout_marginTop="-120dp"
@@ -160,6 +161,7 @@
                 android:layout_height="wrap_content" />
 
             <Button
+                android:padding="10dp"
                 android:id="@+id/logout_btn"
                 android:layout_marginTop="30dp"
                 android:layout_gravity="center"

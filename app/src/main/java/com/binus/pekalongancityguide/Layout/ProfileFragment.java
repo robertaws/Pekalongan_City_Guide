@@ -1,17 +1,23 @@
 package com.binus.pekalongancityguide.Layout;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.binus.pekalongancityguide.EditProfile;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.FragmentProfileBinding;
 import com.bumptech.glide.Glide;
@@ -27,6 +33,7 @@ public class ProfileFragment extends Fragment {
     FragmentProfileBinding binding;
     private FirebaseAuth firebaseAuth;
     private static final String TAG = "PROFILE_TAG";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -39,9 +46,8 @@ public class ProfileFragment extends Fragment {
         getInfo();
 
         binding.editName.setOnClickListener(v -> {
-            //
+            startActivity(new Intent(getActivity(), EditProfile.class));
         });
-
         binding.logoutBtn.setOnClickListener(v -> {
             startActivity(new Intent(getActivity(),MainActivity.class));
             getActivity().finish();
@@ -49,6 +55,7 @@ public class ProfileFragment extends Fragment {
 
         return view;
     }
+
     private void getInfo(){
         Log.e(TAG,"Loading User Info..."+firebaseAuth.getUid());
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
@@ -74,7 +81,6 @@ public class ProfileFragment extends Fragment {
                                 .placeholder(R.drawable.person)
                                 .into(binding.profileImg);
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
