@@ -2,7 +2,6 @@ package com.binus.pekalongancityguide;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -28,6 +27,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,17 +38,21 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
 public class EditProfile extends AppCompatActivity {
     private static final int REQUEST_GALLERY = 500;
+    private static final int REQUEST_CAMERA_PERMISSION = 200;
     private ActivityEditProfileBinding binding;
     private FirebaseAuth firebaseAuth;
     private static final String TAG = "PROFILE_EDIT_TAG";
     private Uri imguri = null;
     private String name = "";
     private ProgressDialog progressDialog;
+    ShapeableImageView imgView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,15 +138,35 @@ public class EditProfile extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "on Failure: Failed to upload image due to"+e.getMessage());
+                        Log.d(TAG, "on Failure: Failed to upload image due to" + e.getMessage());
                         progressDialog.dismiss();
-                        Toast.makeText(EditProfile.this, "on Failure: Failed to upload image due to"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditProfile.this, "on Failure: Failed to upload image due to" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
+    private ActivityResultLauncher<Void> cameraResultActivityLauncher = registerForActivityResult(
+            new ActivityResultContracts.TakePicturePreview(), new ActivityResultCallback<Bitmap>() {
+                @Override
+                public void onActivityResult(Bitmap result) {
+                    if (result != null) {
+                        // set the captured image to ImageView
+                        imgView.setImageBitmap(result);
+
+                        // save the image to local storage if needed
+                        // saveImageToGallery(result);
+
+                        // convert the Bitmap image to Uri
+                        imguri = getImageUri(this, result);
+
+                        // upload the image to Firebase Storage or do other things with the Uri
+                        uploadImage();
+                    }
+                }
+            });
+
     private void showImage() {
-        PopupMenu popupMenu = new PopupMenu(this,binding.editImage);
+        PopupMenu popupMenu = new PopupMenu(this, binding.editImage);
         popupMenu.getMenu().add(Menu.NONE, 0, 0, "Camera");
         popupMenu.getMenu().add(Menu.NONE, 1, 1, "Gallery");
         popupMenu.show();
@@ -150,58 +174,34 @@ public class EditProfile extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 int which = item.getItemId();
-                if(which==0){
-                    pickImageCamera();
-                }else if(which==1){
-                    pickImageGallery();
+                if (which == 0) {
+                    // launch the camera to take a picture
+                    cameraResultActivityLauncher.launch(null);
+                    return true;
+                } else if (which == 1) {
+                    // launch the gallery to choose a picture
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent, REQUEST_GALLERY);
+                    return true;
                 }
                 return false;
             }
         });
     }
 
-    private void pickImageCamera() {
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE,"new Pick");
-        values.put(MediaStore.Images.Media.DESCRIPTION,"Image Description");
-        imguri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,values);
 
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imguri);
-        cameraResultActivityLauncher.launch(intent);
-    }
-
-    private void pickImageGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, REQUEST_GALLERY);
-    }
-    private ActivityResultLauncher<Intent> cameraResultActivityLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Log.d(TAG, "onActivityResult: " + imguri);
-                        Intent data = result.getData();
-                        binding.editImage.setImageURI(imguri);
-                    } else {
-                        Toast.makeText(EditProfile.this, "Cancelled", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-    );
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_GALLERY && resultCode == RESULT_OK && data != null) {
-            imguri = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imguri);
-                binding.editImage.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_GALLERY && data != null) {
+                imguri = data.getData();
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imguri);
+                    imgView.setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -246,6 +246,7 @@ public class EditProfile extends AppCompatActivity {
                                 .placeholder(R.drawable.person)
                                 .into(binding.editImage);
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
@@ -253,4 +254,12 @@ public class EditProfile extends AppCompatActivity {
                 });
 
     }
+
+    private Uri getImageUri(ActivityResultCallback<Bitmap> context, Bitmap bitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
+        return Uri.parse(path);
+    }
+
 }
