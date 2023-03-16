@@ -1,16 +1,10 @@
 package com.binus.pekalongancityguide;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,12 +12,17 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.binus.pekalongancityguide.Layout.MyApplication;
-import com.binus.pekalongancityguide.Layout.ProfileFragment;
 import com.binus.pekalongancityguide.databinding.ActivityEditProfileBinding;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -39,9 +38,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 public class EditProfile extends AppCompatActivity {
+    private static final int REQUEST_GALLERY = 500;
     private ActivityEditProfileBinding binding;
     private FirebaseAuth firebaseAuth;
     private static final String TAG = "PROFILE_EDIT_TAG";
@@ -142,8 +143,8 @@ public class EditProfile extends AppCompatActivity {
 
     private void showImage() {
         PopupMenu popupMenu = new PopupMenu(this,binding.editImage);
-        popupMenu.getMenu().add(Menu.NONE,0,0,"Camera");
-        popupMenu.getMenu().add(Menu.NONE,0,0,"Gallery");
+        popupMenu.getMenu().add(Menu.NONE, 0, 0, "Camera");
+        popupMenu.getMenu().add(Menu.NONE, 1, 1, "Gallery");
         popupMenu.show();
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -171,32 +172,48 @@ public class EditProfile extends AppCompatActivity {
     }
 
     private void pickImageGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        galleryResultActivityLauncher.launch(intent);
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, REQUEST_GALLERY);
     }
     private ActivityResultLauncher<Intent> cameraResultActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode()== Activity.RESULT_OK){
-                        Log.d(TAG,"onActivityResult: "+imguri);
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Log.d(TAG, "onActivityResult: " + imguri);
                         Intent data = result.getData();
                         binding.editImage.setImageURI(imguri);
-                    }else{
+                    } else {
                         Toast.makeText(EditProfile.this, "Cancelled", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
     );
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_GALLERY && resultCode == RESULT_OK && data != null) {
+            imguri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imguri);
+                binding.editImage.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
     private ActivityResultLauncher<Intent> galleryResultActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode()== Activity.RESULT_OK){
-                        Log.d(TAG,"onActivityResult: "+imguri);
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Log.d(TAG, "onActivityResult: " + imguri);
                         Intent data = result.getData();
                         imguri = data.getData();
                         Log.d(TAG,"onActivityResult: Picked from Gallery"+imguri);
