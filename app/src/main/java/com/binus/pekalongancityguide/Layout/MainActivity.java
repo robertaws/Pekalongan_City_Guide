@@ -12,16 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityMainBinding;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthResult;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -50,6 +47,14 @@ public class MainActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please Wait");
         progressDialog.setCanceledOnTouchOutside(false);
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseApp.initializeApp(this);
+
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        FirebaseDatabase.getInstance().getReference().keepSynced(true);
+
+        DatabaseReference myRef = database.getReference("path/to/data");
 
         init();
 
@@ -96,12 +101,14 @@ public class MainActivity extends AppCompatActivity {
         Password = binding.loginPass.getText().toString().trim();
         if (Email.isEmpty()) {
             email.setError("All field must not be empty!");
-        }else if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
             email.setError("Invalid Email Address!");
-        }else if(Password.isEmpty()){
+        }
+        if (Password.isEmpty()) {
             pass.setError("All field must not be empty!");
             til.setPasswordVisibilityToggleEnabled(false);
-        }else{
+        } else {
             tryLogin();
         }
     }
