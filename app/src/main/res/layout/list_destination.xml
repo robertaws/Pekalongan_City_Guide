@@ -12,7 +12,7 @@
         android:id="@+id/layoutImage"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:background="@drawable/test"
+        android:background="@drawable/slide8"
         android:backgroundTint="@color/palette_4"
         android:backgroundTintMode="multiply"
         >
