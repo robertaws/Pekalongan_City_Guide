@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -214,6 +215,14 @@ public class EditProfile extends AppCompatActivity {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Toast.makeText(EditProfile.this, "Failed to upload image", Toast.LENGTH_SHORT).show();
+                                    // Dismiss the progress dialog
+                                    progressDialog.dismiss();
+                                    Log.e("FirebaseStorage", e.getMessage());
+                                }
+                            })
+                            .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                                     // Dismiss the progress dialog
                                     progressDialog.dismiss();
                                 }
