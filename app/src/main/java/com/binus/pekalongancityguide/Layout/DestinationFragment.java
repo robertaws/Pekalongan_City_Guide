@@ -34,10 +34,13 @@ public class DestinationFragment extends Fragment {
         for (int i = 0; i < DestinationItem.destiimage.length; i++) {
             destiData.add(new Destination(
                     DestinationItem.destiimage[i],
+                    DestinationItem.destiLat[i],
+                    DestinationItem.destiLong[i],
                     DestinationItem.destiname[i],
                     DestinationItem.destiname2[i],
                     DestinationItem.destidesc[i],
-                    DestinationItem.destiaddress[i]
+                    DestinationItem.destiaddress[i],
+                    DestinationItem.destiTitle[i]
             ));
         }
 

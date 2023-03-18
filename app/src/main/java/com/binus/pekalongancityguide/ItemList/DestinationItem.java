@@ -34,4 +34,22 @@ public class DestinationItem {
             "Jl. Jetayu No.3, Panjang Wetan, Kec. Pekalongan Utara, Kota Pekalongan, Jawa Tengah 51141",
             "4MRG+M27, Kandang Panjang, Kec. Pekalongan Utara, Kota Pekalongan, Jawa Tengah 51149"
     };
+    public static double[] destiLat = {
+            -6.890605027590413,
+            -6.878492166014722,
+            -6.878460211172696,
+            -6.858141957826265,
+    };
+    public static double[] destiLong = {
+            109.67643115647243,
+            109.67476847842183,
+            109.67545512393117,
+            109.67507811229183
+    };
+    public static String[] destiTitle = {
+            "Alun-alun Kota Pekalongan",
+            "Kawasan Budaya Jetayu",
+            "Museum Batik Pekalongan",
+            "Kawasan Wisata Taman Mangrove"
+    };
 }

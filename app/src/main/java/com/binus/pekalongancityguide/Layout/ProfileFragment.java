@@ -24,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ProfileFragment extends Fragment {
     Button logout;
-    FragmentProfileBinding binding;
+    private FragmentProfileBinding binding;
     private FirebaseAuth firebaseAuth;
     private static final String TAG = "PROFILE_TAG";
 
@@ -78,10 +78,8 @@ public class ProfileFragment extends Fragment {
                                         .placeholder(R.drawable.person)
                                         .centerCrop()
                                         .into(binding.profileImg);
-
                             }
                         }
-
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {

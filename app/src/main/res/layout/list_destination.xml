@@ -50,5 +50,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible" />
+        <TextView
+            android:id="@+id/loc_lat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
+        <TextView
+            android:id="@+id/loc_long"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
+        <TextView
+            android:id="@+id/loc_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

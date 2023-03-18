@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(new Intent(MainActivity.this,Home.class));
                             finish();
                         }else if(userType.equals("admin")){
-                            startActivity(new Intent(MainActivity.this, Home.class));
+                            startActivity(new Intent(MainActivity.this, AdminHome.class));
                             finish();
                         }
                     }

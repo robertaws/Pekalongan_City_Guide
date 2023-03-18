@@ -42,6 +42,11 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
         holder.destinameTV2.setText(item1.getDestiName2());
         holder.destiDescTV.setText(item1.getDestiDesc());
         holder.destiAddressTV.setText(item1.getDestiAddress());
+        double destiLat = item1.getDestiLat();
+        holder.destiLatTV.setText(String.valueOf(destiLat));
+        double destiLong = item1.getDestiLong();
+        holder.destiLatTV.setText(String.valueOf(destiLong));
+        holder.destiTitleTV.setText(item1.getDestiTitle());
         holder.layoutBg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,6 +55,9 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
                 intent.putExtra("nama",item.get(position).getDestiName());
                 intent.putExtra("detil",item.get(position).getDestiDesc());
                 intent.putExtra("alamat",item.get(position).getDestiAddress());
+                intent.putExtra("lat",item.get(position).getDestiLat());
+                intent.putExtra("long",item.get(position).getDestiLong());
+                intent.putExtra("judul",item.get(position).getDestiTitle());
                 v.getContext().startActivity(intent);
             }
         });
@@ -61,7 +69,7 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView destinameTV, destinameTV2, destiDescTV, destiAddressTV;
+        TextView destinameTV, destinameTV2, destiDescTV, destiAddressTV,destiLatTV,destiLongTV,destiTitleTV;
         RelativeLayout layoutBg;
 
         public ViewHolder(@NonNull View itemView) {
@@ -71,6 +79,9 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
             layoutBg = itemView.findViewById(R.id.layoutImage);
             destiDescTV = itemView.findViewById(R.id.loc_desc);
             destiAddressTV = itemView.findViewById(R.id.loc_address);
+            destiLatTV = itemView.findViewById(R.id.loc_lat);
+            destiLongTV = itemView.findViewById(R.id.loc_long);
+            destiTitleTV = itemView.findViewById(R.id.loc_title);
         }
     }
 }
