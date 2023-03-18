@@ -1,11 +1,13 @@
 package com.binus.pekalongancityguide;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +23,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.binus.pekalongancityguide.Layout.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -37,9 +41,12 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 
+
 public class EditProfile extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_IMAGE_PICK = 2;
+    private static final int CAMERA_PERMISSION_CODE = 3;
+    private static final int STORAGE_PERMISSION_CODE = 4;
     private ImageView mImageView;
     private EditText mUsernameEditText;
     private Button mSaveProfileButton;
@@ -47,6 +54,7 @@ public class EditProfile extends AppCompatActivity {
     private DatabaseReference mDatabaseRef;
     private StorageReference mStorageRef;
     private FirebaseAuth mAuth;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +68,23 @@ public class EditProfile extends AppCompatActivity {
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("users");
         mStorageRef = FirebaseStorage.getInstance().getReference("user_profile_images");
         mAuth = FirebaseAuth.getInstance();
+
+        // Initialize the progress dialog
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Uploading image");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+        // Check camera permission
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
+        }
+
+        // Check storage permission
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+        }
+
 
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,6 +150,15 @@ public class EditProfile extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Dismiss any open dialogs
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
     private void saveProfile() {
         String username = mUsernameEditText.getText().toString().trim();
         if (TextUtils.isEmpty(username)) {
@@ -135,7 +169,6 @@ public class EditProfile extends AppCompatActivity {
         final String userId = mAuth.getCurrentUser().getUid();
 
         if (mImageUri != null) {
-            final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading image...");
             progressDialog.show();
 
@@ -212,6 +245,21 @@ public class EditProfile extends AppCompatActivity {
                             Toast.makeText(EditProfile.this, "Failed to update profile", Toast.LENGTH_SHORT).show();
                         }
                     });
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Camera permission was granted, start camera intent
+                dispatchTakePictureIntent();
+            } else {
+                // Camera permission was denied, show a message to the user
+                Toast.makeText(this, "Camera permission is required to take photos", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
