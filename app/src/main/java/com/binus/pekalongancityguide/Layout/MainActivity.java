@@ -35,7 +35,6 @@ import com.google.firebase.database.ValueEventListener;
 import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int REQUEST_CAMERA_PERMISSION = 200;
     private ActivityMainBinding binding;
     Button login, noLogin;
     EditText email, pass;
@@ -63,18 +62,6 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference myRef = database.getReference("path/to/data");
 
         init();
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED) {
-            // Camera permission is granted
-            Log.d("PERMISSION", "GRANTED");
-        } else {
-            // Camera permission is not granted
-            Log.d("PERMISSION", "DENIED");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
-
-        }
-
 
         binding.noLogin.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, Home.class)));
         binding.loginBtn.setOnClickListener(v -> {
@@ -174,28 +161,4 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-
-    // Request the camera permission
-    private void requestCameraPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
-    }
-
-    // Check if the camera permission is granted
-    private boolean isCameraPermissionGranted() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    // Handle the permission request result
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted, do something
-            } else {
-                // Permission denied, show a message or something
-            }
-        }
-    }
-
 }
