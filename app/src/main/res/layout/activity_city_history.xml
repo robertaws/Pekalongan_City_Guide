@@ -92,9 +92,10 @@ On November 4, 1945, the movement attacked Indonesian army HQ and the regent off
                     android:layout_height="match_parent"
                     android:orientation="vertical">
                     <RelativeLayout
+                        android:layout_gravity="center"
                         android:layout_marginHorizontal="20dp"
                         android:layout_width="170dp"
-                        android:layout_height="150dp"
+                        android:layout_height="140dp"
                         android:background="@drawable/history1"
                         android:backgroundTint="@color/palette_4"
                         android:backgroundTintMode="multiply"/>
@@ -116,6 +117,7 @@ On November 4, 1945, the movement attacked Indonesian army HQ and the regent off
                 app:cardCornerRadius="16dp"
                 app:cardElevation="5dp">
                 <LinearLayout
+                    android:padding="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">

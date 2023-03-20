@@ -1,17 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_vertical"
-    tools:context=".Layout.AdminHome">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
+    <data>
+
+    </data>
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ADMIN HOME"
-        android:textSize="30dp"/>
+        android:layout_height="match_parent"
+        android:background="@drawable/background_batik"
+        android:backgroundTint="@color/palette_4"
+        android:backgroundTintMode="screen"
+        tools:context=".Layout.AdminHome">
 
-</LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="@color/palette_4">
+
+            <TextView
+                android:layout_marginTop="8dp"
+                android:id="@+id/dashboard"
+                android:textColor="@color/palette_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="Dashboard Admin"
+                android:textStyle="bold"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/admin_info"
+                android:textColor="@color/palette_1"
+                android:layout_below="@+id/dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="Admin Info"
+                android:textStyle="bold"
+                android:textSize="14dp" />
+
+            <ImageButton
+                android:id="@+id/logout_admin"
+                android:background="#0000"
+                android:layout_marginTop="5dp"
+                android:layout_alignParentEnd="true"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/logout" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
+            <Button
+                android:layout_marginHorizontal="10dp"
+                android:id="@+id/add_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add category" />
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+</layout>

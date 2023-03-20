@@ -2,6 +2,8 @@ package com.binus.pekalongancityguide.Layout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +22,12 @@ import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class HomeFragment extends Fragment {
     RecyclerView foodRV, recyclerView;
+
     RecyclerView.Adapter foodRVAdapter;
     RecyclerView.LayoutManager foodRVLayoutManager;
     ArrayList<Food> foodData;
@@ -64,7 +68,7 @@ public class HomeFragment extends Fragment {
         foodRVAdapter = new FoodAdapter(foodData);
         foodRV.setAdapter(foodRVAdapter);
 
-        recyclerView = view.findViewById(R.id.news_list);
+        recyclerView = view.findViewById(R.id.newsRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         return view;
