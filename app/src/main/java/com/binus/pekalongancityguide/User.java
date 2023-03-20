@@ -1,26 +1,36 @@
 package com.binus.pekalongancityguide;
 
 public class User {
-    private String userId;
+    private String uid;
+    private String email;
     private String username;
-    private String imageUrl;
+    private String profileImage; // new field
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String userId, String username, String imageUrl) {
-        this.userId = userId;
+    public User(String uid, String email, String username) {
+        this.uid = uid;
+        this.email = email;
         this.username = username;
-        this.imageUrl = imageUrl;
+        this.profileImage = ""; // initialize the profile image field to an empty string
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUid() {
+        return uid;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getUsername() {
@@ -31,11 +41,11 @@ public class User {
         this.username = username;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getProfileImage() { // new getter method
+        return profileImage;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setProfileImage(String profileImage) { // new setter method
+        this.profileImage = profileImage;
     }
 }
