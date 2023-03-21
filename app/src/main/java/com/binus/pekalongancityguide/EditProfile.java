@@ -1,12 +1,5 @@
 package com.binus.pekalongancityguide;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -16,14 +9,24 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.binus.pekalongancityguide.Layout.MyApplication;
-import com.binus.pekalongancityguide.Layout.ProfileFragment;
 import com.binus.pekalongancityguide.databinding.ActivityEditProfileBinding;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -75,7 +78,7 @@ public class EditProfile extends AppCompatActivity {
     private void validatedata() {
         name = binding.editName.getText().toString().trim();
         if(TextUtils.isEmpty(name)){
-            Toast.makeText(this, "Enter new name", Toast.LENGTH_SHORT).show();
+            showCustomToast("Enter new name");
         }else{
             if(imguri==null){
                 updateProfile("");
@@ -100,13 +103,13 @@ public class EditProfile extends AppCompatActivity {
                 .addOnSuccessListener(unused -> {
                     Log.d(TAG, "on Success: Profile updated");
                     progressDialog.dismiss();
-                    Toast.makeText(this, "Profile updated", Toast.LENGTH_SHORT).show();
+                    showCustomToast("Profile updated");
 
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "on Success: Failed to update db due to"+e.getMessage());
                     progressDialog.dismiss();
-                    Toast.makeText(this, "Failed to update db due to"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    showCustomToast("Failed to update db due to" + e.getMessage());
                 });
     }
 
@@ -135,7 +138,7 @@ public class EditProfile extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG, "on Failure: Failed to upload image due to"+e.getMessage());
                         progressDialog.dismiss();
-                        Toast.makeText(EditProfile.this, "on Failure: Failed to upload image due to"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        showCustomToast("on Failure: Failed to upload image due to" + e.getMessage());
                     }
                 });
     }
@@ -185,7 +188,7 @@ public class EditProfile extends AppCompatActivity {
                         Intent data = result.getData();
                         binding.editImage.setImageURI(imguri);
                     }else{
-                        Toast.makeText(EditProfile.this, "Cancelled", Toast.LENGTH_SHORT).show();
+                        showCustomToast("Cancelled");
                     }
                 }
             }
@@ -202,7 +205,7 @@ public class EditProfile extends AppCompatActivity {
                         Log.d(TAG,"onActivityResult: Picked from Gallery"+imguri);
                         binding.editImage.setImageURI(imguri);
                     }else{
-                        Toast.makeText(EditProfile.this, "Cancelled", Toast.LENGTH_SHORT).show();
+                        showCustomToast("Cancelled");
                     }
                 }
             }
@@ -229,6 +232,7 @@ public class EditProfile extends AppCompatActivity {
                                 .placeholder(R.drawable.person)
                                 .into(binding.editImage);
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
@@ -236,4 +240,22 @@ public class EditProfile extends AppCompatActivity {
                 });
 
     }
+
+    private void showCustomToast(String toastText) {
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.custom_toast,
+                (ViewGroup) findViewById(R.id.custom_toast));
+
+        // Set custom text
+        TextView text = layout.findViewById(R.id.toastText);
+        text.setText(toastText);
+
+        Toast toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.BOTTOM, 0, 50);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(layout);
+        toast.show();
+    }
+
+
 }
