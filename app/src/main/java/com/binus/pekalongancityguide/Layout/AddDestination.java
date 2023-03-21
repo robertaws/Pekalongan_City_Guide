@@ -1,21 +1,25 @@
 package com.binus.pekalongancityguide.Layout;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.binus.pekalongancityguide.ItemTemplate.Categories;
+import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityAddDestinationBinding;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -55,7 +59,12 @@ public class AddDestination extends AppCompatActivity {
         binding.backtoAdmin.setOnClickListener(v -> onBackPressed());
         binding.addPicture.setOnClickListener(v -> addPhoto());
         binding.categoryPick.setOnClickListener(v -> showCategoryDialog());
-        binding.addBtn.setOnClickListener(v -> validateData());
+        binding.addBtn.setOnClickListener(v -> {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
+            validateData();
+        });
+
     }
     private String title="",desc="",category="";
     private void validateData() {
@@ -187,10 +196,15 @@ public class AddDestination extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null){
-            Log.d(TAG,"onActivityResult : Image picked");
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Log.d(TAG, "onActivityResult : Image picked");
             imageUri = data.getData();
-            Log.d(TAG,"onActivityResult : URI : "+imageUri);
+            Log.d(TAG, "onActivityResult : URI : " + imageUri);
+            Glide.with(AddDestination.this)
+                    .load(imageUri)
+                    .placeholder(R.drawable.person)
+                    .centerCrop()
+                    .into(binding.addPicture);
         }
         else{
             Log.d(TAG,"onActivityResult : Cancelled pick image");

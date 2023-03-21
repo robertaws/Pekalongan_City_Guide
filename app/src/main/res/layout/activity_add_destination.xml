@@ -1,88 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
     </data>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/background_batik"
-        android:backgroundTint="@color/palette_4"
-        android:backgroundTintMode="screen"
-        android:orientation="vertical"
-        tools:context=".Layout.AddDestination">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <ImageButton
-        android:id="@+id/backtoAdmin"
-        android:contentDescription="Back to Admin Home"
-        android:layout_gravity="start"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="#0000"
-        android:src="@drawable/back_icon"/>
-    <ImageButton
-        android:id="@+id/add_picture"
-        android:contentDescription="Add destination picture"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="start"
-        android:layout_width="58dp"
-        android:layout_height="58dp"
-        android:background="#0000"
-        android:src="@drawable/insert_photo"/>
-</RelativeLayout>
+        android:layout_height="wrap_content"
+        android:id="@+id/addDesti">
 
-        <ImageView
-            android:layout_gravity="center"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@drawable/add_loc_icon" />
-
-        <EditText
-            android:id="@+id/title_et"
-            android:layout_marginTop="20dp"
-            android:padding="15dp"
-            android:background="@drawable/et_style"
-            android:layout_marginHorizontal="30dp"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Add New Destination" />
+            android:layout_height="match_parent"
+            android:background="@drawable/background_batik"
+            android:backgroundTint="@color/palette_4"
+            android:backgroundTintMode="screen"
+            android:orientation="vertical"
+            tools:context=".Layout.AddDestination">
 
-        <EditText
-            android:id="@+id/desc_et"
-            android:layout_marginTop="20dp"
-            android:padding="15dp"
-            android:background="@drawable/et_style"
-            android:layout_marginHorizontal="30dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Destination Description" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/category_pick"
-            android:drawablePadding="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/et_style"
-            android:hint="Pick Category"
-            android:drawableStart="@drawable/category"
-            android:padding="10dp"
-            android:layout_marginHorizontal="30dp"
-            android:drawableEnd="@drawable/dropdown_icon" />
+                <ImageButton
+                    android:id="@+id/backtoAdmin"
+                    android:contentDescription="Back to Admin Home"
+                    android:layout_gravity="start"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="#0000"
+                    android:src="@drawable/back_icon" />
 
-        <Button
-            android:id="@+id/add_btn"
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Add ITEM"
-            android:layout_marginHorizontal="30dp" />
+            </RelativeLayout>
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/add_picture"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:src="@drawable/insert_photo"
+                android:layout_marginHorizontal="40dp" />
+
+            <EditText
+                android:id="@+id/title_et"
+                android:layout_marginTop="20dp"
+                android:padding="15dp"
+                android:background="@drawable/et_style"
+                android:layout_marginHorizontal="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Add New Destination" />
+
+            <EditText
+                android:id="@+id/desc_et"
+                android:layout_marginTop="20dp"
+                android:padding="15dp"
+                android:background="@drawable/et_style"
+                android:layout_marginHorizontal="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Destination Description" />
+
+            <TextView
+                android:id="@+id/category_pick"
+                android:drawablePadding="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/et_style"
+                android:hint="Pick Category"
+                android:drawableStart="@drawable/category"
+                android:padding="10dp"
+                android:layout_marginHorizontal="30dp"
+                android:drawableEnd="@drawable/dropdown_icon"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                android:gravity="center" />
+
+            <Button
+                android:id="@+id/add_btn"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add ITEM"
+                android:layout_marginHorizontal="30dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
 </layout>

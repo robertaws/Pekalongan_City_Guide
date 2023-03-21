@@ -13,13 +13,15 @@
         android:background="@drawable/background_batik"
         android:backgroundTint="@color/palette_4"
         android:backgroundTintMode="screen"
-        tools:context=".Layout.AdminHome">
+        tools:context=".Layout.AdminHome"
+        android:id="@+id/adminHome">
 
         <RelativeLayout
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:background="@color/palette_4">
+
             <TextView
                 android:layout_marginTop="8dp"
                 android:id="@+id/dashboard"

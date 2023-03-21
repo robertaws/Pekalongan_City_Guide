@@ -14,13 +14,15 @@
         android:backgroundTint="@color/palette_4"
         android:backgroundTintMode="screen"
         android:orientation="vertical"
-        tools:context=".EditProfile">
+        tools:context=".EditProfile"
+        android:id="@+id/editProfile">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="40dp"
             android:orientation="horizontal">
+
             <ImageButton
                 android:id="@+id/backProfile"
                 android:layout_gravity="start"
@@ -65,7 +67,8 @@
             android:layout_height="wrap_content"
             android:text="Update"
             android:padding="15dp"
-            android:layout_marginHorizontal="40dp" />
+            android:layout_marginHorizontal="40dp"
+            android:textColor="@color/palette_4" />
 
     </LinearLayout>
 </layout>

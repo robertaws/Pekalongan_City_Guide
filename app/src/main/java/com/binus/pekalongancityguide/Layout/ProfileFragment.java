@@ -71,7 +71,7 @@ public class ProfileFragment extends Fragment {
                         binding.profileJoined.setText(formatDate);
                         binding.profileType.setText(type);
                         if (isAdded()) {
-                            String imageUrl = snapshot.child("photo_url").getValue(String.class);
+                            String imageUrl = snapshot.child("profileImage").getValue(String.class);
                             if (imageUrl != null) {
                                 Glide.with(ProfileFragment.this)
                                         .load(profile_img)

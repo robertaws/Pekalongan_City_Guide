@@ -3,18 +3,23 @@ package com.binus.pekalongancityguide;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,8 +76,36 @@ public class EditProfile extends AppCompatActivity {
             showImage();
         });
         binding.updateProfile.setOnClickListener(v -> {
+            // Hide keyboard
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
             validatedata();
         });
+
+        View activityRootView = findViewById(android.R.id.content);
+        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
+                if (heightDiff > dpToPx(200)) { // adjust this threshold as needed
+                    // keyboard is visible
+                    // put your code here that you want to run when the keyboard is shown
+                    // Hide keyboard when clicked outside of EditText
+                    findViewById(R.id.editProfile).setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                            return false;
+                        }
+                    });
+                } else {
+                    // keyboard is not visible
+                    // put your code here that you want to run when the keyboard is hidden
+                }
+            }
+        });
+
     }
 
     private void validatedata() {
@@ -183,10 +216,15 @@ public class EditProfile extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode()== Activity.RESULT_OK){
-                        Log.d(TAG,"onActivityResult: "+imguri);
+                    if(result.getResultCode()== Activity.RESULT_OK) {
+                        Log.d(TAG, "onActivityResult: " + imguri);
                         Intent data = result.getData();
                         binding.editImage.setImageURI(imguri);
+                        Glide.with(EditProfile.this)
+                                .load(imguri)
+                                .placeholder(R.drawable.person)
+                                .centerCrop()
+                                .into(binding.editImage);
                     }else{
                         showCustomToast("Cancelled");
                     }
@@ -198,12 +236,17 @@ public class EditProfile extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode()== Activity.RESULT_OK){
-                        Log.d(TAG,"onActivityResult: "+imguri);
+                    if(result.getResultCode()== Activity.RESULT_OK) {
+                        Log.d(TAG, "onActivityResult: " + imguri);
                         Intent data = result.getData();
                         imguri = data.getData();
-                        Log.d(TAG,"onActivityResult: Picked from Gallery"+imguri);
+                        Log.d(TAG, "onActivityResult: Picked from Gallery" + imguri);
                         binding.editImage.setImageURI(imguri);
+                        Glide.with(EditProfile.this)
+                                .load(imguri)
+                                .placeholder(R.drawable.person)
+                                .centerCrop()
+                                .into(binding.editImage);
                     }else{
                         showCustomToast("Cancelled");
                     }
@@ -227,10 +270,6 @@ public class EditProfile extends AppCompatActivity {
                         String type = ""+snapshot.child("userType").getValue();
 
                         binding.editName.setText(name);
-                        Glide.with(EditProfile.this)
-                                .load(profile_img)
-                                .placeholder(R.drawable.person)
-                                .into(binding.editImage);
                     }
 
                     @Override
@@ -257,5 +296,10 @@ public class EditProfile extends AppCompatActivity {
         toast.show();
     }
 
+    // utility method to convert dp to pixels
+    public int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
 
 }
