@@ -1,4 +1,4 @@
-package com.binus.pekalongancityguide;
+package com.binus.pekalongancityguide.Layout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,7 +32,7 @@ public class AddCategory extends AppCompatActivity {
         dialog = new ProgressDialog(this);
         dialog.setTitle("Please Wait");
         dialog.setCanceledOnTouchOutside(false);
-
+        binding.backAdmin.setOnClickListener(v -> onBackPressed());
         binding.submitBtn.setOnClickListener(v -> validateData());
     }
 
@@ -53,25 +53,19 @@ public class AddCategory extends AppCompatActivity {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("id",""+timestamp);
         hashMap.put("category",""+category);
-        hashMap.put("timestamp",""+timestamp);
+        hashMap.put("timestamp",timestamp);
         hashMap.put("uid",""+firebaseAuth.getUid());
 
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Categories");
         reference.child(""+timestamp)
                 .setValue(hashMap)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        dialog.dismiss();
-                        Toast.makeText(AddCategory.this, "Category Added Successfully!", Toast.LENGTH_SHORT).show();
-                    }
+                .addOnSuccessListener(unused -> {
+                    dialog.dismiss();
+                    Toast.makeText(AddCategory.this, "Category Added Successfully!", Toast.LENGTH_SHORT).show();
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        dialog.dismiss();
-                        Toast.makeText(AddCategory.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                .addOnFailureListener(e -> {
+                    dialog.dismiss();
+                    Toast.makeText(AddCategory.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 }

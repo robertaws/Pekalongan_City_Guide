@@ -50,7 +50,7 @@ public class Splash extends AppCompatActivity {
                                 startActivity(new Intent(Splash.this,Home.class));
                                 finish();
                             }else if(userType.equals("admin")){
-                                startActivity(new Intent(Splash.this,Home.class));
+                                startActivity(new Intent(Splash.this,AdminHome.class));
                                 finish();
                             }
                         }
