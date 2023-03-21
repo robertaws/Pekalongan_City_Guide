@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 
 import com.binus.pekalongancityguide.Adapter.CategoryAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Categories;
@@ -61,6 +60,7 @@ public class AdminHome extends AppCompatActivity {
             checkUser();
         });
         binding.addCategory.setOnClickListener(v -> startActivity(new Intent(AdminHome.this, AddCategory.class)));
+        binding.addLocFab.setOnClickListener(v -> startActivity(new Intent(AdminHome.this, AddDestination.class)));
     }
 
     private void showCategory() {
