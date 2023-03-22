@@ -14,7 +14,7 @@
         android:backgroundTint="@color/palette_4"
         android:backgroundTintMode="screen"
         android:orientation="vertical"
-        tools:context=".EditProfile"
+        tools:context=".Layout.EditProfile"
         android:id="@+id/editProfile">
 
         <LinearLayout

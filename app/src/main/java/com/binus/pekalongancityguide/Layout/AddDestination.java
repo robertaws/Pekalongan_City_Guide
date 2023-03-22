@@ -43,7 +43,7 @@ public class AddDestination extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private ProgressDialog progressDialog;
-    ArrayList<Categories> categoriesArrayList;
+    ArrayList<String> categoriesTitleArrayList, categoryIdArrayList;
     public static final String TAG = "ADD_IMAGE_TAG";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,17 +66,16 @@ public class AddDestination extends AppCompatActivity {
         });
 
     }
-    private String title="",desc="",category="";
+    private String title="",desc="";
     private void validateData() {
         Log.d(TAG,"validate data : validating data ");
         title = binding.titleEt.getText().toString().trim();
         desc = binding.descEt.getText().toString().trim();
-        category = binding.categoryPick.getText().toString().trim();
         if(TextUtils.isEmpty(title)){
             binding.titleEt.setError("Enter destination title!");
         }else if(TextUtils.isEmpty((desc))){
             binding.descEt.setError("Enter destination description!");
-        }else if(TextUtils.isEmpty(category)){
+        }else if(TextUtils.isEmpty(selectedCategoryTitle)){
             binding.categoryPick.setError("Pick a category!");
         }else if(imageUri==null){
             Toast.makeText(this, "Pick an image!", Toast.LENGTH_SHORT).show();
@@ -123,7 +122,7 @@ public class AddDestination extends AppCompatActivity {
         hashMap.put("id",""+timestamp);
         hashMap.put("title",""+title);
         hashMap.put("description",""+desc);
-        hashMap.put("category",""+category);
+        hashMap.put("categoryId",""+selectedCategoryId);
         hashMap.put("url",""+uploadedImageUrl);
         hashMap.put("timestamp",timestamp);
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
@@ -148,16 +147,19 @@ public class AddDestination extends AppCompatActivity {
 
     private void loadCategory(){
         Log.d(TAG,"load Category : load Category ");
-        categoriesArrayList = new ArrayList<>();
+        categoriesTitleArrayList = new ArrayList<>();
+        categoryIdArrayList = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Categories");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                categoriesArrayList.clear();
+                categoriesTitleArrayList.clear();
+                categoryIdArrayList.clear();
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    Categories categories = dataSnapshot.getValue(Categories.class);
-                    categoriesArrayList.add(categories);
-                    Log.d(TAG,"on Data Changed: "+categories.getCategory());
+                    String categoryId = ""+dataSnapshot.child("id").getValue();
+                    String categoryTitle = ""+dataSnapshot.child("category").getValue();
+                    categoriesTitleArrayList.add(categoryTitle);
+                    categoryIdArrayList.add(categoryId);
                 }
             }
 
@@ -167,20 +169,22 @@ public class AddDestination extends AppCompatActivity {
             }
         });
     }
+    private String selectedCategoryId,selectedCategoryTitle;
     private void showCategoryDialog(){
         Log.d(TAG,"Category dialog : showing dialog ");
-        String [] categoryArray = new String[categoriesArrayList.size()];
-        for(int i=0;i<categoriesArrayList.size();i++){
-            categoryArray[i] = categoriesArrayList.get(i).getCategory();
+        String [] categoryArray = new String[categoriesTitleArrayList.size()];
+        for(int i=0;i<categoriesTitleArrayList.size();i++){
+            categoryArray[i] = categoriesTitleArrayList.get(i);
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Pick Category")
                 .setItems(categoryArray, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String category = categoryArray[which];
-                        binding.categoryPick.setText(category);
-                        Log.d(TAG,"on Click : Selected Category :"+category);
+                        selectedCategoryTitle = categoriesTitleArrayList.get(which);
+                        selectedCategoryId = categoryIdArrayList.get(which);
+                        binding.categoryPick.setText(selectedCategoryTitle);
+                        Log.d(TAG,"on Click : Selected Category :"+selectedCategoryId+" "+selectedCategoryTitle);
                     }
                 })
                 .show();

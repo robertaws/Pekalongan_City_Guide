@@ -54,10 +54,10 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.setTitle("Please Wait");
         progressDialog.setCanceledOnTouchOutside(false);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
         FirebaseApp.initializeApp(this);
 
-        FirebaseDatabase.getInstance().getReference().keepSynced(true);
+        FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().keepSynced(true);
 
         DatabaseReference myRef = database.getReference("path/to/data");
 

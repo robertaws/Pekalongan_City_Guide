@@ -1,4 +1,4 @@
-package com.binus.pekalongancityguide;
+package com.binus.pekalongancityguide.Layout;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -31,7 +31,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.binus.pekalongancityguide.Layout.MyApplication;
+import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityEditProfileBinding;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -205,7 +205,6 @@ public class EditProfile extends AppCompatActivity {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imguri);
         cameraResultActivityLauncher.launch(intent);
     }
-
     private void pickImageGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");

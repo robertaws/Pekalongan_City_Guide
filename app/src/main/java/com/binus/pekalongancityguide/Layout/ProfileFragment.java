@@ -11,7 +11,6 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.binus.pekalongancityguide.EditProfile;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.FragmentProfileBinding;
 import com.bumptech.glide.Glide;
@@ -44,7 +43,6 @@ public class ProfileFragment extends Fragment {
         });
         binding.logoutBtn.setOnClickListener(v -> {
             startActivity(new Intent(getActivity(),MainActivity.class));
-            getActivity().finish();
         });
 
         return view;
@@ -75,7 +73,6 @@ public class ProfileFragment extends Fragment {
                             if (imageUrl != null) {
                                 Glide.with(ProfileFragment.this)
                                         .load(profile_img)
-                                        .placeholder(R.drawable.person)
                                         .centerCrop()
                                         .into(binding.profileImg);
                             }

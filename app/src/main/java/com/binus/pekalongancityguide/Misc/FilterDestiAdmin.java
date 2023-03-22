@@ -1,20 +1,22 @@
-package com.binus.pekalongancityguide;
+package com.binus.pekalongancityguide.Misc;
 
 import android.widget.Filter;
 
+import com.binus.pekalongancityguide.Adapter.AdminDestinationAdapter;
 import com.binus.pekalongancityguide.Adapter.CategoryAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Categories;
+import com.binus.pekalongancityguide.ItemTemplate.DestinationAdmin;
 
 import java.util.ArrayList;
 
-public class FilterCategory extends Filter {
-    ArrayList<Categories> filter;
+public class FilterDestiAdmin extends Filter {
+    ArrayList<DestinationAdmin> filter;
     private
-    CategoryAdapter categoryAdapter;
+    AdminDestinationAdapter adminDestinationAdapter;
 
-    public FilterCategory(ArrayList<Categories> filter, CategoryAdapter categoryAdapter) {
+    public FilterDestiAdmin(ArrayList<DestinationAdmin> filter, AdminDestinationAdapter adminDestinationAdapter) {
         this.filter = filter;
-        this.categoryAdapter = categoryAdapter;
+        this.adminDestinationAdapter = adminDestinationAdapter;
     }
 
     @Override
@@ -22,9 +24,9 @@ public class FilterCategory extends Filter {
         FilterResults results = new FilterResults();
         if(constraint!=null && constraint.length()>0){
             constraint = constraint.toString().toUpperCase();
-            ArrayList<Categories> filtered = new ArrayList<>();
+            ArrayList<DestinationAdmin> filtered = new ArrayList<>();
             for(int i=0;i<filter.size();i++){
-                if(filter.get(i).getCategory().toUpperCase().contains(constraint)){
+                if(filter.get(i).getTitle().toUpperCase().contains(constraint)){
                     filtered.add(filter.get(i));
                 }
             }
@@ -39,7 +41,7 @@ public class FilterCategory extends Filter {
 
     @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
-        categoryAdapter.categoriesArrayList = (ArrayList<Categories>)results.values;
-        categoryAdapter.notifyDataSetChanged();
+        adminDestinationAdapter.destinationAdminArrayList = (ArrayList<DestinationAdmin>)results.values;
+        adminDestinationAdapter.notifyDataSetChanged();
     }
 }
