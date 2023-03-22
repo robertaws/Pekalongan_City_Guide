@@ -16,13 +16,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.binus.pekalongancityguide.ItemTemplate.Categories;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityAddDestinationBinding;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +36,8 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
+
 public class AddDestination extends AppCompatActivity {
     private ActivityAddDestinationBinding binding;
     private FirebaseAuth firebaseAuth;
@@ -48,6 +50,7 @@ public class AddDestination extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Places.initialize(getApplicationContext(), MAPS_API_KEY);
         binding = ActivityAddDestinationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         firebaseAuth = FirebaseAuth.getInstance();
@@ -79,13 +82,37 @@ public class AddDestination extends AppCompatActivity {
             binding.categoryPick.setError("Pick a category!");
         }else if(imageUri==null){
             Toast.makeText(this, "Pick an image!", Toast.LENGTH_SHORT).show();
-        }else{
-            uploadtoStorage();
+        }else {
+            uploadtoStorage(null);
+            // Get location ID from title and address
+//            PlacesClient placesClient = Places.createClient(this);
+//            List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS);
+//            AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
+//            FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+//                    .setTypeFilter(TypeFilter.ESTABLISHMENT)
+//                    .setSessionToken(token)
+//                    .setQuery(title)
+//                    .build();
+//            Task<FindAutocompletePredictionsResponse> task = placesClient.findAutocompletePredictions(request);
+//            task.addOnSuccessListener(response -> {
+//                if (!response.getAutocompletePredictions().isEmpty()) {
+//                    // Get the place ID from the first prediction
+//                    String placeId = response.getAutocompletePredictions().get(0).getPlaceId();
+//                    Log.d(TAG, "Place ID: " + placeId);
+//                    uploadtoStorage(placeId);
+//                } else {
+//                    Toast.makeText(this, "No location found for the given title", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//            task.addOnFailureListener(e -> {
+//                Log.e(TAG, "Error getting place ID: " + e.getMessage());
+//                Toast.makeText(this, "Error getting location from title: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//            });
         }
     }
 
-    private void uploadtoStorage() {
-        Log.d(TAG,"uploadtoStorage : uploading to storage");
+    private void uploadtoStorage(String placeId) {
+        Log.d(TAG, "uploadtoStorage : uploading to storage");
         progressDialog.setMessage("Uploading image");
         progressDialog.show();
         long timestamp = System.currentTimeMillis();
@@ -100,47 +127,48 @@ public class AddDestination extends AppCompatActivity {
                         Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                         while (!uriTask.isSuccessful());
                         String uploadedImageUrl = ""+uriTask.getResult();
-                        uploadtoDB(uploadedImageUrl,timestamp);
+                        uploadtoDB(uploadedImageUrl, timestamp, placeId);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
-                        Log.d(TAG,"on Failure : Image upload failed due to "+e.getMessage());
-                        Toast.makeText(AddDestination.this, "Image upload failed due to "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "on Failure : Image upload failed due to " + e.getMessage());
+                        Toast.makeText(AddDestination.this, "Image upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
     }
-    private void uploadtoDB(String uploadedImageUrl, long timestamp){
-        Log.d(TAG,"uploadtoDB : uploading image to firebase DB");
+
+    private void uploadtoDB(String uploadedImageUrl, long timestamp, String placeId) {
+        Log.d(TAG, "uploadtoDB : uploading image to firebase DB");
         progressDialog.setMessage("Uploading image info");
         String uid = firebaseAuth.getUid();
-        HashMap<String,Object> hashMap = new HashMap<>();
-        hashMap.put("uid",""+uid);
-        hashMap.put("id",""+timestamp);
-        hashMap.put("title",""+title);
-        hashMap.put("description",""+desc);
-        hashMap.put("categoryId",""+selectedCategoryId);
-        hashMap.put("url",""+uploadedImageUrl);
-        hashMap.put("timestamp",timestamp);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("uid", "" + uid);
+        hashMap.put("id", "" + timestamp);
+        hashMap.put("title", "" + title);
+        hashMap.put("description", "" + desc);
+        hashMap.put("categoryId", "" + selectedCategoryId);
+        hashMap.put("url", "" + uploadedImageUrl);
+        hashMap.put("timestamp", timestamp);
+        hashMap.put("placeId", placeId);
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
         reference.child(""+timestamp)
                 .setValue(hashMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(Void unused) {
+                    public void onSuccess(Void aVoid) {
                         progressDialog.dismiss();
-                        Log.d(TAG,"on success : Image succesfully uploaded to db");
+                        Toast.makeText(getApplicationContext(), "Image uploaded successfully", Toast.LENGTH_LONG).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
-                        Log.d(TAG,"on Failure : failed to upload to db due to"+e.getMessage());
-                        Toast.makeText(AddDestination.this, "failed to upload to db due to"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }

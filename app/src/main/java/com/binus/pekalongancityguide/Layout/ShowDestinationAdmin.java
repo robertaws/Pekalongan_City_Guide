@@ -1,19 +1,17 @@
 package com.binus.pekalongancityguide.Layout;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.View;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.binus.pekalongancityguide.Adapter.AdminDestinationAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.DestinationAdmin;
-import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityShowDestinationAdminBinding;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,7 +25,8 @@ public class ShowDestinationAdmin extends AppCompatActivity {
     private ActivityShowDestinationAdminBinding binding;
     private ArrayList<DestinationAdmin> destinationAdminArrayList;
     private AdminDestinationAdapter adapter;
-    private String categoryId,categoryTitle;
+    private String categoryId, categoryTitle;
+    private TextView rating;
     private static final String TAG = "DESTI_LIST_TAG";
 
 
@@ -38,7 +37,7 @@ public class ShowDestinationAdmin extends AppCompatActivity {
         setContentView(binding.getRoot());
         Intent intent = getIntent();
         categoryId = intent.getStringExtra("categoryId");
-        categoryTitle =intent.getStringExtra("categoryTitle");
+        categoryTitle = intent.getStringExtra("categoryTitle");
         binding.subtitleTv.setText(categoryTitle);
 
         loadDestination();

@@ -19,20 +19,21 @@
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:background="@color/white"
-            android:backgroundTint="@color/palette_4"
             android:backgroundTintMode="multiply">
+
             <TextView
-                android:padding="5dp"
-                android:background="@drawable/et_style"
-                android:id="@+id/adminloc_cat"
+                android:id="@+id/adminloc_rat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="20dp"
-                android:text="Category"
-                android:textStyle="italic"
-                android:textColor="@color/palette_2"
-                android:textSize="16dp" />
+                android:background="#80000000"
+                android:drawableEnd="@drawable/star"
+                android:gravity="center_horizontal"
+                android:padding="10dp"
+                android:text="4.5"
+                android:textColor="@color/palette_4"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
             <ImageButton
                 android:id="@+id/option_btn"
                 android:layout_margin="10dp"
@@ -40,21 +41,27 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:src="@drawable/more_button"
-                android:background="#0000"/>
+                android:background="#0000" />
+
             <TextView
                 android:id="@+id/adminloc_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="invisible" />
+
             <TextView
                 android:id="@+id/adminloc_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
                 android:text="TESTA LAGUSA"
-                android:layout_margin="10dp"
-                android:textSize="20dp"
-                android:layout_alignParentBottom="true"/>
+                android:textColor="@color/white"
+                android:textSize="24dp"
+                android:textStyle="bold" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </layout>
