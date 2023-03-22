@@ -76,7 +76,7 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
         holder.description.setText(description);
         loadCategory(destinationAdmin,holder);
         loadImage(destinationAdmin,holder);
-        holder.options.setOnClickListener(new View.OnClickListener() {
+        holder.options.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 showOptionsDialog(destinationAdmin,holder);
@@ -97,6 +97,7 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
                         if(which==0){
                             Intent intent = new Intent(context, EditDestination.class);
                             intent.putExtra("destiId",destiId);
+                            context.startActivity(intent);
                         }else{
                             deleteDesti(destinationAdmin,holder);
                         }
