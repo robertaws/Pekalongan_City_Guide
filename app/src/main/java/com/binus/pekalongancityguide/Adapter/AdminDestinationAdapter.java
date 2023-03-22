@@ -71,8 +71,6 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
         holder.title.setText(title);
         holder.description.setText(description);
         holder.rating.setText("4.5");
-//        holder.rating.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-//        loadCategory(destinationAdmin,holder);
         loadImage(destinationAdmin, holder);
         holder.options.setOnClickListener(new View.OnClickListener() {
             @Override

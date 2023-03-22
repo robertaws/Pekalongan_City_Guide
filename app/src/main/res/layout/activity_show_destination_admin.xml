@@ -23,7 +23,7 @@
                 android:id="@+id/backCategory"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="#00"
+                android:background="#0000"
                 android:src="@drawable/back_icon" />
 
             <TextView
