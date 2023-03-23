@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityAddDestinationBinding;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -26,6 +27,8 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -77,31 +80,25 @@ public class AddDestination extends AppCompatActivity {
         });
 
     }
-    private String title="",desc="",address="",desLat="",desLong="";
+
+    private String title = "", desc = "", address = "";
+    private Double latitude, longitude;
+
     private void validateData() {
-        Log.d(TAG,"validate data : validating data ");
+        Log.d(TAG, "validate data : validating data ");
         title = binding.titleEt.getText().toString().trim();
         desc = binding.descEt.getText().toString().trim();
-        address = binding.addressEt.getText().toString().trim();
-        desLat = binding.latEt.getText().toString().trim();
-        desLong = binding.longEt.getText().toString().trim();
-        if(TextUtils.isEmpty(title)){
+        if (TextUtils.isEmpty(title)) {
             binding.titleEt.setError("Enter destination title!");
-        }else if(TextUtils.isEmpty((desc))){
+        } else if (TextUtils.isEmpty((desc))) {
             binding.descEt.setError("Enter destination description!");
-        }else if(TextUtils.isEmpty((address))){
-            binding.descEt.setError("Enter destination Address!");
-        }else if(TextUtils.isEmpty((desLat))){
-            binding.descEt.setError("Enter destination Latitude!");
-        }else if(TextUtils.isEmpty((desLong))){
-            binding.descEt.setError("Enter destination Longitude!");
-        }else if(TextUtils.isEmpty(selectedCategoryTitle)){
+        } else if (TextUtils.isEmpty(selectedCategoryTitle)) {
             binding.categoryPick.setError("Pick a category!");
         }else if(imageUri==null){
             Toast.makeText(this, "Pick an image!", Toast.LENGTH_SHORT).show();
         }else {
             PlacesClient placesClient = Places.createClient(this);
-            List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS);
+            List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
             AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
             FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
                     .setTypeFilter(TypeFilter.ESTABLISHMENT)
@@ -114,8 +111,28 @@ public class AddDestination extends AppCompatActivity {
                     // Get the place ID from the first prediction
                     String placeId = response.getAutocompletePredictions().get(0).getPlaceId();
                     Log.d(TAG, "Place ID: " + placeId);
-                    // Call a method to upload the data to the database
-                    uploadtoStorage(placeId);
+
+                    // Fetch the details of the place using the place ID
+                    FetchPlaceRequest placeRequest = FetchPlaceRequest.builder(placeId, placeFields).build();
+                    placesClient.fetchPlace(placeRequest).addOnCompleteListener(new OnCompleteListener<FetchPlaceResponse>() {
+                        @Override
+                        public void onComplete(@NonNull Task<FetchPlaceResponse> task) {
+                            if (task.isSuccessful()) {
+                                Place place = task.getResult().getPlace();
+                                String address = place.getAddress();
+                                double latitude = place.getLatLng().latitude;
+                                double longitude = place.getLatLng().longitude;
+                                Log.d(TAG, "Address: " + address);
+                                Log.d(TAG, "Latitude: " + latitude);
+                                Log.d(TAG, "Longitude: " + longitude);
+
+                                // Call a method to upload the data to the database
+                                uploadtoStorage(placeId, address, latitude, longitude);
+                            } else {
+                                Toast.makeText(AddDestination.this, "Error getting location details: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 } else {
                     Toast.makeText(this, "No location found for the given title", Toast.LENGTH_SHORT).show();
                 }
@@ -128,7 +145,7 @@ public class AddDestination extends AppCompatActivity {
         }
     }
 
-    private void uploadtoStorage(String placeId) {
+    private void uploadtoStorage(String placeId, String address, double lat, double lng) {
         Log.d(TAG, "uploadtoStorage : uploading to storage");
         progressDialog.setMessage("Uploading image");
         progressDialog.show();
@@ -144,7 +161,7 @@ public class AddDestination extends AppCompatActivity {
                         Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                         while (!uriTask.isSuccessful());
                         String uploadedImageUrl = ""+uriTask.getResult();
-                        uploadtoDB(uploadedImageUrl, timestamp, placeId);
+                        uploadtoDB(uploadedImageUrl, timestamp, placeId, address, lat, lng);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -158,7 +175,7 @@ public class AddDestination extends AppCompatActivity {
 
     }
 
-    private void uploadtoDB(String uploadedImageUrl, long timestamp, String placeId) {
+    private void uploadtoDB(String uploadedImageUrl, long timestamp, String placeId, String address, double desLat, double desLong) {
         Log.d(TAG, "uploadtoDB : uploading image to firebase DB");
         progressDialog.setMessage("Uploading image info");
         String uid = firebaseAuth.getUid();
@@ -188,7 +205,17 @@ public class AddDestination extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
-                        Toast.makeText(getApplicationContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "on Failure : " + e.getMessage());
+                        Toast.makeText(AddDestination.this, "Data upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "uploadtoDB : Place ID successfully added to database");
+                            getPlaceDetails(placeId);
+                        }
                     }
                 });
     }
@@ -256,10 +283,25 @@ public class AddDestination extends AppCompatActivity {
                     .placeholder(R.drawable.person)
                     .centerCrop()
                     .into(binding.addPicture);
-        }
-        else{
-            Log.d(TAG,"onActivityResult : Cancelled pick image");
+        } else {
+            Log.d(TAG, "onActivityResult : Cancelled pick image");
             Toast.makeText(this, "Cancelled pick image", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void getPlaceDetails(String placeId) {
+        Log.d(TAG, "getPlaceDetails : getting place details");
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS);
+        FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, placeFields).build();
+        PlacesClient placesClient = Places.createClient(this);
+        placesClient.fetchPlace(request)
+                .addOnSuccessListener((response) -> {
+                    Place place = response.getPlace();
+                    Log.d(TAG, "Place details: " + place.getName() + ", " + place.getAddress() + ", " + place.getLatLng());
+                })
+                .addOnFailureListener((exception) -> {
+                    Log.e(TAG, "Place not found: " + exception.getMessage());
+                });
+    }
+
 }

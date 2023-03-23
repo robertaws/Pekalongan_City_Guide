@@ -63,33 +63,33 @@
                 android:layout_height="wrap_content"
                 android:hint="Destination Description" />
 
-            <EditText
-                android:id="@+id/address_et"
-                android:layout_marginTop="20dp"
-                android:padding="15dp"
-                android:background="@drawable/et_style"
-                android:layout_marginHorizontal="30dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Destination Address" />
-            <EditText
-                android:id="@+id/lat_et"
-                android:layout_marginTop="20dp"
-                android:padding="15dp"
-                android:background="@drawable/et_style"
-                android:layout_marginHorizontal="30dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Destination Lattitude" />
-            <EditText
-                android:id="@+id/long_et"
-                android:layout_marginTop="20dp"
-                android:padding="15dp"
-                android:background="@drawable/et_style"
-                android:layout_marginHorizontal="30dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Destination Longitude" />
+            <!--            <EditText-->
+            <!--                android:id="@+id/address_et"-->
+            <!--                android:layout_marginTop="20dp"-->
+            <!--                android:padding="15dp"-->
+            <!--                android:background="@drawable/et_style"-->
+            <!--                android:layout_marginHorizontal="30dp"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:hint="Destination Address" />-->
+            <!--            <EditText-->
+            <!--                android:id="@+id/lat_et"-->
+            <!--                android:layout_marginTop="20dp"-->
+            <!--                android:padding="15dp"-->
+            <!--                android:background="@drawable/et_style"-->
+            <!--                android:layout_marginHorizontal="30dp"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:hint="Destination Lattitude" />-->
+            <!--            <EditText-->
+            <!--                android:id="@+id/long_et"-->
+            <!--                android:layout_marginTop="20dp"-->
+            <!--                android:padding="15dp"-->
+            <!--                android:background="@drawable/et_style"-->
+            <!--                android:layout_marginHorizontal="30dp"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:hint="Destination Longitude" />-->
             <TextView
                 android:id="@+id/category_pick"
                 android:drawablePadding="10dp"
