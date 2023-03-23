@@ -23,9 +23,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.binus.pekalongancityguide.ItemTemplate.DestinationAdmin;
 import com.binus.pekalongancityguide.Layout.DestinationDetailAdmin;
 import com.binus.pekalongancityguide.Layout.EditDestination;
-import com.binus.pekalongancityguide.ItemTemplate.DestinationAdmin;
 import com.binus.pekalongancityguide.Misc.FilterDestiAdmin;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.databinding.ListDestiAdminBinding;
@@ -71,7 +71,6 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
 
         DestinationAdmin destinationAdmin = destinationAdminArrayList.get(position);
         String destiId = destinationAdmin.getId();
-        String categoryId = destinationAdmin.getCategoryId();
         String imageUrl = destinationAdmin.getUrl();
         String title = destinationAdmin.getTitle();
         String rating = destinationAdmin.getRating();
