@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityAddDestinationBinding;
@@ -126,7 +127,6 @@ public class AddDestination extends AppCompatActivity {
                                 Log.d(TAG, "Latitude: " + latitude);
                                 Log.d(TAG, "Longitude: " + longitude);
                                 Log.d(TAG, "Rating: " + rating);
-
                                 uploadtoStorage(placeId, address, latitude, longitude,rating);
                             } else {
                                 Toast.makeText(AddDestination.this, "Error getting location details: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -141,7 +141,6 @@ public class AddDestination extends AppCompatActivity {
                 Log.e(TAG, "Error getting place ID: " + e.getMessage());
                 Toast.makeText(this, "Error getting location from title: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             });
-
         }
     }
 
@@ -216,6 +215,7 @@ public class AddDestination extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "uploadtoDB : Place ID successfully added to database");
                             getPlaceDetails(placeId);
+                            onBackPressed();
                         }
                     }
                 });

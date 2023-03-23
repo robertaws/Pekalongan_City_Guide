@@ -1,10 +1,13 @@
 package com.binus.pekalongancityguide.Layout;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.binus.pekalongancityguide.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.sagarkoli.chetanbottomnavigation.chetanBottomNavigation;
 
 public class Home extends AppCompatActivity {
@@ -18,17 +21,16 @@ public class Home extends AppCompatActivity {
     private static final int bm = 3;
     private static final int convo = 4;
     private static final int pr = 5;
+    private FirebaseAuth firebaseAuth;
     chetanBottomNavigation bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        checkUser();
         bottomNavigationView = findViewById(R.id.bottom_navi);
-
         getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
-
-
         bottomNavigationView.add(new chetanBottomNavigation.Model(home, R.drawable.ic_home));
         bottomNavigationView.add(new chetanBottomNavigation.Model(desti, R.drawable.destination));
         bottomNavigationView.add(new chetanBottomNavigation.Model(bm, R.drawable.bookmark));
@@ -82,5 +84,13 @@ public class Home extends AppCompatActivity {
         });
 
         bottomNavigationView.show(home, true);
+    }
+
+    private void checkUser(){
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        if(firebaseUser==null){
+            startActivity(new Intent(Home.this,MainActivity.class));
+            finish();
+        }
     }
 }

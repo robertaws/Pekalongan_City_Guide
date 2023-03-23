@@ -16,6 +16,7 @@ import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.FragmentProfileBinding;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,10 +44,19 @@ public class ProfileFragment extends Fragment {
             startActivity(new Intent(getActivity(), EditProfile.class));
         });
         binding.logoutBtn.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(),MainActivity.class));
+            firebaseAuth.signOut();
+            checkUser();
         });
 
         return view;
+    }
+
+    private void checkUser(){
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        if(firebaseUser==null){
+            startActivity(new Intent(getActivity(),MainActivity.class));
+            getActivity().finish();
+        }
     }
 
     private void getInfo(){

@@ -82,7 +82,6 @@ public class ShowDestinationAdmin extends AppCompatActivity {
                         adapter = new AdminDestinationAdapter(ShowDestinationAdmin.this,destinationAdminArrayList);
                         binding.destiAdminrv.setAdapter(adapter);
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 

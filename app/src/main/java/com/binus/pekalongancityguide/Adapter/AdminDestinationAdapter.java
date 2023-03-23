@@ -31,6 +31,11 @@ import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.databinding.ListDestiAdminBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -76,9 +81,21 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
         String title = destinationAdmin.getTitle();
         String rating = destinationAdmin.getRating();
         String description = destinationAdmin.getDescription();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination")
+                .child(destiId);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String desRating = ""+dataSnapshot.child("rating").getValue();
+                holder.rating.setText(desRating);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: " + databaseError.getMessage());
+            }
+        });
         holder.title.setText(title);
         holder.description.setText(description);
-        holder.rating.setText(rating);
         loadImage(destinationAdmin, holder);
         holder.options.setOnClickListener(new View.OnClickListener() {
             @Override

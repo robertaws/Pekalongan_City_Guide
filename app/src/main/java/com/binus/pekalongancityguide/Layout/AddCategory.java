@@ -33,7 +33,10 @@ public class AddCategory extends AppCompatActivity {
         dialog.setTitle("Please Wait");
         dialog.setCanceledOnTouchOutside(false);
         binding.backAdmin.setOnClickListener(v -> onBackPressed());
-        binding.submitBtn.setOnClickListener(v -> validateData());
+        binding.submitBtn.setOnClickListener(v -> {
+            validateData();
+            onBackPressed();
+        });
     }
 
     private String category = "";

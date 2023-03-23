@@ -11,12 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
 import com.binus.pekalongancityguide.ItemList.DestinationItem;
+import com.binus.pekalongancityguide.ItemTemplate.Categories;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
 public class DestinationFragment extends Fragment {
+    public ArrayList<Categories> categoriesArrayList;
     RecyclerView destiRV;
     RecyclerView.Adapter destiRVAdapter;
     RecyclerView.LayoutManager destiRVLayoutManager;
@@ -26,26 +29,6 @@ public class DestinationFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_destination, container, false);
         destiRV = view.findViewById(R.id.desti_rv);
-
-        destiRVLayoutManager = new LinearLayoutManager(getContext());
-        destiRV.setLayoutManager(destiRVLayoutManager);
-
-        destiData = new ArrayList<>();
-        for (int i = 0; i < DestinationItem.destiimage.length; i++) {
-            destiData.add(new Destination(
-                    DestinationItem.destiimage[i],
-                    DestinationItem.destiLat[i],
-                    DestinationItem.destiLong[i],
-                    DestinationItem.destiname[i],
-                    DestinationItem.destiname2[i],
-                    DestinationItem.destidesc[i],
-                    DestinationItem.destiaddress[i],
-                    DestinationItem.destiTitle[i]
-            ));
-        }
-
-        destiRVAdapter = new DestinationAdapter(destiData);
-        destiRV.setAdapter(destiRVAdapter);
         return view;
     }
 }

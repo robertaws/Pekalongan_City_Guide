@@ -1,31 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Layout.DestinationFragment"
-    android:layout_marginTop="5dp"
-    android:background="@color/bg">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <data>
+
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        tools:context=".Layout.DestinationFragment"
+        android:layout_marginTop="5dp"
+        android:background="@color/bg">
 
-        <SearchView
-            android:id="@+id/search_desti"
-            android:alpha="0.75"
-            android:background="@color/palette_3"
-            android:layout_margin="10dp"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"
+            tools:context=".Layout.ShowDestinationAdmin">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/desti_rv"
-            android:layout_width="match_parent"
-            tools:listitem="@layout/list_destination"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+            <EditText
+                android:layout_marginTop="10dp"
+                android:id="@+id/search_desti"
+                android:drawableStart="@drawable/search_icon"
+                android:drawablePadding="5dp"
+                android:padding="5dp"
+                android:background="@drawable/et_style"
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search Destination" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="15dp"
+                android:id="@+id/desti_rv"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:layout_below="@id/search_desti"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/list_destination"/>
+        </RelativeLayout>
 
-</FrameLayout>
+    </FrameLayout>
+</layout>
