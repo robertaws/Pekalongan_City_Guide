@@ -52,10 +52,8 @@ public class DestinationDetailAdmin extends AppCompatActivity {
                         String address = ""+snapshot.child("address").getValue();
                         String categoryId = ""+snapshot.child("categoryId").getValue();
                         String url = ""+snapshot.child("url").getValue();
-                        String desLat = ""+snapshot.child("latitude").getValue();
-                        String desLong = ""+snapshot.child("longitude").getValue();
-                        double latitude = Double.parseDouble(desLat);
-                        double longitude = Double.parseDouble(desLong);
+                        double latitude = Double.parseDouble(snapshot.child("latitude").getValue().toString());
+                        double longitude = Double.parseDouble(snapshot.child("longitude").getValue().toString());
                         binding.destiAdminName.setText(title);
                         binding.destiAdminDesc.setText(description);
                         binding.destiAdminAddress.setText(address);
@@ -66,7 +64,7 @@ public class DestinationDetailAdmin extends AppCompatActivity {
                             binding.destiAdminImage.setBackground(drawable);
                         }
                         SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager()
-                                .findFragmentById(R.id.admin_map    );
+                                .findFragmentById(R.id.admin_map);
                         fragment.getMapAsync(googleMap ->{
                             LatLng coordinate = new LatLng(latitude, longitude);
                             MarkerOptions marker = new MarkerOptions();

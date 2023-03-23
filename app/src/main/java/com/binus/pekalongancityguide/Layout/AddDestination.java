@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Rating;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -98,7 +99,7 @@ public class AddDestination extends AppCompatActivity {
             Toast.makeText(this, "Pick an image!", Toast.LENGTH_SHORT).show();
         }else {
             PlacesClient placesClient = Places.createClient(this);
-            List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
+            List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.RATING);
             AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
             FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
                     .setTypeFilter(TypeFilter.ESTABLISHMENT)
@@ -108,11 +109,9 @@ public class AddDestination extends AppCompatActivity {
             Task<FindAutocompletePredictionsResponse> task = placesClient.findAutocompletePredictions(request);
             task.addOnSuccessListener(response -> {
                 if (!response.getAutocompletePredictions().isEmpty()) {
-                    // Get the place ID from the first prediction
                     String placeId = response.getAutocompletePredictions().get(0).getPlaceId();
                     Log.d(TAG, "Place ID: " + placeId);
 
-                    // Fetch the details of the place using the place ID
                     FetchPlaceRequest placeRequest = FetchPlaceRequest.builder(placeId, placeFields).build();
                     placesClient.fetchPlace(placeRequest).addOnCompleteListener(new OnCompleteListener<FetchPlaceResponse>() {
                         @Override
@@ -122,12 +121,13 @@ public class AddDestination extends AppCompatActivity {
                                 String address = place.getAddress();
                                 double latitude = place.getLatLng().latitude;
                                 double longitude = place.getLatLng().longitude;
+                                double rating = place.getRating();
                                 Log.d(TAG, "Address: " + address);
                                 Log.d(TAG, "Latitude: " + latitude);
                                 Log.d(TAG, "Longitude: " + longitude);
+                                Log.d(TAG, "Rating: " + rating);
 
-                                // Call a method to upload the data to the database
-                                uploadtoStorage(placeId, address, latitude, longitude);
+                                uploadtoStorage(placeId, address, latitude, longitude,rating);
                             } else {
                                 Toast.makeText(AddDestination.this, "Error getting location details: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
@@ -145,7 +145,7 @@ public class AddDestination extends AppCompatActivity {
         }
     }
 
-    private void uploadtoStorage(String placeId, String address, double lat, double lng) {
+    private void uploadtoStorage(String placeId, String address, double lat, double lng,double rating) {
         Log.d(TAG, "uploadtoStorage : uploading to storage");
         progressDialog.setMessage("Uploading image");
         progressDialog.show();
@@ -161,7 +161,7 @@ public class AddDestination extends AppCompatActivity {
                         Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                         while (!uriTask.isSuccessful());
                         String uploadedImageUrl = ""+uriTask.getResult();
-                        uploadtoDB(uploadedImageUrl, timestamp, placeId, address, lat, lng);
+                        uploadtoDB(uploadedImageUrl, timestamp, placeId, address, lat, lng,rating);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -175,7 +175,7 @@ public class AddDestination extends AppCompatActivity {
 
     }
 
-    private void uploadtoDB(String uploadedImageUrl, long timestamp, String placeId, String address, double desLat, double desLong) {
+    private void uploadtoDB(String uploadedImageUrl, long timestamp, String placeId, String address, double desLat, double desLong, double rating) {
         Log.d(TAG, "uploadtoDB : uploading image to firebase DB");
         progressDialog.setMessage("Uploading image info");
         String uid = firebaseAuth.getUid();
@@ -187,6 +187,7 @@ public class AddDestination extends AppCompatActivity {
         hashMap.put("address", "" + address);
         hashMap.put("latitude", "" + desLat);
         hashMap.put("longitude","" + desLong);
+        hashMap.put("rating","" + rating);
         hashMap.put("categoryId", "" + selectedCategoryId);
         hashMap.put("url", "" + uploadedImageUrl);
         hashMap.put("timestamp", timestamp);

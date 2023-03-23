@@ -74,16 +74,11 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
         String categoryId = destinationAdmin.getCategoryId();
         String imageUrl = destinationAdmin.getUrl();
         String title = destinationAdmin.getTitle();
+        String rating = destinationAdmin.getRating();
         String description = destinationAdmin.getDescription();
-        String address = destinationAdmin.getAddress();
-        String latitude = destinationAdmin.getLatitude();
-        String longitude = destinationAdmin.getLongitude();
         holder.title.setText(title);
         holder.description.setText(description);
-        holder.rating.setText("4.5");
-        holder.address.setText(address);
-        holder.latitude.setText(String.valueOf(latitude));
-        holder.longitude.setText(String.valueOf(longitude));
+        holder.rating.setText(rating);
         loadImage(destinationAdmin, holder);
         holder.options.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,26 +145,6 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
                 .show();
     }
 
-
-
-//    private void loadCategory(DestinationAdmin destinationAdmin, HolderAdminDestination holder) {
-//        String categoryId = destinationAdmin.getCategoryId();
-//        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
-//        reference.child(categoryId)
-//                .addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        String categorytext = ""+snapshot.child("category").getValue();
-//                        holder.category.setText(categorytext);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-//    }
-
     public void loadImage(DestinationAdmin destinationAdmin, HolderAdminDestination holder){
         String imageUrl = destinationAdmin.getUrl();
         StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
@@ -208,7 +183,7 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
 
     public class HolderAdminDestination extends RecyclerView.ViewHolder {
         RelativeLayout layoutImage;
-        TextView title, description, address, latitude, longitude, rating;
+        TextView title, description, rating;
         ImageButton options;
 
         public HolderAdminDestination(@NonNull View itemView) {
@@ -216,9 +191,6 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
             layoutImage = binding.adminlayoutImage;
             title = binding.adminlocTitle;
             description = binding.adminlocDesc;
-            address = binding.adminlocAddress;
-            latitude = binding.adminlocLat;
-            longitude = binding.adminlocLong;
             rating = binding.adminlocRat;
             options = binding.optionBtn;
         }
