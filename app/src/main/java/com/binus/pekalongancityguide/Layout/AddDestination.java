@@ -23,6 +23,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,7 +40,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
 
@@ -83,31 +91,31 @@ public class AddDestination extends AppCompatActivity {
         }else if(imageUri==null){
             Toast.makeText(this, "Pick an image!", Toast.LENGTH_SHORT).show();
         }else {
-            uploadtoStorage(null);
-            // Get location ID from title and address
-//            PlacesClient placesClient = Places.createClient(this);
-//            List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS);
-//            AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
-//            FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
-//                    .setTypeFilter(TypeFilter.ESTABLISHMENT)
-//                    .setSessionToken(token)
-//                    .setQuery(title)
-//                    .build();
-//            Task<FindAutocompletePredictionsResponse> task = placesClient.findAutocompletePredictions(request);
-//            task.addOnSuccessListener(response -> {
-//                if (!response.getAutocompletePredictions().isEmpty()) {
-//                    // Get the place ID from the first prediction
-//                    String placeId = response.getAutocompletePredictions().get(0).getPlaceId();
-//                    Log.d(TAG, "Place ID: " + placeId);
-//                    uploadtoStorage(placeId);
-//                } else {
-//                    Toast.makeText(this, "No location found for the given title", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//            task.addOnFailureListener(e -> {
-//                Log.e(TAG, "Error getting place ID: " + e.getMessage());
-//                Toast.makeText(this, "Error getting location from title: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//            });
+            PlacesClient placesClient = Places.createClient(this);
+            List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS);
+            AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
+            FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+                    .setTypeFilter(TypeFilter.ESTABLISHMENT)
+                    .setSessionToken(token)
+                    .setQuery(title)
+                    .build();
+            Task<FindAutocompletePredictionsResponse> task = placesClient.findAutocompletePredictions(request);
+            task.addOnSuccessListener(response -> {
+                if (!response.getAutocompletePredictions().isEmpty()) {
+                    // Get the place ID from the first prediction
+                    String placeId = response.getAutocompletePredictions().get(0).getPlaceId();
+                    Log.d(TAG, "Place ID: " + placeId);
+                    // Call a method to upload the data to the database
+                    uploadtoStorage(placeId);
+                } else {
+                    Toast.makeText(this, "No location found for the given title", Toast.LENGTH_SHORT).show();
+                }
+            });
+            task.addOnFailureListener(e -> {
+                Log.e(TAG, "Error getting place ID: " + e.getMessage());
+                Toast.makeText(this, "Error getting location from title: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
+
         }
     }
 
