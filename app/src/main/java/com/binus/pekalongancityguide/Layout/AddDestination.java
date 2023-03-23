@@ -78,6 +78,7 @@ public class AddDestination extends AppCompatActivity {
 
     }
     private String title="",desc="";
+
     private void validateData() {
         Log.d(TAG,"validate data : validating data ");
         title = binding.titleEt.getText().toString().trim();
