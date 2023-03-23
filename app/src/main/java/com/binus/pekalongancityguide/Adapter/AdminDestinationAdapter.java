@@ -122,7 +122,6 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
                     }
                 })
                 .show();
-
     }
 
 

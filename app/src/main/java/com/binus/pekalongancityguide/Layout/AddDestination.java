@@ -199,7 +199,6 @@ public class AddDestination extends AppCompatActivity {
                     categoryIdArrayList.add(categoryId);
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
