@@ -1,6 +1,8 @@
 package com.binus.pekalongancityguide.ItemTemplate;
 
-public class DestinationAdmin {
+import java.io.Serializable;
+
+public class DestinationAdmin implements Serializable{
     String uid,id,title,description,categoryId,url;
 
 

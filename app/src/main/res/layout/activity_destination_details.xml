@@ -42,7 +42,6 @@
             android:layout_margin="8dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="5dp">
-
             <ImageView
                 android:id="@+id/ddimg"
                 android:layout_width="match_parent"

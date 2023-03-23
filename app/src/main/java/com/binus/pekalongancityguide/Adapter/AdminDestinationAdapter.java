@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,22 +19,22 @@ import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.binus.pekalongancityguide.EditDestination;
+import com.binus.pekalongancityguide.Layout.DestinationDetailAdmin;
+import com.binus.pekalongancityguide.Layout.EditDestination;
 import com.binus.pekalongancityguide.ItemTemplate.DestinationAdmin;
 import com.binus.pekalongancityguide.Misc.FilterDestiAdmin;
+import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.databinding.ListDestiAdminBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 import static com.binus.pekalongancityguide.Misc.Constants.MAX_BYTES_IMAGE;
@@ -66,6 +67,9 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
     public void onBindViewHolder(@NonNull HolderAdminDestination holder, int position) {
 
         DestinationAdmin destinationAdmin = destinationAdminArrayList.get(position);
+        String destiId = destinationAdmin.getId();
+        String categoryId = destinationAdmin.getCategoryId();
+        String imageUrl = destinationAdmin.getUrl();
         String title = destinationAdmin.getTitle();
         String description = destinationAdmin.getDescription();
         holder.title.setText(title);
@@ -80,9 +84,22 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
                 showOptionsDialog(destinationAdmin, holder);
             }
         });
+        holder.itemView.setOnClickListener(v -> {
+            Drawable drawable = holder.layoutImage.getBackground();
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            Bitmap bitmap = bitmapDrawable.getBitmap();
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
+            byte[] byteArray = stream.toByteArray();
+
+            Intent intent = new Intent(context, DestinationDetailAdmin.class);
+            intent.putExtra("destiId",destiId);
+            intent.putExtra("image", byteArray);
+            context.startActivity(intent);
+        });
     }
 
-    private void showOptionsDialog(DestinationAdmin destinationAdmin, HolderAdminDestination holder) {
+    private void showOptionsDialog(DestinationAdmin destinationAdmin, HolderAdminDestination holder){
         String destiId = destinationAdmin.getId();
         String destiUrl = destinationAdmin.getUrl();
         String destiTitle = destinationAdmin.getTitle();
@@ -97,7 +114,12 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
                             intent.putExtra("destiId",destiId);
                             context.startActivity(intent);
                         }else{
-                            deleteDesti(destinationAdmin,holder);
+                            MyApplication.deleteDesti(
+                                    context,
+                                    ""+destiId,
+                                    ""+destiUrl,
+                                    ""+destiTitle
+                            );
                         }
                     }
                 })
@@ -105,51 +127,7 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
 
     }
 
-    private void deleteDesti(DestinationAdmin destinationAdmin, HolderAdminDestination holder) {
-        String destiId = destinationAdmin.getId();
-        String destiUrl = destinationAdmin.getUrl();
-        String destiTitle = destinationAdmin.getTitle();
-        Log.d(TAG,"delete desti : Deleting..");
-        dialog.setMessage("Deleting "+destiTitle+". . .");
-        dialog.show();
-        Log.d(TAG,"delete desti : Deleting from storage");
-        StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(destiUrl);
-        reference.delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
 
-                        Log.d(TAG,"onSuccess : Succesfully deleted data");
-                        DatabaseReference reference1 = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
-                        reference1.child(destiId)
-                                .removeValue()
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-                                        Log.d(TAG,"onSuccess: data deleted from db");
-                                        dialog.dismiss();
-                                        Toast.makeText(context, "Destination Deleted Succesfully !", Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.d(TAG,"onFAilure: error deleting data because of"+e.getMessage());
-                                        dialog.dismiss();
-                                        Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "onFailure: fail detele data due to" + e.getMessage());
-                        dialog.dismiss();
-                    }
-                });
-
-    }
 
 //    private void loadCategory(DestinationAdmin destinationAdmin, HolderAdminDestination holder) {
 //        String categoryId = destinationAdmin.getCategoryId();
@@ -169,7 +147,7 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
 //                });
 //    }
 
-    private void loadImage(DestinationAdmin destinationAdmin, HolderAdminDestination holder) {
+    public void loadImage(DestinationAdmin destinationAdmin, HolderAdminDestination holder){
         String imageUrl = destinationAdmin.getUrl();
         StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
         reference.getBytes(MAX_BYTES_IMAGE)
@@ -181,7 +159,6 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
                         BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), bitmap);
                         drawable.setGravity(Gravity.FILL);
                         holder.layoutImage.setBackground(drawable);
-
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -206,7 +183,7 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
         return filterDestiAdmin;
     }
 
-    class HolderAdminDestination extends RecyclerView.ViewHolder {
+    public class HolderAdminDestination extends RecyclerView.ViewHolder {
         RelativeLayout layoutImage;
         TextView title, description, rating;
         ImageButton options;
