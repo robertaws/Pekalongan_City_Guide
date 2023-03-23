@@ -7,12 +7,18 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityDestinationDetailAdminBinding;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,14 +49,33 @@ public class DestinationDetailAdmin extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String title = ""+snapshot.child("title").getValue();
                         String description = ""+snapshot.child("description").getValue();
+                        String address = ""+snapshot.child("address").getValue();
                         String categoryId = ""+snapshot.child("categoryId").getValue();
                         String url = ""+snapshot.child("url").getValue();
+                        String desLat = ""+snapshot.child("latitude").getValue();
+                        String desLong = ""+snapshot.child("longitude").getValue();
+                        double latitude = Double.parseDouble(desLat);
+                        double longitude = Double.parseDouble(desLong);
                         binding.destiAdminName.setText(title);
                         binding.destiAdminDesc.setText(description);
-                        byte[] byteArray = getIntent().getByteArrayExtra("image");
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-                        BitmapDrawable drawable = new BitmapDrawable(getResources(), bitmap);
-                        binding.destiAdminImage.setBackground(drawable);
+                        binding.destiAdminAddress.setText(address);
+                        String filePath = getIntent().getStringExtra("imageFilePath");
+                        if (filePath != null) {
+                            Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+                            Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+                            binding.destiAdminImage.setBackground(drawable);
+                        }
+                        SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager()
+                                .findFragmentById(R.id.admin_map    );
+                        fragment.getMapAsync(googleMap ->{
+                            LatLng coordinate = new LatLng(latitude, longitude);
+                            MarkerOptions marker = new MarkerOptions();
+                            marker = marker.position(coordinate);
+                            marker = marker.title(title);
+                            googleMap.addMarker(marker);
+                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 15);
+                            googleMap.moveCamera(cameraUpdate);
+                        });
                     }
 
                     @Override

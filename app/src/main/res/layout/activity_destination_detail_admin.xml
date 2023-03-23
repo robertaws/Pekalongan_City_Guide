@@ -126,14 +126,18 @@
                             android:layout_marginTop="5dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
-                        <!--            <fragment-->
-                        <!--                android:layout_marginTop="20dp"-->
-                        <!--                android:layout_marginBottom="20dp"-->
-                        <!--                android:layout_width="match_parent"-->
-                        <!--                android:layout_height="200dp"-->
-                        <!--                android:id="@+id/map"-->
-                        <!--                android:name="com.google.android.gms.maps.SupportMapFragment">-->
-                        <!--            </fragment>-->
+                                    <fragment
+                                        android:layout_marginTop="20dp"
+                                        android:layout_marginBottom="20dp"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="200dp"
+                                        android:id="@+id/admin_map"
+                                        android:name="com.google.android.gms.maps.SupportMapFragment">
+                                    </fragment>
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_marginTop="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
                         <Button
                             android:id="@+id/save_btn"
                             android:layout_width="match_parent"

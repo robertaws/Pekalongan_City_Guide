@@ -3,20 +3,20 @@ package com.binus.pekalongancityguide.ItemTemplate;
 import java.io.Serializable;
 
 public class DestinationAdmin implements Serializable{
-    String uid,id,title,description,categoryId,url;
-
-
+    String uid,id,title,description,categoryId,url,address,latitude,longitude;
     public DestinationAdmin(){
 
     }
-
-    public DestinationAdmin(String uid, String id, String title, String description, String categoryId, String url) {
+    public DestinationAdmin(String uid, String id, String title, String description, String categoryId, String url, String address, String latitude, String longitude) {
         this.uid = uid;
         this.id = id;
         this.title = title;
         this.description = description;
         this.categoryId = categoryId;
         this.url = url;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getUid() {
@@ -65,5 +65,29 @@ public class DestinationAdmin implements Serializable{
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 }

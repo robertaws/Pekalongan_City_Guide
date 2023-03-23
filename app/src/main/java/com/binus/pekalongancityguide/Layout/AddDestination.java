@@ -77,16 +77,24 @@ public class AddDestination extends AppCompatActivity {
         });
 
     }
-    private String title="",desc="";
-
+    private String title="",desc="",address="",desLat="",desLong="";
     private void validateData() {
         Log.d(TAG,"validate data : validating data ");
         title = binding.titleEt.getText().toString().trim();
         desc = binding.descEt.getText().toString().trim();
+        address = binding.addressEt.getText().toString().trim();
+        desLat = binding.latEt.getText().toString().trim();
+        desLong = binding.longEt.getText().toString().trim();
         if(TextUtils.isEmpty(title)){
             binding.titleEt.setError("Enter destination title!");
         }else if(TextUtils.isEmpty((desc))){
             binding.descEt.setError("Enter destination description!");
+        }else if(TextUtils.isEmpty((address))){
+            binding.descEt.setError("Enter destination Address!");
+        }else if(TextUtils.isEmpty((desLat))){
+            binding.descEt.setError("Enter destination Latitude!");
+        }else if(TextUtils.isEmpty((desLong))){
+            binding.descEt.setError("Enter destination Longitude!");
         }else if(TextUtils.isEmpty(selectedCategoryTitle)){
             binding.categoryPick.setError("Pick a category!");
         }else if(imageUri==null){
@@ -159,6 +167,9 @@ public class AddDestination extends AppCompatActivity {
         hashMap.put("id", "" + timestamp);
         hashMap.put("title", "" + title);
         hashMap.put("description", "" + desc);
+        hashMap.put("address", "" + address);
+        hashMap.put("latitude", "" + desLat);
+        hashMap.put("longitude","" + desLong);
         hashMap.put("categoryId", "" + selectedCategoryId);
         hashMap.put("url", "" + uploadedImageUrl);
         hashMap.put("timestamp", timestamp);

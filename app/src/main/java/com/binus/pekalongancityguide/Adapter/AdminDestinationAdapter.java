@@ -35,6 +35,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static com.binus.pekalongancityguide.Misc.Constants.MAX_BYTES_IMAGE;
@@ -72,9 +75,15 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
         String imageUrl = destinationAdmin.getUrl();
         String title = destinationAdmin.getTitle();
         String description = destinationAdmin.getDescription();
+        String address = destinationAdmin.getAddress();
+        String latitude = destinationAdmin.getLatitude();
+        String longitude = destinationAdmin.getLongitude();
         holder.title.setText(title);
         holder.description.setText(description);
         holder.rating.setText("4.5");
+        holder.address.setText(address);
+        holder.latitude.setText(String.valueOf(latitude));
+        holder.longitude.setText(String.valueOf(longitude));
         loadImage(destinationAdmin, holder);
         holder.options.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,12 +96,29 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
             BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
             Bitmap bitmap = bitmapDrawable.getBitmap();
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 25, stream);
             byte[] byteArray = stream.toByteArray();
 
+            String filePath = context.getFilesDir().getPath() + "/image.png";
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(filePath);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                fos.write(byteArray);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                fos.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             Intent intent = new Intent(context, DestinationDetailAdmin.class);
             intent.putExtra("destiId",destiId);
-            intent.putExtra("image", byteArray);
+            intent.putExtra("imageFilePath", filePath);
             context.startActivity(intent);
         });
     }
@@ -182,7 +208,7 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
 
     public class HolderAdminDestination extends RecyclerView.ViewHolder {
         RelativeLayout layoutImage;
-        TextView title, description, rating;
+        TextView title, description, address, latitude, longitude, rating;
         ImageButton options;
 
         public HolderAdminDestination(@NonNull View itemView) {
@@ -190,6 +216,9 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
             layoutImage = binding.adminlayoutImage;
             title = binding.adminlocTitle;
             description = binding.adminlocDesc;
+            address = binding.adminlocAddress;
+            latitude = binding.adminlocLat;
+            longitude = binding.adminlocLong;
             rating = binding.adminlocRat;
             options = binding.optionBtn;
         }

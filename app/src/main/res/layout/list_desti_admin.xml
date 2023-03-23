@@ -62,6 +62,21 @@
                 android:textColor="@color/white"
                 android:textSize="24dp"
                 android:textStyle="bold" />
+            <TextView
+                android:id="@+id/adminloc_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible" />
+            <TextView
+                android:id="@+id/adminloc_lat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible" />
+            <TextView
+                android:id="@+id/adminloc_long"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"/>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </layout>
