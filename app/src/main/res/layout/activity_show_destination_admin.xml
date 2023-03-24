@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".Layout.ShowDestinationAdmin">
+
+        <RelativeLayout
+            android:id="@+id/toolbar"
+            android:gravity="center_vertical"
+            android:background="@color/palette_4"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize">
+
+            <ImageButton
+                android:id="@+id/backCategory"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="#0000"
+                android:src="@drawable/back_icon" />
+
+            <TextView
+                android:id="@+id/title_tv"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_height="wrap_content"
+                android:text="Destination"
+                android:textStyle="bold"
+                android:textColor="@color/palette_1" />
+
+            <TextView
+                android:id="@+id/subtitle_tv"
+                android:layout_below="@id/title_tv"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Category"
+                android:textColor="@color/palette_1" />
+        </RelativeLayout>
+
+        <EditText
+            android:layout_marginTop="5dp"
+            android:id="@+id/search_destiadmin"
+            android:drawableStart="@drawable/search_icon"
+            android:drawablePadding="5dp"
+            android:padding="5dp"
+            android:background="@color/bg"
+            android:layout_marginHorizontal="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar"
+            android:hint="Search Destination" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="5dp"
+            android:id="@+id/desti_adminrv"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_below="@id/search_destiadmin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/list_desti_admin" />
+    </RelativeLayout>
+</layout>

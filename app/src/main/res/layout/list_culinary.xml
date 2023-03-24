@@ -14,7 +14,6 @@
         android:background="@drawable/food1"
         android:backgroundTint="@color/palette_4"
         android:backgroundTintMode="multiply">
-
         <TextView
             android:id="@+id/food_name"
             android:layout_width="wrap_content"
@@ -38,6 +37,37 @@
             android:textColor="@color/white"
             android:textSize="24dp"
             android:textStyle="bold" />
+        <TextView
+            android:visibility="invisible"
+            android:id="@+id/food_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginBottom="12dp"
+            android:text="Nasi Padang"
+            android:textColor="@color/alfa"
+            android:textSize="24dp"
+            android:textStyle="bold"/>
+        <ImageView
+            android:id="@+id/foodimage_1"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/food1"/>
+        <ImageView
+            android:id="@+id/foodimage_2"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/food1"/>
+        <ImageView
+            android:id="@+id/foodimage_3"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/food1"/>
+
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

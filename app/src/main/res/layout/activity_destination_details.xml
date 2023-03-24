@@ -1,100 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/palette_4"
-    tools:context=".DestinationDetails">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
         android:orientation="vertical"
-        android:padding="5dp">
+        android:background="@color/palette_4"
+        tools:context=".Layout.DestinationDetails">
 
-        <TextView
-            android:layout_marginStart="5dp"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Destination Details"
-            android:textSize="20dp"
-            android:textColor="@color/palette_1"
-            android:textStyle="bold" />
+            android:orientation="horizontal">
 
-        <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_margin="8dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="5dp">
+            <ImageButton
+                android:id="@+id/backDesti"
+                android:layout_gravity="start"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="#0000"
+                android:src="@drawable/back_icon" />
 
-            <ImageView
-                android:id="@+id/ddimg"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/desti4" />
+                android:gravity="center"
+                android:text="Destination Details"
+                android:textColor="@color/palette_1"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="5dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            app:cardBackgroundColor="@color/palette_3"
-            app:cardCornerRadius="6dp"
-            app:cardElevation="5dp"
-            app:contentPaddingBottom="10dp"
-            app:contentPaddingLeft="20dp"
-            app:contentPaddingRight="20dp"
-            app:contentPaddingTop="10dp">
+            android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <TextView
-                    android:textSize="18dp"
-                    android:id="@+id/ddname"
+                <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="230dp"
+                    android:layout_margin="10dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="5dp">
+
+                    <ImageView
+                        android:id="@+id/desti_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Destination Name"
-                    android:textColor="@color/palette_1"
-                    android:textStyle="bold" />
+                    android:layout_margin="10dp"
+                    app:cardBackgroundColor="@color/palette_3"
+                    app:cardCornerRadius="6dp"
+                    app:cardElevation="5dp"
+                    app:contentPaddingBottom="10dp"
+                    app:contentPaddingLeft="20dp"
+                    app:contentPaddingRight="20dp"
+                    app:contentPaddingTop="10dp">
 
-                <Button
-                    android:id="@+id/save_btn"
-                    android:drawableTint="@color/palette_4"
-                    android:drawableLeft="@drawable/bookmark"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/palette_4"
-                    android:textAlignment="center"
-                    android:layout_marginTop="5dp"
-                    android:text="Save Item" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
-                <TextView
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/ddadd"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Destination Address"
-                    android:justificationMode="inter_word"
-                    android:textColor="@color/palette_1" />
+                        <TextView
+                            android:textSize="18dp"
+                            android:id="@+id/desti_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Destination Name"
+                            android:textColor="@color/palette_1"
+                            android:textStyle="bold" />
 
-                <TextView
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/dddesc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:justificationMode="inter_word"
-                    android:text="Destination Description"
-                    android:textColor="@color/palette_1" />
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_marginTop="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
 
+                        <TextView
+                            android:layout_marginTop="10dp"
+                            android:id="@+id/desti_desc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:justificationMode="inter_word"
+                            android:text="Destination Description"
+                            android:textColor="@color/palette_1" />
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_marginTop="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
+
+                        <TextView
+                            android:textStyle="bold"
+                            android:id="@+id/desti_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:justificationMode="inter_word"
+                            android:text="Destination Address"
+                            android:textColor="@color/palette_1" />
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_marginTop="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
+
+                        <fragment
+                            android:layout_marginTop="20dp"
+                            android:layout_marginBottom="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:id="@+id/map"
+                            android:name="com.google.android.gms.maps.SupportMapFragment"></fragment>
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_marginTop="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
+
+                        <Button
+                            android:id="@+id/save_item"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:drawableLeft="@drawable/bookmark"
+                            android:drawableTint="@color/palette_4"
+                            android:text="Save Item"
+                            android:textAlignment="center"
+                            android:textColor="@color/palette_4" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </ScrollView>
 
     </LinearLayout>
-</ScrollView>
+</layout>

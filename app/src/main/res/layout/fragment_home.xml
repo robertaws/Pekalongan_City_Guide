@@ -3,8 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg"
-    tools:context=".HomeFragment">
+    android:background="@drawable/background_batik"
+    android:backgroundTint="@color/palette_4"
+    android:backgroundTintMode="screen"
+    tools:context=".Layout.HomeFragment">
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -18,7 +20,7 @@
             android:layout_height="100dp"
             android:src="@drawable/logo"/>
         <TextView
-            android:background="@color/palette_1"
+            android:background="@color/palette_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
@@ -60,17 +62,47 @@
             android:textSize="24dp"
             android:layout_marginLeft="10dp"
             android:textColor="@color/palette_1"/>
-        <TextView
-            android:background="@color/palette_1"
+        <androidx.cardview.widget.CardView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:padding="10dp"
-            android:justificationMode="inter_word"
-            android:text="Pekalongan is a city of Central Java, Indonesia. It was formerly the seat of Pekalongan Regency on the northern coast of the province, but is now an independent municipality within the province. The city is Central Java's most important port, and is known for its batik.\n\n\nRead More ->"
-            android:textColor="@color/white"
-            android:textSize="16dp"
-            android:textStyle="bold"/>
+            android:layout_margin="15dp"
+            app:cardElevation="20dp"
+            app:cardCornerRadius="15dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/palette_1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:paddingHorizontal="5dp"
+                    android:justificationMode="inter_word"
+                    android:text="The coastal area around Pekalongan was part of the ancient Holing (Kalingga) kingdom. The 7th century Sojomerto inscription, discovered in neighboring Batang Regency, Central Java, is linked with Kalingga as well as the ancestor of the Sailendras."
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:includeFontPadding="false"
+                    android:gravity="center_vertical"
+                    android:drawableRight="@drawable/read_more"
+                    android:textAllCaps="false"
+                    android:id="@+id/city_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:drawablePadding="5dp"
+                    android:text="Read more"
+                    android:textStyle="bold"
+                    android:textSize="18dp"
+                    android:textColor="@color/palette_4"/>
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -83,9 +115,7 @@
             android:id="@+id/food_rv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:listitem="@layout/list_culinary">
-
-        </androidx.recyclerview.widget.RecyclerView>
+            tools:listitem="@layout/list_culinary"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,24 +124,12 @@
             android:textSize="24dp"
             android:layout_marginLeft="10dp"
             android:textColor="@color/palette_1"/>
-        <ImageView
-            android:src="@drawable/test"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/newsRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/palette_2"
-            android:layout_margin="10dp"/>
-        <ImageView
-            android:src="@drawable/test"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/palette_2"
-            android:layout_margin="10dp"/>
-        <ImageView
-            android:src="@drawable/test"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/palette_2"
-            android:layout_margin="10dp"/>
+            android:layout_height="match_parent"
+            tools:listitem="@layout/news_item"
+            android:padding="16dp"/>
     </LinearLayout>
 </ScrollView>
 

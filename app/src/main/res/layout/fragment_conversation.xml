@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tran"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context=".ConversationFragment"
+    android:layout_height="match_parent"
+    tools:context=".Layout.ConversationFragment"
     android:background="@color/bg">
 
     <!-- TODO: Update blank fragment layout -->
@@ -12,11 +11,13 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:orientation="vertical">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -30,7 +31,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/convo_rv"
-                tools:listitem="@layout/list_convo" />
+                tools:listitem="@layout/list_convo"
+                android:layout_weight="1" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -39,14 +41,16 @@
                 android:textSize="24dp"
                 android:textStyle="bold"
                 android:layout_marginTop="20dp"
-                android:textColor="@color/palette_1"/>
+                android:textColor="@color/palette_1"
+                android:nestedScrollingEnabled="false" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/phrases_rv"
                 android:layout_marginBottom="20dp"
-                tools:listitem="@layout/list_phrases"/>
+                tools:listitem="@layout/list_phrases"
+                android:layout_weight="1" />
 
         </LinearLayout>
 

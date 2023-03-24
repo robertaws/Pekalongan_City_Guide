@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_batik"
+    android:backgroundTint="@color/palette_4"
+    android:backgroundTintMode="screen"
+    tools:context=".Layout.CityHistory">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/backHome2"
+            android:layout_gravity="start"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="#0000"
+            android:src="@drawable/back_icon" />
+        <TextView
+            android:layout_marginStart="-20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Pekalongan City History"
+            android:textColor="@color/palette_1"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:justificationMode="inter_word"
+        android:text="\t\t\t\t\tThe coastal area around Pekalongan was part of the ancient Holing (Kalingga) kingdom. The 7th century Sojomerto inscription, discovered in neighboring Batang Regency, Central Java, is linked with Kalingga as well as the ancestor of the Sailendras. The exact location of the Kalingga capital is unclear however, that it was suggested lies somewhere between Pekalongan and Jepara. However it is most likely that Kalingga was located in Pekalongan instead of Jepara, since there is similarity of names between Kalingga and Pekalongan. The name probably slightly shifted over centuries, from Kalingga, Kaling, Kalong, and later added with pe- -an circumfix forming 'Pekalongan'.\n\n\t\t\t\t\tThe history of Pekalongan dated back to the early 12th century. A book written in 1178 by a Song dynasty official already had record of Pekalongan, then known to Chinese merchants as 'Pukalong', it was then a seaport of Java (then known as Dvapa); the king of Java lived at Pukalong, knotted his hair at the back of his head, while his people wore short hair and wrapped their body with colorfully weaved cloth. Chinese merchant ship set sail from Canton during November, with the aid of fair wind sailed nonstop day and night, arrived at Pukalong in about one month. The people made wine from coconuts, produced very delicious red and white cane sugar, the kingdom made coins out of bronze and copper, 60 copper coins exchanged for one tael of gold. Local produces included pepper, clove, sandalwood, eaglewood and white round cardamom.\n\n\t\t\t\t\tPekalongan became a part of the empire of the Sultanate of Mataram through treaty and marriage alliances by the early 17th century. The area was on the geographic periphery of the empire, which was based in interior central Java. However, it was a wealthy area, and by the end of the 17th century, the substantial money and produce it sent to the center made it a key part of Mataram's realm. The area went into economic decline during the 18th century, and the Dutch East India Company began to gain substantial influence over the area's political and economic life. The Dutch built a fort in the city in 1753; this fort still stands.\n\n\t\t\t\t\tFrom the 1830s, the Pekalongan area became a major producer of sugar. Sugarcane had been grown in the area since the early 12th century, as recorded in Chinese history books, but production expanded substantially during the mid-19th century due to Dutch efforts. Initially, production was boosted through compulsory corvée labor; the Dutch colonial government took advantage of longstanding Javanese expectations that the peasantry contributes a part of their labor to the state. Between the 1860s and the 1890s, this system was phased out, and workers were paid directly. The colonial sugar industry collapsed during the Great Depression of the 1930s, but sugar remains a key export of the area in independent Indonesia.\n\n\t\t\t\t\t\tOn October 8, 1945, an anti 'Swapraja'/anti feudalism movement called Three Regions Movement/'Gerakan Tiga Daerah' was established in Tegal, Pekalongan, and Brebes. The goal of this movement was to replace the blue blood regents (related to the kings from Jogyakarta and Surakarta) with ordinary people. According to the leaders of this movement, the old regents had cooperated with Japanese during World War II and sent people to the Japanese slave labor camps.\n\n\t\t\t\t\tThe main leader of this movement was Sarjiyo who became the new regent of Pekalongan. Other leaders of this movement were Kutil, K. Mijaya, and Ir. Sakirman. Ir Sakirman was the local leader of Indonesian Communist Party (PKI).\n\n\t\t\t\t\tThe old regents were arrested, stripped naked, and dragged into the prisons. Other government officials and police officers were kidnapped and massacred at Talang bridge. This movement also started a racial riot against ethnic Chinese in Brebes.\n\n\t\t\t\t\tThe government of Republic of Indonesia (RI) in Jogyakarta disagree with this movement and declared it as an illegal movement.
+
+On November 4, 1945, the movement attacked Indonesian army HQ and the regent office in Pekalongan. The rebels were defeated by Indonesian army in a fierce battle on December 21, 1945. Most leaders of this movement were arrested and thrown into the prisons. This rebellion is called Three Regions Affair."
+        android:layout_margin="10dp"
+        android:textColor="@color/palette_2"
+        android:textSize="16dp"/>
+    <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="5dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/palette_3"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="General Info"
+                android:layout_margin="10dp"
+                android:textColor="@color/palette_1"
+                android:textSize="20dp"
+                android:textStyle="bold"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:justificationMode="inter_word"
+                android:layout_margin="15dp"
+                android:textColor="@color/palette_1"
+                android:text="Pekalongan Other transcription(s) :\n - Hanacaraka :	ꦥꦼꦏꦭꦺꦴꦁꦔꦤ꧀\n - Pegon	ڤٓكالَوڠان\n - Chinese	北加隆岸\n\nNickname : Kota Batik (lit. 'the Batik city')\n\nMotto(s) : Pekalongan Kota BATIK (Bersih (Clean), Aman (Safe), Tertib (Discipline), Indah (Beautiful), Komunikatif (Communicative))\n\nMayor :	Saelany Mahfudz\n\nArea Total :	45.25 km2 (17.47 sq mi)\n\nTotal Population per-2019 :	307,097\nDensity : 6,800/km2 (18,000/sq mi)\n\nTime zone : UTC+7 (Western Indonesia Time)\n\nArea code : (+62) 285\n\nWebsite : pekalongankota.go.id"
+                android:textSize="16dp" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="5dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+                    <RelativeLayout
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_width="170dp"
+                        android:layout_height="140dp"
+                        android:background="@drawable/history1"
+                        android:backgroundTint="@color/palette_4"
+                        android:backgroundTintMode="multiply"/>
+                    <TextView
+                        android:textColor="@color/palette_1"
+                        android:textSize="16dp"
+                        android:layout_gravity="center"
+                        android:padding="5dp"
+                        android:textAlignment="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Coat of Arms of Pekalongan\nfrom 1930s during colonial era"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="5dp">
+                <LinearLayout
+                    android:background="@color/white"
+                    android:padding="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <RelativeLayout
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_width="130dp"
+                        android:layout_height="150dp"
+                        android:background="@drawable/history2"
+                        android:backgroundTint="@color/palette_4"
+                        android:backgroundTintMode="multiply"/>
+                    <TextView
+                        android:layout_marginTop="3dp"
+                        android:textColor="@color/palette_1"
+                        android:textSize="16dp"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="City Coat of arms \n(Now)"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="5dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+                    <RelativeLayout
+                        android:layout_marginTop="10dp"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_width="220dp"
+                        android:layout_height="150dp"
+                        android:background="@drawable/history3"
+                        android:backgroundTint="@color/palette_4"
+                        android:backgroundTintMode="multiply"/>
+                    <TextView
+                        android:layout_marginTop="3dp"
+                        android:textColor="@color/palette_1"
+                        android:textSize="16dp"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="City Flag"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+</LinearLayout>
+
+
+
+</ScrollView>

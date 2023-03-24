@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="3dp"
+        android:clickable="true">
+
+        <RelativeLayout
+            android:id="@+id/adminlayoutImage"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:background="@color/white"
+            android:backgroundTintMode="multiply">
+
+            <TextView
+                android:id="@+id/adminloc_rat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#80000000"
+                android:drawableEnd="@drawable/star"
+                android:gravity="center_horizontal"
+                android:padding="10dp"
+                android:text="4.5"
+                android:textColor="@color/palette_4"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/option_btn"
+                android:layout_margin="10dp"
+                android:layout_alignParentRight="true"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/more_button"
+                android:background="#0000" />
+
+            <TextView
+                android:id="@+id/adminloc_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/adminloc_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/white"
+                android:textSize="24dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

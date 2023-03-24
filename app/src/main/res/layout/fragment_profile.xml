@@ -1,116 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ProfileFragment">
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-        <View
-            android:id="@+id/view"
+        tools:context=".Layout.ProfileFragment">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="50dp"
-            android:background="#DFCCB5"/>
-        <ImageView
-            android:layout_marginTop="-120dp"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@drawable/person"
-            android:layout_gravity="center"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <TextView
-            android:textColor="#ACA2A2"
-            android:layout_marginStart="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Username"
-            android:textSize="16dp"/>
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="50dp"
+                android:backgroundTint="@color/palette_1"
+                android:backgroundTintMode="screen"
+                android:background="@drawable/batik"/>
 
-        <TextView
-            android:id="@+id/profile_user"
-            android:layout_marginTop="10dp"
-            android:textColor="#55545A"
-            android:layout_marginStart="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="John Cena"
-            android:textSize="18dp"
-            android:textStyle="bold"/>
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profileImg"
+                android:layout_marginTop="-120dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                app:shapeAppearance="@style/roundedImage" />
 
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:textColor="#ACA2A2"
+                android:layout_marginStart="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Username"
+                android:textSize="16dp" />
 
-        <TextView
-            android:layout_marginTop="10dp"
-            android:textColor="#ACA2A2"
-            android:layout_marginStart="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Email Address"
-            android:textSize="16dp"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/profile_email"
-            android:layout_marginTop="10dp"
-            android:textColor="#55545A"
-            android:layout_marginStart="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="john_cena@wwe.com"
-            android:textSize="18dp"
-            android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/profile_user"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#55545A"
+                    android:layout_marginStart="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="John Cena"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:layout_marginTop="10dp"
-            android:textColor="#ACA2A2"
-            android:layout_marginStart="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Phone Number"
-            android:textSize="16dp"/>
+                <ImageButton
+                    android:id="@+id/edit_name"
+                    android:padding="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/edit_icon"
+                    android:background="#0000"/>
+            </RelativeLayout>
 
-        <TextView
-            android:id="@+id/profile_phone"
-            android:layout_marginTop="10dp"
-            android:textColor="#55545A"
-            android:layout_marginStart="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0815347892360"
-            android:textSize="18dp"
-            android:textStyle="bold">
-        </TextView>
 
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/logout_profile"
-            android:layout_marginTop="30dp"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Logout"/>
-    </LinearLayout>
-</FrameLayout>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:textColor="#ACA2A2"
+                android:layout_marginStart="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email Address"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/profile_email"
+                android:layout_marginTop="10dp"
+                android:textColor="#55545A"
+                android:layout_marginStart="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="john_cena@wwe.com"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:textColor="#ACA2A2"
+                android:layout_marginStart="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Time Joined"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/profile_joined"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:text="5-1-1999"
+                android:textColor="#55545A"
+                android:textSize="18dp"
+                android:textStyle="bold"></TextView>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_marginTop="10dp"
+                android:textColor="#ACA2A2"
+                android:layout_marginStart="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User Type"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/profile_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:text="Admin"
+                android:textColor="#55545A"
+                android:textSize="18dp"
+                android:textStyle="bold"></TextView>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:padding="10dp"
+                android:id="@+id/logout_btn"
+                android:layout_marginTop="30dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Logout" />
+        </LinearLayout>
+    </FrameLayout>
+</layout>

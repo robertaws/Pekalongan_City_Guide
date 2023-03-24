@@ -1,54 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="10dp"
-    app:cardElevation="3dp"
-    android:clickable="true">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
-        android:id="@+id/layoutImage"
+    <data>
+
+    </data>
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:background="@drawable/test"
-        android:backgroundTint="@color/palette_4"
-        android:backgroundTintMode="multiply"
-        >
-        <TextView
-            android:id="@+id/loc_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="21.5dp"
-            android:layout_marginBottom="19dp"
-            android:text="Monumen Nasional"
-            android:textColor="@color/alfa"
-            android:textSize="24dp"
-            android:textStyle="bold" />
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="3dp"
+        android:clickable="true">
 
-        <TextView
-            android:id="@+id/loc_name2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginBottom="20dp"
-            android:text="Monumen Nasional"
-            android:textColor="@color/white"
-            android:textSize="24dp"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/loc_desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="invisible" />
+        <RelativeLayout
+            android:id="@+id/layoutImage"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:background="@color/white"
+            android:backgroundTintMode="multiply">
 
-        <TextView
-            android:id="@+id/loc_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="invisible" />
-    </RelativeLayout>
-</androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/loc_rat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#80000000"
+                android:drawableEnd="@drawable/star"
+                android:gravity="center_horizontal"
+                android:padding="10dp"
+                android:text="4.5"
+                android:textColor="@color/palette_4"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/loc_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/loc_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/white"
+                android:textSize="24dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Home">
+    tools:context=".Layout.Home">
 
     <FrameLayout
         android:id="@+id/container"
@@ -28,11 +28,11 @@
         android:layout_alignParentBottom="true"
         app:sk_backgroundBottomColor="@color/palette_4"
         app:sk_circleColor="@color/palette_4"
-        app:sk_countBackgroundColor="#ff6f00"
-        app:sk_countTextColor="#ffffff"
+        app:sk_countBackgroundColor="@null"
+        app:sk_countTextColor="@null"
         app:sk_defaultIconColor="@color/palette_2"
-        app:sk_rippleColor="#2f424242"
+        app:sk_rippleColor="@null"
         app:sk_selectedIconColor="@color/palette_1"
-        app:sk_shadowColor="#1f212121"></com.sagarkoli.chetanbottomnavigation.chetanBottomNavigation>
+        app:sk_shadowColor="#1f212121" />
 
 </RelativeLayout>

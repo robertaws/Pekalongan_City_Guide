@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_batik"
+        android:backgroundTint="@color/palette_4"
+        android:backgroundTintMode="screen"
+        tools:context=".Layout.AdminHome"
+        android:id="@+id/adminHome">
+
+        <RelativeLayout
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="@color/palette_4">
+
+            <TextView
+                android:layout_marginTop="8dp"
+                android:id="@+id/dashboard"
+                android:textColor="@color/palette_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="Dashboard Admin"
+                android:textStyle="bold"
+                android:textSize="16dp" />
+            <TextView
+                android:id="@+id/admin_info"
+                android:textColor="@color/palette_2"
+                android:layout_below="@+id/dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="Admin Info"
+                android:textStyle="bold"
+                android:textSize="14dp" />
+            <ImageButton
+                android:id="@+id/logout_admin"
+                android:background="#0000"
+                android:layout_marginTop="5dp"
+                android:layout_alignParentEnd="true"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/logout" />
+        </RelativeLayout>
+        <EditText
+            android:layout_marginTop="5dp"
+            android:id="@+id/search_cat"
+            android:drawableStart="@drawable/search_icon"
+            android:drawablePadding="5dp"
+            android:padding="5dp"
+            android:background="@color/bg"
+            android:layout_marginHorizontal="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar"
+            android:hint="Search Category"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginHorizontal="10dp"
+            android:id="@+id/cat_rv"
+            android:layout_below="@id/search_cat"
+            android:layout_above="@id/bottom_bar"
+            tools:listitem="@layout/list_category"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:id="@+id/bottom_bar"
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:padding="5dp">
+
+            <Button
+                android:id="@+id/add_category"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:text="Add category"
+                android:layout_gravity="center_vertical" />
+
+            <ImageButton
+                android:id="@+id/add_loc_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/add_desti_icon"
+                android:layout_marginHorizontal="10dp"
+                android:background="#0000"
+                android:layout_gravity="center_vertical" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</layout>
