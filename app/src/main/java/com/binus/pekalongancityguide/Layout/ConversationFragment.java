@@ -22,7 +22,6 @@ import com.binus.pekalongancityguide.R;
 import java.util.ArrayList;
 
 public class ConversationFragment extends Fragment {
-
     RecyclerView convoRV, phrasesRV;
     RecyclerView.Adapter convoRVAdapter, phrasesRVAdapter;
     RecyclerView.LayoutManager convoRVLayoutManager, phrasesRVLayoutManager;

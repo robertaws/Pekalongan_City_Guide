@@ -31,13 +31,13 @@
                 android:text="Title" />
 
             <ImageButton
-                android:background="@color/alfa"
                 android:id="@+id/cat_delete"
                 android:layout_marginVertical="8dp"
                 android:layout_marginEnd="10dp"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/delete" />
+                android:src="@drawable/delete"
+                android:background="#0000" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

@@ -111,7 +111,7 @@ public class ConvoItem {
             "saya ingin makan ayam goreng pak Gembus",
             "siap, tunggu saya mandi sebentar",
             "selamat siang pak. Bagaimana kabarnya?",
-            "baik- baik saja nak. Silahkan masuk ",
+            "baik - baik saja nak. Silahkan masuk ",
             "saya mau dada tambah kol goreng pak",
             "saya pesan yang sama dengan sambal yang banyak ya pak",
             "baik nak. Tunggu 10 menit ya, nasinya belum masak",
