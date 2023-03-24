@@ -134,7 +134,6 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
             context.startActivity(intent);
         });
     }
-
     private void showOptionsDialog(Destination destination, HolderAdminDestination holder){
         String destiId = destination.getId();
         String destiUrl = destination.getUrl();
