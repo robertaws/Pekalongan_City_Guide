@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.binus.pekalongancityguide.Adapter.AdminDestinationAdapter;
-import com.binus.pekalongancityguide.ItemTemplate.DestinationAdmin;
+import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.databinding.ActivityShowDestinationAdminBinding;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 public class ShowDestinationAdmin extends AppCompatActivity {
     private ActivityShowDestinationAdminBinding binding;
-    private ArrayList<DestinationAdmin> destinationAdminArrayList;
+    private ArrayList<Destination> destinationArrayList;
     private AdminDestinationAdapter adapter;
     private String categoryId, categoryTitle;
     private TextView rating;
@@ -67,19 +67,19 @@ public class ShowDestinationAdmin extends AppCompatActivity {
     }
 
     private void loadDestination(){
-        destinationAdminArrayList = new ArrayList<>();
+        destinationArrayList = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
         reference.orderByChild("categoryId").equalTo(categoryId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        destinationAdminArrayList.clear();
+                        destinationArrayList.clear();
                         for(DataSnapshot dataSnapshot: snapshot.getChildren()){
-                            DestinationAdmin destinationAdmin = dataSnapshot.getValue(DestinationAdmin.class);
-                            destinationAdminArrayList.add(destinationAdmin);
-                            Log.d(TAG,"onDatachanged: "+destinationAdmin.getId()+""+destinationAdmin.getTitle());
+                            Destination destination = dataSnapshot.getValue(Destination.class);
+                            destinationArrayList.add(destination);
+                            Log.d(TAG,"onDatachanged: "+ destination.getId()+""+ destination.getTitle());
                         }
-                        adapter = new AdminDestinationAdapter(ShowDestinationAdmin.this,destinationAdminArrayList);
+                        adapter = new AdminDestinationAdapter(ShowDestinationAdmin.this, destinationArrayList);
                         binding.destiAdminrv.setAdapter(adapter);
                     }
                     @Override

@@ -33,16 +33,6 @@
                 android:textColor="@color/palette_4"
                 android:textSize="16dp"
                 android:textStyle="bold" />
-
-            <ImageButton
-                android:id="@+id/option_more"
-                android:layout_margin="10dp"
-                android:layout_alignParentRight="true"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/more_button"
-                android:background="#0000" />
-
             <TextView
                 android:id="@+id/loc_desc"
                 android:layout_width="wrap_content"

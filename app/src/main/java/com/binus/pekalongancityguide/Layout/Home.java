@@ -28,7 +28,6 @@ public class Home extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        checkUser();
         bottomNavigationView = findViewById(R.id.bottom_navi);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
         bottomNavigationView.add(new chetanBottomNavigation.Model(home, R.drawable.ic_home));
@@ -84,13 +83,5 @@ public class Home extends AppCompatActivity {
         });
 
         bottomNavigationView.show(home, true);
-    }
-
-    private void checkUser(){
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if(firebaseUser==null){
-            startActivity(new Intent(Home.this,MainActivity.class));
-            finish();
-        }
     }
 }

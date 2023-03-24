@@ -40,7 +40,6 @@ public class DestinationDetailAdmin extends AppCompatActivity {
         binding.backDestinAdmin.setOnClickListener(v -> onBackPressed());
 
     }
-
     private void loadDetails(){
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
         reference.child(destiId)

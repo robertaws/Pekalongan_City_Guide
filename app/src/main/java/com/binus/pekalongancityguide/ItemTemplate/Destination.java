@@ -1,82 +1,76 @@
 package com.binus.pekalongancityguide.ItemTemplate;
 
-public class Destination {
-    int destiImage;
-    double destiLat,destiLong;
-    String destiName, destiName2,destiDesc,destiAddress,destiTitle;
+import java.io.Serializable;
 
-    public Destination(int destiImage, double destiLat, double destiLong, String destiName, String destiName2, String destiDesc, String destiAddress, String destiTitle) {
-        this.destiImage = destiImage;
-        this.destiLat = destiLat;
-        this.destiLong = destiLong;
-        this.destiName = destiName;
-        this.destiName2 = destiName2;
-        this.destiDesc = destiDesc;
-        this.destiAddress = destiAddress;
-        this.destiTitle = destiTitle;
+public class Destination implements Serializable{
+    String uid,id,title,description,categoryId,url,rating;
+    public Destination(){
+
     }
 
-    public int getDestiImage() {
-        return destiImage;
+    public Destination(String uid, String id, String title, String description, String categoryId, String url, String rating) {
+        this.uid = uid;
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.categoryId = categoryId;
+        this.url = url;
+        this.rating = rating;
     }
 
-    public void setDestiImage(int destiImage) {
-        this.destiImage = destiImage;
+    public String getUid() {
+        return uid;
     }
 
-    public double getDestiLat() {
-        return destiLat;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
-    public void setDestiLat(double destiLat) {
-        this.destiLat = destiLat;
+    public String getId() {
+        return id;
     }
 
-    public double getDestiLong() {
-        return destiLong;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setDestiLong(double destiLong) {
-        this.destiLong = destiLong;
+    public String getTitle() {
+        return title;
     }
 
-    public String getDestiName() {
-        return destiName;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setDestiName(String destiName) {
-        this.destiName = destiName;
+    public String getDescription() {
+        return description;
     }
 
-    public String getDestiName2() {
-        return destiName2;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setDestiName2(String destiName2) {
-        this.destiName2 = destiName2;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public String getDestiDesc() {
-        return destiDesc;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public void setDestiDesc(String destiDesc) {
-        this.destiDesc = destiDesc;
+    public String getUrl() {
+        return url;
     }
 
-    public String getDestiAddress() {
-        return destiAddress;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public void setDestiAddress(String destiAddress) {
-        this.destiAddress = destiAddress;
+    public String getRating() {
+        return rating;
     }
 
-    public String getDestiTitle() {
-        return destiTitle;
-    }
-
-    public void setDestiTitle(String destiTitle) {
-        this.destiTitle = destiTitle;
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 }

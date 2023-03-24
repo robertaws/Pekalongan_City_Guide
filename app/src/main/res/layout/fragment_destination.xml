@@ -11,35 +11,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".Layout.DestinationFragment"
-        android:layout_marginTop="5dp"
         android:background="@color/bg">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".Layout.ShowDestinationAdmin">
-
-            <EditText
-                android:layout_marginTop="10dp"
-                android:id="@+id/search_desti"
-                android:drawableStart="@drawable/search_icon"
-                android:drawablePadding="5dp"
-                android:padding="5dp"
-                android:background="@drawable/et_style"
-                android:layout_marginHorizontal="10dp"
+            android:layout_height="match_parent">
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Search Destination" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_marginTop="15dp"
-                android:id="@+id/desti_rv"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:layout_below="@id/search_desti"
+                android:background="#0000"
+                app:tabBackground="@drawable/tab_selector"
+                app:tabIndicatorHeight="0dp"
+                app:tabMode="scrollable"
+                app:tabUnboundedRipple="false"
+                app:tabIndicatorFullWidth="false"/>
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/viewPager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:listitem="@layout/list_destination"/>
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tab_layout"/>
         </RelativeLayout>
-
     </FrameLayout>
 </layout>

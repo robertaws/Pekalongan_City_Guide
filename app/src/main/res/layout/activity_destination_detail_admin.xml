@@ -62,8 +62,7 @@
                     <ImageView
                         android:id="@+id/desti_admin_image"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/desti1" />
+                        android:layout_height="match_parent"/>
 
                 </androidx.cardview.widget.CardView>
 

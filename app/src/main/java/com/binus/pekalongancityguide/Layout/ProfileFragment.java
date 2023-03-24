@@ -1,5 +1,7 @@
 package com.binus.pekalongancityguide.Layout;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,11 +46,20 @@ public class ProfileFragment extends Fragment {
             startActivity(new Intent(getActivity(), EditProfile.class));
         });
         binding.logoutBtn.setOnClickListener(v -> {
-            firebaseAuth.signOut();
+            logoutConfirm();
             checkUser();
         });
 
         return view;
+    }
+    private void logoutConfirm(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Logout");
+        builder.setMessage("Are you sure you want to log out?");
+        builder.setPositiveButton("Yes", (dialog, which) -> firebaseAuth.signOut());
+        builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void checkUser(){

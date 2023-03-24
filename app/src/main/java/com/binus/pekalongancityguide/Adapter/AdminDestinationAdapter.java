@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.Layout.DestinationDetailAdmin;
 import com.binus.pekalongancityguide.Layout.EditDestination;
-import com.binus.pekalongancityguide.ItemTemplate.DestinationAdmin;
+import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.Misc.FilterDestiAdmin;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.databinding.ListDestiAdminBinding;
@@ -49,15 +49,15 @@ import static com.binus.pekalongancityguide.Misc.Constants.MAX_BYTES_IMAGE;
 
 public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinationAdapter.HolderAdminDestination> implements Filterable {
     private Context context;
-    public ArrayList<DestinationAdmin> destinationAdminArrayList,filterList;
+    public ArrayList<Destination> destinationArrayList,filterList;
     public static final String TAG = "DESTINATION_ADAPTER_TAG";
     private FilterDestiAdmin filterDestiAdmin;
     private ListDestiAdminBinding binding;
     private ProgressDialog dialog;
-    public AdminDestinationAdapter(Context context, ArrayList<DestinationAdmin> destinationAdminArrayList) {
+    public AdminDestinationAdapter(Context context, ArrayList<Destination> destinationArrayList) {
         this.context = context;
-        this.destinationAdminArrayList = destinationAdminArrayList;
-        this.filterList = destinationAdminArrayList;
+        this.destinationArrayList = destinationArrayList;
+        this.filterList = destinationArrayList;
         dialog = new ProgressDialog(context);
         dialog.setTitle("Please Wait");
         dialog.setCanceledOnTouchOutside(false);
@@ -74,13 +74,13 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
     @Override
     public void onBindViewHolder(@NonNull HolderAdminDestination holder, int position) {
 
-        DestinationAdmin destinationAdmin = destinationAdminArrayList.get(position);
-        String destiId = destinationAdmin.getId();
-        String categoryId = destinationAdmin.getCategoryId();
-        String imageUrl = destinationAdmin.getUrl();
-        String title = destinationAdmin.getTitle();
-        String rating = destinationAdmin.getRating();
-        String description = destinationAdmin.getDescription();
+        Destination destination = destinationArrayList.get(position);
+        String destiId = destination.getId();
+        String categoryId = destination.getCategoryId();
+        String imageUrl = destination.getUrl();
+        String title = destination.getTitle();
+        String rating = destination.getRating();
+        String description = destination.getDescription();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination")
                 .child(destiId);
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -96,11 +96,11 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
         });
         holder.title.setText(title);
         holder.description.setText(description);
-        loadImage(destinationAdmin, holder);
+        loadImage(destination, holder);
         holder.options.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showOptionsDialog(destinationAdmin, holder);
+                showOptionsDialog(destination, holder);
             }
         });
         holder.itemView.setOnClickListener(v -> {
@@ -135,10 +135,10 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
         });
     }
 
-    private void showOptionsDialog(DestinationAdmin destinationAdmin, HolderAdminDestination holder){
-        String destiId = destinationAdmin.getId();
-        String destiUrl = destinationAdmin.getUrl();
-        String destiTitle = destinationAdmin.getTitle();
+    private void showOptionsDialog(Destination destination, HolderAdminDestination holder){
+        String destiId = destination.getId();
+        String destiUrl = destination.getUrl();
+        String destiTitle = destination.getTitle();
         String[] options = {"Edit","Delete"};
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Choose Options")
@@ -162,14 +162,14 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
                 .show();
     }
 
-    public void loadImage(DestinationAdmin destinationAdmin, HolderAdminDestination holder){
-        String imageUrl = destinationAdmin.getUrl();
+    public void loadImage(Destination destination, HolderAdminDestination holder){
+        String imageUrl = destination.getUrl();
         StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
         reference.getBytes(MAX_BYTES_IMAGE)
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
                     public void onSuccess(byte[] bytes) {
-                        Log.d(TAG, "on Success: " + destinationAdmin.getTitle() + "successfully got the file");
+                        Log.d(TAG, "on Success: " + destination.getTitle() + "successfully got the file");
                         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                         BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), bitmap);
                         drawable.setGravity(Gravity.FILL);
@@ -186,7 +186,7 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
 
     @Override
     public int getItemCount() {
-        return destinationAdminArrayList.size();
+        return destinationArrayList.size();
     }
 
     @Override
