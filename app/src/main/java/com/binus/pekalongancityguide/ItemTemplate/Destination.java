@@ -3,12 +3,14 @@ package com.binus.pekalongancityguide.ItemTemplate;
 import java.io.Serializable;
 
 public class Destination implements Serializable{
-    String uid,id,title,description,categoryId,url,rating;
+    String uid,id,title,description,categoryId,url,rating,address;
+    double desLat,desLong;
+    boolean favorite;
     public Destination(){
 
     }
 
-    public Destination(String uid, String id, String title, String description, String categoryId, String url, String rating) {
+    public Destination(String uid, String id, String title, String description, String categoryId, String url, String rating, String address, double desLat, double desLong, boolean favorite) {
         this.uid = uid;
         this.id = id;
         this.title = title;
@@ -16,6 +18,10 @@ public class Destination implements Serializable{
         this.categoryId = categoryId;
         this.url = url;
         this.rating = rating;
+        this.address = address;
+        this.desLat = desLat;
+        this.desLong = desLong;
+        this.favorite = favorite;
     }
 
     public String getUid() {
@@ -72,5 +78,37 @@ public class Destination implements Serializable{
 
     public void setRating(String rating) {
         this.rating = rating;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public double getDesLat() {
+        return desLat;
+    }
+
+    public void setDesLat(double desLat) {
+        this.desLat = desLat;
+    }
+
+    public double getDesLong() {
+        return desLong;
+    }
+
+    public void setDesLong(double desLong) {
+        this.desLong = desLong;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 }

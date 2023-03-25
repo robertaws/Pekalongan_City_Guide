@@ -86,11 +86,11 @@
                     android:textSize="16dp"
                     android:textStyle="bold"/>
                 <TextView
+                    android:id="@+id/city_desc"
                     android:includeFontPadding="false"
                     android:gravity="center_vertical"
                     android:drawableRight="@drawable/read_more"
                     android:textAllCaps="false"
-                    android:id="@+id/city_desc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp"

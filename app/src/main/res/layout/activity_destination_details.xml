@@ -27,7 +27,7 @@
                 android:src="@drawable/back_icon" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="Destination Details"
@@ -140,12 +140,13 @@
 
                         <Button
                             android:id="@+id/save_item"
+                            android:textAllCaps="false"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
-                            android:drawableLeft="@drawable/bookmark"
+                            android:drawableLeft="@drawable/remove_bookmark"
                             android:drawableTint="@color/palette_4"
-                            android:text="Save Item"
+                            android:text="Bookmark Place"
                             android:textAlignment="center"
                             android:textColor="@color/palette_4" />
                     </LinearLayout>

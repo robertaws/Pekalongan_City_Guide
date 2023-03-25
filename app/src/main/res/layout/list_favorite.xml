@@ -11,18 +11,18 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         app:cardCornerRadius="10dp"
-        app:cardElevation="20dp"
+        app:cardElevation="3dp"
         android:clickable="true">
 
         <RelativeLayout
-            android:id="@+id/layoutImage"
+            android:id="@+id/bookmarklayoutImage"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:background="@color/palette_4"
+            android:background="@color/white"
             android:backgroundTintMode="multiply">
 
             <TextView
-                android:id="@+id/loc_rat"
+                android:id="@+id/bookmark_loc_rat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#80000000"
@@ -33,14 +33,24 @@
                 android:textColor="@color/palette_4"
                 android:textSize="16dp"
                 android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/unbookmark_btn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentRight="true"
+                android:layout_margin="5dp"
+                android:background="#0000"
+                android:src="@drawable/bookmark" />
+
             <TextView
-                android:id="@+id/loc_desc"
+                android:id="@+id/bookmark_loc_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="invisible" />
 
             <TextView
-                android:id="@+id/loc_title"
+                android:id="@+id/bookmark_loc_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -49,10 +59,10 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 android:textColor="@color/white"
-                android:text="Test Text"
                 android:shadowColor="#000000"
                 android:shadowDx="2"
                 android:shadowDy="2"
+                android:text="SImple Text"
                 android:shadowRadius="2"
                 android:textSize="24dp"
                 android:textStyle="bold" />
