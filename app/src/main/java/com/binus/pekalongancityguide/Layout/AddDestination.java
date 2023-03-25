@@ -290,7 +290,7 @@ public class AddDestination extends AppCompatActivity {
         }
     }
 
-    private void getPlaceDetails(String placeId) {
+    private void getPlaceDetails(String placeId){
         Log.d(TAG, "getPlaceDetails : getting place details");
         List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS);
         FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, placeFields).build();

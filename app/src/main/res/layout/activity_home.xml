@@ -12,15 +12,6 @@
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_navi" />
 
-    <!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
-    <!--        android:id="@+id/bottom_navi"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignParentBottom="true"-->
-    <!--        app:menu="@menu/bottom_nav"-->
-    <!--        android:background="@color/palette_4"-->
-    <!--        app:itemIconTint="@drawable/bottom_nav_item_color"/>-->
-
     <com.sagarkoli.chetanbottomnavigation.chetanBottomNavigation
         android:id="@+id/bottom_navi"
         android:layout_width="match_parent"

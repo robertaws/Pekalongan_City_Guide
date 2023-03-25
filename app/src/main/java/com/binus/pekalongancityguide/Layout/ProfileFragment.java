@@ -1,16 +1,23 @@
 package com.binus.pekalongancityguide.Layout;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.binus.pekalongancityguide.Misc.MyApplication;
@@ -25,21 +32,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class ProfileFragment extends Fragment {
+import java.util.Locale;
+import java.util.Objects;
+
+public class ProfileFragment extends Fragment{
     Button logout;
     private FragmentProfileBinding binding;
     private FirebaseAuth firebaseAuth;
     private static final String TAG = "PROFILE_TAG";
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(inflater, container, false);
          View view = binding.getRoot();
-        logout = view.findViewById(R.id.logout_btn);
-
-        firebaseAuth = FirebaseAuth.getInstance();
+         firebaseAuth = FirebaseAuth.getInstance();
         getInfo();
 
         binding.editName.setOnClickListener(v -> {
@@ -47,16 +54,19 @@ public class ProfileFragment extends Fragment {
         });
         binding.logoutBtn.setOnClickListener(v -> {
             logoutConfirm();
-            checkUser();
         });
 
         return view;
     }
+
     private void logoutConfirm(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Logout");
         builder.setMessage("Are you sure you want to log out?");
-        builder.setPositiveButton("Yes", (dialog, which) -> firebaseAuth.signOut());
+        builder.setPositiveButton("Yes", (dialog, which) ->{
+            firebaseAuth.signOut();
+            checkUser();
+        } );
         builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -105,6 +115,5 @@ public class ProfileFragment extends Fragment {
 
                     }
                 });
-
     }
 }
