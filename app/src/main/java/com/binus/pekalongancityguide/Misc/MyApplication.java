@@ -106,7 +106,7 @@ public class MyApplication extends Application {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
-                            Toast.makeText(context, "Added to Favorites list", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Added to Bookmark", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -128,7 +128,7 @@ public class MyApplication extends Application {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
-                            Toast.makeText(context, "Removed from Favorites list", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Removed from Bookmark", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

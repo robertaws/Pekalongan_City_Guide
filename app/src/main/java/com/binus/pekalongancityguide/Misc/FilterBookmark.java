@@ -2,18 +2,19 @@ package com.binus.pekalongancityguide.Misc;
 
 import android.widget.Filter;
 
-import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
+import com.binus.pekalongancityguide.Adapter.AdminDestinationAdapter;
+import com.binus.pekalongancityguide.Adapter.BookmarkAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 
 import java.util.ArrayList;
 
-public class FilterDestiUser extends Filter {
+public class FilterBookmark extends Filter {
     ArrayList<Destination> filter;
-    private DestinationAdapter destinationAdapter;
+    private BookmarkAdapter bookmarkAdapter;
 
-    public FilterDestiUser(ArrayList<Destination> filter, DestinationAdapter destinationAdapter) {
+    public FilterBookmark(ArrayList<Destination> filter, BookmarkAdapter bookmarkAdapter) {
         this.filter = filter;
-        this.destinationAdapter = destinationAdapter;
+        this.bookmarkAdapter = bookmarkAdapter;
     }
 
     @Override
@@ -38,7 +39,7 @@ public class FilterDestiUser extends Filter {
 
     @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
-        destinationAdapter.destinations = (ArrayList<Destination>)results.values;
-        destinationAdapter.notifyDataSetChanged();
+        bookmarkAdapter.destiArray = (ArrayList<Destination>)results.values;
+        bookmarkAdapter.notifyDataSetChanged();
     }
 }

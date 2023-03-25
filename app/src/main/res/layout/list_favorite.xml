@@ -20,7 +20,10 @@
             android:layout_height="250dp"
             android:background="@color/white"
             android:backgroundTintMode="multiply">
-
+            <ProgressBar
+                android:id="@+id/progress_bookmark"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
             <TextView
                 android:id="@+id/bookmark_loc_rat"
                 android:layout_width="wrap_content"

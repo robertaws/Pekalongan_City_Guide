@@ -19,10 +19,20 @@
             android:text="Bookmark List"
             android:textStyle="bold"
             android:textSize="24dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginTop="30dp"
-            android:layout_marginBottom="20dp"
             android:textColor="@color/palette_1" />
+        <EditText
+            android:layout_marginVertical="20dp"
+            android:id="@+id/search_bookmark"
+            android:drawableStart="@drawable/search_icon"
+            android:drawablePadding="5dp"
+            android:padding="5dp"
+            android:background="@drawable/et_style"
+            android:layout_marginHorizontal="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Search Bookmark" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/destiRV"
