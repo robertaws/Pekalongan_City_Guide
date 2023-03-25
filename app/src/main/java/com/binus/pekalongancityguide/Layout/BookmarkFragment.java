@@ -1,10 +1,15 @@
 package com.binus.pekalongancityguide.Layout;
 
+import static com.binus.pekalongancityguide.Layout.AddDestination.TAG;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +39,26 @@ public class BookmarkFragment extends Fragment {
         binding = FragmentBookmarkBinding.inflate(LayoutInflater.from(getContext()),container,false);
         firebaseAuth = FirebaseAuth.getInstance();
         loadBookmark();
+        binding.searchBookmark.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                try {
+                    bookmarkAdapter.getFilter().filter(s);
+                }catch (Exception e){
+                    Log.d(TAG,"onTextChanged :"+e.getMessage());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         return binding.getRoot();
     }
     private void loadBookmark(){

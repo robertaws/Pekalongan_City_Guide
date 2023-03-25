@@ -13,7 +13,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,6 +25,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.Layout.DestinationDetails;
+import com.binus.pekalongancityguide.Misc.FilterBookmark;
+import com.binus.pekalongancityguide.Misc.FilterDestiUser;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.databinding.ListFavoriteBinding;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -40,15 +45,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.HolderBookmark>{
+public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.HolderBookmark> implements Filterable{
     private static final String TAG = "BOOKMARK_ADAPTER_TAG";
     private Context context;
-    private ArrayList<Destination> destinationArraylist;
+    public ArrayList<Destination> destiArray,filterListBookmark;
     private ListFavoriteBinding binding;
+    private FilterBookmark filterBookmark;
 
-    public BookmarkAdapter(Context context, ArrayList<Destination> destinationArraylist) {
+    public BookmarkAdapter(Context context, ArrayList<Destination> destiArray) {
         this.context = context;
-        this.destinationArraylist = destinationArraylist;
+        this.destiArray = destiArray;
+        this.filterListBookmark = destiArray;
     }
 
     @NonNull
@@ -60,7 +67,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
 
     @Override
     public void onBindViewHolder(@NonNull HolderBookmark holder, int position){
-        Destination destination = destinationArraylist.get(position);
+        Destination destination = destiArray.get(position);
         loadDestination(destination,holder);
         holder.itemView.setOnClickListener(v -> {
             Drawable drawable = holder.layoutImage.getBackground();
@@ -132,6 +139,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
                                         BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), bitmap);
                                         drawable.setGravity(Gravity.FILL);
                                         holder.layoutImage.setBackground(drawable);
+                                        holder.progressBar.setVisibility(View.GONE);
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
@@ -153,19 +161,30 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
     }
     @Override
     public int getItemCount() {
-        return destinationArraylist.size();
+        return destiArray.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        if(filterBookmark==null){
+            filterBookmark = new FilterBookmark(filterListBookmark,this);
+
+        }
+        return filterBookmark;
     }
 
     class HolderBookmark extends RecyclerView.ViewHolder{
         RelativeLayout layoutImage;
         TextView title, rating;
         ImageButton unBookmark;
+        ProgressBar progressBar;
         public HolderBookmark(@NonNull View itemView) {
             super(itemView);
             layoutImage = binding.bookmarklayoutImage;
             title = binding.bookmarkLocTitle;
             rating = binding.bookmarkLocRat;
             unBookmark = binding.unbookmarkBtn;
+            progressBar = binding.progressBookmark;
         }
     }
 }

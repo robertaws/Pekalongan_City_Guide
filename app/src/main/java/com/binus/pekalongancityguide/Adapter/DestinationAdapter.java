@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -65,7 +66,7 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
         return new HolderDestination(binding.getRoot());
     }
     @Override
-    public void onBindViewHolder(@NonNull HolderDestination holder, int position) {
+    public void onBindViewHolder(@NonNull HolderDestination holder, int position){
         Destination destination = destinations.get(position);
         String destiId = destination.getId();
         String title = destination.getTitle();
@@ -132,6 +133,7 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
                         BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), bitmap);
                         drawable.setGravity(Gravity.FILL);
                         holder.layoutImage.setBackground(drawable);
+                        holder.progressBar.setVisibility(View.GONE);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -158,12 +160,14 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
     class HolderDestination extends RecyclerView.ViewHolder{
         RelativeLayout layoutImage;
         TextView title, description, rating;
+        ProgressBar progressBar;
         public HolderDestination(@NonNull View itemView) {
             super(itemView);
             layoutImage = binding.layoutImage;
             title = binding.locTitle;
             description = binding.locDesc;
             rating = binding.locRat;
+            progressBar = binding.progressBar;
         }
     }
 }
