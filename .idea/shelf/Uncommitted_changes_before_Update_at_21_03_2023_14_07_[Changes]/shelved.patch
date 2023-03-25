@@ -1,0 +1,146 @@
+Index: app/src/main/java/com/binus/pekalongancityguide/EditProfile.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide;\r\n\r\nimport android.Manifest;\r\nimport android.app.AlertDialog;\r\nimport android.app.ProgressDialog;\r\nimport android.content.ContentResolver;\r\nimport android.content.Context;\r\nimport android.content.DialogInterface;\r\nimport android.content.Intent;\r\nimport android.content.pm.PackageManager;\r\nimport android.graphics.Bitmap;\r\nimport android.net.Uri;\r\nimport android.os.Bundle;\r\nimport android.provider.MediaStore;\r\nimport android.text.TextUtils;\r\nimport android.view.Gravity;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.view.inputmethod.InputMethodManager;\r\nimport android.webkit.MimeTypeMap;\r\nimport android.widget.Button;\r\nimport android.widget.EditText;\r\nimport android.widget.ImageView;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.annotation.Nullable;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.core.app.ActivityCompat;\r\nimport androidx.core.content.ContextCompat;\r\nimport androidx.fragment.app.Fragment;\r\nimport androidx.fragment.app.FragmentTransaction;\r\n\r\nimport com.binus.pekalongancityguide.Layout.ProfileFragment;\r\nimport com.binus.pekalongancityguide.databinding.ActivityEditProfileBinding;\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.OnFailureListener;\r\nimport com.google.android.gms.tasks.OnSuccessListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.auth.UserProfileChangeRequest;\r\nimport com.google.firebase.database.DataSnapshot;\r\nimport com.google.firebase.database.DatabaseError;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\nimport com.google.firebase.database.ValueEventListener;\r\nimport com.google.firebase.storage.FirebaseStorage;\r\nimport com.google.firebase.storage.StorageReference;\r\nimport com.google.firebase.storage.UploadTask;\r\nimport com.squareup.picasso.Picasso;\r\n\r\nimport java.io.ByteArrayOutputStream;\r\nimport java.util.HashMap;\r\n\r\n\r\npublic class EditProfile extends AppCompatActivity {\r\n    private static final int REQUEST_IMAGE_CAPTURE = 1;\r\n    private static final int REQUEST_IMAGE_PICK = 2;\r\n    private static final int CAMERA_PERMISSION_CODE = 3;\r\n    private static final int STORAGE_PERMISSION_CODE = 4;\r\n    private ImageView mImageView;\r\n    private EditText mUsernameEditText;\r\n    private Uri mImageUri;\r\n    private DatabaseReference mDatabaseRef;\r\n    private StorageReference mStorageRef;\r\n    private FirebaseAuth mAuth;\r\n    private ProgressDialog progressDialog;\r\n    private ActivityEditProfileBinding binding;\r\n    private static final String TAG = \"PROFILE_EDIT_TAG\";\r\n    private String name = \"\";\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        binding = ActivityEditProfileBinding.inflate(getLayoutInflater());\r\n        setContentView(R.layout.activity_edit_profile);\r\n\r\n        mImageView = findViewById(R.id.edit_image);\r\n        mUsernameEditText = findViewById(R.id.edit_name);\r\n        Button mSaveProfileButton = findViewById(R.id.update_profile);\r\n        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);\r\n\r\n        mDatabaseRef = FirebaseDatabase.getInstance().getReference(\"users\");\r\n        mStorageRef = FirebaseStorage.getInstance().getReference(\"user_profile_images\");\r\n        mAuth = FirebaseAuth.getInstance();\r\n\r\n        // Initialize the progress dialog\r\n        progressDialog = new ProgressDialog(this);\r\n        progressDialog.setCancelable(false);\r\n        progressDialog.setMessage(\"Updating Profile...\");\r\n        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);\r\n\r\n        // Check camera permission\r\n        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {\r\n            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);\r\n        }\r\n\r\n        // Check storage permission\r\n        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {\r\n            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);\r\n        }\r\n\r\n        getInfo();\r\n\r\n        binding.backProfile.setOnClickListener(v -> {\r\n            onBackPressed();\r\n        });\r\n\r\n        mImageView.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                showImagePickerDialog();\r\n            }\r\n        });\r\n\r\n        mSaveProfileButton.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);\r\n                saveProfile();\r\n            }\r\n        });\r\n    }\r\n\r\n    private void validateData() {\r\n        name = binding.editName.getText().toString().trim();\r\n        if (TextUtils.isEmpty(name)) {\r\n            showCustomToast(\"Enter new name\");\r\n        } else {\r\n            updateProfile(name, null);\r\n        }\r\n    }\r\n\r\n    // Update user profile with name and profile picture\r\n    private void updateProfile(String name, Uri imageUri) {\r\n        if (imageUri != null) {\r\n            // Upload new profile picture to Firebase Storage\r\n            StorageReference storageRef = FirebaseStorage.getInstance().getReference()\r\n                    .child(\"user_profile_images/\" + FirebaseAuth.getInstance().getCurrentUser().getUid() + \".jpg\");\r\n            UploadTask uploadTask = storageRef.putFile(imageUri);\r\n\r\n            uploadTask.continueWithTask(task -> {\r\n                if (!task.isSuccessful()) {\r\n                    throw task.getException();\r\n                }\r\n\r\n                // Get the download URL of the uploaded profile picture\r\n                return storageRef.getDownloadUrl();\r\n            }).addOnCompleteListener(task -> {\r\n                if (task.isSuccessful()) {\r\n                    // Update user profile with new name and profile picture URL\r\n                    String profilePictureUrl = task.getResult().toString();\r\n                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()\r\n                            .setDisplayName(name)\r\n                            .setPhotoUri(Uri.parse(profilePictureUrl))\r\n                            .build();\r\n\r\n                    FirebaseAuth.getInstance().getCurrentUser().updateProfile(profileUpdates)\r\n                            .addOnCompleteListener(task1 -> {\r\n                                if (task1.isSuccessful()) {\r\n                                    showCustomToast(\"User profile updated\");\r\n                                    // Dismiss the progress dialog after the upload is successful\r\n                                    progressDialog.dismiss();\r\n                                    // Go to the profile fragment after successful update\r\n                                    Fragment profileFragment = new ProfileFragment();\r\n                                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();\r\n                                    Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(\"fragment_home\");\r\n                                    if (currentFragment != null) {\r\n                                        transaction.replace(currentFragment.getId(), profileFragment, \"fragment_profile\");\r\n                                        transaction.addToBackStack(null);\r\n                                        transaction.commit();\r\n                                    }\r\n                                } else {\r\n                                    showCustomToast(\"Failed to update user profile\");\r\n                                }\r\n                            });\r\n                } else {\r\n                    showCustomToast(\"Failed to upload profile picture\");\r\n                }\r\n            });\r\n        } else {\r\n            // Update user profile with new name only\r\n            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()\r\n                    .setDisplayName(name)\r\n                    .build();\r\n\r\n            FirebaseAuth.getInstance().getCurrentUser().updateProfile(profileUpdates)\r\n                    .addOnCompleteListener(task -> {\r\n                        if (task.isSuccessful()) {\r\n                            showCustomToast(\"User profile updated\");\r\n                            // Dismiss the progress dialog after the upload is successful\r\n                            progressDialog.dismiss();\r\n                            // Go to the profile fragment after successful update\r\n                            Fragment profileFragment = new ProfileFragment();\r\n                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();\r\n                            transaction.replace(R.id.container, profileFragment);\r\n                            transaction.commit();\r\n                        } else {\r\n                            showCustomToast(\"Failed to update user profile\");\r\n                        }\r\n                    });\r\n        }\r\n    }\r\n\r\n\r\n    private void showImagePickerDialog() {\r\n        final CharSequence[] options = {\"Take Photo\", \"Choose From Gallery\", \"Cancel\"};\r\n        AlertDialog.Builder builder = new AlertDialog.Builder(EditProfile.this);\r\n        builder.setTitle(\"Choose your profile picture\");\r\n\r\n        builder.setItems(options, new DialogInterface.OnClickListener() {\r\n            @Override\r\n            public void onClick(DialogInterface dialogInterface, int i) {\r\n                if (options[i].equals(\"Take Photo\")) {\r\n                    dispatchTakePictureIntent();\r\n                } else if (options[i].equals(\"Choose From Gallery\")) {\r\n                    pickImageFromGallery();\r\n                } else if (options[i].equals(\"Cancel\")) {\r\n                    dialogInterface.dismiss();\r\n                }\r\n            }\r\n        });\r\n        builder.show();\r\n    }\r\n\r\n    private void dispatchTakePictureIntent() {\r\n        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);\r\n        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {\r\n            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);\r\n        }\r\n    }\r\n\r\n    private void pickImageFromGallery() {\r\n        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);\r\n        startActivityForResult(intent, REQUEST_IMAGE_PICK);\r\n    }\r\n\r\n    @Override\r\n    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {\r\n        super.onActivityResult(requestCode, resultCode, data);\r\n\r\n        if (resultCode == RESULT_OK) {\r\n            if (requestCode == REQUEST_IMAGE_CAPTURE && data != null) {\r\n                Bundle extras = data.getExtras();\r\n                Bitmap imageBitmap = (Bitmap) extras.get(\"data\");\r\n                mImageView.setImageBitmap(imageBitmap);\r\n                mImageUri = getImageUri(getApplicationContext(), imageBitmap);\r\n            } else if (requestCode == REQUEST_IMAGE_PICK && data != null) {\r\n                mImageUri = data.getData();\r\n                mImageView.setImageURI(mImageUri);\r\n            }\r\n        }\r\n    }\r\n\r\n    private void saveProfile() {\r\n        String username = mUsernameEditText.getText().toString().trim();\r\n        if (TextUtils.isEmpty(username)) {\r\n            showCustomToast(\"Please enter a username\");\r\n            return;\r\n        }\r\n\r\n        final String userId = mAuth.getCurrentUser().getUid();\r\n\r\n        if (mImageUri != null) {\r\n            progressDialog.setTitle(\"Uploading image...\");\r\n            progressDialog.show();\r\n\r\n            // Delete old image from storage\r\n            mStorageRef.child(userId).delete().addOnCompleteListener(new OnCompleteListener<Void>() {\r\n                @Override\r\n                public void onComplete(@NonNull Task<Void> task) {\r\n                    // Upload new image to storage\r\n                    mStorageRef.child(userId).putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {\r\n                        @Override\r\n                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {\r\n                            // Get the download URL of the image\r\n                            mStorageRef.child(userId).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {\r\n                                @Override\r\n                                public void onSuccess(Uri uri) {\r\n                                    // Update user profile with new image URL\r\n                                    String imageUrl = uri.toString();\r\n                                    HashMap<String, Object> hashMap = new HashMap<>();\r\n                                    hashMap.put(\"imageUrl\", imageUrl);\r\n                                    mDatabaseRef.child(userId).updateChildren(hashMap);\r\n\r\n                                    // Update user profile with new username\r\n                                    name = mUsernameEditText.getText().toString().trim();\r\n                                    updateProfile(name, mImageUri);\r\n                                }\r\n                            });\r\n                        }\r\n                    }).addOnFailureListener(new OnFailureListener() {\r\n                        @Override\r\n                        public void onFailure(@NonNull Exception e) {\r\n                            progressDialog.dismiss();\r\n                            showCustomToast(\"Failed to upload image: \");\r\n                        }\r\n                    });\r\n                }\r\n            });\r\n        } else {\r\n            // Update user profile with new username\r\n            name = mUsernameEditText.getText().toString().trim();\r\n            updateProfile(name, null);\r\n        }\r\n    }\r\n\r\n    @Override\r\n    protected void onDestroy() {\r\n        super.onDestroy();\r\n        // Dismiss any open dialogs\r\n        if (progressDialog != null && progressDialog.isShowing()) {\r\n            progressDialog.dismiss();\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {\r\n        super.onRequestPermissionsResult(requestCode, permissions, grantResults);\r\n\r\n        if (requestCode == CAMERA_PERMISSION_CODE) {\r\n            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {\r\n                // Camera permission was granted, start camera intent\r\n\r\n            } else {\r\n                // Camera permission was denied, show a message to the user\r\n                showCustomToast(\"Camera permission is required to take photos\");\r\n            }\r\n        }\r\n    }\r\n\r\n    private Uri getImageUri(Context context, Bitmap bitmap) {\r\n        ByteArrayOutputStream bytes = new ByteArrayOutputStream();\r\n        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);\r\n        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, \"Profile Picture\", null);\r\n        return Uri.parse(path);\r\n    }\r\n\r\n    private String getFileExtension(Uri uri) {\r\n        ContentResolver contentResolver = getContentResolver();\r\n        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();\r\n        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));\r\n    }\r\n\r\n    private void getInfo() {\r\n        DatabaseReference ref = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Users\");\r\n        ref.child(mAuth.getUid())\r\n                .addListenerForSingleValueEvent(new ValueEventListener() {\r\n                    @Override\r\n                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {\r\n                        String username = \"\" + dataSnapshot.child(\"Username\").getValue();\r\n                        String email = \"\" + dataSnapshot.child(\"Email\").getValue();\r\n                        String profileImage = \"\" + dataSnapshot.child(\"profileImage\").getValue();\r\n\r\n                        binding.editName.setText(username);\r\n                        try {\r\n                            Picasso.get().load(profileImage).placeholder(R.drawable.person).into(binding.editImage);\r\n                        } catch (Exception e) {\r\n                            binding.editImage.setImageResource(R.drawable.person);\r\n                        }\r\n                    }\r\n\r\n                    @Override\r\n                    public void onCancelled(@NonNull DatabaseError databaseError) {\r\n\r\n                    }\r\n                });\r\n    }\r\n\r\n    private void showCustomToast(String customText) {\r\n        // Inflate custom layout\r\n        LayoutInflater inflater = getLayoutInflater();\r\n        View layout = inflater.inflate(R.layout.custom_toast,\r\n                (ViewGroup) findViewById(R.id.custom_toast));\r\n\r\n// Set custom text\r\n        TextView text = layout.findViewById(R.id.toastText);\r\n        text.setText(customText);\r\n\r\n// Create and show custom Toast\r\n        Toast toast = new Toast(getApplicationContext());\r\n        toast.setGravity(Gravity.BOTTOM, 0, 0);\r\n        toast.setDuration(Toast.LENGTH_LONG);\r\n        toast.setView(layout);\r\n        toast.show();\r\n\r\n    }\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/EditProfile.java b/app/src/main/java/com/binus/pekalongancityguide/EditProfile.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/EditProfile.java	(revision 1f67d1b9ae97859a1c58dcb8e1734fcfb7dd4b15)
++++ b/app/src/main/java/com/binus/pekalongancityguide/EditProfile.java	(date 1679377679796)
+@@ -160,6 +160,12 @@
+                     FirebaseAuth.getInstance().getCurrentUser().updateProfile(profileUpdates)
+                             .addOnCompleteListener(task1 -> {
+                                 if (task1.isSuccessful()) {
++                                    // Update user profile in Realtime Database
++                                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
++                                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(userId);
++                                    userRef.child("Username").setValue(name);
++                                    userRef.child("profileImage").setValue(profilePictureUrl);
++
+                                     showCustomToast("User profile updated");
+                                     // Dismiss the progress dialog after the upload is successful
+                                     progressDialog.dismiss();
+@@ -189,6 +195,11 @@
+             FirebaseAuth.getInstance().getCurrentUser().updateProfile(profileUpdates)
+                     .addOnCompleteListener(task -> {
+                         if (task.isSuccessful()) {
++                            // Update user profile in Realtime Database
++                            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
++                            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(userId);
++                            userRef.child("Username").setValue(name);
++
+                             showCustomToast("User profile updated");
+                             // Dismiss the progress dialog after the upload is successful
+                             progressDialog.dismiss();
+@@ -267,43 +278,78 @@
+             progressDialog.setTitle("Uploading image...");
+             progressDialog.show();
+ 
+-            // Delete old image from storage
+-            mStorageRef.child(userId).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+-                @Override
+-                public void onComplete(@NonNull Task<Void> task) {
+-                    // Upload new image to storage
+-                    mStorageRef.child(userId).putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+-                        @Override
+-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+-                            // Get the download URL of the image
+-                            mStorageRef.child(userId).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+-                                @Override
+-                                public void onSuccess(Uri uri) {
+-                                    // Update user profile with new image URL
+-                                    String imageUrl = uri.toString();
++            // Upload new profile picture to Firebase Storage
++            StorageReference storageRef = FirebaseStorage.getInstance().getReference()
++                    .child("user_profile_images/" + userId + ".jpg");
++            UploadTask uploadTask = storageRef.putFile(mImageUri);
++
++            uploadTask.continueWithTask(task -> {
++                if (!task.isSuccessful()) {
++                    throw task.getException();
++                }
++
++                // Get the download URL of the uploaded profile picture
++                return storageRef.getDownloadUrl();
++            }).addOnCompleteListener(task -> {
++                if (task.isSuccessful()) {
++                    // Update user profile with new name and profile picture URL
++                    String profilePictureUrl = task.getResult().toString();
++                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
++                            .setDisplayName(username)
++                            .setPhotoUri(Uri.parse(profilePictureUrl))
++                            .build();
++
++                    FirebaseAuth.getInstance().getCurrentUser().updateProfile(profileUpdates)
++                            .addOnCompleteListener(task1 -> {
++                                if (task1.isSuccessful()) {
++                                    // Update user profile in Realtime Database
++                                    DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference()
++                                            .child("Users").child(userId);
+                                     HashMap<String, Object> hashMap = new HashMap<>();
+-                                    hashMap.put("imageUrl", imageUrl);
+-                                    mDatabaseRef.child(userId).updateChildren(hashMap);
++                                    hashMap.put("Username", username);
++                                    hashMap.put("profileImage", profilePictureUrl);
++                                    databaseRef.updateChildren(hashMap);
+ 
+-                                    // Update user profile with new username
+-                                    name = mUsernameEditText.getText().toString().trim();
+-                                    updateProfile(name, mImageUri);
++                                    showCustomToast("User profile updated");
++                                    progressDialog.dismiss();
++                                    Fragment profileFragment = new ProfileFragment();
++                                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
++                                    transaction.replace(R.id.container, profileFragment);
++                                    transaction.commit();
++                                } else {
++                                    showCustomToast("Failed to update user profile");
+                                 }
+                             });
+-                        }
+-                    }).addOnFailureListener(new OnFailureListener() {
+-                        @Override
+-                        public void onFailure(@NonNull Exception e) {
++                } else {
++                    showCustomToast("Failed to upload profile picture");
++                }
++            });
++        } else {
++            // Update user profile with new name only
++            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
++                    .setDisplayName(username)
++                    .build();
++
++            FirebaseAuth.getInstance().getCurrentUser().updateProfile(profileUpdates)
++                    .addOnCompleteListener(task -> {
++                        if (task.isSuccessful()) {
++                            // Update user profile in Realtime Database
++                            DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference()
++                                    .child("Users").child(userId);
++                            HashMap<String, Object> hashMap = new HashMap<>();
++                            hashMap.put("Username", username);
++                            databaseRef.updateChildren(hashMap);
++
++                            showCustomToast("User profile updated");
+                             progressDialog.dismiss();
+-                            showCustomToast("Failed to upload image: ");
+-                        }
+-                    });
+-                }
+-            });
+-        } else {
+-            // Update user profile with new username
+-            name = mUsernameEditText.getText().toString().trim();
+-            updateProfile(name, null);
++                            Fragment profileFragment = new ProfileFragment();
++                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
++                            transaction.replace(R.id.container, profileFragment);
++                            transaction.commit();
++                        } else {
++                            showCustomToast("Failed to update user profile");
++                        }
++                    });
+         }
+     }
+ 

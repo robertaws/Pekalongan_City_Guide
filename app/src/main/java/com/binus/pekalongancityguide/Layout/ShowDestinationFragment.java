@@ -1,10 +1,6 @@
 package com.binus.pekalongancityguide.Layout;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -12,10 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
-import com.binus.pekalongancityguide.R;
-import com.binus.pekalongancityguide.databinding.FragmentDestinationBinding;
 import com.binus.pekalongancityguide.databinding.FragmentShowDestinationBinding;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -61,9 +58,9 @@ public class ShowDestinationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentShowDestinationBinding.inflate(LayoutInflater.from(getContext()),container,false);
-        if(category.equals("All")){
+        if (category.equals("All")) {
             loadDestinations();
-        }else{
+        } else {
             loadCategoriedDestination();
         }
         binding.searchDesti.addTextChangedListener(new TextWatcher() {
