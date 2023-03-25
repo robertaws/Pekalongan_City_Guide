@@ -1,0 +1,27 @@
+Index: app/src/main/res/layout/fragment_conversation.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<FrameLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:id=\"@+id/tran\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"wrap_content\"\r\n    tools:context=\".Layout.ConversationFragment\"\r\n    android:background=\"@color/bg\">\r\n\r\n    <!-- TODO: Update blank fragment layout -->\r\n\r\n    <ScrollView\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\">\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"match_parent\"\r\n            android:layout_margin=\"15dp\"\r\n            android:orientation=\"vertical\">\r\n            <TextView\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:text=\"Daily conversation examples:\"\r\n                android:textSize=\"24dp\"\r\n                android:layout_marginBottom=\"20dp\"\r\n                android:textStyle=\"bold\"\r\n                android:textColor=\"@color/palette_1\"/>\r\n\r\n            <androidx.recyclerview.widget.RecyclerView\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:id=\"@+id/convo_rv\"\r\n                tools:listitem=\"@layout/list_convo\" />\r\n\r\n            <TextView\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:text=\"Frequent phrases:\"\r\n                android:textSize=\"24dp\"\r\n                android:textStyle=\"bold\"\r\n                android:layout_marginTop=\"20dp\"\r\n                android:textColor=\"@color/palette_1\"/>\r\n\r\n            <androidx.recyclerview.widget.RecyclerView\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:id=\"@+id/phrases_rv\"\r\n                android:layout_marginBottom=\"20dp\"\r\n                tools:listitem=\"@layout/list_phrases\"/>\r\n\r\n        </LinearLayout>\r\n\r\n    </ScrollView>\r\n\r\n</FrameLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_conversation.xml b/app/src/main/res/layout/fragment_conversation.xml
+--- a/app/src/main/res/layout/fragment_conversation.xml	(revision 8b6b333f285f225bf3a697617932d32ae6e685cd)
++++ b/app/src/main/res/layout/fragment_conversation.xml	(date 1679644649666)
+@@ -7,8 +7,6 @@
+     tools:context=".Layout.ConversationFragment"
+     android:background="@color/bg">
+ 
+-    <!-- TODO: Update blank fragment layout -->
+-
+     <ScrollView
+         android:layout_width="match_parent"
+         android:layout_height="match_parent">
+@@ -47,7 +45,6 @@
+                 android:id="@+id/phrases_rv"
+                 android:layout_marginBottom="20dp"
+                 tools:listitem="@layout/list_phrases"/>
+-
+         </LinearLayout>
+ 
+     </ScrollView>
