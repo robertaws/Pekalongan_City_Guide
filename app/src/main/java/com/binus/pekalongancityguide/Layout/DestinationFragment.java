@@ -2,33 +2,25 @@ package com.binus.pekalongancityguide.Layout;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
-import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Categories;
-import com.binus.pekalongancityguide.ItemTemplate.Destination;
-import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.FragmentDestinationBinding;
-import com.denzcoskun.imageslider.adapters.ViewPagerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class DestinationFragment extends Fragment {
@@ -36,18 +28,26 @@ public class DestinationFragment extends Fragment {
     public ViewPagerAdapter viewPagerAdapter;
     private FragmentDestinationBinding binding;
     private static final String TAG = "DESTI_USER_TAG";
-    public DestinationFragment(){
+
+    public DestinationFragment() {
 
     }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentDestinationBinding.inflate(LayoutInflater.from(getContext()),container,false);
+        binding = FragmentDestinationBinding.inflate(LayoutInflater.from(getContext()), container, false);
         setupViewPagerAdapter(binding.viewPager);
         binding.tabLayout.setupWithViewPager(binding.viewPager);
         return binding.getRoot();
     }
-    private void setupViewPagerAdapter(ViewPager viewPager){
+
+    private void setupViewPagerAdapter(ViewPager viewPager) {
         viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getContext());
         categoriesArrayList = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Categories");

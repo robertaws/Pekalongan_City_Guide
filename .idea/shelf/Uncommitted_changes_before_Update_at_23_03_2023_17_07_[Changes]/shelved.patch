@@ -1,0 +1,109 @@
+Index: app/src/main/java/com/binus/pekalongancityguide/ItemTemplate/DestinationAdmin.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.ItemTemplate;\r\n\r\nimport java.io.Serializable;\r\n\r\npublic class DestinationAdmin implements Serializable{\r\n    String uid,id,title,description,categoryId,url,address,latitude,longitude;\r\n    public DestinationAdmin(){\r\n\r\n    }\r\n    public DestinationAdmin(String uid, String id, String title, String description, String categoryId, String url, String address, String latitude, String longitude) {\r\n        this.uid = uid;\r\n        this.id = id;\r\n        this.title = title;\r\n        this.description = description;\r\n        this.categoryId = categoryId;\r\n        this.url = url;\r\n        this.address = address;\r\n        this.latitude = latitude;\r\n        this.longitude = longitude;\r\n    }\r\n\r\n    public String getUid() {\r\n        return uid;\r\n    }\r\n\r\n    public void setUid(String uid) {\r\n        this.uid = uid;\r\n    }\r\n\r\n    public String getId() {\r\n        return id;\r\n    }\r\n\r\n    public void setId(String id) {\r\n        this.id = id;\r\n    }\r\n\r\n    public String getTitle() {\r\n        return title;\r\n    }\r\n\r\n    public void setTitle(String title) {\r\n        this.title = title;\r\n    }\r\n\r\n    public String getDescription() {\r\n        return description;\r\n    }\r\n\r\n    public void setDescription(String description) {\r\n        this.description = description;\r\n    }\r\n\r\n    public String getCategoryId() {\r\n        return categoryId;\r\n    }\r\n\r\n    public void setCategoryId(String categoryId) {\r\n        this.categoryId = categoryId;\r\n    }\r\n\r\n    public String getUrl() {\r\n        return url;\r\n    }\r\n\r\n    public void setUrl(String url) {\r\n        this.url = url;\r\n    }\r\n\r\n    public String getAddress() {\r\n        return address;\r\n    }\r\n\r\n    public void setAddress(String address) {\r\n        this.address = address;\r\n    }\r\n\r\n    public String getLatitude() {\r\n        return latitude;\r\n    }\r\n\r\n    public void setLatitude(String latitude) {\r\n        this.latitude = latitude;\r\n    }\r\n\r\n    public String getLongitude() {\r\n        return longitude;\r\n    }\r\n\r\n    public void setLongitude(String longitude) {\r\n        this.longitude = longitude;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/ItemTemplate/DestinationAdmin.java b/app/src/main/java/com/binus/pekalongancityguide/ItemTemplate/DestinationAdmin.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/ItemTemplate/DestinationAdmin.java	(revision 6fda929b9f3ecdba008ffca1f5c8c68dd3d647ba)
++++ b/app/src/main/java/com/binus/pekalongancityguide/ItemTemplate/DestinationAdmin.java	(date 1679566004880)
+@@ -2,17 +2,19 @@
+ 
+ import java.io.Serializable;
+ 
+-public class DestinationAdmin implements Serializable{
+-    String uid,id,title,description,categoryId,url,address,latitude,longitude;
+-    public DestinationAdmin(){
++public class DestinationAdmin implements Serializable {
++    String uid, id, title, description, placeId, url, address, latitude, longitude;
++
++    public DestinationAdmin() {
+ 
+     }
+-    public DestinationAdmin(String uid, String id, String title, String description, String categoryId, String url, String address, String latitude, String longitude) {
++
++    public DestinationAdmin(String uid, String id, String title, String description, String placeId, String url, String address, String latitude, String longitude) {
+         this.uid = uid;
+         this.id = id;
+         this.title = title;
+         this.description = description;
+-        this.categoryId = categoryId;
++        this.placeId = placeId;
+         this.url = url;
+         this.address = address;
+         this.latitude = latitude;
+@@ -51,12 +53,12 @@
+         this.description = description;
+     }
+ 
+-    public String getCategoryId() {
+-        return categoryId;
++    public String getPlaceId() {
++        return placeId;
+     }
+ 
+-    public void setCategoryId(String categoryId) {
+-        this.categoryId = categoryId;
++    public void setPlaceId(String placeId) {
++        this.placeId = placeId;
+     }
+ 
+     public String getUrl() {
+Index: app/src/main/java/com/binus/pekalongancityguide/Adapter/AdminDestinationAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.Adapter;\r\n\r\nimport android.app.AlertDialog;\r\nimport android.app.ProgressDialog;\r\nimport android.content.Context;\r\nimport android.content.DialogInterface;\r\nimport android.content.Intent;\r\nimport android.graphics.Bitmap;\r\nimport android.graphics.BitmapFactory;\r\nimport android.graphics.drawable.BitmapDrawable;\r\nimport android.graphics.drawable.Drawable;\r\nimport android.util.Log;\r\nimport android.view.Gravity;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.Filter;\r\nimport android.widget.Filterable;\r\nimport android.widget.ImageButton;\r\nimport android.widget.RelativeLayout;\r\nimport android.widget.TextView;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport com.binus.pekalongancityguide.Layout.DestinationDetailAdmin;\r\nimport com.binus.pekalongancityguide.Layout.EditDestination;\r\nimport com.binus.pekalongancityguide.ItemTemplate.DestinationAdmin;\r\nimport com.binus.pekalongancityguide.Misc.FilterDestiAdmin;\r\nimport com.binus.pekalongancityguide.Misc.MyApplication;\r\nimport com.binus.pekalongancityguide.databinding.ListDestiAdminBinding;\r\nimport com.google.android.gms.tasks.OnFailureListener;\r\nimport com.google.android.gms.tasks.OnSuccessListener;\r\nimport com.google.firebase.storage.FirebaseStorage;\r\nimport com.google.firebase.storage.StorageReference;\r\n\r\nimport java.io.ByteArrayOutputStream;\r\nimport java.io.FileNotFoundException;\r\nimport java.io.FileOutputStream;\r\nimport java.io.IOException;\r\nimport java.util.ArrayList;\r\n\r\nimport static com.binus.pekalongancityguide.Misc.Constants.MAX_BYTES_IMAGE;\r\n\r\npublic class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinationAdapter.HolderAdminDestination> implements Filterable {\r\n    private Context context;\r\n    public ArrayList<DestinationAdmin> destinationAdminArrayList,filterList;\r\n    public static final String TAG = \"DESTINATION_ADAPTER_TAG\";\r\n    private FilterDestiAdmin filterDestiAdmin;\r\n    private ListDestiAdminBinding binding;\r\n    private ProgressDialog dialog;\r\n    public AdminDestinationAdapter(Context context, ArrayList<DestinationAdmin> destinationAdminArrayList) {\r\n        this.context = context;\r\n        this.destinationAdminArrayList = destinationAdminArrayList;\r\n        this.filterList = destinationAdminArrayList;\r\n        dialog = new ProgressDialog(context);\r\n        dialog.setTitle(\"Please Wait\");\r\n        dialog.setCanceledOnTouchOutside(false);\r\n    }\r\n\r\n    @NonNull\r\n    @Override\r\n    public HolderAdminDestination onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {\r\n        binding = ListDestiAdminBinding.inflate(LayoutInflater.from(context),parent,false);\r\n\r\n        return new HolderAdminDestination(binding.getRoot());\r\n    }\r\n\r\n    @Override\r\n    public void onBindViewHolder(@NonNull HolderAdminDestination holder, int position) {\r\n\r\n        DestinationAdmin destinationAdmin = destinationAdminArrayList.get(position);\r\n        String destiId = destinationAdmin.getId();\r\n        String categoryId = destinationAdmin.getCategoryId();\r\n        String imageUrl = destinationAdmin.getUrl();\r\n        String title = destinationAdmin.getTitle();\r\n        String description = destinationAdmin.getDescription();\r\n        String address = destinationAdmin.getAddress();\r\n        String latitude = destinationAdmin.getLatitude();\r\n        String longitude = destinationAdmin.getLongitude();\r\n        holder.title.setText(title);\r\n        holder.description.setText(description);\r\n        holder.rating.setText(\"4.5\");\r\n        holder.address.setText(address);\r\n        holder.latitude.setText(String.valueOf(latitude));\r\n        holder.longitude.setText(String.valueOf(longitude));\r\n        loadImage(destinationAdmin, holder);\r\n        holder.options.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                showOptionsDialog(destinationAdmin, holder);\r\n            }\r\n        });\r\n        holder.itemView.setOnClickListener(v -> {\r\n            Drawable drawable = holder.layoutImage.getBackground();\r\n            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;\r\n            Bitmap bitmap = bitmapDrawable.getBitmap();\r\n            ByteArrayOutputStream stream = new ByteArrayOutputStream();\r\n            bitmap.compress(Bitmap.CompressFormat.PNG, 25, stream);\r\n            byte[] byteArray = stream.toByteArray();\r\n\r\n            String filePath = context.getFilesDir().getPath() + \"/image.png\";\r\n            FileOutputStream fos = null;\r\n            try {\r\n                fos = new FileOutputStream(filePath);\r\n            } catch (FileNotFoundException e) {\r\n                throw new RuntimeException(e);\r\n            }\r\n            try {\r\n                fos.write(byteArray);\r\n            } catch (IOException e) {\r\n                throw new RuntimeException(e);\r\n            }\r\n            try {\r\n                fos.close();\r\n            } catch (IOException e) {\r\n                throw new RuntimeException(e);\r\n            }\r\n            Intent intent = new Intent(context, DestinationDetailAdmin.class);\r\n            intent.putExtra(\"destiId\",destiId);\r\n            intent.putExtra(\"imageFilePath\", filePath);\r\n            context.startActivity(intent);\r\n        });\r\n    }\r\n\r\n    private void showOptionsDialog(DestinationAdmin destinationAdmin, HolderAdminDestination holder){\r\n        String destiId = destinationAdmin.getId();\r\n        String destiUrl = destinationAdmin.getUrl();\r\n        String destiTitle = destinationAdmin.getTitle();\r\n        String[] options = {\"Edit\",\"Delete\"};\r\n        AlertDialog.Builder builder = new AlertDialog.Builder(context);\r\n        builder.setTitle(\"Choose Options\")\r\n                .setItems(options, new DialogInterface.OnClickListener() {\r\n                    @Override\r\n                    public void onClick(DialogInterface dialog, int which) {\r\n                        if(which==0){\r\n                            Intent intent = new Intent(context, EditDestination.class);\r\n                            intent.putExtra(\"destiId\",destiId);\r\n                            context.startActivity(intent);\r\n                        }else{\r\n                            MyApplication.deleteDesti(\r\n                                    context,\r\n                                    \"\"+destiId,\r\n                                    \"\"+destiUrl,\r\n                                    \"\"+destiTitle\r\n                            );\r\n                        }\r\n                    }\r\n                })\r\n                .show();\r\n    }\r\n\r\n\r\n\r\n//    private void loadCategory(DestinationAdmin destinationAdmin, HolderAdminDestination holder) {\r\n//        String categoryId = destinationAdmin.getCategoryId();\r\n//        DatabaseReference reference = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference();\r\n//        reference.child(categoryId)\r\n//                .addValueEventListener(new ValueEventListener() {\r\n//                    @Override\r\n//                    public void onDataChange(@NonNull DataSnapshot snapshot) {\r\n//                        String categorytext = \"\"+snapshot.child(\"category\").getValue();\r\n//                        holder.category.setText(categorytext);\r\n//                    }\r\n//\r\n//                    @Override\r\n//                    public void onCancelled(@NonNull DatabaseError error) {\r\n//\r\n//                    }\r\n//                });\r\n//    }\r\n\r\n    public void loadImage(DestinationAdmin destinationAdmin, HolderAdminDestination holder){\r\n        String imageUrl = destinationAdmin.getUrl();\r\n        StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);\r\n        reference.getBytes(MAX_BYTES_IMAGE)\r\n                .addOnSuccessListener(new OnSuccessListener<byte[]>() {\r\n                    @Override\r\n                    public void onSuccess(byte[] bytes) {\r\n                        Log.d(TAG, \"on Success: \" + destinationAdmin.getTitle() + \"successfully got the file\");\r\n                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);\r\n                        BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), bitmap);\r\n                        drawable.setGravity(Gravity.FILL);\r\n                        holder.layoutImage.setBackground(drawable);\r\n                    }\r\n                })\r\n                .addOnFailureListener(new OnFailureListener() {\r\n                    @Override\r\n                    public void onFailure(@NonNull Exception e) {\r\n                        Log.d(TAG,\"on Failure: failed to getting file from url due to\"+e.getMessage());\r\n                    }\r\n                });\r\n    }\r\n\r\n    @Override\r\n    public int getItemCount() {\r\n        return destinationAdminArrayList.size();\r\n    }\r\n\r\n    @Override\r\n    public Filter getFilter() {\r\n        if(filterDestiAdmin==null){\r\n            filterDestiAdmin = new FilterDestiAdmin(filterList,this);\r\n\r\n        }\r\n        return filterDestiAdmin;\r\n    }\r\n\r\n    public class HolderAdminDestination extends RecyclerView.ViewHolder {\r\n        RelativeLayout layoutImage;\r\n        TextView title, description, address, latitude, longitude, rating;\r\n        ImageButton options;\r\n\r\n        public HolderAdminDestination(@NonNull View itemView) {\r\n            super(itemView);\r\n            layoutImage = binding.adminlayoutImage;\r\n            title = binding.adminlocTitle;\r\n            description = binding.adminlocDesc;\r\n            address = binding.adminlocAddress;\r\n            latitude = binding.adminlocLat;\r\n            longitude = binding.adminlocLong;\r\n            rating = binding.adminlocRat;\r\n            options = binding.optionBtn;\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/Adapter/AdminDestinationAdapter.java b/app/src/main/java/com/binus/pekalongancityguide/Adapter/AdminDestinationAdapter.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/Adapter/AdminDestinationAdapter.java	(revision 6fda929b9f3ecdba008ffca1f5c8c68dd3d647ba)
++++ b/app/src/main/java/com/binus/pekalongancityguide/Adapter/AdminDestinationAdapter.java	(date 1679566004764)
+@@ -23,9 +23,9 @@
+ import androidx.annotation.NonNull;
+ import androidx.recyclerview.widget.RecyclerView;
+ 
++import com.binus.pekalongancityguide.ItemTemplate.DestinationAdmin;
+ import com.binus.pekalongancityguide.Layout.DestinationDetailAdmin;
+ import com.binus.pekalongancityguide.Layout.EditDestination;
+-import com.binus.pekalongancityguide.ItemTemplate.DestinationAdmin;
+ import com.binus.pekalongancityguide.Misc.FilterDestiAdmin;
+ import com.binus.pekalongancityguide.Misc.MyApplication;
+ import com.binus.pekalongancityguide.databinding.ListDestiAdminBinding;
+@@ -71,7 +71,7 @@
+ 
+         DestinationAdmin destinationAdmin = destinationAdminArrayList.get(position);
+         String destiId = destinationAdmin.getId();
+-        String categoryId = destinationAdmin.getCategoryId();
++        String placeId = destinationAdmin.getPlaceId();
+         String imageUrl = destinationAdmin.getUrl();
+         String title = destinationAdmin.getTitle();
+         String description = destinationAdmin.getDescription();
+@@ -150,26 +150,6 @@
+                 .show();
+     }
+ 
+-
+-
+-//    private void loadCategory(DestinationAdmin destinationAdmin, HolderAdminDestination holder) {
+-//        String categoryId = destinationAdmin.getCategoryId();
+-//        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
+-//        reference.child(categoryId)
+-//                .addValueEventListener(new ValueEventListener() {
+-//                    @Override
+-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+-//                        String categorytext = ""+snapshot.child("category").getValue();
+-//                        holder.category.setText(categorytext);
+-//                    }
+-//
+-//                    @Override
+-//                    public void onCancelled(@NonNull DatabaseError error) {
+-//
+-//                    }
+-//                });
+-//    }
+-
+     public void loadImage(DestinationAdmin destinationAdmin, HolderAdminDestination holder){
+         String imageUrl = destinationAdmin.getUrl();
+         StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
