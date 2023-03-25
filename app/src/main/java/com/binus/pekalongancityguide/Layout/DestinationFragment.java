@@ -48,7 +48,7 @@ public class DestinationFragment extends Fragment {
         return binding.getRoot();
     }
     private void setupViewPagerAdapter(ViewPager viewPager){
-        viewPagerAdapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,getContext());
+        viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getContext());
         categoriesArrayList = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Categories");
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -80,13 +80,15 @@ public class DestinationFragment extends Fragment {
             }
         });
         viewPager.setAdapter(viewPagerAdapter);
+        viewPager.setOffscreenPageLimit(1);
     }
     public class ViewPagerAdapter extends FragmentPagerAdapter{
-        private ArrayList <ShowDestinationFragment> fragmentList = new ArrayList<>();;
+        private ArrayList <ShowDestinationFragment> fragmentList = new ArrayList<>();
         private ArrayList <String> fragmentTitleList = new ArrayList<>();
         private Context context;
-        public ViewPagerAdapter(@NonNull FragmentManager fm, int behavior, Context context) {
-            super(fm, behavior);
+
+        public ViewPagerAdapter(@NonNull FragmentManager fm, Context context) {
+            super(fm, BEHAVIOR_SET_USER_VISIBLE_HINT);
             this.context = context;
         }
 
