@@ -126,7 +126,7 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
         reference.getBytes(MAX_BYTES_IMAGE)
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
-                    public void onSuccess(byte[] bytes) {
+                    public void onSuccess(byte[] bytes){
                         Log.d(TAG, "on Success: " + destination.getTitle() + "successfully got the file");
                         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                         BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), bitmap);

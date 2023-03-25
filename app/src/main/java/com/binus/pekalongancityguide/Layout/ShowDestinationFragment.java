@@ -98,7 +98,6 @@ public class ShowDestinationFragment extends Fragment {
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     Destination destination = dataSnapshot.getValue(Destination.class);
                     destinationArrayList.add(destination);
-
                 }
                 destinationAdapter = new DestinationAdapter(getContext(),destinationArrayList);
                 binding.destiRv.setAdapter(destinationAdapter);
