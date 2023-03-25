@@ -1,17 +1,12 @@
 package com.binus.pekalongancityguide.Layout;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.binus.pekalongancityguide.R;
+import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.sagarkoli.chetanbottomnavigation.chetanBottomNavigation;
 
 public class Home extends AppCompatActivity {
     private static final int home = 1;
@@ -25,7 +20,8 @@ public class Home extends AppCompatActivity {
     private static final int convo = 4;
     private static final int pr = 5;
     private FirebaseAuth firebaseAuth;
-    chetanBottomNavigation bottomNavigationView;
+    //    MeowBottomNavigation bottomNavigationView;
+    MeowBottomNavigation bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +29,15 @@ public class Home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         bottomNavigationView = findViewById(R.id.bottom_navi);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
-        bottomNavigationView.add(new chetanBottomNavigation.Model(home, R.drawable.ic_home));
-        bottomNavigationView.add(new chetanBottomNavigation.Model(desti, R.drawable.destination));
-        bottomNavigationView.add(new chetanBottomNavigation.Model(bm, R.drawable.remove_bookmark));
-        bottomNavigationView.add(new chetanBottomNavigation.Model(convo, R.drawable.chat));
-        bottomNavigationView.add(new chetanBottomNavigation.Model(pr, R.drawable.profile));
+        bottomNavigationView.add(new MeowBottomNavigation.Model(home, R.drawable.ic_home));
+        bottomNavigationView.add(new MeowBottomNavigation.Model(desti, R.drawable.destination));
+        bottomNavigationView.add(new MeowBottomNavigation.Model(bm, R.drawable.remove_bookmark));
+        bottomNavigationView.add(new MeowBottomNavigation.Model(convo, R.drawable.chat));
+        bottomNavigationView.add(new MeowBottomNavigation.Model(pr, R.drawable.profile));
 
-        bottomNavigationView.setOnShowListener(new chetanBottomNavigation.ShowListener() {
+        bottomNavigationView.setOnShowListener(new MeowBottomNavigation.ShowListener() {
             @Override
-            public void onShowItem(chetanBottomNavigation.Model item) {
+            public void onShowItem(MeowBottomNavigation.Model item) {
                 String name;
                 switch (item.getId()) {
                     case home:
@@ -67,15 +63,15 @@ public class Home extends AppCompatActivity {
             }
         });
 
-        bottomNavigationView.setOnClickMenuListener(new chetanBottomNavigation.ClickListener() {
+        bottomNavigationView.setOnClickMenuListener(new MeowBottomNavigation.ClickListener() {
             @Override
-            public void onClickItem(chetanBottomNavigation.Model item) {
+            public void onClickItem(MeowBottomNavigation.Model item) {
             }
         });
 
-        bottomNavigationView.setOnReselectListener(new chetanBottomNavigation.ReselectListener() {
+        bottomNavigationView.setOnReselectListener(new MeowBottomNavigation.ReselectListener() {
             @Override
-            public void onReselectItem(chetanBottomNavigation.Model item) {
+            public void onReselectItem(MeowBottomNavigation.Model item) {
             }
         });
         bottomNavigationView.show(home, true);
