@@ -11,16 +11,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/palette_3"
+        android:background="@color/palette_1"
         android:padding="8dp"
         android:orientation="horizontal">
+        <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            app:cardElevation="8dp"
+            app:cardCornerRadius="40dp"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="5dp">
+            <ImageView
+                android:padding="5dp"
+                android:background="@color/palette_4"
+                android:id="@+id/phrase_img"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:src="@drawable/logo"
+                />
+        </androidx.cardview.widget.CardView>
 
-        <ImageView
-            android:id="@+id/phrase_img"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:src="@drawable/logo"
-            android:layout_gravity="center_vertical" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,7 +52,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="Aksara\t\t\t: "
-                    android:textColor="@color/palette_1"
+                    android:textColor="@color/palette_4"
                     android:textSize="18dp" />
 
                 <TextView
@@ -49,7 +61,7 @@
                     android:layout_height="match_parent"
                     android:justificationMode="inter_word"
                     android:text="꧋ꦱꦺꦭꦩꦠ꧀ꦥꦒꦶ"
-                    android:textColor="@color/palette_1"
+                    android:textColor="@color/palette_4"
                     android:textSize="18dp"
                     android:paddingBottom="10dp"
                     android:layout_marginStart="5dp" />
@@ -66,12 +78,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="Jawa\t\t\t\t: "
-                    android:textColor="@color/palette_1"
+                    android:textColor="@color/palette_4"
                     android:textSize="18dp" />
 
                 <TextView
                     android:id="@+id/phrase_latin_value"
-                    android:textColor="@color/palette_1"
+                    android:textColor="@color/palette_4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:justificationMode="inter_word"
@@ -92,12 +104,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="English\t\t: "
-                    android:textColor="@color/palette_1"
+                    android:textColor="@color/palette_4"
                     android:textSize="18dp" />
 
                 <TextView
                     android:id="@+id/phrase_english_value"
-                    android:textColor="@color/palette_1"
+                    android:textColor="@color/palette_4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:justificationMode="inter_word"
@@ -118,12 +130,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="Bahasa\t\t: "
-                    android:textColor="@color/palette_1"
+                    android:textColor="@color/palette_4"
                     android:textSize="18dp" />
 
                 <TextView
                     android:id="@+id/phrase_indo_value"
-                    android:textColor="@color/palette_1"
+                    android:textColor="@color/palette_4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:justificationMode="inter_word"

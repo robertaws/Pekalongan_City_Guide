@@ -12,21 +12,6 @@
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_navi" />
 
-    <!--    <com.sagarkoli.chetanbottomnavigation.chetanBottomNavigation-->
-    <!--        android:id="@+id/bottom_navi"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignParentBottom="true"-->
-    <!--        app:sk_backgroundBottomColor="@color/palette_4"-->
-    <!--        app:sk_circleColor="@color/palette_4"-->
-    <!--        app:sk_countBackgroundColor="#0000"-->
-    <!--        app:sk_countTextColor="@null"-->
-    <!--        app:sk_defaultIconColor="@color/palette_2"-->
-    <!--        app:sk_rippleColor="@null"-->
-    <!--        app:sk_selectedIconColor="@color/palette_1"-->
-    <!--        app:sk_shadowColor="#1f212121"-->
-    <!--        android:background="#0000"/>-->
-
     <com.etebarian.meowbottomnavigation.MeowBottomNavigation
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,6 +22,6 @@
         app:mbn_countBackgroundColor="@color/palette_1"
         app:mbn_defaultIconColor="@color/palette_2"
         app:mbn_selectedIconColor="@color/palette_1"
-        android:background="@color/palette_3" />
+        android:background="@color/palette_3"/>
 
 </RelativeLayout>
