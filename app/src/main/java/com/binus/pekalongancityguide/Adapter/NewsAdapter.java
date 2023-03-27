@@ -5,16 +5,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.ObservableArrayList;
+import androidx.lifecycle.ViewModelProviderGetKt;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.R;
 import com.bumptech.glide.Glide;
 import com.kwabenaberko.newsapilib.models.Article;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
@@ -31,32 +38,27 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         return new ViewHolder(view);
     }
 
-    @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Article article = mArticles.get(position);
-
-        // Set article title
-        holder.titleTextView.setText(article.getTitle());
-
-        // Set article description
-        holder.descriptionTextView.setText(article.getDescription());
-
-        // Set article author
-        holder.authorTextView.setText(article.getAuthor());
-
-        // Set article source name
-        holder.sourceTextView.setText(article.getSource().getName());
-
-        // Set article published date
-        holder.dateTextView.setText(article.getPublishedAt());
-
-        // Set article image
+        holder.titleTv.setText(article.getTitle());
+        holder.descTV.setText(article.getDescription());
+        holder.authorTV.setText(article.getAuthor());
+        holder.sourceTV.setText(article.getSource().getName());
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
+        String formattedDate = "";
+        try {
+            Date date = inputDateFormat.parse(article.getPublishedAt());
+            formattedDate = outputDateFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        holder.dateTV.setText(formattedDate);
         if (article.getUrlToImage() != null) {
             Glide.with(holder.itemView.getContext())
                     .load(article.getUrlToImage())
-                    .into(holder.imageView);
+                    .into(holder.newsImage);
         }
-
         Log.d("NewsAPI", "Title: " + article.getTitle());
         Log.d("NewsAPI", "Description: " + article.getDescription());
         Log.d("NewsAPI", "Image URL: " + article.getUrlToImage());
@@ -66,23 +68,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     public int getItemCount() {
         return mArticles.size();
     }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView titleTextView;
-        private TextView descriptionTextView;
-        private TextView authorTextView;
-        private TextView sourceTextView;
-        private TextView dateTextView;
-        private ImageView imageView;
-
+        private TextView titleTv, descTV, authorTV, sourceTV, dateTV;
+        private ImageView newsImage;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            titleTextView = itemView.findViewById(R.id.news_title);
-            descriptionTextView = itemView.findViewById(R.id.news_body);
-            authorTextView = itemView.findViewById(R.id.news_author);
-            sourceTextView = itemView.findViewById(R.id.news_source);
-            dateTextView = itemView.findViewById(R.id.news_date);
-            imageView = itemView.findViewById(R.id.news_iv);
+            titleTv = itemView.findViewById(R.id.news_title);
+            descTV = itemView.findViewById(R.id.news_body);
+            authorTV = itemView.findViewById(R.id.news_author);
+            sourceTV = itemView.findViewById(R.id.news_source);
+            dateTV = itemView.findViewById(R.id.news_date);
+            newsImage = itemView.findViewById(R.id.news_iv);
         }
     }
 }

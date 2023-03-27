@@ -149,7 +149,6 @@ public class AddDestination extends AppCompatActivity {
                                         }
                                     }
                                 }.execute(url);
-
                             } else {
                                 Toast.makeText(AddDestination.this, "Error getting location details: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
@@ -213,7 +212,21 @@ public class AddDestination extends AppCompatActivity {
         hashMap.put("url", "" + uploadedImageUrl);
         hashMap.put("timestamp", timestamp);
         hashMap.put("placeId", placeId);
-        hashMap.put("reviews", reviews);
+
+        ArrayList<HashMap<String, Object>> reviewsList = new ArrayList<>();
+        for (int i = 0; i < reviews.length(); i++) {
+            try {
+                JSONObject review = reviews.getJSONObject(i);
+                HashMap<String, Object> reviewMap = new HashMap<>();
+                reviewMap.put("authorName", review.getString("author_name"));
+                reviewMap.put("rating", review.getInt("rating"));
+                reviewMap.put("text", review.getString("text"));
+                reviewsList.add(reviewMap);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        hashMap.put("reviews", reviewsList);
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
         reference.child(""+timestamp)
                 .setValue(hashMap)
@@ -348,7 +361,6 @@ public class AddDestination extends AppCompatActivity {
                 while ((line = reader.readLine()) != null) {
                     response.append(line);
                 }
-
                 // Parse the JSON response
                 json = new JSONObject(response.toString());
             } catch (Exception e) {

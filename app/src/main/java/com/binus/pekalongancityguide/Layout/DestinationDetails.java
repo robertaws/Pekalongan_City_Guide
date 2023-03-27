@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -17,7 +18,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.binus.pekalongancityguide.Adapter.BookmarkAdapter;
+import com.binus.pekalongancityguide.Adapter.ReviewAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
+import com.binus.pekalongancityguide.ItemTemplate.Review;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityDestinationDetailsBinding;
@@ -34,12 +37,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DestinationDetails extends AppCompatActivity {
     private ActivityDestinationDetailsBinding binding;
     String destiId;
     boolean inFavorite = false;
     FirebaseAuth firebaseAuth;
+    private static final String TAG = "REVIEW_TAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +88,19 @@ public class DestinationDetails extends AppCompatActivity {
                         binding.destiName.setText(title);
                         binding.destiDesc.setText(description);
                         binding.destiAddress.setText(address);
+
+                        List<Review> reviews = new ArrayList<>();
+                        for (DataSnapshot reviewSnapshot : snapshot.child("reviews").getChildren()) {
+                            String authorName = reviewSnapshot.child("authorName").getValue(String.class);
+                            int rating = reviewSnapshot.child("rating").getValue(int.class);
+                            String text = reviewSnapshot.child("text").getValue(String.class);
+                            reviews.add(new Review(authorName, rating, text));
+                        }
+                        ReviewAdapter reviewAdapter = new ReviewAdapter(reviews);
+                        binding.reviewRv.setAdapter(reviewAdapter);
+
+                        binding.reviewRv.setAdapter(new ReviewAdapter(reviews));
+
                         String filePath = getIntent().getStringExtra("imageFilePath");
                         if (filePath != null) {
                             Bitmap bitmap = BitmapFactory.decodeFile(filePath);
@@ -107,6 +125,7 @@ public class DestinationDetails extends AppCompatActivity {
                     }
                 });
     }
+
     private void checkFavorite(){
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
         reference.child(firebaseAuth.getUid()).child("Favorites").child(destiId)

@@ -1,5 +1,7 @@
 package com.binus.pekalongancityguide.Layout;
 
+import static com.binus.pekalongancityguide.BuildConfig.NEWS_API_KEY;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,8 +32,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import static com.binus.pekalongancityguide.BuildConfig.NEWS_API_KEY;
 
 
 public class HomeFragment extends Fragment {
@@ -88,35 +88,25 @@ public class HomeFragment extends Fragment {
         Date dateBefore30Days = cal.getTime();
         String dateString = dateFormat.format(dateBefore30Days);
 
-
-// Define the query parameters
         EverythingRequest everythingRequest = new EverythingRequest.Builder()
-                .q("pekalongan") // search for articles containing "pekalongan"
-                .language("id") // set the language to English
-                .from(dateString) // set the start date to 30 days ago
-                .to(String.valueOf(new Date())) // set the end date to the current date
+                .q("jawa tengah")
+                .language("id")
+                .from(dateString)
+                .to(String.valueOf(new Date()))
                 .build();
 
-
-// Make the API request to get the news articles
         newsApiClient.getEverything(everythingRequest, new NewsApiClient.ArticlesResponseCallback() {
             @Override
             public void onSuccess(ArticleResponse response) {
                 List<Article> articles = response.getArticles();
-
-                // Use the list of articles to populate your RecyclerView
                 NewsAdapter newsAdapter = new NewsAdapter(articles);
                 newsRV.setAdapter(newsAdapter);
             }
-
             @Override
             public void onFailure(Throwable throwable) {
-                // Handle the error
                 Log.e("NewsAPI", "Error fetching news articles: " + throwable.getMessage());
             }
         });
-
-
         return view;
     }
 

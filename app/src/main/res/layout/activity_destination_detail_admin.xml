@@ -138,6 +138,16 @@
                             android:layout_marginTop="5dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/adminreview_rv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:listitem="@layout/list_review"/>
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_marginTop="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
             </LinearLayout>

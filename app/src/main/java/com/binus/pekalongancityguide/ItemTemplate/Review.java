@@ -1,37 +1,39 @@
 package com.binus.pekalongancityguide.ItemTemplate;
-
 public class Review {
-    private String reviewerName;
-    private String reviewText;
-    private float rating;
+    private String reviewAuthor;
+    private int reviewRating;
+    private String review_text;
 
-    public Review(String reviewerName, String reviewText, float rating) {
-        this.reviewerName = reviewerName;
-        this.reviewText = reviewText;
-        this.rating = rating;
+    public Review() {}
+
+    public Review(String reviewAuthor, int reviewRating, String review_text) {
+        this.reviewAuthor = reviewAuthor;
+        this.reviewRating = reviewRating;
+        this.review_text = review_text;
     }
 
-    public String getReviewerName() {
-        return reviewerName;
+    public String getReviewAuthor() {
+        return reviewAuthor;
     }
 
-    public void setReviewerName(String reviewerName) {
-        this.reviewerName = reviewerName;
+    public void setReviewAuthor(String reviewAuthor) {
+        this.reviewAuthor = reviewAuthor;
     }
 
-    public String getReviewText() {
-        return reviewText;
+    public int getReviewRating() {
+        return reviewRating;
     }
 
-    public void setReviewText(String reviewText) {
-        this.reviewText = reviewText;
+    public void setReviewRating(int reviewRating) {
+        this.reviewRating = reviewRating;
     }
 
-    public float getRating() {
-        return rating;
+    public String getReview_text() {
+        return review_text;
     }
 
-    public void setRating(float rating) {
-        this.rating = rating;
+    public void setReview_text(String review_text) {
+        this.review_text = review_text;
     }
 }
+
