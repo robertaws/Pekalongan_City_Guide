@@ -2,20 +2,53 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:background="#0000">
+
     <ImageView
         android:id="@+id/news_iv"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@color/palette_4"/>
+        android:background="@color/palette_4" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/news_source"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Source" />
+
+        <TextView
+            android:id="@+id/news_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:layout_marginStart="5dp" />
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/news_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="JUDUL"/>
+        android:text="JUDUL" />
+
     <TextView
         android:id="@+id/news_body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ISI"/>
+        android:text="ISI"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/news_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ISI"
+        android:visibility="invisible" />
 </LinearLayout>
