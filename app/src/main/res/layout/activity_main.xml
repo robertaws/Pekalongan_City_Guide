@@ -32,6 +32,10 @@
             app:boxBackgroundMode="none">
 
             <EditText
+                android:drawableTint="@color/palette_1"
+                android:gravity="center_vertical"
+                android:drawablePadding="15dp"
+                android:drawableLeft="@drawable/mail_icon"
                 android:id="@+id/login_email"
                 android:padding="12dp"
                 android:layout_marginHorizontal="20dp"
@@ -53,6 +57,10 @@
             app:boxBackgroundMode="none">
 
             <EditText
+                android:drawableTint="@color/palette_1"
+                android:gravity="center_vertical"
+                android:drawablePadding="15dp"
+                android:drawableStart="@drawable/pass_icon"
                 android:id="@+id/login_pass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

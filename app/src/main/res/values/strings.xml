@@ -37,7 +37,7 @@
     #profile fragment
     <string name="user_txt">Username</string>
     <string name="email_txt">Email Address</string>
-    <string name="time_txt">Time Joined</string>
+    <string name="time_txt">Date Joined</string>
     <string name="type_txt">User Type</string>
     <string name="logout_text">Logout</string>
     <string name="lang_txt">Language</string>

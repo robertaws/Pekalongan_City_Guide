@@ -1,5 +1,6 @@
 package com.binus.pekalongancityguide.Layout;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +21,6 @@ public class Home extends AppCompatActivity {
     private static final int convo = 4;
     private static final int pr = 5;
     private FirebaseAuth firebaseAuth;
-    //    MeowBottomNavigation bottomNavigationView;
     MeowBottomNavigation bottomNavigationView;
 
     @Override

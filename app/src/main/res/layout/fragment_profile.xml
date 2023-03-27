@@ -37,6 +37,10 @@
                 app:shapeAppearance="@style/roundedImage" />
 
             <TextView
+                android:gravity="center_vertical"
+                android:drawablePadding="5dp"
+                android:drawableTint="#ACA2A2"
+                android:drawableLeft="@drawable/user_icon"
                 android:textColor="#ACA2A2"
                 android:layout_marginStart="20dp"
                 android:layout_width="wrap_content"
@@ -80,6 +84,10 @@
                 android:layout_height="wrap_content" />
 
             <TextView
+                android:gravity="center_vertical"
+                android:drawablePadding="5dp"
+                android:drawableTint="#ACA2A2"
+                android:drawableLeft="@drawable/mail_icon"
                 android:layout_marginTop="10dp"
                 android:textColor="#ACA2A2"
                 android:layout_marginStart="20dp"
@@ -107,6 +115,10 @@
                 android:layout_height="wrap_content" />
 
             <TextView
+                android:gravity="center_vertical"
+                android:drawablePadding="5dp"
+                android:drawableTint="#ACA2A2"
+                android:drawableLeft="@drawable/date_icon"
                 android:layout_marginTop="10dp"
                 android:textColor="#ACA2A2"
                 android:layout_marginStart="20dp"
@@ -133,6 +145,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <TextView
+                android:gravity="center_vertical"
+                android:drawablePadding="5dp"
+                android:drawableTint="#ACA2A2"
+                android:drawableLeft="@drawable/type_icon"
                 android:layout_marginTop="10dp"
                 android:textColor="#ACA2A2"
                 android:layout_marginStart="20dp"
@@ -142,6 +158,7 @@
                 android:textSize="16dp" />
 
             <TextView
+
                 android:id="@+id/profile_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -52,6 +52,9 @@
             android:background="@color/palette_4" />
 
         <EditText
+            android:gravity="center_vertical"
+            android:drawablePadding="15dp"
+            android:drawableLeft="@drawable/user_icon"
             android:id="@+id/edit_name"
             android:layout_marginVertical="20dp"
             android:padding="15dp"

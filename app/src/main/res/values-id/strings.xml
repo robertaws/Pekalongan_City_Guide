@@ -37,7 +37,7 @@
     #profile fragment
     <string name="user_txt">Nama pengguna</string>
     <string name="email_txt">Alamat email</string>
-    <string name="time_txt">Waktu Bergabung</string>
+    <string name="time_txt">Tanggal Bergabung</string>
     <string name="type_txt">Tipe Pengguna</string>
     <string name="logout_text">Keluar</string>
     <string name="lang_txt">Bahasa</string>
