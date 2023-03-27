@@ -1,7 +1,5 @@
 package com.binus.pekalongancityguide.Adapter;
 
-import static com.binus.pekalongancityguide.Misc.Constants.MAX_BYTES_IMAGE;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.Layout.DestinationDetails;
 import com.binus.pekalongancityguide.Misc.FilterBookmark;
-import com.binus.pekalongancityguide.Misc.FilterDestiUser;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.databinding.ListFavoriteBinding;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -44,6 +41,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static com.binus.pekalongancityguide.Misc.Constants.MAX_BYTES_IMAGE;
 
 public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.HolderBookmark> implements Filterable{
     private static final String TAG = "BOOKMARK_ADAPTER_TAG";
@@ -112,44 +111,48 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String title = ""+snapshot.child("title").getValue();
-                        String description = ""+snapshot.child("description").getValue();
-                        String address = ""+snapshot.child("address").getValue();
-                        String categoryId = ""+snapshot.child("categoryId").getValue();
-                        String url = ""+snapshot.child("url").getValue();
-                        String desRating = ""+snapshot.child("rating").getValue();
-                        double latitude = Double.parseDouble(snapshot.child("latitude").getValue().toString());
-                        double longitude = Double.parseDouble(snapshot.child("longitude").getValue().toString());
-                        destination.setFavorite(true);
-                        destination.setTitle(title);
-                        destination.setDescription(description);
-                        destination.setAddress(address);
-                        destination.setCategoryId(categoryId);
-                        destination.setUrl(url);
-                        destination.setDesLat(latitude);
-                        destination.setDesLong(longitude);
-                        destination.setRating(desRating);
-                        StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(url);
-                        reference.getBytes(MAX_BYTES_IMAGE)
-                                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                    @Override
-                                    public void onSuccess(byte[] bytes) {
-                                        Log.d(TAG, "on Success: " + destination.getTitle() + "successfully got the file");
-                                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                        BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), bitmap);
-                                        drawable.setGravity(Gravity.FILL);
-                                        holder.layoutImage.setBackground(drawable);
-                                        holder.progressBar.setVisibility(View.GONE);
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.d(TAG,"on Failure: failed to getting file from url due to"+e.getMessage());
-                                    }
-                                });
-                        holder.title.setText(title);
-                        holder.rating.setText(desRating);
+                        if (snapshot.exists()) {
+                            String title = "" + snapshot.child("title").getValue();
+                            String description = "" + snapshot.child("description").getValue();
+                            String address = "" + snapshot.child("address").getValue();
+                            String categoryId = "" + snapshot.child("categoryId").getValue();
+                            String url = "" + snapshot.child("url").getValue();
+                            String desRating = "" + snapshot.child("rating").getValue();
+                            double latitude = Double.parseDouble(snapshot.child("latitude").getValue().toString());
+                            double longitude = Double.parseDouble(snapshot.child("longitude").getValue().toString());
+                            destination.setFavorite(true);
+                            destination.setTitle(title);
+                            destination.setDescription(description);
+                            destination.setAddress(address);
+                            destination.setCategoryId(categoryId);
+                            destination.setUrl(url);
+                            destination.setDesLat(latitude);
+                            destination.setDesLong(longitude);
+                            destination.setRating(desRating);
+                            StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(url);
+                            reference.getBytes(MAX_BYTES_IMAGE)
+                                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                        @Override
+                                        public void onSuccess(byte[] bytes) {
+                                            Log.d(TAG, "on Success: " + destination.getTitle() + "successfully got the file");
+                                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                            BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), bitmap);
+                                            drawable.setGravity(Gravity.FILL);
+                                            holder.layoutImage.setBackground(drawable);
+                                            holder.progressBar.setVisibility(View.GONE);
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.d(TAG, "on Failure: failed to getting file from url due to" + e.getMessage());
+                                        }
+                                    });
+                            holder.title.setText(title);
+                            holder.rating.setText(desRating);
+                        } else {
+                            // handle null snapshot case
+                        }
                     }
 
                     @Override

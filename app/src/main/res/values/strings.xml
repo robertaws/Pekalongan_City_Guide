@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     #ENGLISH STRING
     #home fragment
     <string name="app_name">Pekalongan City Guide</string>
