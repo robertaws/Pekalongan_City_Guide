@@ -11,6 +11,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 
+import com.binus.pekalongancityguide.Adapter.ReviewAdapter;
+import com.binus.pekalongancityguide.ItemTemplate.Review;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityDestinationDetailAdminBinding;
@@ -24,6 +26,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DestinationDetailAdmin extends AppCompatActivity {
     private ActivityDestinationDetailAdminBinding binding;
@@ -56,6 +61,18 @@ public class DestinationDetailAdmin extends AppCompatActivity {
                         binding.destiAdminName.setText(title);
                         binding.destiAdminDesc.setText(description);
                         binding.destiAdminAddress.setText(address);
+
+                        List<Review> reviews = new ArrayList<>();
+                        for (DataSnapshot reviewSnapshot : snapshot.child("reviews").getChildren()) {
+                            String authorName = reviewSnapshot.child("authorName").getValue(String.class);
+                            int rating = reviewSnapshot.child("rating").getValue(int.class);
+                            String text = reviewSnapshot.child("text").getValue(String.class);
+                            reviews.add(new Review(authorName, rating, text));
+                        }
+                        ReviewAdapter reviewAdapter = new ReviewAdapter(reviews);
+                        binding.adminreviewRv.setAdapter(reviewAdapter);
+
+                        binding.adminreviewRv.setAdapter(new ReviewAdapter(reviews));
                         String filePath = getIntent().getStringExtra("imageFilePath");
                         if (filePath != null) {
                             Bitmap bitmap = BitmapFactory.decodeFile(filePath);

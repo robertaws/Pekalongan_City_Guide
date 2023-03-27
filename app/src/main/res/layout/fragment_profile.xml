@@ -7,14 +7,14 @@
 
     </data>
 
-    <FrameLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:context=".Layout.ProfileFragment">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:orientation="vertical">
 
             <View
@@ -30,10 +30,11 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/profileImg"
-                android:layout_marginTop="-120dp"
+                android:layout_marginTop="-150dp"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center"
+                android:layout_marginBottom="30dp"
                 app:shapeAppearance="@style/roundedImage" />
 
             <TextView
@@ -77,6 +78,7 @@
 
 
             <com.google.android.material.divider.MaterialDivider
+                app:dividerColor="@color/palette_4"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="5dp"
@@ -108,6 +110,7 @@
                 android:textStyle="bold" />
 
             <com.google.android.material.divider.MaterialDivider
+                app:dividerColor="@color/palette_4"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="5dp"
@@ -139,6 +142,7 @@
                 android:textStyle="bold"></TextView>
 
             <com.google.android.material.divider.MaterialDivider
+                app:dividerColor="@color/palette_4"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="5dp"
@@ -158,7 +162,6 @@
                 android:textSize="16dp" />
 
             <TextView
-
                 android:id="@+id/profile_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -170,19 +173,21 @@
                 android:textStyle="bold"></TextView>
 
             <com.google.android.material.divider.MaterialDivider
+                app:dividerColor="@color/palette_4"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
             <Button
                 android:padding="10dp"
                 android:id="@+id/logout_btn"
                 android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Logout" />
+                android:text="@string/logout_text" />
         </LinearLayout>
-    </FrameLayout>
+    </ScrollView>
 </layout>

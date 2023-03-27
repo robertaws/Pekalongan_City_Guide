@@ -40,7 +40,7 @@
     <string name="time_txt">Date Joined</string>
     <string name="type_txt">User Type</string>
     <string name="logout_text">Logout</string>
-    <string name="lang_txt">Language</string>
+    <string name="change_lang">Change Language</string>
     #edit profile
     <string name="edit_header">Edit Profile</string>
     <string name="update_text">Update</string>
@@ -57,5 +57,4 @@
     <string name="regispass_text">Enter Password</string>
     <string name="regiscfmpass_text">Confirm Your Password</string>
     <string name="regisbtn_text">Register</string>
-
 </resources>

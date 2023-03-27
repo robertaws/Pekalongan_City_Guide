@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -36,7 +37,6 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class ProfileFragment extends Fragment{
-    Button logout;
     private FragmentProfileBinding binding;
     private FirebaseAuth firebaseAuth;
     private static final String TAG = "PROFILE_TAG";
@@ -55,7 +55,6 @@ public class ProfileFragment extends Fragment{
         binding.logoutBtn.setOnClickListener(v -> {
             logoutConfirm();
         });
-
         return view;
     }
 

@@ -40,7 +40,6 @@
     <string name="time_txt">Tanggal Bergabung</string>
     <string name="type_txt">Tipe Pengguna</string>
     <string name="logout_text">Keluar</string>
-    <string name="lang_txt">Bahasa</string>
     #edit profile
     <string name="edit_header">Mengedit Profil</string>
     <string name="update_text">Perbarui</string>
@@ -57,5 +56,6 @@
     <string name="regispass_text">Masukkan Kata Sandi</string>
     <string name="regiscfmpass_text">Konfirmasikan Kata Sandi</string>
     <string name="regisbtn_text">Daftar</string>
+    <string name="change_lang">Ubah Bahasa</string>
 
 </resources>
