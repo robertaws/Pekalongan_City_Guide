@@ -4,8 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Rating;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityAddDestinationBinding;
@@ -44,6 +43,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -112,6 +120,7 @@ public class AddDestination extends AppCompatActivity {
                 if (!response.getAutocompletePredictions().isEmpty()) {
                     String placeId = response.getAutocompletePredictions().get(0).getPlaceId();
                     Log.d(TAG, "Place ID: " + placeId);
+                    String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" + MAPS_API_KEY;
 
                     FetchPlaceRequest placeRequest = FetchPlaceRequest.builder(placeId, placeFields).build();
                     placesClient.fetchPlace(placeRequest).addOnCompleteListener(new OnCompleteListener<FetchPlaceResponse>() {
@@ -127,7 +136,20 @@ public class AddDestination extends AppCompatActivity {
                                 Log.d(TAG, "Latitude: " + latitude);
                                 Log.d(TAG, "Longitude: " + longitude);
                                 Log.d(TAG, "Rating: " + rating);
-                                uploadtoStorage(placeId, address, latitude, longitude,rating);
+                                new GetReviewsTask() {
+                                    @Override
+                                    protected void onPostExecute(JSONArray reviews) {
+                                        if (reviews != null) {
+                                            // Do something with the reviews
+                                            Log.d(TAG, "Reviews: " + reviews.toString());
+                                            // Call the uploadtoStorage method with the reviews parameter
+                                            uploadtoStorage(placeId, address, latitude, longitude, rating, reviews);
+                                        } else {
+                                            Toast.makeText(AddDestination.this, "Error getting reviews", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }.execute(url);
+
                             } else {
                                 Toast.makeText(AddDestination.this, "Error getting location details: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
@@ -144,7 +166,7 @@ public class AddDestination extends AppCompatActivity {
         }
     }
 
-    private void uploadtoStorage(String placeId, String address, double lat, double lng,double rating) {
+    private void uploadtoStorage(String placeId, String address, double lat, double lng, double rating, JSONArray reviews) {
         Log.d(TAG, "uploadtoStorage : uploading to storage");
         progressDialog.setMessage("Uploading image");
         progressDialog.show();
@@ -160,7 +182,7 @@ public class AddDestination extends AppCompatActivity {
                         Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                         while (!uriTask.isSuccessful());
                         String uploadedImageUrl = ""+uriTask.getResult();
-                        uploadtoDB(uploadedImageUrl, timestamp, placeId, address, lat, lng,rating);
+                        uploadtoDB(uploadedImageUrl, timestamp, placeId, address, lat, lng, rating, reviews);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -174,7 +196,7 @@ public class AddDestination extends AppCompatActivity {
 
     }
 
-    private void uploadtoDB(String uploadedImageUrl, long timestamp, String placeId, String address, double desLat, double desLong, double rating) {
+    private void uploadtoDB(String uploadedImageUrl, long timestamp, String placeId, String address, double desLat, double desLong, double rating, JSONArray reviews) {
         Log.d(TAG, "uploadtoDB : uploading image to firebase DB");
         progressDialog.setMessage("Uploading image info");
         String uid = firebaseAuth.getUid();
@@ -191,6 +213,7 @@ public class AddDestination extends AppCompatActivity {
         hashMap.put("url", "" + uploadedImageUrl);
         hashMap.put("timestamp", timestamp);
         hashMap.put("placeId", placeId);
+        hashMap.put("reviews", reviews);
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
         reference.child(""+timestamp)
                 .setValue(hashMap)
@@ -290,7 +313,7 @@ public class AddDestination extends AppCompatActivity {
         }
     }
 
-    private void getPlaceDetails(String placeId){
+    private void getPlaceDetails(String placeId) {
         Log.d(TAG, "getPlaceDetails : getting place details");
         List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS);
         FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, placeFields).build();
@@ -303,6 +326,65 @@ public class AddDestination extends AppCompatActivity {
                 .addOnFailureListener((exception) -> {
                     Log.e(TAG, "Place not found: " + exception.getMessage());
                 });
+
+    }
+
+    private static abstract class GetReviewsTask extends AsyncTask<String, Void, JSONObject> {
+        @Override
+        protected JSONObject doInBackground(String... params) {
+            String url = params[0];
+            JSONObject json = null;
+            try {
+                // Create the URL and open the connection
+                URL urlObj = new URL(url);
+                HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
+                conn.setRequestMethod("GET");
+
+                // Read the response from the connection
+                InputStream stream = conn.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+
+                // Parse the JSON response
+                json = new JSONObject(response.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return json;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject json) {
+            if (json != null) {
+                try {
+                    // Extract the details and reviews from the JSON
+                    JSONObject result = json.getJSONObject("result");
+                    JSONArray reviews = result.getJSONArray("reviews");
+                    for (int i = 0; i < reviews.length(); i++) {
+                        JSONObject review = reviews.getJSONObject(i);
+                        String authorName = review.getString("author_name");
+                        int reviewRating = review.getInt("rating");
+                        String text = review.getString("text");
+                        // Do something with the review data...
+                        Log.d("Review #" + i, "Author Name: " + authorName);
+                        Log.d("Review #" + i, "Rating: " + reviewRating);
+                        Log.d("Review #" + i, "Text: " + text);
+                    }
+                    onPostExecute(reviews);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e(TAG, "Error with JSON parsing: " + e.getMessage());
+                }
+            } else {
+                Log.e(TAG, "Error getting reviews from server");
+            }
+        }
+
+        protected abstract void onPostExecute(JSONArray reviews);
     }
 
 }
