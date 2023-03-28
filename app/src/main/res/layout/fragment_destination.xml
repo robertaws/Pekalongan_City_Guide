@@ -11,7 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".Layout.DestinationFragment"
-        android:background="@drawable/background_batik">
+        android:background="@drawable/background_batik"
+        android:backgroundTint="@color/palette_4"
+        android:backgroundTintMode="screen">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -21,7 +23,7 @@
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#0000"
+                android:background="@color/palette_2"
                 app:tabBackground="@drawable/tab_selector"
                 app:tabIndicatorHeight="0dp"
                 app:tabMode="scrollable"

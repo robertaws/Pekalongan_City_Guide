@@ -151,7 +151,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
                             holder.title.setText(title);
                             holder.rating.setText(desRating);
                         } else {
-                            // handle null snapshot case
+
                         }
                     }
 

@@ -93,8 +93,8 @@ public class HomeFragment extends Fragment {
                 .language("id")
                 .from(dateString)
                 .to(String.valueOf(new Date()))
+                .sortBy("publishedAt")
                 .build();
-
         newsApiClient.getEverything(everythingRequest, new NewsApiClient.ArticlesResponseCallback() {
             @Override
             public void onSuccess(ArticleResponse response) {
