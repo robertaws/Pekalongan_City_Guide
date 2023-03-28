@@ -36,7 +36,7 @@ public class NewsDetail extends AppCompatActivity {
 
         binding.newsDetailTitle.setText(title);
         binding.newsDetailContent.setText(desc);
-        binding.newsDetailAuthor.setText("Editor : "+author);
+        binding.newsDetailAuthor.setText(author);
         binding.newsDetailDate.setText(date);
         binding.newsDetailSource.setText("Source : "+source);
         Glide.with(this)

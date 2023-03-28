@@ -18,6 +18,7 @@ import com.binus.pekalongancityguide.Adapter.FoodAdapter;
 import com.binus.pekalongancityguide.Adapter.NewsAdapter;
 import com.binus.pekalongancityguide.ItemList.FoodItem;
 import com.binus.pekalongancityguide.ItemTemplate.Food;
+import com.binus.pekalongancityguide.Misc.ImageFullscreen;
 import com.binus.pekalongancityguide.R;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
@@ -55,6 +56,7 @@ public class HomeFragment extends Fragment {
         slideModels.add(new SlideModel(R.drawable.slide6, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.slide7, ScaleTypes.FIT));
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
+
         cityDesc = view.findViewById(R.id.city_desc);
         cityDesc.setOnClickListener(v -> {
             startActivity(new Intent(getActivity(), CityHistory.class));

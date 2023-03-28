@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PekalonganCityGuide"
         tools:targetApi="31">
+        <activity
+            android:name=".Misc.ImageFullscreen"
+            android:exported="false" />
         <activity
             android:name=".Layout.NewsDetail"
             android:exported="false" />
@@ -33,11 +41,9 @@
         <activity
             android:name=".Layout.AdminHome"
             android:exported="false" />
-
         <activity
             android:name=".Layout.CityHistory"
             android:exported="false" />
-
         <activity
             android:name=".Layout.FoodDetails"
             android:exported="false" />
@@ -70,11 +76,5 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
     </application>
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
