@@ -1,10 +1,12 @@
 package com.binus.pekalongancityguide.Layout;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -30,6 +32,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.R;
@@ -51,6 +55,7 @@ import com.google.firebase.storage.UploadTask;
 import java.util.HashMap;
 
 public class EditProfile extends AppCompatActivity {
+    private static final int REQUEST_CAMERA_PERMISSION = 1001;
     private ActivityEditProfileBinding binding;
     private FirebaseAuth firebaseAuth;
     private static final String TAG = "PROFILE_EDIT_TAG";
@@ -88,10 +93,7 @@ public class EditProfile extends AppCompatActivity {
             @Override
             public void onGlobalLayout() {
                 int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
-                if (heightDiff > dpToPx(200)) { // adjust this threshold as needed
-                    // keyboard is visible
-                    // put your code here that you want to run when the keyboard is shown
-                    // Hide keyboard when clicked outside of EditText
+                if (heightDiff > dpToPx(200)) {
                     findViewById(R.id.editProfile).setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
@@ -178,6 +180,10 @@ public class EditProfile extends AppCompatActivity {
     }
 
     private void showImage() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+        }
         PopupMenu popupMenu = new PopupMenu(this,binding.editImage);
         popupMenu.getMenu().add(Menu.NONE,0,0,"Camera");
         popupMenu.getMenu().add(Menu.NONE,1,1,"Gallery");

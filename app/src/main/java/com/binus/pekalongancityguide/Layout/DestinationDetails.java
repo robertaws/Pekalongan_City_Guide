@@ -21,6 +21,7 @@ import com.binus.pekalongancityguide.Adapter.BookmarkAdapter;
 import com.binus.pekalongancityguide.Adapter.ReviewAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.ItemTemplate.Review;
+import com.binus.pekalongancityguide.Misc.ImageFullscreen;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityDestinationDetailsBinding;
@@ -36,10 +37,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DestinationDetails extends AppCompatActivity {
+    Object imageDrawable;
     private ActivityDestinationDetailsBinding binding;
     String destiId;
     boolean inFavorite = false;
@@ -71,7 +74,6 @@ public class DestinationDetails extends AppCompatActivity {
             }
         });
     }
-
     private void loadDetails(){
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
         reference.child(destiId)

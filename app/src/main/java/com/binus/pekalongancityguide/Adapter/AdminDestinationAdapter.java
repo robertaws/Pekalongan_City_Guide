@@ -97,12 +97,7 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
         holder.title.setText(title);
         holder.description.setText(description);
         loadImage(destination, holder);
-        holder.options.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showOptionsDialog(destination, holder);
-            }
-        });
+        holder.options.setOnClickListener(v -> showOptionsDialog(destination, holder));
         holder.itemView.setOnClickListener(v -> {
             Drawable drawable = holder.layoutImage.getBackground();
             BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
@@ -141,21 +136,18 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
         String[] options = {"Edit","Delete"};
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Choose Options")
-                .setItems(options, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(which==0){
-                            Intent intent = new Intent(context, EditDestination.class);
-                            intent.putExtra("destiId",destiId);
-                            context.startActivity(intent);
-                        }else{
-                            MyApplication.deleteDesti(
-                                    context,
-                                    ""+destiId,
-                                    ""+destiUrl,
-                                    ""+destiTitle
-                            );
-                        }
+                .setItems(options, (dialog, which) -> {
+                    if(which==0){
+                        Intent intent = new Intent(context, EditDestination.class);
+                        intent.putExtra("destiId",destiId);
+                        context.startActivity(intent);
+                    }else{
+                        MyApplication.deleteDesti(
+                                context,
+                                ""+destiId,
+                                ""+destiUrl,
+                                ""+destiTitle
+                        );
                     }
                 })
                 .show();
@@ -175,12 +167,7 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
                         holder.layoutImage.setBackground(drawable);
                     }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG,"on Failure: failed to getting file from url due to"+e.getMessage());
-                    }
-                });
+                .addOnFailureListener(e -> Log.d(TAG,"on Failure: failed to getting file from url due to"+e.getMessage()));
     }
 
     @Override
