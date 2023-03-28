@@ -103,8 +103,7 @@ public class EditProfile extends AppCompatActivity {
                         }
                     });
                 } else {
-                    // keyboard is not visible
-                    // put your code here that you want to run when the keyboard is hidden
+
                 }
             }
         });
@@ -148,7 +147,6 @@ public class EditProfile extends AppCompatActivity {
                     showCustomToast("Failed to update db due to" + e.getMessage());
                 });
     }
-
     private void uploadImage() {
         Log.d(TAG,"UploadImage: Uploading profile image..");
         progressDialog.setMessage("Updating profile image");
@@ -167,6 +165,7 @@ public class EditProfile extends AppCompatActivity {
                         String uploadedImageUrl = ""+uriTask.getResult();
                         Log.d(TAG, "on Success: Uploaded image url:"+uploadedImageUrl);
                         updateProfile(uploadedImageUrl);
+                        onBackPressed();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -291,7 +290,6 @@ public class EditProfile extends AppCompatActivity {
         View layout = inflater.inflate(R.layout.custom_toast,
                 (ViewGroup) findViewById(R.id.custom_toast));
 
-        // Set custom text
         TextView text = layout.findViewById(R.id.toastText);
         text.setText(toastText);
 
@@ -301,8 +299,6 @@ public class EditProfile extends AppCompatActivity {
         toast.setView(layout);
         toast.show();
     }
-
-    // utility method to convert dp to pixels
     public int dpToPx(int dp) {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
