@@ -42,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DestinationDetails extends AppCompatActivity {
-    Object imageDrawable;
+    String imageUrl;
     private ActivityDestinationDetailsBinding binding;
     String destiId;
     boolean inFavorite = false;
@@ -62,6 +62,12 @@ public class DestinationDetails extends AppCompatActivity {
         }
         loadDetails();
         binding.backDesti.setOnClickListener(v -> onBackPressed());
+        binding.destiImage.setOnClickListener(v -> {
+            Intent intent1 = new Intent(this,ImageFullscreen.class);
+            intent1.putExtra("fullImg", imageUrl);
+            startActivity(intent1);
+        });
+
         binding.saveItem.setOnClickListener(v -> {
             if(firebaseAuth.getCurrentUser() == null){
                 Toast.makeText(DestinationDetails.this, "You are not logged in!", Toast.LENGTH_SHORT).show();
@@ -90,7 +96,7 @@ public class DestinationDetails extends AppCompatActivity {
                         binding.destiName.setText(title);
                         binding.destiDesc.setText(description);
                         binding.destiAddress.setText(address);
-
+                        imageUrl = url;
                         List<Review> reviews = new ArrayList<>();
                         for (DataSnapshot reviewSnapshot : snapshot.child("reviews").getChildren()) {
                             String authorName = reviewSnapshot.child("authorName").getValue(String.class);
@@ -104,7 +110,7 @@ public class DestinationDetails extends AppCompatActivity {
                         binding.reviewRv.setAdapter(new ReviewAdapter(reviews));
 
                         String filePath = getIntent().getStringExtra("imageFilePath");
-                        if (filePath != null) {
+                        if (filePath != null){
                             Bitmap bitmap = BitmapFactory.decodeFile(filePath);
                             Drawable drawable = new BitmapDrawable(getResources(), bitmap);
                             binding.destiImage.setBackground(drawable);
