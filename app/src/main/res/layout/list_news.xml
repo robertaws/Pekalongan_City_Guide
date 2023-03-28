@@ -62,7 +62,6 @@
                     android:layout_marginHorizontal="5dp" />
 
             </LinearLayout>
-
             <TextView
                 android:textColor="@color/white"
                 android:justificationMode="inter_word"
@@ -74,26 +73,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:text="JUDUL" />
-
-            <TextView
-                android:textColor="@color/white"
-                android:id="@+id/news_body"
-                android:layout_marginHorizontal="5dp"
-                android:justificationMode="inter_word"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:visibility="gone"
-                android:text="ISI"/>
-
-            <TextView
-                android:textColor="@color/white"
-                android:id="@+id/news_author"
-                android:visibility="gone"
-                android:layout_marginHorizontal="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ISI"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </layout>
