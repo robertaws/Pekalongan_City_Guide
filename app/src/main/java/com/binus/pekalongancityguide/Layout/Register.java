@@ -98,21 +98,25 @@ public class Register extends AppCompatActivity {
         Email = binding.regisEmail.getText().toString().trim();
         Password = binding.regisPass.getText().toString().trim();
         Cfmpass = binding.regisCpass.getText().toString().trim();
-        if(Username.isEmpty()){
+        if (Username.isEmpty()) {
             user.setError("Username cannot be empty!");
-        }else if(Username.length()<3 || Username.length()>12){
+        } else if (Username.length() < 3 || Username.length() > 12) {
             user.setError("Username must be between 3-12 characters!");
-        }else if(Email.isEmpty()){
+        } else if (Email.isEmpty()) {
             email.setError("Email cannot be empty!");
-        }else if(!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
             email.setError("Invalid Email Address!");
-        }else if(Password.isEmpty()){
+        } else if (Password.isEmpty()) {
             pass.setError("Password cannot be empty!");
-        }else if(Password.length()<8){
-            pass.setError("password must be more than 8 characters!");
-        }else if(!Cfmpass.equals(Password)){
+        } else if (Password.length() < 8) {
+            pass.setError("Password must be more than 8 characters!");
+        } else if (!Password.matches(".*[0-9].*")) {
+            pass.setError("Password must contain at least one number!");
+        } else if (!Password.matches(".*[!@#$%^&*()].*")) {
+            pass.setError("Password must contain at least one symbol!");
+        } else if (!Cfmpass.equals(Password)) {
             cpass.setError("Password does not match!");
-        }else{
+        } else {
             createUser();
         }
     }

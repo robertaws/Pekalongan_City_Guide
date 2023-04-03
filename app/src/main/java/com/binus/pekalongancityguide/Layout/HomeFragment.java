@@ -37,7 +37,7 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
     RecyclerView foodRV, newsRV;
-    RecyclerView.Adapter foodRVAdapter, newsRVAdapter;
+    RecyclerView.Adapter foodRVAdapter;
     RecyclerView.LayoutManager foodRVLayoutManager, newsRVLayoutManager;
     ArrayList<Food> foodData;
     TextView cityDesc;

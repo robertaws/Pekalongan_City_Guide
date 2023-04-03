@@ -276,7 +276,6 @@ public class EditProfile extends AppCompatActivity {
 
                         binding.editName.setText(name);
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
