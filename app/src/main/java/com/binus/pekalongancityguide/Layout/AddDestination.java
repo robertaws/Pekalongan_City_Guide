@@ -26,10 +26,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
+import com.google.android.libraries.places.api.model.OpeningHours;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -108,7 +108,7 @@ public class AddDestination extends AppCompatActivity {
             Toast.makeText(this, "Pick an image!", Toast.LENGTH_SHORT).show();
         }else {
             PlacesClient placesClient = Places.createClient(this);
-            List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.RATING);
+            List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.RATING, Place.Field.OPENING_HOURS,Place.Field.PHONE_NUMBER);
             AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
             FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
                     .setTypeFilter(TypeFilter.ESTABLISHMENT)
@@ -123,35 +123,45 @@ public class AddDestination extends AppCompatActivity {
                     String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" + MAPS_API_KEY;
 
                     FetchPlaceRequest placeRequest = FetchPlaceRequest.builder(placeId, placeFields).build();
-                    placesClient.fetchPlace(placeRequest).addOnCompleteListener(new OnCompleteListener<FetchPlaceResponse>() {
-                        @Override
-                        public void onComplete(@NonNull Task<FetchPlaceResponse> task) {
-                            if (task.isSuccessful()) {
-                                Place place = task.getResult().getPlace();
-                                String address = place.getAddress();
-                                double latitude = place.getLatLng().latitude;
-                                double longitude = place.getLatLng().longitude;
-                                double rating = place.getRating();
-                                Log.d(TAG, "Address: " + address);
-                                Log.d(TAG, "Latitude: " + latitude);
-                                Log.d(TAG, "Longitude: " + longitude);
-                                Log.d(TAG, "Rating: " + rating);
-                                new GetReviewsTask() {
-                                    @Override
-                                    protected void onPostExecute(JSONArray reviews) {
-                                        if (reviews != null) {
-                                            // Do something with the reviews
-                                            Log.d(TAG, "Reviews: " + reviews.toString());
-                                            // Call the uploadtoStorage method with the reviews parameter
-                                            uploadtoStorage(placeId, address, latitude, longitude, rating, reviews);
+                    placesClient.fetchPlace(placeRequest).addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+                            Place place = task1.getResult().getPlace();
+                            String address = place.getAddress();
+                            String phoneNumber = place.getPhoneNumber();
+                            OpeningHours openingHours = place.getOpeningHours();
+                            double latitude = place.getLatLng().latitude;
+                            double longitude = place.getLatLng().longitude;
+                            double rating = place.getRating();
+                            Log.d(TAG, "Address: " + address);
+                            Log.d(TAG, "Latitude: " + latitude);
+                            Log.d(TAG, "Longitude: " + longitude);
+                            Log.d(TAG, "Rating: " + rating);
+                            Log.d(TAG, "Phone number: " + phoneNumber);
+//                            if (openingHours != null) {
+//                                Log.d(TAG, "Opening hours:");
+//                                for (String weekday : openingHours.getWeekdayText()) {
+//                                    Log.d(TAG, weekday);
+//                                }
+//                            } else {
+//                                Log.d(TAG, "Opening hours not available.");
+//                            }
+                            new GetReviewsTask() {
+                                @Override
+                                protected void onPostExecute(JSONArray reviews) {
+                                    if (reviews != null) {
+                                        Log.d(TAG, "Reviews: " + reviews.toString());
+                                        if (openingHours != null) {
+                                            uploadtoStorage(placeId, address, latitude, longitude, rating, reviews, phoneNumber, openingHours.getWeekdayText());
                                         } else {
-                                            Toast.makeText(AddDestination.this, "Error getting reviews", Toast.LENGTH_SHORT).show();
+                                            uploadtoStorage(placeId, address, latitude, longitude, rating, reviews, phoneNumber, null);
                                         }
+                                    } else {
+                                        Toast.makeText(AddDestination.this, "Error getting reviews", Toast.LENGTH_SHORT).show();
                                     }
-                                }.execute(url);
-                            } else {
-                                Toast.makeText(AddDestination.this, "Error getting location details: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                            }
+                                }
+                            }.execute(url);
+                        } else {
+                            Toast.makeText(AddDestination.this, "Error getting location details: " + task1.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
                 } else {
@@ -165,7 +175,7 @@ public class AddDestination extends AppCompatActivity {
         }
     }
 
-    private void uploadtoStorage(String placeId, String address, double lat, double lng, double rating, JSONArray reviews) {
+    private void uploadtoStorage(String placeId, String address, double lat, double lng, double rating, JSONArray reviews, String phoneNumber,List<String> weekday) {
         Log.d(TAG, "uploadtoStorage : uploading to storage");
         progressDialog.setMessage("Uploading image");
         progressDialog.show();
@@ -181,7 +191,7 @@ public class AddDestination extends AppCompatActivity {
                         Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                         while (!uriTask.isSuccessful());
                         String uploadedImageUrl = ""+uriTask.getResult();
-                        uploadtoDB(uploadedImageUrl, timestamp, placeId, address, lat, lng, rating, reviews);
+                        uploadtoDB(uploadedImageUrl, timestamp, placeId, address, lat, lng, rating, reviews, phoneNumber,weekday);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -195,7 +205,7 @@ public class AddDestination extends AppCompatActivity {
 
     }
 
-    private void uploadtoDB(String uploadedImageUrl, long timestamp, String placeId, String address, double desLat, double desLong, double rating, JSONArray reviews) {
+    private void uploadtoDB(String uploadedImageUrl, long timestamp, String placeId, String address, double desLat, double desLong, double rating, JSONArray reviews, String phoneNumber, List<String> weekday) {
         Log.d(TAG, "uploadtoDB : uploading image to firebase DB");
         progressDialog.setMessage("Uploading image info");
         String uid = firebaseAuth.getUid();
@@ -212,6 +222,7 @@ public class AddDestination extends AppCompatActivity {
         hashMap.put("url", "" + uploadedImageUrl);
         hashMap.put("timestamp", timestamp);
         hashMap.put("placeId", placeId);
+        hashMap.put("phoneNumber", phoneNumber);
 
         ArrayList<HashMap<String, Object>> reviewsList = new ArrayList<>();
         for (int i = 0; i < reviews.length(); i++) {
@@ -227,6 +238,11 @@ public class AddDestination extends AppCompatActivity {
             }
         }
         hashMap.put("reviews", reviewsList);
+
+        HashMap<String, Object> openingHoursMap = new HashMap<>();
+        openingHoursMap.put("weekday", weekday);
+        hashMap.put("openingHours", openingHoursMap);
+
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
         reference.child(""+timestamp)
                 .setValue(hashMap)

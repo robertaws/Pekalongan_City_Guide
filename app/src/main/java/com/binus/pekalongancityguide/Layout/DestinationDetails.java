@@ -91,11 +91,13 @@ public class DestinationDetails extends AppCompatActivity {
                         String address = ""+snapshot.child("address").getValue();
                         String categoryId = ""+snapshot.child("categoryId").getValue();
                         String url = ""+snapshot.child("url").getValue();
+                        String phone = ""+snapshot.child("phoneNumber").getValue();
                         double latitude = Double.parseDouble(snapshot.child("latitude").getValue().toString());
                         double longitude = Double.parseDouble(snapshot.child("longitude").getValue().toString());
                         binding.destiName.setText(title);
                         binding.destiDesc.setText(description);
                         binding.destiAddress.setText(address);
+                        binding.destiPhone.setText("Phone Number: "+phone);
                         imageUrl = url;
                         List<Review> reviews = new ArrayList<>();
                         for (DataSnapshot reviewSnapshot : snapshot.child("reviews").getChildren()) {

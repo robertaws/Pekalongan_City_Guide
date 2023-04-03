@@ -118,13 +118,26 @@
                             android:layout_marginTop="10dp"
                             android:justificationMode="inter_word"
                             android:text="Destination Address"
-                            android:textColor="@color/palette_1" />
+                            android:textColor="@color/palette_1"/>
 
                         <com.google.android.material.divider.MaterialDivider
                             android:layout_marginTop="5dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
+                        <TextView
+                            android:textStyle="bold"
+                            android:id="@+id/desti_phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:justificationMode="inter_word"
+                            android:text="Destination Phone"
+                            android:textColor="@color/palette_1"/>
 
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_marginTop="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
                         <fragment
                             android:layout_marginTop="20dp"
                             android:layout_marginBottom="20dp"

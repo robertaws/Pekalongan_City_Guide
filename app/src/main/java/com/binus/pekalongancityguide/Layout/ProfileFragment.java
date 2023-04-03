@@ -45,7 +45,9 @@ public class ProfileFragment extends Fragment{
                 startActivity(intent);
             }
         });
-
+        binding.changePass.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), ChangePassword.class));
+        });
         binding.editName.setOnClickListener(v -> {
             startActivity(new Intent(getActivity(), EditProfile.class));
         });
