@@ -105,7 +105,6 @@ public class DestinationDetails extends AppCompatActivity {
                             String dayOfWeek = entry.getKey();
                             String openingHours = entry.getValue();
                             System.out.println(dayOfWeek + ": " + openingHours);
-                            // Or display the opening hours in some other way
                         }
                         List<OpeningHours> openingHoursList = new ArrayList<>();
                         for (Map.Entry<String, String> entry : openingHoursMap.entrySet()) {
