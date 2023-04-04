@@ -16,11 +16,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -39,8 +36,6 @@ import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityEditProfileBinding;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -50,7 +45,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 
@@ -89,22 +83,14 @@ public class EditProfile extends AppCompatActivity {
         });
 
         View activityRootView = findViewById(android.R.id.content);
-        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
-                if (heightDiff > dpToPx(200)) {
-                    findViewById(R.id.editProfile).setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                            return false;
-                        }
-                    });
-                } else {
-
-                }
+        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
+            if (heightDiff > dpToPx(200)) {
+                findViewById(R.id.editProfile).setOnTouchListener((v, event) -> {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                    return false;
+                });
             }
         });
 
@@ -155,26 +141,20 @@ public class EditProfile extends AppCompatActivity {
         String filePathAndName = "ProfileImages/"+firebaseAuth.getUid();
         StorageReference storageReference = FirebaseStorage.getInstance("gs://pekalongan-city-guide-5bf2e.appspot.com/").getReference(filePathAndName);
         storageReference.putFile(imguri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Log.d(TAG, "on Success: Profile image uploaded");
-                        Log.d(TAG, "on Success: Getting url of the uploaded image");
-                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                        while (!uriTask.isSuccessful());
-                        String uploadedImageUrl = ""+uriTask.getResult();
-                        Log.d(TAG, "on Success: Uploaded image url:"+uploadedImageUrl);
-                        updateProfile(uploadedImageUrl);
-                        onBackPressed();
-                    }
+                .addOnSuccessListener(taskSnapshot -> {
+                    Log.d(TAG, "on Success: Profile image uploaded");
+                    Log.d(TAG, "on Success: Getting url of the uploaded image");
+                    Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                    while (!uriTask.isSuccessful()) ;
+                    String uploadedImageUrl = "" + uriTask.getResult();
+                    Log.d(TAG, "on Success: Uploaded image url:" + uploadedImageUrl);
+                    updateProfile(uploadedImageUrl);
+                    onBackPressed();
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "on Failure: Failed to upload image due to"+e.getMessage());
-                        progressDialog.dismiss();
-                        showCustomToast("on Failure: Failed to upload image due to" + e.getMessage());
-                    }
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "on Failure: Failed to upload image due to" + e.getMessage());
+                    progressDialog.dismiss();
+                    showCustomToast("on Failure: Failed to upload image due to" + e.getMessage());
                 });
     }
 
@@ -183,21 +163,18 @@ public class EditProfile extends AppCompatActivity {
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
         }
-        PopupMenu popupMenu = new PopupMenu(this,binding.editImage);
-        popupMenu.getMenu().add(Menu.NONE,0,0,"Camera");
-        popupMenu.getMenu().add(Menu.NONE,1,1,"Gallery");
+        PopupMenu popupMenu = new PopupMenu(this, binding.editImage);
+        popupMenu.getMenu().add(Menu.NONE, 0, 0, "Camera");
+        popupMenu.getMenu().add(Menu.NONE, 1, 1, "Gallery");
         popupMenu.show();
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int which = item.getItemId();
-                if(which==0){
-                    pickImageCamera();
-                }else if(which==1){
-                    pickImageGallery();
-                }
-                return false;
+        popupMenu.setOnMenuItemClickListener(item -> {
+            int which = item.getItemId();
+            if (which == 0) {
+                pickImageCamera();
+            } else if (which == 1) {
+                pickImageGallery();
             }
+            return false;
         });
     }
 

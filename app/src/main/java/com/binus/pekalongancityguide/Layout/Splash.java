@@ -1,10 +1,11 @@
 package com.binus.pekalongancityguide.Layout;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.binus.pekalongancityguide.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,12 +26,7 @@ public class Splash extends AppCompatActivity {
             getSupportActionBar().hide();
         }
         firebaseAuth = FirebaseAuth.getInstance();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                checkUser();
-            }
-        }, 3000);
+        new Handler().postDelayed(() -> checkUser(), 3000);
     }
 
     private void checkUser() {
@@ -44,18 +40,19 @@ public class Splash extends AppCompatActivity {
             databaseReference.child(firebaseUser.getUid())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onDataChange(DataSnapshot snapshot) {
-                            String userType =""+snapshot.child("userType").getValue();
-                            if(userType.equals("user")){
-                                startActivity(new Intent(Splash.this,Home.class));
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String userType = "" + snapshot.child("userType").getValue();
+                            if (userType.equals("user")) {
+                                startActivity(new Intent(Splash.this, Home.class));
                                 finish();
-                            }else if(userType.equals("admin")){
-                                startActivity(new Intent(Splash.this,AdminHome.class));
+                            } else if (userType.equals("admin")) {
+                                startActivity(new Intent(Splash.this, AdminHome.class));
                                 finish();
                             }
                         }
+
                         @Override
-                        public void onCancelled(DatabaseError error) {
+                        public void onCancelled(@NonNull DatabaseError error) {
 
                         }
                     });

@@ -2,7 +2,6 @@ package com.binus.pekalongancityguide.Adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +15,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.binus.pekalongancityguide.ItemTemplate.Categories;
 import com.binus.pekalongancityguide.Layout.ShowDestinationAdmin;
 import com.binus.pekalongancityguide.Misc.FilterCategory;
-import com.binus.pekalongancityguide.ItemTemplate.Categories;
 import com.binus.pekalongancityguide.databinding.ListCategoryBinding;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -50,60 +47,34 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Holder
         Categories model = categoriesArrayList.get(position);
         String id = model.getId();
         String category = model.getCategory();
-        String uid = model.getUid();
-        long timestamp = model.getTimestamp();
         holder.title.setText(category);
-        holder.delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("Delete")
-                            .setMessage("Are you sure want to delete this item?")
-                            .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    deleteCat(model,holder);
-                                    Toast.makeText(context, "Deleting item...", Toast.LENGTH_SHORT).show();
-                                }
-                            })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .show();
+        holder.delete.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Delete")
+                    .setMessage("Are you sure want to delete this item?")
+                    .setPositiveButton("Confirm", (dialog, which) -> {
+                        deleteCat(model);
+                        Toast.makeText(context, "Deleting item...", Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                    .show();
 
-            }
         });
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, ShowDestinationAdmin.class);
-                intent.putExtra("categoryId",id);
-                intent.putExtra("categoryTitle",category);
-                context.startActivity(intent);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ShowDestinationAdmin.class);
+            intent.putExtra("categoryId", id);
+            intent.putExtra("categoryTitle", category);
+            context.startActivity(intent);
         });
     }
 
-    private void deleteCat(Categories model, HolderCategory holder) {
+    private void deleteCat(Categories model) {
         String id = model.getId();
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Categories");
         reference.child(id)
                 .removeValue()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(context, "Item deleted succesfully!", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .addOnSuccessListener(unused -> Toast.makeText(context, "Item deleted succesfully!", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(context, "" + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     @Override

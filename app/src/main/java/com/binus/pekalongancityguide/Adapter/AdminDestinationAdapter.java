@@ -3,7 +3,6 @@ package com.binus.pekalongancityguide.Adapter;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,13 +22,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.Layout.DestinationDetailAdmin;
 import com.binus.pekalongancityguide.Layout.EditDestination;
-import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.Misc.FilterDestiAdmin;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.databinding.ListDestiAdminBinding;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -76,10 +74,7 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
 
         Destination destination = destinationArrayList.get(position);
         String destiId = destination.getId();
-        String categoryId = destination.getCategoryId();
-        String imageUrl = destination.getUrl();
         String title = destination.getTitle();
-        String rating = destination.getRating();
         String description = destination.getDescription();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination")
                 .child(destiId);
@@ -107,7 +102,7 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
             byte[] byteArray = stream.toByteArray();
 
             String filePath = context.getFilesDir().getPath() + "/image.png";
-            FileOutputStream fos = null;
+            FileOutputStream fos;
             try {
                 fos = new FileOutputStream(filePath);
             } catch (FileNotFoundException e) {

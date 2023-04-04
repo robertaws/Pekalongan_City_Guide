@@ -6,8 +6,8 @@
     <TextView
         android:id="@+id/opening_hours"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:padding="10dp"
         android:text="Opening Hours"
-        android:background="@color/ic_launcher_background"/>
+        android:textColor="@color/palette_2" />
 </LinearLayout>

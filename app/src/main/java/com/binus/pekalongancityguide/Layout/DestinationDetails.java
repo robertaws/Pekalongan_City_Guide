@@ -1,26 +1,18 @@
 package com.binus.pekalongancityguide.Layout;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.binus.pekalongancityguide.Adapter.BookmarkAdapter;
 import com.binus.pekalongancityguide.Adapter.OpeningHoursAdapter;
 import com.binus.pekalongancityguide.Adapter.ReviewAdapter;
-import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.ItemTemplate.OpeningHours;
 import com.binus.pekalongancityguide.ItemTemplate.Review;
 import com.binus.pekalongancityguide.Misc.ImageFullscreen;
@@ -39,14 +31,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DestinationDetails extends AppCompatActivity {
     String imageUrl;
     private ActivityDestinationDetailsBinding binding;
-    private OpeningHoursAdapter openingHoursAdapter;
     String destiId;
     boolean inFavorite = false;
     FirebaseAuth firebaseAuth;
@@ -92,16 +84,39 @@ public class DestinationDetails extends AppCompatActivity {
                         String title = ""+snapshot.child("title").getValue();
                         String description = ""+snapshot.child("description").getValue();
                         String address = ""+snapshot.child("address").getValue();
-                        String categoryId = ""+snapshot.child("categoryId").getValue();
-                        String url = ""+snapshot.child("url").getValue();
-                        String phone = ""+snapshot.child("phoneNumber").getValue();
+                        String categoryId = "" + snapshot.child("categoryId").getValue();
+                        String url = "" + snapshot.child("url").getValue();
+                        String phone = "" + snapshot.child("phoneNumber").getValue();
                         double latitude = Double.parseDouble(snapshot.child("latitude").getValue().toString());
                         double longitude = Double.parseDouble(snapshot.child("longitude").getValue().toString());
                         binding.destiName.setText(title);
                         binding.destiDesc.setText(description);
                         binding.destiAddress.setText(address);
-                        binding.destiPhone.setText("Phone Number: "+phone);
+                        binding.destiPhone.setText("Phone Number: " + phone);
                         imageUrl = url;
+                        Map<String, String> openingHoursMap = new HashMap<>();
+                        for (DataSnapshot hourSnapshot : snapshot.child("openingHours").getChildren()) {
+                            String dayOfWeek = hourSnapshot.getKey();
+                            String openingHours = hourSnapshot.getValue(String.class);
+                            openingHoursMap.put(dayOfWeek, openingHours);
+                        }
+
+                        for (Map.Entry<String, String> entry : openingHoursMap.entrySet()) {
+                            String dayOfWeek = entry.getKey();
+                            String openingHours = entry.getValue();
+                            System.out.println(dayOfWeek + ": " + openingHours);
+                            // Or display the opening hours in some other way
+                        }
+                        List<OpeningHours> openingHoursList = new ArrayList<>();
+                        for (Map.Entry<String, String> entry : openingHoursMap.entrySet()) {
+                            String dayOfWeek = entry.getKey();
+                            String openingHours = entry.getValue();
+                            openingHoursList.add(new OpeningHours(dayOfWeek, openingHours));
+                        }
+
+                        OpeningHoursAdapter hoursAdapter = new OpeningHoursAdapter(openingHoursList);
+                        binding.openingRv.setAdapter(hoursAdapter);
+
                         List<Review> reviews = new ArrayList<>();
                         for (DataSnapshot reviewSnapshot : snapshot.child("reviews").getChildren()) {
                             String authorName = reviewSnapshot.child("authorName").getValue(String.class);
@@ -111,6 +126,7 @@ public class DestinationDetails extends AppCompatActivity {
                         }
                         ReviewAdapter reviewAdapter = new ReviewAdapter(reviews);
                         binding.reviewRv.setAdapter(reviewAdapter);
+
                         binding.reviewRv.setAdapter(new ReviewAdapter(reviews));
 
                         String filePath = getIntent().getStringExtra("imageFilePath");
@@ -121,11 +137,11 @@ public class DestinationDetails extends AppCompatActivity {
                         }
                         SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager()
                                 .findFragmentById(R.id.map);
-                        fragment.getMapAsync(googleMap ->{
+                        fragment.getMapAsync(googleMap -> {
                             LatLng coordinate = new LatLng(latitude, longitude);
                             MarkerOptions marker = new MarkerOptions();
-                            marker = marker.position(coordinate);
-                            marker = marker.title(title);
+                            marker.position(coordinate);
+                            marker.title(title);
                             googleMap.addMarker(marker);
                             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 15);
                             googleMap.moveCamera(cameraUpdate);
@@ -136,27 +152,6 @@ public class DestinationDetails extends AppCompatActivity {
 
                     }
                 });
-
-        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("Destination")
-                .child("openingHours");
-        databaseRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<OpeningHours> openingHoursList = new ArrayList<>();
-                for (DataSnapshot openingHoursSnapshot : snapshot.getChildren()) {
-                    OpeningHours openingHours = openingHoursSnapshot.getValue(OpeningHours.class);
-                    openingHoursList.add(openingHours);
-                }
-                openingHoursAdapter = new OpeningHoursAdapter(openingHoursList);
-                binding.openingRv.setAdapter(openingHoursAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e(TAG, "Failed to read value.", error.toException());
-            }
-        });
-
     }
 
     private void checkFavorite(){

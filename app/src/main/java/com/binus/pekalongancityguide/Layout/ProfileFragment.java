@@ -30,20 +30,17 @@ public class ProfileFragment extends Fragment{
     private String mProfileImgUrl;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(inflater, container, false);
-         View view = binding.getRoot();
-         firebaseAuth = FirebaseAuth.getInstance();
+        View view = binding.getRoot();
+        firebaseAuth = FirebaseAuth.getInstance();
         getInfo();
-        binding.profileImg.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(),ImageFullscreen.class);
-                intent.putExtra("fullImg", mProfileImgUrl);
-                startActivity(intent);
-            }
+        binding.profileImg.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), ImageFullscreen.class);
+            intent.putExtra("fullImg", mProfileImgUrl);
+            startActivity(intent);
         });
         binding.changePass.setOnClickListener(v -> {
             startActivity(new Intent(getActivity(), ChangePassword.class));

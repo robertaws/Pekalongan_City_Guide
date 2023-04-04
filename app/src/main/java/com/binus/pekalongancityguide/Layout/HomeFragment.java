@@ -1,7 +1,5 @@
 package com.binus.pekalongancityguide.Layout;
 
-import static com.binus.pekalongancityguide.BuildConfig.NEWS_API_KEY;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +16,6 @@ import com.binus.pekalongancityguide.Adapter.FoodAdapter;
 import com.binus.pekalongancityguide.Adapter.NewsAdapter;
 import com.binus.pekalongancityguide.ItemList.FoodItem;
 import com.binus.pekalongancityguide.ItemTemplate.Food;
-import com.binus.pekalongancityguide.Misc.ImageFullscreen;
 import com.binus.pekalongancityguide.R;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
@@ -33,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import static com.binus.pekalongancityguide.BuildConfig.NEWS_API_KEY;
 
 
 public class HomeFragment extends Fragment {
@@ -58,9 +57,7 @@ public class HomeFragment extends Fragment {
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
 
         cityDesc = view.findViewById(R.id.city_desc);
-        cityDesc.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), CityHistory.class));
-        });
+        cityDesc.setOnClickListener(v -> startActivity(new Intent(getActivity(), CityHistory.class)));
         foodRV = view.findViewById(R.id.food_rv);
         foodRVLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
         foodRV.setLayoutManager(foodRVLayoutManager);

@@ -1,14 +1,11 @@
 package com.binus.pekalongancityguide.Layout;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,8 +13,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityMainBinding;
@@ -70,22 +65,18 @@ public class MainActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         });
 
-        binding.mainRegis.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "mainRegis is not null: " + (binding.mainRegis != null));
-                Intent regisIntent = new Intent(MainActivity.this, Register.class);
-                startActivity(regisIntent);
-            }
+        binding.mainRegis.setOnClickListener(view -> {
+            Log.d(TAG, "mainRegis is not null: " + (binding.mainRegis != null));
+            Intent regisIntent = new Intent(MainActivity.this, Register.class);
+            startActivity(regisIntent);
         });
 
         til.getEditText().setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 // The user has clicked on the text input layout
                 til.setPasswordVisibilityToggleEnabled(true);
-            } else {
-                // The user has left the text input layout
-            }
+            }  // The user has left the text input layout
+
         });
 
     }
@@ -127,11 +118,7 @@ public class MainActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     Snackbar.make(binding.getRoot(), e.getMessage(), Snackbar.LENGTH_SHORT).show();
                     Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        public void run() {
-                            progressDialog.dismiss();
-                        }
-                    }, 2000);
+                    handler.postDelayed(() -> progressDialog.dismiss(), 2000);
                 });
     }
 
@@ -143,20 +130,20 @@ public class MainActivity extends AppCompatActivity {
         databaseReference.child(firebaseUser.getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot snapshot) {
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
                         progressDialog.dismiss();
-                        String userType =""+snapshot.child("userType").getValue();
-                        if(userType.equals("user")){
-                            startActivity(new Intent(MainActivity.this,Home.class));
+                        String userType = "" + snapshot.child("userType").getValue();
+                        if (userType.equals("user")) {
+                            startActivity(new Intent(MainActivity.this, Home.class));
                             finish();
-                        }else if(userType.equals("admin")){
+                        } else if (userType.equals("admin")) {
                             startActivity(new Intent(MainActivity.this, AdminHome.class));
                             finish();
                         }
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError error) {
+                    public void onCancelled(@NonNull DatabaseError error) {
 
                     }
                 });

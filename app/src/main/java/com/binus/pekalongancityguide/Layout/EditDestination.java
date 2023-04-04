@@ -1,20 +1,16 @@
 package com.binus.pekalongancityguide.Layout;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.binus.pekalongancityguide.databinding.ActivityEditDestinationBinding;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,12 +41,7 @@ public class EditDestination extends AppCompatActivity {
         loadDestiInfo();
         binding.categoryTV.setOnClickListener(v -> categoryDialog());
         binding.backDestiAdmin.setOnClickListener(v -> onBackPressed());
-        binding.updateDesti.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                validateData();
-            }
-        });
+        binding.updateDesti.setOnClickListener(v -> validateData());
     }
 
 
@@ -117,20 +108,12 @@ public class EditDestination extends AppCompatActivity {
         DatabaseReference ref = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
         ref.child(destiId)
                 .updateChildren(hashMap)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG,"onSuccess: Destination updated");
-                        dialog.dismiss();
-                        Toast.makeText(EditDestination.this, "Destination info updated . . .", Toast.LENGTH_SHORT).show();
-                    }
+                .addOnSuccessListener(unused -> {
+                    Log.d(TAG, "onSuccess: Destination updated");
+                    dialog.dismiss();
+                    Toast.makeText(EditDestination.this, "Destination info updated . . .", Toast.LENGTH_SHORT).show();
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG,"onFailure: error update due to"+e.getMessage());
-                    }
-                });
+                .addOnFailureListener(e -> Log.d(TAG, "onFailure: error update due to" + e.getMessage()));
     }
 
 
@@ -143,14 +126,11 @@ public class EditDestination extends AppCompatActivity {
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose Category")
-                .setItems(categoriesArray, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        selectedCategoryId = categoryIdArrayList.get(which);
-                        selectedCategoryTitle = categoryTitleArrayList.get(which);
+                .setItems(categoriesArray, (dialog, which) -> {
+                    selectedCategoryId = categoryIdArrayList.get(which);
+                    selectedCategoryTitle = categoryTitleArrayList.get(which);
 
-                        binding.categoryTV.setText(selectedCategoryTitle);
-                    }
+                    binding.categoryTV.setText(selectedCategoryTitle);
                 })
                 .show();
     }

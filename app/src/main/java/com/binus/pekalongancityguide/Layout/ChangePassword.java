@@ -1,8 +1,5 @@
 package com.binus.pekalongancityguide.Layout;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -13,7 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.binus.pekalongancityguide.Layout.MainActivity;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityChangePasswordBinding;
 import com.google.firebase.auth.AuthCredential;
