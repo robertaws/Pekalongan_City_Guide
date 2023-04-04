@@ -1,30 +1,15 @@
 package com.binus.pekalongancityguide.Misc;
 
-import static com.binus.pekalongancityguide.Layout.AddDestination.TAG;
-import static com.binus.pekalongancityguide.Misc.Constants.MAX_BYTES_IMAGE;
-
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.Gravity;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
-import com.binus.pekalongancityguide.Adapter.AdminDestinationAdapter;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -56,38 +41,26 @@ public class MyApplication extends Application {
         Log.d(TAG,"delete desti : Deleting from storage");
         StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(destiUrl);
         reference.delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
+                .addOnSuccessListener(unused -> {
 
-                        Log.d(TAG,"onSuccess : Succesfully deleted data");
-                        DatabaseReference reference1 = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
-                        reference1.child(destiId)
-                                .removeValue()
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-                                        Log.d(TAG,"onSuccess: data deleted from db");
-                                        dialog.dismiss();
-                                        Toast.makeText(context, "Destination Deleted Succesfully !", Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.d(TAG,"onFAilure: error deleting data because of"+e.getMessage());
-                                        dialog.dismiss();
-                                        Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                    }
+                    Log.d(TAG, "onSuccess : Succesfully deleted data");
+                    DatabaseReference reference1 = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+                    reference1.child(destiId)
+                            .removeValue()
+                            .addOnSuccessListener(unused1 -> {
+                                Log.d(TAG, "onSuccess: data deleted from db");
+                                dialog.dismiss();
+                                Toast.makeText(context, "Destination Deleted Succesfully !", Toast.LENGTH_SHORT).show();
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.d(TAG, "onFAilure: error deleting data because of" + e.getMessage());
+                                dialog.dismiss();
+                                Toast.makeText(context, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "onFailure: fail detele data due to" + e.getMessage());
-                        dialog.dismiss();
-                    }
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "onFailure: fail detele data due to" + e.getMessage());
+                    dialog.dismiss();
                 });
 
     }
@@ -103,18 +76,8 @@ public class MyApplication extends Application {
             DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
             reference.child(firebaseAuth.getUid()).child("Favorites").child(destiId)
                     .setValue(hashMap)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Toast.makeText(context, "Added to Bookmark", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(context, "Failed to Added favorites due to"+e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    .addOnSuccessListener(unused -> Toast.makeText(context, "Added to Bookmark", Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> Toast.makeText(context, "Failed to Added favorites due to" + e.getMessage(), Toast.LENGTH_SHORT).show());
         }
     }
     public static void removeFavorite(Context context, String destiId){
@@ -125,18 +88,8 @@ public class MyApplication extends Application {
             DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
             reference.child(firebaseAuth.getUid()).child("Favorites").child(destiId)
                     .removeValue()
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Toast.makeText(context, "Removed from Bookmark", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(context, "Failed to remove favorites due to"+e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    .addOnSuccessListener(unused -> Toast.makeText(context, "Removed from Bookmark", Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> Toast.makeText(context, "Failed to remove favorites due to" + e.getMessage(), Toast.LENGTH_SHORT).show());
         }
     }
 }

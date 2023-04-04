@@ -77,7 +77,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
             byte[] byteArray = stream.toByteArray();
 
             String filePath = context.getFilesDir().getPath() + "/image.png";
-            FileOutputStream fos = null;
+            FileOutputStream fos;
             try {
                 fos = new FileOutputStream(filePath);
             } catch (FileNotFoundException e) {
@@ -150,8 +150,6 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
                                     });
                             holder.title.setText(title);
                             holder.rating.setText(desRating);
-                        } else {
-
                         }
                     }
 

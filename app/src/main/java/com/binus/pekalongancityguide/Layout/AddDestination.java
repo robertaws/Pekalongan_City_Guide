@@ -2,7 +2,6 @@ package com.binus.pekalongancityguide.Layout;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -20,9 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityAddDestinationBinding;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
@@ -41,7 +37,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -175,24 +170,18 @@ public class AddDestination extends AppCompatActivity {
         String filePathandName = "Destination/" + timestamp;
         StorageReference storageReference = FirebaseStorage.getInstance("gs://pekalongan-city-guide-5bf2e.appspot.com").getReference(filePathandName);
         storageReference.putFile(imageUri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Log.d(TAG,"on success : Image uploaded to Storage");
-                        Log.d(TAG,"on success : getting image url");
-                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                        while (!uriTask.isSuccessful());
-                        String uploadedImageUrl = ""+uriTask.getResult();
-                        uploadtoDB(uploadedImageUrl, timestamp, placeId, address, lat, lng, rating, reviews, phoneNumber,weekday);
-                    }
+                .addOnSuccessListener(taskSnapshot -> {
+                    Log.d(TAG, "on success : Image uploaded to Storage");
+                    Log.d(TAG, "on success : getting image url");
+                    Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                    while (!uriTask.isSuccessful()) ;
+                    String uploadedImageUrl = "" + uriTask.getResult();
+                    uploadtoDB(uploadedImageUrl, timestamp, placeId, address, lat, lng, rating, reviews, phoneNumber, weekday);
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        progressDialog.dismiss();
-                        Log.d(TAG, "on Failure : Image upload failed due to " + e.getMessage());
-                        Toast.makeText(AddDestination.this, "Image upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    Log.d(TAG, "on Failure : Image upload failed due to " + e.getMessage());
+                    Toast.makeText(AddDestination.this, "Image upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
 
     }
@@ -233,31 +222,22 @@ public class AddDestination extends AppCompatActivity {
         hashMap.put("openingHours", weekday);
 
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
-        reference.child(""+timestamp)
+        reference.child("" + timestamp)
                 .setValue(hashMap)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        progressDialog.dismiss();
-                        Toast.makeText(getApplicationContext(), "Image uploaded successfully", Toast.LENGTH_LONG).show();
-                    }
+                .addOnSuccessListener(aVoid -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "Image uploaded successfully", Toast.LENGTH_LONG).show();
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        progressDialog.dismiss();
-                        Log.d(TAG, "on Failure : " + e.getMessage());
-                        Toast.makeText(AddDestination.this, "Data upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    Log.d(TAG, "on Failure : " + e.getMessage());
+                    Toast.makeText(AddDestination.this, "Data upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 })
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "uploadtoDB : Place ID successfully added to database");
-                            getPlaceDetails(placeId);
-                            onBackPressed();
-                        }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "uploadtoDB : Place ID successfully added to database");
+                        getPlaceDetails(placeId);
+                        onBackPressed();
                     }
                 });
     }
@@ -294,14 +274,11 @@ public class AddDestination extends AppCompatActivity {
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Pick Category")
-                .setItems(categoryArray, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        selectedCategoryTitle = categoriesTitleArrayList.get(which);
-                        selectedCategoryId = categoryIdArrayList.get(which);
-                        binding.categoryPick.setText(selectedCategoryTitle);
-                        Log.d(TAG,"on Click : Selected Category :"+selectedCategoryId+" "+selectedCategoryTitle);
-                    }
+                .setItems(categoryArray, (dialog, which) -> {
+                    selectedCategoryTitle = categoriesTitleArrayList.get(which);
+                    selectedCategoryId = categoryIdArrayList.get(which);
+                    binding.categoryPick.setText(selectedCategoryTitle);
+                    Log.d(TAG, "on Click : Selected Category :" + selectedCategoryId + " " + selectedCategoryTitle);
                 })
                 .show();
 

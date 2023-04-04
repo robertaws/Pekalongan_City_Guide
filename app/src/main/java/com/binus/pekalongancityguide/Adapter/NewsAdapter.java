@@ -12,8 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.Layout.NewsDetail;
-import com.binus.pekalongancityguide.R;
-import com.binus.pekalongancityguide.databinding.ListDestinationBinding;
 import com.binus.pekalongancityguide.databinding.ListNewsBinding;
 import com.bumptech.glide.Glide;
 import com.kwabenaberko.newsapilib.models.Article;

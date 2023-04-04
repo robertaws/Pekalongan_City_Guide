@@ -165,6 +165,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             tools:listitem="@layout/list_opening_hours"
+                            android:background="@color/palette_4"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
                         <com.google.android.material.divider.MaterialDivider
                             android:layout_marginTop="5dp"
@@ -183,12 +184,14 @@
                             android:justificationMode="inter_word"
                             android:text="Place Reviews"
                             android:textColor="@color/palette_1" />
+
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/review_rv"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                            tools:listitem="@layout/list_review"/>
+                            tools:listitem="@layout/list_review"
+                            android:nestedScrollingEnabled="false" />
                         <com.google.android.material.divider.MaterialDivider
                             android:layout_marginTop="5dp"
                             android:layout_width="match_parent"

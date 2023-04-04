@@ -2,7 +2,6 @@ package com.binus.pekalongancityguide.Misc;
 
 import android.widget.Filter;
 
-import com.binus.pekalongancityguide.Adapter.AdminDestinationAdapter;
 import com.binus.pekalongancityguide.Adapter.BookmarkAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 

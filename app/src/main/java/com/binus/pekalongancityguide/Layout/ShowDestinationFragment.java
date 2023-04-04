@@ -55,9 +55,9 @@ public class ShowDestinationFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentShowDestinationBinding.inflate(LayoutInflater.from(getContext()),container,false);
+        binding = FragmentShowDestinationBinding.inflate(LayoutInflater.from(getContext()), container, false);
         if (category.equals("All")) {
             loadDestinations();
         } else {

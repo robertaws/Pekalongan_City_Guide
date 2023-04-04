@@ -1,7 +1,5 @@
 package com.binus.pekalongancityguide.Adapter;
 
-import static com.binus.pekalongancityguide.Misc.Constants.MAX_BYTES_IMAGE;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,15 +20,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.binus.pekalongancityguide.ItemTemplate.Categories;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
-import com.binus.pekalongancityguide.Layout.DestinationDetailAdmin;
 import com.binus.pekalongancityguide.Layout.DestinationDetails;
-import com.binus.pekalongancityguide.Misc.FilterDestiAdmin;
 import com.binus.pekalongancityguide.Misc.FilterDestiUser;
 import com.binus.pekalongancityguide.databinding.ListDestinationBinding;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,9 +38,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static com.binus.pekalongancityguide.Misc.Constants.MAX_BYTES_IMAGE;
+
 public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.HolderDestination> implements Filterable {
     private Context context;
-    public ArrayList<Destination> destinations,filterList;
+    public ArrayList<Destination> destinations, filterList;
     private ListDestinationBinding binding;
     private FilterDestiUser filterDestiUser;
     private static final String TAG = "ADAPTER_USER_TAG";
@@ -71,8 +65,6 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
         String destiId = destination.getId();
         String title = destination.getTitle();
         String description = destination.getDescription();
-        String imageUrl = destination.getUrl();
-        String categoryId = destination.getCategoryId();
         holder.title.setText(title);
         holder.description.setText(description);
         loadImage(destination, holder);
@@ -98,7 +90,7 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
             byte[] byteArray = stream.toByteArray();
 
             String filePath = context.getFilesDir().getPath() + "/image.png";
-            FileOutputStream fos = null;
+            FileOutputStream fos;
             try {
                 fos = new FileOutputStream(filePath);
             } catch (FileNotFoundException e) {
@@ -125,23 +117,15 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
         String imageUrl = destination.getUrl();
         StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
         reference.getBytes(MAX_BYTES_IMAGE)
-                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                    @Override
-                    public void onSuccess(byte[] bytes){
-                        Log.d(TAG, "on Success: " + destination.getTitle() + "successfully got the file");
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), bitmap);
-                        drawable.setGravity(Gravity.FILL);
-                        holder.layoutImage.setBackground(drawable);
-                        holder.progressBar.setVisibility(View.GONE);
-                    }
+                .addOnSuccessListener(bytes -> {
+                    Log.d(TAG, "on Success: " + destination.getTitle() + "successfully got the file");
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), bitmap);
+                    drawable.setGravity(Gravity.FILL);
+                    holder.layoutImage.setBackground(drawable);
+                    holder.progressBar.setVisibility(View.GONE);
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG,"on Failure: failed to getting file from url due to"+e.getMessage());
-                    }
-                });
+                .addOnFailureListener(e -> Log.d(TAG, "on Failure: failed to getting file from url due to" + e.getMessage()));
     }
     @Override
     public int getItemCount() {

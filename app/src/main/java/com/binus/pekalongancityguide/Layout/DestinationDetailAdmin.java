@@ -1,19 +1,17 @@
 package com.binus.pekalongancityguide.Layout;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.binus.pekalongancityguide.Adapter.ReviewAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Review;
-import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityDestinationDetailAdminBinding;
 import com.google.android.gms.maps.CameraUpdate;
@@ -81,11 +79,11 @@ public class DestinationDetailAdmin extends AppCompatActivity {
                         }
                         SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager()
                                 .findFragmentById(R.id.admin_map);
-                        fragment.getMapAsync(googleMap ->{
+                        fragment.getMapAsync(googleMap -> {
                             LatLng coordinate = new LatLng(latitude, longitude);
                             MarkerOptions marker = new MarkerOptions();
-                            marker = marker.position(coordinate);
-                            marker = marker.title(title);
+                            marker.position(coordinate);
+                            marker.title(title);
                             googleMap.addMarker(marker);
                             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 15);
                             googleMap.moveCamera(cameraUpdate);

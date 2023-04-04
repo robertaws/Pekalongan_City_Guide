@@ -1,6 +1,5 @@
 package com.binus.pekalongancityguide.Layout;
 
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,44 +34,35 @@ public class Home extends AppCompatActivity {
         bottomNavigationView.add(new MeowBottomNavigation.Model(convo, R.drawable.chat));
         bottomNavigationView.add(new MeowBottomNavigation.Model(pr, R.drawable.profile));
 
-        bottomNavigationView.setOnShowListener(new MeowBottomNavigation.ShowListener() {
-            @Override
-            public void onShowItem(MeowBottomNavigation.Model item) {
-                String name;
-                switch (item.getId()) {
-                    case home:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commitAllowingStateLoss();
-                        break;
+        bottomNavigationView.setOnShowListener(item -> {
+            String name;
+            switch (item.getId()) {
+                case home:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commitAllowingStateLoss();
+                    break;
 
-                    case desti:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container, destinationFragment).commitAllowingStateLoss();
-                        break;
+                case desti:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container, destinationFragment).commitAllowingStateLoss();
+                    break;
 
-                    case bm:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container, bookmarkFragment).commitAllowingStateLoss();
-                        break;
+                case bm:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container, bookmarkFragment).commitAllowingStateLoss();
+                    break;
 
-                    case convo:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container, conversationFragment).commitAllowingStateLoss();
-                        break;
+                case convo:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container, conversationFragment).commitAllowingStateLoss();
+                    break;
 
-                    case pr:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container, profileFragment).commitAllowingStateLoss();
-                        break;
-                }
+                case pr:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container, profileFragment).commitAllowingStateLoss();
+                    break;
             }
         });
 
-        bottomNavigationView.setOnClickMenuListener(new MeowBottomNavigation.ClickListener() {
-            @Override
-            public void onClickItem(MeowBottomNavigation.Model item) {
-            }
+        bottomNavigationView.setOnClickMenuListener(item -> {
         });
 
-        bottomNavigationView.setOnReselectListener(new MeowBottomNavigation.ReselectListener() {
-            @Override
-            public void onReselectItem(MeowBottomNavigation.Model item) {
-            }
+        bottomNavigationView.setOnReselectListener(item -> {
         });
         bottomNavigationView.show(home, true);
     }

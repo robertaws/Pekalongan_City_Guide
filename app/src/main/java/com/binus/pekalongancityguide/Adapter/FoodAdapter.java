@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.ItemTemplate.Food;
-import com.binus.pekalongancityguide.Layout.DestinationDetails;
 import com.binus.pekalongancityguide.Layout.FoodDetails;
 import com.binus.pekalongancityguide.R;
 
@@ -43,18 +42,15 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
         holder.foodIV1.setBackgroundResource(item1.getFoodImage1());
         holder.foodIV2.setBackgroundResource(item1.getFoodImage2());
         holder.foodIV3.setBackgroundResource(item1.getFoodImage3());
-        holder.layoutBg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), FoodDetails.class);
-                intent.putExtra("imeg",item.get(position).getFoodImage());
-                intent.putExtra("imeg1",item.get(position).getFoodImage1());
-                intent.putExtra("imeg2",item.get(position).getFoodImage2());
-                intent.putExtra("imeg3",item.get(position).getFoodImage3());
-                intent.putExtra("name",item.get(position).getFoodName());
-                intent.putExtra("desc",item.get(position).getFoodDesc());
-                v.getContext().startActivity(intent);
-            }
+        holder.layoutBg.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), FoodDetails.class);
+            intent.putExtra("imeg", item.get(position).getFoodImage());
+            intent.putExtra("imeg1", item.get(position).getFoodImage1());
+            intent.putExtra("imeg2", item.get(position).getFoodImage2());
+            intent.putExtra("imeg3", item.get(position).getFoodImage3());
+            intent.putExtra("name", item.get(position).getFoodName());
+            intent.putExtra("desc", item.get(position).getFoodDesc());
+            v.getContext().startActivity(intent);
         });
     }
 
