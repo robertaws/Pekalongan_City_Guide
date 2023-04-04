@@ -18,8 +18,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.binus.pekalongancityguide.Adapter.BookmarkAdapter;
+import com.binus.pekalongancityguide.Adapter.OpeningHoursAdapter;
 import com.binus.pekalongancityguide.Adapter.ReviewAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
+import com.binus.pekalongancityguide.ItemTemplate.OpeningHours;
 import com.binus.pekalongancityguide.ItemTemplate.Review;
 import com.binus.pekalongancityguide.Misc.ImageFullscreen;
 import com.binus.pekalongancityguide.Misc.MyApplication;
@@ -44,6 +46,7 @@ import java.util.List;
 public class DestinationDetails extends AppCompatActivity {
     String imageUrl;
     private ActivityDestinationDetailsBinding binding;
+    private OpeningHoursAdapter openingHoursAdapter;
     String destiId;
     boolean inFavorite = false;
     FirebaseAuth firebaseAuth;
@@ -108,7 +111,6 @@ public class DestinationDetails extends AppCompatActivity {
                         }
                         ReviewAdapter reviewAdapter = new ReviewAdapter(reviews);
                         binding.reviewRv.setAdapter(reviewAdapter);
-
                         binding.reviewRv.setAdapter(new ReviewAdapter(reviews));
 
                         String filePath = getIntent().getStringExtra("imageFilePath");
@@ -134,6 +136,27 @@ public class DestinationDetails extends AppCompatActivity {
 
                     }
                 });
+
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("Destination")
+                .child("openingHours");
+        databaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<OpeningHours> openingHoursList = new ArrayList<>();
+                for (DataSnapshot openingHoursSnapshot : snapshot.getChildren()) {
+                    OpeningHours openingHours = openingHoursSnapshot.getValue(OpeningHours.class);
+                    openingHoursList.add(openingHours);
+                }
+                openingHoursAdapter = new OpeningHoursAdapter(openingHoursList);
+                binding.openingRv.setAdapter(openingHoursAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "Failed to read value.", error.toException());
+            }
+        });
+
     }
 
     private void checkFavorite(){

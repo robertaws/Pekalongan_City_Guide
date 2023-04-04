@@ -137,14 +137,6 @@ public class AddDestination extends AppCompatActivity {
                             Log.d(TAG, "Longitude: " + longitude);
                             Log.d(TAG, "Rating: " + rating);
                             Log.d(TAG, "Phone number: " + phoneNumber);
-//                            if (openingHours != null) {
-//                                Log.d(TAG, "Opening hours:");
-//                                for (String weekday : openingHours.getWeekdayText()) {
-//                                    Log.d(TAG, weekday);
-//                                }
-//                            } else {
-//                                Log.d(TAG, "Opening hours not available.");
-//                            }
                             new GetReviewsTask() {
                                 @Override
                                 protected void onPostExecute(JSONArray reviews) {
@@ -238,10 +230,7 @@ public class AddDestination extends AppCompatActivity {
             }
         }
         hashMap.put("reviews", reviewsList);
-
-        HashMap<String, Object> openingHoursMap = new HashMap<>();
-        openingHoursMap.put("weekday", weekday);
-        hashMap.put("openingHours", openingHoursMap);
+        hashMap.put("openingHours", weekday);
 
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
         reference.child(""+timestamp)
