@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/date_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date:"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/date_edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/date_text_view"
+        android:layout_marginTop="8dp"
+        android:background="@null"
+        android:hint="Select date" />
+
+    <Button
+        android:id="@+id/date_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/date_edit_text"
+        android:layout_alignBottom="@+id/date_edit_text"
+        android:layout_alignRight="@+id/end_time_button"
+        android:text="Select" />
+
+    <TextView
+        android:id="@+id/start_time_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/date_edit_text"
+        android:layout_marginTop="16dp"
+        android:text="Start time:"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/start_time_edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/start_time_text_view"
+        android:layout_marginTop="8dp"
+        android:background="@null"
+        android:hint="Select start time" />
+
+    <Button
+        android:id="@+id/start_time_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/start_time_edit_text"
+        android:layout_alignBottom="@+id/start_time_edit_text"
+        android:layout_alignRight="@+id/end_time_button"
+        android:text="Select" />
+
+    <TextView
+        android:id="@+id/end_time_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/start_time_edit_text"
+        android:layout_marginTop="16dp"
+        android:text="End time:"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/end_time_edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/end_time_text_view"
+        android:layout_marginTop="8dp"
+        android:background="@null"
+        android:hint="Select end time" />
+
+    <Button
+        android:id="@+id/end_time_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/end_time_edit_text"
+        android:layout_alignBottom="@+id/end_time_edit_text"
+        android:layout_alignParentRight="true"
+        android:text="Select" />
+
+    <Button
+        android:id="@+id/add_to_itinerary_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Add to itinerary"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:background="@color/palette_1"
+        android:textColor="@android:color/white"
+        android:layout_below="@+id/end_time_edit_text" />
+
+</RelativeLayout>
