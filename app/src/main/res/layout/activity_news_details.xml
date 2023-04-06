@@ -123,6 +123,7 @@
                         android:id="@+id/news_detail_link"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/palette_4"
                         android:text="Read More"
                         android:autoLink="web"/>
 

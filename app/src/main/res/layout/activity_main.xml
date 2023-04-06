@@ -79,6 +79,7 @@
             android:layout_marginTop="50dp"
             android:layout_marginHorizontal="20dp"
             android:background="@drawable/et_style"
+            android:textColor="@color/palette_4"
             android:text="Login"
             android:textSize="16dp"
             android:padding="10dp" />
@@ -91,6 +92,7 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/et_style"
             android:text="Continue without Login"
+            android:textColor="@color/palette_4"
             android:textSize="16dp"
             android:padding="10dp" />
 

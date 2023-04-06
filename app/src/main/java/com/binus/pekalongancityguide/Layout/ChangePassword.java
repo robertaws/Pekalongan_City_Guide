@@ -30,6 +30,9 @@ public class ChangePassword extends AppCompatActivity {
     binding.updatePass.setOnClickListener(v -> {
         validatedata();
     });
+    binding.backtoProfile.setOnClickListener(v -> {
+        onBackPressed();
+    });
     }
     private void validatedata() {
         newPass = binding.editPass.getText().toString().trim();
