@@ -1,5 +1,7 @@
 package com.binus.pekalongancityguide.Layout;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -10,9 +12,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.format.DateFormat;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -23,7 +30,6 @@ import com.binus.pekalongancityguide.Adapter.OpeningHoursAdapter;
 import com.binus.pekalongancityguide.Adapter.ReviewAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.OpeningHours;
 import com.binus.pekalongancityguide.ItemTemplate.Review;
-import com.binus.pekalongancityguide.Misc.AddToItineraryDialog;
 import com.binus.pekalongancityguide.Misc.ImageFullscreen;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.R;
@@ -33,6 +39,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,7 +49,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -53,6 +65,9 @@ public class DestinationDetails extends AppCompatActivity {
     boolean inFavorite = false;
     FirebaseAuth firebaseAuth;
     private static final String TAG = "REVIEW_TAG";
+    int startHour,startMinute,startHour1,startMinute1
+            ,endHour,endMinute,endHour1,endMinute1
+            ,dayDate,monthDate,yearDate,dayDate1,monthDate1,yearDate1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +87,6 @@ public class DestinationDetails extends AppCompatActivity {
             intent1.putExtra("fullImg", imageUrl);
             startActivity(intent1);
         });
-        binding.addItenary.setOnClickListener(v -> {
-            AddToItineraryDialog dialog = new AddToItineraryDialog();
-            dialog.show(getSupportFragmentManager(), "add_to_itinerary_dialog");
-        });
         binding.saveItem.setOnClickListener(v -> {
             if (firebaseAuth.getCurrentUser() == null) {
                 Toast.makeText(DestinationDetails.this, "You are not logged in!", Toast.LENGTH_SHORT).show();
@@ -87,84 +98,156 @@ public class DestinationDetails extends AppCompatActivity {
                 }
             }
         });
+        binding.addItenary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddItineraryDialog();
+            }
+        });
     }
 
     private void showAddItineraryDialog() {
-        final Dialog dialog = new Dialog(DestinationDetails.this);
-        dialog.setContentView(R.layout.dialog_add_to_itinerary);
-        dialog.setTitle("Add to Itinerary");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_add_to_itinerary, null);
+        builder.setView(view);
+        EditText dateEt,startEt,endEt;
+        ImageButton dateBtn,startBtn,endBtn;
+        Button addItinerary;
+        dateEt = view.findViewById(R.id.date_et);
+        startEt = view.findViewById(R.id.starttime_et);
+        endEt = view.findViewById(R.id.endtime_et);
+        dateBtn = view.findViewById(R.id.datepicker_btn);
+        startBtn = view.findViewById(R.id.startpicker_btn);
+        endBtn = view.findViewById(R.id.endpicker_btn);
+        addItinerary = view.findViewById(R.id.additinerary_btn);
 
-        // Get references to the views in the dialog
-        final EditText dateEditText = dialog.findViewById(R.id.date_edit_text);
-        final Button dateButton = dialog.findViewById(R.id.date_button);
-        final EditText startTimeEditText = dialog.findViewById(R.id.start_time_edit_text);
-        final Button startTimeButton = dialog.findViewById(R.id.start_time_button);
-        final EditText endTimeEditText = dialog.findViewById(R.id.end_time_edit_text);
-        final Button endTimeButton = dialog.findViewById(R.id.end_time_button);
-        Button addToItineraryButton = dialog.findViewById(R.id.add_to_itinerary_button);
-
-        // Set onClickListener to the date button
-        dateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Show the date picker
-                DatePickerDialog datePickerDialog = null;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    datePickerDialog = new DatePickerDialog(DestinationDetails.this);
+        startBtn.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            startHour = calendar.get(Calendar.HOUR_OF_DAY);
+            startMinute = calendar.get(Calendar.MINUTE);
+            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_12H)
+                    .setHour(startHour)
+                    .setMinute(startMinute)
+                    .setTitleText("Select start time")
+                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);
+            MaterialTimePicker dialog = mybuilder.build();
+            dialog.addOnPositiveButtonClickListener(timeview -> {
+                startHour = dialog.getHour();
+                startMinute = dialog.getMinute();
+                if (startHour <= 12) {
+                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d am", startHour, startMinute));
+                } else {
+                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", startHour - 12, startMinute));
                 }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    datePickerDialog.setOnDateSetListener((view, year, month, dayOfMonth) -> {
-                        // Set the selected date to the date EditText
-                        String date = dayOfMonth + "/" + (month + 1) + "/" + year;
-                        dateEditText.setText(date);
-                    });
+            });
+            dialog.show(getSupportFragmentManager(), "startTimePicker");
+        });
+        startEt.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            startHour1 = calendar.get(Calendar.HOUR_OF_DAY);
+            startMinute1 = calendar.get(Calendar.MINUTE);
+            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_12H)
+                    .setHour(startHour1)
+                    .setMinute(startMinute1)
+                    .setTitleText("Select start time")
+                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);
+            MaterialTimePicker dialog = mybuilder.build();
+            dialog.addOnPositiveButtonClickListener(timeview -> {
+                startHour1 = dialog.getHour();
+                startMinute1 = dialog.getMinute();
+                if (startHour1 <= 12) {
+                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d am", startHour1, startMinute1));
+                } else {
+                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", startHour1 - 12, startMinute1));
                 }
-                datePickerDialog.show();
-            }
+            });
+            dialog.show(getSupportFragmentManager(), "startTimePicker");
         });
-
-        // Set onClickListener to the start time button
-        startTimeButton.setOnClickListener(v -> {
-            // Show the start time picker
-            TimePickerDialog timePickerDialog = new TimePickerDialog(DestinationDetails.this, new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                    // Set the selected start time to the start time EditText
-                    String startTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute);
-                    startTimeEditText.setText(startTime);
+        endBtn.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            endHour = calendar.get(Calendar.HOUR_OF_DAY);
+            endMinute = calendar.get(Calendar.MINUTE);
+            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_12H)
+                    .setHour(endHour)
+                    .setMinute(endMinute)
+                    .setTitleText("Select start time")
+                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);
+            MaterialTimePicker dialog = mybuilder.build();
+            dialog.addOnPositiveButtonClickListener(timeview -> {
+                endHour = dialog.getHour();
+                endMinute = dialog.getMinute();
+                if (endHour <= 12) {
+                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d am", endHour, endMinute));
+                } else {
+                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", endHour - 12, endMinute));
                 }
-            }, 0, 0, true);
-            timePickerDialog.show();
+            });
+            dialog.show(getSupportFragmentManager(), "startTimePicker");
         });
-
-        // Set onClickListener to the end time button
-        endTimeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Show the end time picker
-                TimePickerDialog timePickerDialog = new TimePickerDialog(DestinationDetails.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        // Set the selected end time to the end time EditText
-                        String endTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute);
-                        endTimeEditText.setText(endTime);
-                    }
-                }, 0, 0, true);
-                timePickerDialog.show();
-            }
+        endEt.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            endHour1 = calendar.get(Calendar.HOUR_OF_DAY);
+            endMinute1 = calendar.get(Calendar.MINUTE);
+            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_12H)
+                    .setHour(endHour1)
+                    .setMinute(endMinute1)
+                    .setTitleText("Select start time")
+                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);
+            MaterialTimePicker dialog = mybuilder.build();
+            dialog.addOnPositiveButtonClickListener(timeview -> {
+                endHour1 = dialog.getHour();
+                endMinute1 = dialog.getMinute();
+                if (endHour1 <= 12) {
+                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d am", endHour1, endMinute1));
+                } else {
+                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", endHour1 - 12, endMinute1));
+                }
+            });
+            dialog.show(getSupportFragmentManager(), "startTimePicker");
         });
-
-        // Set onClickListener to the "add to itinerary" button
-        addToItineraryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: Add the selected date, start time, and end time to the itinerary
-                // Dismiss the dialog
-                dialog.dismiss();
-            }
+        dateBtn.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            yearDate = calendar.get(Calendar.YEAR);
+            monthDate = calendar.get(Calendar.MONTH);
+            dayDate = calendar.get(Calendar.DAY_OF_MONTH);
+            DatePickerDialog dialog;
+            dialog = new DatePickerDialog(this, (dateView, year, month, dayOfMonth) -> {
+                yearDate = year;
+                monthDate = month;
+                dayDate = dayOfMonth;
+                SimpleDateFormat format = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
+                String dateString = format.format(new Date(yearDate - 1900, monthDate, dayDate));
+                dateEt.setText(dateString);
+            }, yearDate, monthDate, dayDate);
+            dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);
+            dialog.show();
         });
-
-        // Show the dialog
+        dateEt.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            yearDate1 = calendar.get(Calendar.YEAR);
+            monthDate1 = calendar.get(Calendar.MONTH);
+            dayDate1 = calendar.get(Calendar.DAY_OF_MONTH);
+            DatePickerDialog dialog;
+            dialog = new DatePickerDialog(this, (view15, year, month, dayOfMonth) -> {
+                yearDate1 = year;
+                monthDate1 = month;
+                dayDate1 = dayOfMonth;
+                SimpleDateFormat format = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
+                String dateString = format.format(new Date(yearDate - 1900, monthDate, dayDate));
+                dateEt.setText(dateString);
+            },yearDate1,monthDate1,dayDate1);
+            dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);
+            dialog.show();
+        });
+        addItinerary.setOnClickListener(v -> {
+            Toast.makeText(this, "Destination Added!", Toast.LENGTH_SHORT).show();
+        });
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
         dialog.show();
     }
 

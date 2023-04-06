@@ -88,6 +88,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
+                android:textColor="@color/palette_4"
                 android:text="Add category"
                 android:layout_gravity="center_vertical" />
 

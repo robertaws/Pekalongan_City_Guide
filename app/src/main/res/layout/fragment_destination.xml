@@ -23,11 +23,13 @@
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/palette_2"
+                android:background="#D5BB91"
                 app:tabBackground="@drawable/tab_selector"
                 app:tabIndicatorHeight="0dp"
                 app:tabMode="scrollable"
                 app:tabUnboundedRipple="false"
+                app:tabTextColor="@color/palette_2"
+                app:tabSelectedTextColor="@color/palette_4"
                 app:tabIndicatorFullWidth="false"/>
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/viewPager"
