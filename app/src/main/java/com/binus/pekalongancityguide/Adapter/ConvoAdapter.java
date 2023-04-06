@@ -14,7 +14,7 @@ import com.binus.pekalongancityguide.R;
 import java.util.List;
 
 public class ConvoAdapter extends RecyclerView.Adapter<ConvoAdapter.ViewHolder> {
-    private List<Conversations> item;
+    private final List<Conversations> item;
 
     public ConvoAdapter(List<Conversations> items) {
         item = items;

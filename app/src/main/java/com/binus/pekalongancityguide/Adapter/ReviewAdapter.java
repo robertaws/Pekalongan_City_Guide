@@ -14,7 +14,7 @@ import com.binus.pekalongancityguide.R;
 import java.util.List;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
-    private List<Review> reviews;
+    private final List<Review> reviews;
 
     public ReviewAdapter(List<Review> reviews) {
         this.reviews = reviews;

@@ -46,12 +46,12 @@ import java.util.ArrayList;
 import static com.binus.pekalongancityguide.Misc.Constants.MAX_BYTES_IMAGE;
 
 public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinationAdapter.HolderAdminDestination> implements Filterable {
-    private Context context;
+    private final Context context;
     public ArrayList<Destination> destinationArrayList,filterList;
     public static final String TAG = "DESTINATION_ADAPTER_TAG";
     private FilterDestiAdmin filterDestiAdmin;
     private ListDestiAdminBinding binding;
-    private ProgressDialog dialog;
+    private final ProgressDialog dialog;
     public AdminDestinationAdapter(Context context, ArrayList<Destination> destinationArrayList) {
         this.context = context;
         this.destinationArrayList = destinationArrayList;

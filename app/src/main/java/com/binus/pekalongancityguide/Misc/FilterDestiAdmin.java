@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class FilterDestiAdmin extends Filter {
     ArrayList<Destination> filter;
-    private
+    private final
     AdminDestinationAdapter adminDestinationAdapter;
 
     public FilterDestiAdmin(ArrayList<Destination> filter, AdminDestinationAdapter adminDestinationAdapter) {

@@ -19,7 +19,7 @@ import com.binus.pekalongancityguide.R;
 import java.util.List;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
-    private List<Food> item;
+    private final List<Food> item;
 
     public FoodAdapter(List<Food> items) {
         item = items;

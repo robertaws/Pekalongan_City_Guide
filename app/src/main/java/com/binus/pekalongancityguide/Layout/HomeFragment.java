@@ -88,7 +88,7 @@ public class HomeFragment extends Fragment {
         String dateString = dateFormat.format(dateBefore30Days);
 
         EverythingRequest everythingRequest = new EverythingRequest.Builder()
-                .q("jawa tengah")
+                .q("jawa")
                 .language("id")
                 .from(dateString)
                 .to(String.valueOf(new Date()))

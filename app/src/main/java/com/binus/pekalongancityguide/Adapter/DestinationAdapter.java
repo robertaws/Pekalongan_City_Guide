@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import static com.binus.pekalongancityguide.Misc.Constants.MAX_BYTES_IMAGE;
 
 public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.HolderDestination> implements Filterable {
-    private Context context;
+    private final Context context;
     public ArrayList<Destination> destinations, filterList;
     private ListDestinationBinding binding;
     private FilterDestiUser filterDestiUser;

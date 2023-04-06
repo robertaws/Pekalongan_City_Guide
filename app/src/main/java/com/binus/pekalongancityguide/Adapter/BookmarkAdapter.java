@@ -46,7 +46,7 @@ import static com.binus.pekalongancityguide.Misc.Constants.MAX_BYTES_IMAGE;
 
 public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.HolderBookmark> implements Filterable{
     private static final String TAG = "BOOKMARK_ADAPTER_TAG";
-    private Context context;
+    private final Context context;
     public ArrayList<Destination> destiArray,filterListBookmark;
     private ListFavoriteBinding binding;
     private FilterBookmark filterBookmark;

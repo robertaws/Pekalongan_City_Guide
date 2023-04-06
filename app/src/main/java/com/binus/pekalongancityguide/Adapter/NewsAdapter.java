@@ -25,7 +25,7 @@ import java.util.Locale;
 
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
-    private List<Article> mArticles;
+    private final List<Article> mArticles;
     private static ListNewsBinding binding;
 
     public NewsAdapter(List<Article> articles) {
@@ -92,8 +92,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView titleTV,dateTV,sourceTV;
-        private ImageView newsIV;
+        private final TextView titleTV;
+        private final TextView dateTV;
+        private final TextView sourceTV;
+        private final ImageView newsIV;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTV = binding.newsTitle;

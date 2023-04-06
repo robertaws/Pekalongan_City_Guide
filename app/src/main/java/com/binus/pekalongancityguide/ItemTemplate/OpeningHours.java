@@ -1,8 +1,8 @@
 package com.binus.pekalongancityguide.ItemTemplate;
 
 public class OpeningHours {
-    private String dayOfWeek;
-    private String openingHours;
+    private final String dayOfWeek;
+    private final String openingHours;
 
     public OpeningHours(String dayOfWeek, String openingHours) {
         this.dayOfWeek = dayOfWeek;
