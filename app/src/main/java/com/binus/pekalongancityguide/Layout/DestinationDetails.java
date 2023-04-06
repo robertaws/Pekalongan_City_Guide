@@ -1,26 +1,19 @@
 package com.binus.pekalongancityguide.Layout;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.format.DateFormat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,7 +32,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
@@ -98,12 +90,7 @@ public class DestinationDetails extends AppCompatActivity {
                 }
             }
         });
-        binding.addItenary.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAddItineraryDialog();
-            }
-        });
+        binding.addItenary.setOnClickListener(v -> showAddItineraryDialog());
     }
 
     private void showAddItineraryDialog() {
@@ -244,11 +231,46 @@ public class DestinationDetails extends AppCompatActivity {
             dialog.show();
         });
         addItinerary.setOnClickListener(v -> {
-            Toast.makeText(this, "Destination Added!", Toast.LENGTH_SHORT).show();
+            validateData(dateEt, startEt, endEt);
         });
         AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
         dialog.show();
+    }
+
+    private String date = "", startTime = "", endTime = "";
+
+    private void validateData(EditText dateEt, EditText startTimeEt, EditText endTimeEt) {
+        date = dateEt.getText().toString().trim();
+        startTime = startTimeEt.getText().toString().trim();
+        endTime = endTimeEt.getText().toString().trim();
+        boolean allFieldsFilled = true;
+
+        if (TextUtils.isEmpty(date)) {
+            dateEt.setError("Please choose a date!");
+            allFieldsFilled = false;
+        } else {
+            dateEt.setError(null);
+        }
+
+        if (TextUtils.isEmpty(startTime)) {
+            startTimeEt.setError("Please choose a starting time!");
+            allFieldsFilled = false;
+        } else {
+            startTimeEt.setError(null);
+        }
+
+        if (TextUtils.isEmpty(endTime)) {
+            endTimeEt.setError("Please choose an end time!");
+            allFieldsFilled = false;
+        } else {
+            endTimeEt.setError(null);
+        }
+
+        if (allFieldsFilled) {
+            Toast.makeText(this, "Destination Added!", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void loadDetails() {
