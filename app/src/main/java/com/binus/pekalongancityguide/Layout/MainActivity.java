@@ -3,7 +3,6 @@ package com.binus.pekalongancityguide.Layout;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.inputmethod.InputMethodManager;
@@ -95,19 +94,25 @@ public class MainActivity extends AppCompatActivity {
     void validate() {
         Email = binding.loginEmail.getText().toString().trim();
         Password = binding.loginPass.getText().toString().trim();
-        if (Email.isEmpty()) {
-            email.setError("All field must not be empty!");
-        }
-        if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
+
+        boolean hasError = false;
+
+        if (Email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
+            hasError = true;
             email.setError("Invalid Email Address!");
         }
+
         if (Password.isEmpty()) {
+            hasError = true;
             pass.setError("All field must not be empty!");
             til.setPasswordVisibilityToggleEnabled(false);
-        } else {
+        }
+
+        if (!hasError) {
             tryLogin();
         }
     }
+
 
     private void tryLogin() {
         progressDialog.setMessage("Logging in..");
@@ -116,9 +121,8 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth.signInWithEmailAndPassword(Email,Password)
                 .addOnSuccessListener(authResult -> checkUser())
                 .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
                     Snackbar.make(binding.getRoot(), e.getMessage(), Snackbar.LENGTH_SHORT).show();
-                    Handler handler = new Handler();
-                    handler.postDelayed(() -> progressDialog.dismiss(), 2000);
                 });
     }
 
@@ -139,13 +143,17 @@ public class MainActivity extends AppCompatActivity {
                         } else if (userType.equals("admin")) {
                             startActivity(new Intent(MainActivity.this, AdminHome.class));
                             finish();
+                        } else {
+                            Snackbar.make(binding.getRoot(), "Wrong password!", Snackbar.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-
+                        progressDialog.dismiss();
+                        Snackbar.make(binding.getRoot(), error.getMessage(), Snackbar.LENGTH_SHORT).show();
                     }
                 });
     }
+
 }

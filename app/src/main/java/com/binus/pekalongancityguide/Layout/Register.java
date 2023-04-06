@@ -3,6 +3,7 @@ package com.binus.pekalongancityguide.Layout;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +29,16 @@ public class Register extends AppCompatActivity {
     Button register;
     ProgressDialog progressDialog;
     private ActivityRegisterBinding binding;
+
+    private static final String USERNAME_EMPTY_ERROR = "Username cannot be empty!";
+    private static final String USERNAME_LENGTH_ERROR = "Username must be between 3-12 characters!";
+    private static final String EMAIL_EMPTY_ERROR = "Email cannot be empty!";
+    private static final String EMAIL_FORMAT_ERROR = "Invalid Email Address!";
+    private static final String PASSWORD_EMPTY_ERROR = "Password cannot be empty!";
+    private static final String PASSWORD_LENGTH_ERROR = "Password must be more than 8 characters!";
+    private static final String PASSWORD_NUMBER_ERROR = "Password must contain at least one number!";
+    private static final String PASSWORD_SYMBOL_ERROR = "Password must contain at least one symbol!";
+    private static final String PASSWORD_MATCH_ERROR = "Password does not match!";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +83,7 @@ public class Register extends AppCompatActivity {
         etil = findViewById(R.id.regisemail_til);
         util = findViewById(R.id.regisuser_til);
         firebaseAuth = FirebaseAuth.getInstance();
+        setupListeners();
     }
 
     void validate() {
@@ -79,33 +91,110 @@ public class Register extends AppCompatActivity {
         Email = binding.regisEmail.getText().toString().trim();
         Password = binding.regisPass.getText().toString().trim();
         Cfmpass = binding.regisCpass.getText().toString().trim();
-        if (Username.isEmpty()) {
-            user.setError("Username cannot be empty!");
+        boolean allFieldsValid = true;
+
+        if (TextUtils.isEmpty(Username)) {
+            binding.regisUser.setError(USERNAME_EMPTY_ERROR);
+            allFieldsValid = false;
         } else if (Username.length() < 3 || Username.length() > 12) {
-            user.setError("Username must be between 3-12 characters!");
-        } else if (Email.isEmpty()) {
-            email.setError("Email cannot be empty!");
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
-            email.setError("Invalid Email Address!");
-        } else if (Password.isEmpty()) {
-            pass.setError("Password cannot be empty!");
-        } else if (Password.length() < 8) {
-            pass.setError("Password must be more than 8 characters!");
-        } else if (!Password.matches(".*[0-9].*")) {
-            pass.setError("Password must contain at least one number!");
-        } else if (!Password.matches(".*[!@#$%^&*()].*")) {
-            pass.setError("Password must contain at least one symbol!");
-        } else if (!Cfmpass.equals(Password)) {
-            cpass.setError("Password does not match!");
+            binding.regisUser.setError(USERNAME_LENGTH_ERROR);
+            allFieldsValid = false;
         } else {
+            binding.regisUser.setError(null);
+        }
+
+        if (TextUtils.isEmpty(Email)) {
+            binding.regisEmail.setError(EMAIL_EMPTY_ERROR);
+            allFieldsValid = false;
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
+            binding.regisEmail.setError(EMAIL_FORMAT_ERROR);
+            allFieldsValid = false;
+        } else {
+            binding.regisEmail.setError(null);
+        }
+
+        if (TextUtils.isEmpty(Password)) {
+            til.setPasswordVisibilityToggleEnabled(false); // remove toggle
+            pass.setError(PASSWORD_EMPTY_ERROR);
+            allFieldsValid = false;
+        } else if (Password.length() < 8) {
+            til.setPasswordVisibilityToggleEnabled(false); // remove toggle
+            pass.setError(PASSWORD_LENGTH_ERROR);
+            allFieldsValid = false;
+        } else if (!containsNumber(Password)) {
+            til.setPasswordVisibilityToggleEnabled(false); // remove toggle
+            pass.setError(PASSWORD_NUMBER_ERROR);
+            allFieldsValid = false;
+        } else if (!containsSymbol(Password)) {
+            til.setPasswordVisibilityToggleEnabled(false); // remove toggle
+            pass.setError(PASSWORD_SYMBOL_ERROR);
+            allFieldsValid = false;
+        } else {
+            til.setPasswordVisibilityToggleEnabled(true); // show toggle
+            pass.setError(null);
+        }
+
+        if (TextUtils.isEmpty(Cfmpass)) {
+            ctil.setPasswordVisibilityToggleEnabled(false); // remove toggle
+            cpass.setError(PASSWORD_EMPTY_ERROR);
+            allFieldsValid = false;
+        } else if (!Cfmpass.equals(Password)) {
+            ctil.setPasswordVisibilityToggleEnabled(false); // remove toggle
+            cpass.setError(PASSWORD_MATCH_ERROR);
+            allFieldsValid = false;
+        } else {
+            ctil.setPasswordVisibilityToggleEnabled(true); // show toggle
+            cpass.setError(null);
+        }
+
+        if (allFieldsValid) {
+            Toast.makeText(this, "Registered successfully!", Toast.LENGTH_SHORT).show();
             createUser();
         }
     }
 
-    private void createUser(){
+    private boolean containsNumber(String password) {
+        return password.matches(".*\\d.*");
+    }
+
+    private boolean containsSymbol(String password) {
+        return password.matches(".*[!@#$%^&*()].*");
+    }
+
+    private void setupListeners() {
+        pass.setOnFocusChangeListener((view, hasFocus) -> {
+            if (!hasFocus) {
+                validate();
+            }
+        });
+        cpass.setOnFocusChangeListener((view, hasFocus) -> {
+            if (!hasFocus) {
+                validate();
+            }
+        });
+
+        til.getEditText().setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                til.setPasswordVisibilityToggleEnabled(true);
+            } else {
+                til.setPasswordVisibilityToggleEnabled(false);
+            }
+        });
+
+        ctil.getEditText().setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                ctil.setPasswordVisibilityToggleEnabled(true);
+            } else {
+                ctil.setPasswordVisibilityToggleEnabled(false);
+            }
+        });
+
+    }
+
+    private void createUser() {
         progressDialog.setMessage("Creating account...");
         progressDialog.show();
-        firebaseAuth.createUserWithEmailAndPassword(Email,Password)
+        firebaseAuth.createUserWithEmailAndPassword(Email, Password)
                 .addOnSuccessListener(authResult -> {
                     progressDialog.dismiss();
                     addUser();
