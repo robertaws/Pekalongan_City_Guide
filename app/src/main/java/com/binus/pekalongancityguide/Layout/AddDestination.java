@@ -86,7 +86,9 @@ public class AddDestination extends AppCompatActivity {
 
     }
 
-    private String title = "", desc = "", address = "";
+    private String title = "";
+    private String desc = "";
+    private final String address = "";
     private Double latitude, longitude;
 
     private void validateData() {
@@ -136,7 +138,7 @@ public class AddDestination extends AppCompatActivity {
                                 @Override
                                 protected void onPostExecute(JSONArray reviews) {
                                     if (reviews != null) {
-                                        Log.d(TAG, "Reviews: " + reviews.toString());
+                                        Log.d(TAG, "Reviews: " + reviews);
                                         if (openingHours != null) {
                                             uploadtoStorage(placeId, address, latitude, longitude, rating, reviews, phoneNumber, openingHours.getWeekdayText());
                                         } else {

@@ -13,14 +13,10 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -99,7 +95,7 @@ public class EditProfile extends AppCompatActivity {
     private void validatedata() {
         name = binding.editName.getText().toString().trim();
         if(TextUtils.isEmpty(name)){
-            showCustomToast("Enter new name");
+            Toast.makeText(this, "Enter new name", Toast.LENGTH_SHORT).show();
         }else{
             if(imguri==null){
                 updateProfile("");
@@ -124,13 +120,13 @@ public class EditProfile extends AppCompatActivity {
                 .addOnSuccessListener(unused -> {
                     Log.d(TAG, "on Success: Profile updated");
                     progressDialog.dismiss();
-                    showCustomToast("Profile updated");
+                    Toast.makeText(this, "Profile updated", Toast.LENGTH_SHORT).show();
 
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "on Success: Failed to update db due to"+e.getMessage());
                     progressDialog.dismiss();
-                    showCustomToast("Failed to update db due to" + e.getMessage());
+                    Toast.makeText(this, "Failed to update db due to" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
     private void uploadImage() {
@@ -154,7 +150,7 @@ public class EditProfile extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "on Failure: Failed to upload image due to" + e.getMessage());
                     progressDialog.dismiss();
-                    showCustomToast("on Failure: Failed to upload image due to" + e.getMessage());
+                    Toast.makeText(this, "on Failure: Failed to upload image due to" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -193,12 +189,13 @@ public class EditProfile extends AppCompatActivity {
         intent.setType("image/*");
         galleryResultActivityLauncher.launch(intent);
     }
-    private ActivityResultLauncher<Intent> cameraResultActivityLauncher = registerForActivityResult(
+
+    private final ActivityResultLauncher<Intent> cameraResultActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode()== Activity.RESULT_OK) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
                         Log.d(TAG, "onActivityResult: " + imguri);
                         Intent data = result.getData();
                         binding.editImage.setImageURI(imguri);
@@ -207,18 +204,18 @@ public class EditProfile extends AppCompatActivity {
                                 .placeholder(R.drawable.person)
                                 .centerCrop()
                                 .into(binding.editImage);
-                    }else{
-                        showCustomToast("Cancelled");
+                    } else {
+                        Toast.makeText(EditProfile.this, "Cancelled", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
     );
-    private ActivityResultLauncher<Intent> galleryResultActivityLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> galleryResultActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode()== Activity.RESULT_OK) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
                         Log.d(TAG, "onActivityResult: " + imguri);
                         Intent data = result.getData();
                         imguri = data.getData();
@@ -230,7 +227,7 @@ public class EditProfile extends AppCompatActivity {
                                 .centerCrop()
                                 .into(binding.editImage);
                     }else{
-                        showCustomToast("Cancelled");
+                        Toast.makeText(EditProfile.this, "Cancelled", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -259,21 +256,6 @@ public class EditProfile extends AppCompatActivity {
                     }
                 });
 
-    }
-
-    private void showCustomToast(String toastText) {
-        LayoutInflater inflater = getLayoutInflater();
-        View layout = inflater.inflate(R.layout.custom_toast,
-                (ViewGroup) findViewById(R.id.custom_toast));
-
-        TextView text = layout.findViewById(R.id.toastText);
-        text.setText(toastText);
-
-        Toast toast = new Toast(getApplicationContext());
-        toast.setGravity(Gravity.BOTTOM, 0, 50);
-        toast.setDuration(Toast.LENGTH_LONG);
-        toast.setView(layout);
-        toast.show();
     }
     public int dpToPx(int dp) {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();

@@ -14,7 +14,7 @@ import com.binus.pekalongancityguide.R;
 import java.util.List;
 
 public class OpeningHoursAdapter extends RecyclerView.Adapter<OpeningHoursAdapter.OpeningHoursViewHolder> {
-    private List<OpeningHours> hours;
+    private final List<OpeningHours> hours;
 
     public OpeningHoursAdapter(List<OpeningHours> data) {
         this.hours = data;

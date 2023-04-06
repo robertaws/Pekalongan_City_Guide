@@ -25,7 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.HolderCategory> implements Filterable {
-    private Context context;
+    private final Context context;
     public ArrayList<Categories> categoriesArrayList,filter;
     private ListCategoryBinding binding;
     private FilterCategory filterCategory;

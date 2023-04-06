@@ -14,7 +14,7 @@ import com.binus.pekalongancityguide.R;
 import java.util.List;
 
 public class PhrasesAdapter extends RecyclerView.Adapter<PhrasesAdapter.ViewHolder> {
-    private List<Phrases> item;
+    private final List<Phrases> item;
 
     public PhrasesAdapter(List<Phrases> items) {
         item = items;

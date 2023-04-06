@@ -174,19 +174,11 @@ public class Register extends AppCompatActivity {
         });
 
         til.getEditText().setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                til.setPasswordVisibilityToggleEnabled(true);
-            } else {
-                til.setPasswordVisibilityToggleEnabled(false);
-            }
+            til.setPasswordVisibilityToggleEnabled(hasFocus);
         });
 
         ctil.getEditText().setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                ctil.setPasswordVisibilityToggleEnabled(true);
-            } else {
-                ctil.setPasswordVisibilityToggleEnabled(false);
-            }
+            ctil.setPasswordVisibilityToggleEnabled(hasFocus);
         });
 
     }

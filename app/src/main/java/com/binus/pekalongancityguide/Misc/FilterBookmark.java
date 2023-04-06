@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class FilterBookmark extends Filter {
     ArrayList<Destination> filter;
-    private BookmarkAdapter bookmarkAdapter;
+    private final BookmarkAdapter bookmarkAdapter;
 
     public FilterBookmark(ArrayList<Destination> filter, BookmarkAdapter bookmarkAdapter) {
         this.filter = filter;

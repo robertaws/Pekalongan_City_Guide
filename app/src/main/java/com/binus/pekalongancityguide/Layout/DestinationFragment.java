@@ -82,10 +82,10 @@ public class DestinationFragment extends Fragment {
         viewPager.setAdapter(viewPagerAdapter);
         viewPager.setOffscreenPageLimit(1);
     }
-    public class ViewPagerAdapter extends FragmentPagerAdapter{
-        private ArrayList <ShowDestinationFragment> fragmentList = new ArrayList<>();
-        private ArrayList <String> fragmentTitleList = new ArrayList<>();
-        private Context context;
+    public class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final ArrayList<ShowDestinationFragment> fragmentList = new ArrayList<>();
+        private final ArrayList<String> fragmentTitleList = new ArrayList<>();
+        private final Context context;
 
         public ViewPagerAdapter(@NonNull FragmentManager fm, Context context) {
             super(fm, BEHAVIOR_SET_USER_VISIBLE_HINT);
