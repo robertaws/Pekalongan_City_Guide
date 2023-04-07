@@ -2,6 +2,7 @@ package com.binus.pekalongancityguide.Layout;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -57,6 +59,7 @@ public class DestinationDetails extends AppCompatActivity {
     boolean inFavorite = false;
     FirebaseAuth firebaseAuth;
     private static final String TAG = "REVIEW_TAG";
+    private ProgressDialog progressDialog;
     int startHour,startMinute,startHour1,startMinute1
             ,endHour,endMinute,endHour1,endMinute1
             ,dayDate,monthDate,yearDate,dayDate1,monthDate1,yearDate1;
@@ -268,9 +271,42 @@ public class DestinationDetails extends AppCompatActivity {
         }
 
         if (allFieldsFilled) {
+            uploadToDB(date, startTime, endTime);
             Toast.makeText(this, "Destination Added!", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    private void uploadToDB(String date, String startTime, String endTime) {
+        String uid = firebaseAuth.getUid();
+        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        reference.child(destiId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String placeID = "" + snapshot.child("placeID").getValue();
+                Log.d(TAG, "placeID: " + placeID);
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("uid", uid);
+                hashMap.put("start time", startTime);
+                hashMap.put("end time", endTime);
+                hashMap.put("date", date);
+                hashMap.put("place id", placeID);
+                DatabaseReference itineraryRef = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Itinerary");
+                itineraryRef.push().setValue(hashMap).addOnSuccessListener(aVoid -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "Itinerary uploaded successfully", Toast.LENGTH_LONG).show();
+                }).addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    Log.d(TAG, "on Failure : " + e.getMessage());
+                    Toast.makeText(DestinationDetails.this, "Data upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void loadDetails() {

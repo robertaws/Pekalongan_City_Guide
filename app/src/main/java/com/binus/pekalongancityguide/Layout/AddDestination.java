@@ -59,10 +59,10 @@ public class AddDestination extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private Uri imageUri = null;
     private static final int PICK_IMAGE_REQUEST = 1;
-
     private ProgressDialog progressDialog;
     ArrayList<String> categoriesTitleArrayList, categoryIdArrayList;
     public static final String TAG = "ADD_IMAGE_TAG";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,11 +101,11 @@ public class AddDestination extends AppCompatActivity {
             binding.descEt.setError("Enter destination description!");
         } else if (TextUtils.isEmpty(selectedCategoryTitle)) {
             binding.categoryPick.setError("Pick a category!");
-        }else if(imageUri==null){
+        } else if (imageUri == null) {
             Toast.makeText(this, "Pick an image!", Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             PlacesClient placesClient = Places.createClient(this);
-            List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.RATING, Place.Field.OPENING_HOURS,Place.Field.PHONE_NUMBER);
+            List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.RATING, Place.Field.OPENING_HOURS, Place.Field.PHONE_NUMBER);
             AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
             FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
                     .setTypeFilter(TypeFilter.ESTABLISHMENT)
@@ -164,7 +164,7 @@ public class AddDestination extends AppCompatActivity {
         }
     }
 
-    private void uploadtoStorage(String placeId, String address, double lat, double lng, double rating, JSONArray reviews, String phoneNumber,List<String> weekday) {
+    private void uploadtoStorage(String placeId, String address, double lat, double lng, double rating, JSONArray reviews, String phoneNumber, List<String> weekday) {
         Log.d(TAG, "uploadtoStorage : uploading to storage");
         progressDialog.setMessage("Uploading image");
         progressDialog.show();
@@ -199,8 +199,8 @@ public class AddDestination extends AppCompatActivity {
         hashMap.put("description", "" + desc);
         hashMap.put("address", "" + address);
         hashMap.put("latitude", "" + desLat);
-        hashMap.put("longitude","" + desLong);
-        hashMap.put("rating","" + rating);
+        hashMap.put("longitude", "" + desLong);
+        hashMap.put("rating", "" + rating);
         hashMap.put("categoryId", "" + selectedCategoryId);
         hashMap.put("url", "" + uploadedImageUrl);
         hashMap.put("timestamp", timestamp);
@@ -244,8 +244,8 @@ public class AddDestination extends AppCompatActivity {
                 });
     }
 
-    private void loadCategory(){
-        Log.d(TAG,"load Category : load Category ");
+    private void loadCategory() {
+        Log.d(TAG, "load Category : load Category ");
         categoriesTitleArrayList = new ArrayList<>();
         categoryIdArrayList = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Categories");
@@ -254,24 +254,27 @@ public class AddDestination extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 categoriesTitleArrayList.clear();
                 categoryIdArrayList.clear();
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    String categoryId = ""+dataSnapshot.child("id").getValue();
-                    String categoryTitle = ""+dataSnapshot.child("category").getValue();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String categoryId = "" + dataSnapshot.child("id").getValue();
+                    String categoryTitle = "" + dataSnapshot.child("category").getValue();
                     categoriesTitleArrayList.add(categoryTitle);
                     categoryIdArrayList.add(categoryId);
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
     }
-    private String selectedCategoryId,selectedCategoryTitle;
-    private void showCategoryDialog(){
-        Log.d(TAG,"Category dialog : showing dialog ");
-        String [] categoryArray = new String[categoriesTitleArrayList.size()];
-        for(int i=0;i<categoriesTitleArrayList.size();i++){
+
+    private String selectedCategoryId, selectedCategoryTitle;
+
+    private void showCategoryDialog() {
+        Log.d(TAG, "Category dialog : showing dialog ");
+        String[] categoryArray = new String[categoriesTitleArrayList.size()];
+        for (int i = 0; i < categoriesTitleArrayList.size(); i++) {
             categoryArray[i] = categoriesTitleArrayList.get(i);
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -285,8 +288,9 @@ public class AddDestination extends AppCompatActivity {
                 .show();
 
     }
-    private void addPhoto(){
-        Log.d(TAG,"imageIntent : Start pick destination image");
+
+    private void addPhoto() {
+        Log.d(TAG, "imageIntent : Start pick destination image");
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
@@ -295,7 +299,7 @@ public class AddDestination extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Log.d(TAG, "onActivityResult : Image picked");
             imageUri = data.getData();
             Log.d(TAG, "onActivityResult : URI : " + imageUri);
