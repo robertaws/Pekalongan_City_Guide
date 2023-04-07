@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.binus.pekalongancityguide.ItineraryList;
 import com.binus.pekalongancityguide.Misc.ImageFullscreen;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.databinding.FragmentProfileBinding;
@@ -50,6 +51,10 @@ public class ProfileFragment extends Fragment{
         });
         binding.logoutBtn.setOnClickListener(v -> {
             logoutConfirm();
+        });
+        binding.showItineraryBtn.setOnClickListener(v -> {
+            Intent showIniterary = new Intent(getActivity(), ItineraryList.class);
+            startActivity(showIniterary);
         });
         return view;
     }

@@ -222,14 +222,14 @@ public class DestinationDetails extends AppCompatActivity {
             monthDate1 = calendar.get(Calendar.MONTH);
             dayDate1 = calendar.get(Calendar.DAY_OF_MONTH);
             DatePickerDialog dialog;
-            dialog = new DatePickerDialog(this, (view15, year, month, dayOfMonth) -> {
+            dialog = new DatePickerDialog(this, (dateView, year, month, dayOfMonth) -> {
                 yearDate1 = year;
                 monthDate1 = month;
                 dayDate1 = dayOfMonth;
                 SimpleDateFormat format = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
-                String dateString = format.format(new Date(yearDate - 1900, monthDate, dayDate));
+                String dateString = format.format(new Date(yearDate1 - 1900, monthDate1, dayDate1));
                 dateEt.setText(dateString);
-            },yearDate1,monthDate1,dayDate1);
+            }, yearDate1, monthDate1, dayDate1);
             dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);
             dialog.show();
         });
@@ -283,7 +283,7 @@ public class DestinationDetails extends AppCompatActivity {
         reference.child(destiId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String placeID = "" + snapshot.child("placeID").getValue();
+                String placeID = "" + snapshot.child("placeId").getValue();
                 Log.d(TAG, "placeID: " + placeID);
                 HashMap<String, Object> hashMap = new HashMap<>();
                 hashMap.put("uid", uid);
@@ -314,7 +314,7 @@ public class DestinationDetails extends AppCompatActivity {
         reference.child(destiId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    public void onDataChange(@NonNull DataSnapshot snapshot){
                         String title = "" + snapshot.child("title").getValue();
                         String description = "" + snapshot.child("description").getValue();
                         String address = "" + snapshot.child("address").getValue();
