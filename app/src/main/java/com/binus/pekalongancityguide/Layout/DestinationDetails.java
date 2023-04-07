@@ -25,6 +25,7 @@ import com.binus.pekalongancityguide.Adapter.OpeningHoursAdapter;
 import com.binus.pekalongancityguide.Adapter.ReviewAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.OpeningHours;
 import com.binus.pekalongancityguide.ItemTemplate.Review;
+import com.binus.pekalongancityguide.ItineraryList;
 import com.binus.pekalongancityguide.Misc.ImageFullscreen;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.R;
@@ -286,13 +287,12 @@ public class DestinationDetails extends AppCompatActivity {
                 String placeID = "" + snapshot.child("placeId").getValue();
                 Log.d(TAG, "placeID: " + placeID);
                 HashMap<String, Object> hashMap = new HashMap<>();
-                hashMap.put("uid", uid);
                 hashMap.put("startTime", startTime);
                 hashMap.put("endTime", endTime);
                 hashMap.put("date", date);
                 hashMap.put("placeId", placeID);
                 DatabaseReference itineraryRef = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
-                itineraryRef.child(uid).child("itinerary").setValue(hashMap).addOnSuccessListener(aVoid -> {
+                itineraryRef.child(uid).child("itinerary").child(destiId).setValue(hashMap).addOnSuccessListener(aVoid -> {
                     if (progressDialog != null) {
                         progressDialog.dismiss();
                     }
