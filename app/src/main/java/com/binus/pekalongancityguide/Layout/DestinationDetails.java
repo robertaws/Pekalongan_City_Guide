@@ -287,16 +287,20 @@ public class DestinationDetails extends AppCompatActivity {
                 Log.d(TAG, "placeID: " + placeID);
                 HashMap<String, Object> hashMap = new HashMap<>();
                 hashMap.put("uid", uid);
-                hashMap.put("start time", startTime);
-                hashMap.put("end time", endTime);
+                hashMap.put("startTime", startTime);
+                hashMap.put("endTime", endTime);
                 hashMap.put("date", date);
-                hashMap.put("place id", placeID);
-                DatabaseReference itineraryRef = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Itinerary");
-                itineraryRef.push().setValue(hashMap).addOnSuccessListener(aVoid -> {
-                    progressDialog.dismiss();
+                hashMap.put("placeId", placeID);
+                DatabaseReference itineraryRef = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
+                itineraryRef.child(uid).child("itinerary").setValue(hashMap).addOnSuccessListener(aVoid -> {
+                    if (progressDialog != null) {
+                        progressDialog.dismiss();
+                    }
                     Toast.makeText(getApplicationContext(), "Itinerary uploaded successfully", Toast.LENGTH_LONG).show();
                 }).addOnFailureListener(e -> {
-                    progressDialog.dismiss();
+                    if (progressDialog != null) {
+                        progressDialog.dismiss();
+                    }
                     Log.d(TAG, "on Failure : " + e.getMessage());
                     Toast.makeText(DestinationDetails.this, "Data upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
