@@ -11,53 +11,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".ItineraryList">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Itinerary List"
-            android:textSize="20dp"
-            android:layout_margin="15dp"
-            android:textColor="@color/palette_1"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/date_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Date"
-            android:textSize="16dp"
-            android:layout_marginLeft="15dp" />
+        tools:context=".Layout.ItineraryList">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
+            <ImageButton
+                android:id="@+id/backtoprofile"
+                android:layout_gravity="center_vertical"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="#0000"
+                android:src="@drawable/back_icon"/>
             <TextView
-                android:id="@+id/start_tv"
-                android:layout_width="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginVertical="10dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Start Time"
-                android:textSize="16dp"
-                android:layout_marginLeft="15dp" />
-
-            <TextView
-                android:id="@+id/desti_title_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Desti Title"
-                android:textSize="16dp"
-                android:layout_marginLeft="15dp" />
+                android:textStyle="bold"
+                android:text="Itinerary List"
+                android:textSize="20dp"
+                android:textColor="@color/palette_1" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/end_tv"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/itinerary_rv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="End Time"
-            android:textSize="16dp"
-            android:layout_marginLeft="15dp" />
+            android:layout_height="match_parent"
+            tools:listitem="@layout/list_itinerary"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
     </LinearLayout>
 </layout>
