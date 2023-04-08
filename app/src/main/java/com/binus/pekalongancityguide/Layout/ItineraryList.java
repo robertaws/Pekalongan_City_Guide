@@ -1,6 +1,5 @@
     package com.binus.pekalongancityguide.Layout;
 
-    import android.content.Intent;
     import android.os.Bundle;
     import android.util.Log;
 
@@ -31,16 +30,12 @@
         public ActivityItineraryListBinding binding;
         ItineraryAdapter adapter;
         private FirebaseAuth firebaseAuth;
-        String destiId;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             binding = ActivityItineraryListBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
-            Intent intent = getIntent();
-            destiId = intent.getStringExtra("destinationId");
-            Log.d(TAG,destiId);
             firebaseAuth = FirebaseAuth.getInstance();
             adapter = new ItineraryAdapter(itineraryList);
             binding.backtoprofile.setOnClickListener(v -> {
@@ -59,34 +54,43 @@
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     List<Itinerary> itineraryList = new ArrayList<>();
-                    for (DataSnapshot itinerarySnapshot : dataSnapshot.child(destiId).getChildren()) {
-                        String date = itinerarySnapshot.child("date").getValue(String.class);
-                        String startTime = itinerarySnapshot.child("startTime").getValue(String.class);
-                        String endTime = itinerarySnapshot.child("endTime").getValue(String.class);
-                        String placeId = itinerarySnapshot.child("placeId").getValue(String.class);
+                    for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                        String destiId = childSnapshot.getKey();
+                        Log.d(TAG, "Destination ID: " + destiId);
+                        for (DataSnapshot itinerarySnapshot : dataSnapshot.child(destiId).getChildren()) {
+                            String date = itinerarySnapshot.child("date").getValue(String.class);
+                            Log.d(TAG, "Date: " + date);
+                            String startTime = itinerarySnapshot.child("startTime").getValue(String.class);
+                            Log.d(TAG, "Start Time: " + startTime);
+                            String endTime = itinerarySnapshot.child("endTime").getValue(String.class);
+                            Log.d(TAG, "End Time: " + endTime);
+                            String placeId = itinerarySnapshot.child("placeId").getValue(String.class);
+                            Log.d(TAG, "Place ID: " + placeId);
+                            if (!Places.isInitialized()) {
+                                Places.initialize(getApplicationContext(), "MAPS_API_KEY");
+                            }
+                            PlacesClient placesClient = Places.createClient(ItineraryList.this);
+                            List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME);
+                            if (placeId != null && !placeId.isEmpty()) {
+                                FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, placeFields).build();
+                                placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
+                                    Place place = response.getPlace();
+                                    String placeName = place.getName();
+                                    itineraryList.add(new Itinerary(date, startTime, endTime, placeName));
 
-                        if (!Places.isInitialized()) {
-                            Places.initialize(getApplicationContext(), "MAPS_API_KEY");
+                                    ItineraryAdapter adapter = new ItineraryAdapter(itineraryList);
+                                    binding.itineraryRv.setAdapter(adapter);
+                                }).addOnFailureListener((e) -> {
+                                    Log.e(TAG, "Error fetching place details: " + e.getMessage());
+                                });
+                            }
                         }
-                        PlacesClient placesClient = Places.createClient(ItineraryList.this);
-                        List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME);
-                        FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, placeFields).build();
-                        placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
-                            Place place = response.getPlace();
-                            String placeName = place.getName();
-                            itineraryList.add(new Itinerary(date, startTime, endTime, placeName));
-
-                            ItineraryAdapter adapter = new ItineraryAdapter(itineraryList);
-                            binding.itineraryRv.setAdapter(adapter);
-                        }).addOnFailureListener((e) -> {
-                            Log.e(TAG, "" + e.getMessage());
-                        });
                     }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    //TODO: Handle database error
+                    Log.e(TAG, "Database error: " + databaseError.getMessage());
                 }
             });
         }
