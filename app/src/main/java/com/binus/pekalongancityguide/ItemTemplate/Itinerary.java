@@ -6,7 +6,8 @@ public class Itinerary {
     private String endTime;
     private String placeName;
 
-    public Itinerary(){};
+    public Itinerary() {
+    }
 
     public Itinerary(String date, String startTime, String endTime, String placeName) {
         this.date = date;
