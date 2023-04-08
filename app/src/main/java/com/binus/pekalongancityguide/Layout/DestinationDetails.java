@@ -93,7 +93,9 @@ public class DestinationDetails extends AppCompatActivity {
                 }
             }
         });
-        binding.addItenary.setOnClickListener(v -> showAddItineraryDialog());
+        binding.addItenary.setOnClickListener(v ->{
+            showAddItineraryDialog();
+        });
     }
 
     private void showAddItineraryDialog() {
@@ -296,6 +298,9 @@ public class DestinationDetails extends AppCompatActivity {
                         progressDialog.dismiss();
                     }
                     Toast.makeText(getApplicationContext(), "Itinerary uploaded successfully", Toast.LENGTH_LONG).show();
+                    Intent intent2 = new Intent(DestinationDetails.this, ItineraryList.class);
+                    intent2.putExtra("destinationId", destiId);
+                    startActivity(intent2);
                 }).addOnFailureListener(e -> {
                     if (progressDialog != null) {
                         progressDialog.dismiss();
