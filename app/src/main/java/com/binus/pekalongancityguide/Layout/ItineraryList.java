@@ -31,7 +31,7 @@
         public ActivityItineraryListBinding binding;
         ItineraryAdapter adapter;
         private FirebaseAuth firebaseAuth;
-        private String destiId;
+        String destiId;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,8 @@
             binding = ActivityItineraryListBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
             Intent intent = getIntent();
-            destiId = intent.getStringExtra("destiId");
+            destiId = intent.getStringExtra("destinationId");
+            Log.d(TAG,destiId);
             firebaseAuth = FirebaseAuth.getInstance();
             adapter = new ItineraryAdapter(itineraryList);
             binding.backtoprofile.setOnClickListener(v -> {
@@ -50,7 +51,7 @@
         }
 
         private void loadItinerary() {
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
             DatabaseReference userRef = database.getReference("Users").child(firebaseAuth.getUid());
             Query itineraryQuery = userRef.child("itinerary");
 
@@ -60,9 +61,10 @@
                     List<Itinerary> itineraryList = new ArrayList<>();
                     for (DataSnapshot itinerarySnapshot : dataSnapshot.child(destiId).getChildren()) {
                         String date = itinerarySnapshot.child("date").getValue(String.class);
-                        String startTime = itinerarySnapshot.child("startTIme").getValue(String.class);
+                        String startTime = itinerarySnapshot.child("startTime").getValue(String.class);
                         String endTime = itinerarySnapshot.child("endTime").getValue(String.class);
                         String placeId = itinerarySnapshot.child("placeId").getValue(String.class);
+
                         if (!Places.isInitialized()) {
                             Places.initialize(getApplicationContext(), "MAPS_API_KEY");
                         }
@@ -74,25 +76,19 @@
                             String placeName = place.getName();
                             itineraryList.add(new Itinerary(date, startTime, endTime, placeName));
 
+                            ItineraryAdapter adapter = new ItineraryAdapter(itineraryList);
+                            binding.itineraryRv.setAdapter(adapter);
                         }).addOnFailureListener((e) -> {
                             Log.e(TAG, "" + e.getMessage());
                         });
-
                     }
-                    //TODO: Pass itineraryList to RecyclerView adapter
-                    //Create an adapter and pass the itineraryList to it
-                    Log.d("ItineraryList", itineraryList.toString());
-                    ItineraryAdapter adapter = new ItineraryAdapter(itineraryList);
-//Set the adapter to your RecyclerView
-                    binding.itineraryRv.setAdapter(adapter);
                 }
-
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     //TODO: Handle database error
                 }
             });
-
         }
+
     }
