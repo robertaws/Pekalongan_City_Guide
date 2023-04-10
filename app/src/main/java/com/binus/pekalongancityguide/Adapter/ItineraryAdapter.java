@@ -31,7 +31,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         holder.dateTextView.setText(itinerary.getDate());
         holder.startTimeTextView.setText(itinerary.getStartTime());
         holder.endTimeTextView.setText(itinerary.getEndTime());
-        //TODO: Set other itinerary data to view holder
+        holder.placeNameTextView.setText(itinerary.getPlaceId());
     }
 
     @Override
@@ -40,17 +40,14 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
     }
 
     public static class ItineraryViewHolder extends RecyclerView.ViewHolder {
-        public TextView dateTextView;
-        public TextView startTimeTextView;
-        public TextView endTimeTextView;
-        //TODO: Add other views for itinerary data
+        public TextView dateTextView, startTimeTextView, endTimeTextView, placeNameTextView;
 
         public ItineraryViewHolder(View itemView) {
             super(itemView);
             dateTextView = itemView.findViewById(R.id.dateTextView);
             startTimeTextView = itemView.findViewById(R.id.startTimeTextView);
             endTimeTextView = itemView.findViewById(R.id.endTimeTextView);
-            //TODO: Initialize other views for itinerary data
+            placeNameTextView = itemView.findViewById(R.id.placeNameTextView);
         }
     }
 }
