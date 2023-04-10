@@ -293,7 +293,7 @@ public class DestinationDetails extends AppCompatActivity {
                 hashMap.put("date", date);
                 hashMap.put("placeId", placeID);
                 DatabaseReference itineraryRef = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
-                itineraryRef.child(uid).child("itinerary").child(destiId).setValue(hashMap).addOnSuccessListener(aVoid -> {
+                itineraryRef.child(uid).child("itinerary").push().setValue(hashMap).addOnSuccessListener(aVoid -> {
                     if (progressDialog != null) {
                         progressDialog.dismiss();
                     }

@@ -21,9 +21,13 @@
     import com.google.firebase.database.Query;
     import com.google.firebase.database.ValueEventListener;
 
+    import java.text.ParseException;
+    import java.text.SimpleDateFormat;
     import java.util.ArrayList;
     import java.util.Collections;
+    import java.util.Date;
     import java.util.List;
+    import java.util.Locale;
 
     import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
 
@@ -73,11 +77,12 @@
                             placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
                                 Place place = response.getPlace();
                                 String placeName = place.getName();
-                                itineraryList.add(new Itinerary(date, startTime, endTime, placeName));
+                                itineraryList.add(new Itinerary(date, endTime, placeName, startTime));
                                 sortItineraryList(itineraryList);
                                 // Set the sorted itineraryList to the adapter
                                 ItineraryAdapter adapter = new ItineraryAdapter(itineraryList);
                                 binding.itineraryRv.setAdapter(adapter);
+                                adapter.notifyDataSetChanged();
                             }).addOnFailureListener((e) -> {
                                 Log.e(TAG, "Error fetching place details: " + e.getMessage());
                             });
@@ -94,16 +99,21 @@
 
         private void sortItineraryList(List<Itinerary> itineraryList) {
             Collections.sort(itineraryList, (itinerary1, itinerary2) -> {
-                String date1 = itinerary1.getDate();
-                String date2 = itinerary2.getDate();
-                int dateComparison = date1.compareTo(date2);
-                if (dateComparison != 0) {
-                    return dateComparison;
-                } else {
-                    String startTime1 = itinerary1.getStartTime();
-                    String startTime2 = itinerary2.getStartTime();
-                    return startTime1.compareTo(startTime2);
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy hh:mm a", Locale.ENGLISH);
+                try {
+                    Date date1 = sdf.parse(itinerary1.getDate() + " " + itinerary1.getStartTime());
+                    Date date2 = sdf.parse(itinerary2.getDate() + " " + itinerary2.getStartTime());
+                    int dateComparison = date1.compareTo(date2);
+                    if (dateComparison != 0) {
+                        return dateComparison;
+                    } else {
+                        return itinerary1.getStartTime().compareTo(itinerary2.getStartTime());
+                    }
+                } catch (ParseException e) {
+                    Log.e(TAG, "Error parsing date: " + e.getMessage());
+                    return 0;
                 }
             });
         }
+
     }
