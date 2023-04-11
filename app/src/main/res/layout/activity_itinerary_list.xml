@@ -24,6 +24,7 @@
                 android:layout_height="48dp"
                 android:background="#0000"
                 android:src="@drawable/back_icon"/>
+
             <TextView
                 android:layout_marginLeft="10dp"
                 android:layout_marginVertical="10dp"
@@ -34,11 +35,25 @@
                 android:textSize="20dp"
                 android:textColor="@color/palette_1" />
         </LinearLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/itinerary_tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#D5BB91"
+            app:tabBackground="@drawable/tab_selector"
+            app:tabIndicatorHeight="0dp"
+            app:tabMode="scrollable"
+            app:tabUnboundedRipple="false"
+            app:tabTextColor="@color/palette_2"
+            app:tabSelectedTextColor="@color/palette_4"
+            app:tabIndicatorFullWidth="false" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/itinerary_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/list_itinerary"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </LinearLayout>
 </layout>

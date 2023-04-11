@@ -23,7 +23,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class ProfileFragment extends Fragment{
+import java.util.Objects;
+
+public class ProfileFragment extends Fragment {
     private FragmentProfileBinding binding;
     private FirebaseAuth firebaseAuth;
     private static final String TAG = "PROFILE_TAG";
@@ -83,7 +85,7 @@ public class ProfileFragment extends Fragment{
         Log.e(TAG,"Loading User Info..."+firebaseAuth.getUid());
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference r = database.getReference("Users");
-        r.child(firebaseAuth.getUid())
+        r.child(Objects.requireNonNull(firebaseAuth.getUid()))
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {

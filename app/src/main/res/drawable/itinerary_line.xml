@@ -1,0 +1,22 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <rotate
+            android:toDegrees="90"
+            android:angle="90">
+            <shape android:shape="line">
+                <stroke
+                    android:width="2dp"
+                    android:color="@color/palette_1" />
+            </shape>
+        </rotate>
+    </item>
+    <item android:right="10dp">
+        <shape android:shape="oval">
+            <solid android:color="@color/palette_3" />
+            <size
+                android:width="20dp"
+                android:height="20dp" />
+        </shape>
+    </item>
+</layer-list>
+

@@ -1,56 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/itinerary_item_cardview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:elevation="4dp">
+    android:layout_margin="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/dateTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textAppearance="?attr/textAppearanceListItem"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/placeNameTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textAppearance="?attr/textAppearanceListItem"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginStart="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/startTimeTextView"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:padding="8dp"
                 android:textAppearance="?attr/textAppearanceListItem"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:layout_marginTop="8dp"
+                android:textAlignment="center" />
+
+            <com.binus.pekalongancityguide.Misc.DottedLineView
+                android:layout_width="3dp"
+                android:layout_height="50dp" />
 
             <TextView
                 android:id="@+id/endTimeTextView"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:padding="8dp"
                 android:textAppearance="?attr/textAppearanceListItem"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:layout_marginBottom="8dp"
+                android:textAlignment="center" />
+
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/dateTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/placeNameTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+        </LinearLayout>
+
     </LinearLayout>
+
+
 </androidx.cardview.widget.CardView>
+
+
