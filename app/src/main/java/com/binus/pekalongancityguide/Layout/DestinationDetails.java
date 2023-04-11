@@ -274,6 +274,9 @@ public class DestinationDetails extends AppCompatActivity {
 
         if (allFieldsFilled) {
             uploadToDB(date, startTime, endTime);
+            Intent intent = new Intent(this, ItineraryList.class);
+            intent.putExtra("destinationId", destiId);
+            this.startActivity(intent);
             Toast.makeText(this, "Destination Added!", Toast.LENGTH_SHORT).show();
         }
 
@@ -293,16 +296,18 @@ public class DestinationDetails extends AppCompatActivity {
                 hashMap.put("date", date);
                 hashMap.put("placeId", placeID);
                 DatabaseReference itineraryRef = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
-                itineraryRef.child(uid).child("itinerary").push().setValue(hashMap).addOnSuccessListener(aVoid -> {
-                    if (progressDialog != null) {
-                        progressDialog.dismiss();
-                    }
-                    Toast.makeText(getApplicationContext(), "Itinerary uploaded successfully", Toast.LENGTH_LONG).show();
-                }).addOnFailureListener(e -> {
-                    if (progressDialog != null) {
-                        progressDialog.dismiss();
-                    }
-                    Log.d(TAG, "on Failure : " + e.getMessage());
+                itineraryRef.child(uid).child("itinerary").push().setValue(hashMap)
+                        .addOnSuccessListener(aVoid -> {
+                            if (progressDialog != null) {
+                                progressDialog.dismiss();
+
+                            }
+                            Toast.makeText(getApplicationContext(), "Itinerary uploaded successfully", Toast.LENGTH_LONG).show();
+                        }).addOnFailureListener(e -> {
+                            if (progressDialog != null) {
+                                progressDialog.dismiss();
+                            }
+                            Log.d(TAG, "on Failure : " + e.getMessage());
                     Toast.makeText(DestinationDetails.this, "Data upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
             }
