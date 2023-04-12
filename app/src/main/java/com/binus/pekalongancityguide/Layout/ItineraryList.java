@@ -1,30 +1,30 @@
 package com.binus.pekalongancityguide.Layout;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.binus.pekalongancityguide.Adapter.ItineraryAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
-import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityItineraryListBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -46,18 +46,13 @@ import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
 
 public class ItineraryList extends AppCompatActivity {
 
-    LocationRequest locationRequest = LocationRequest
-            .create()
-            .setInterval(10000) // Update every 10 seconds
-            .setFastestInterval(1000) // Get updates as fast as possible
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
+    private LocationManager locationManager;
+    private LocationListener locationListener;
     private static final String TAG = "ITER_TAG";
     private static final int PERMISSION_REQUEST_LOCATION = 500;
     private final List<Itinerary> itineraryList = new ArrayList<>();
     public ActivityItineraryListBinding binding;
     ItineraryAdapter adapter;
-    String destiId;
     PlacesClient placesClient;
     private FirebaseAuth firebaseAuth;
     private FusedLocationProviderClient fusedLocationClient;
@@ -67,9 +62,6 @@ public class ItineraryList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityItineraryListBinding.inflate(getLayoutInflater());
-        Intent intent = getIntent();
-        destiId = intent.getStringExtra("destinationId");
-        Log.d(TAG, "Destination id: " + destiId);
         Places.initialize(getApplicationContext(), MAPS_API_KEY);
         placesClient = Places.createClient(this);
         setContentView(binding.getRoot());
@@ -79,45 +71,64 @@ public class ItineraryList extends AppCompatActivity {
             onBackPressed();
         });
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        // Initialize location callback
-        locationCallback = new LocationCallback() {
+        // Create a location listener
+        locationListener = new LocationListener() {
             @Override
-            public void onLocationResult(LocationResult locationResult) {
-                Log.d(TAG, "onLocationResult called");
+            public void onLocationChanged(Location location) {
+                // Do something with the new location
+                Log.d("Location", "Latitude: " + location.getLatitude() + ", Longitude: " + location.getLongitude());
+            }
 
-                Location currentLocation = locationResult.getLastLocation();
-                if (locationResult == null) {
-                    return;
-                }
-                for (Location location : locationResult.getLocations()) {
-                    // Do something with the new location
-                }
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
             }
         };
+
+        // Check if location permission is granted
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Request permission
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_LOCATION);
+        } else {
+            // Permission already granted, start requesting location updates
+            startLocationUpdates();
+        }
+
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         loadItinerary();
         binding.itineraryRv.setAdapter(adapter);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        // Request location updates
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
-        } else {
-            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-        }
+    protected void onDestroy() {
+        super.onDestroy();
+        // Stop requesting location updates when the activity is destroyed
+        locationManager.removeUpdates(locationListener);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        // Stop receiving location updates
-        fusedLocationClient.removeLocationUpdates(locationCallback);
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, start requesting location updates
+                startLocationUpdates();
+            } else {
+                // Permission denied, show an error message
+                Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void loadItinerary() {
@@ -134,25 +145,48 @@ public class ItineraryList extends AppCompatActivity {
                     Log.d(TAG, "Start Time: " + startTime);
                     String endTime = itinerarySnapshot.child("endTime").getValue(String.class);
                     Log.d(TAG, "End Time: " + endTime);
-                    String placeId = itinerarySnapshot.child("placeId").getValue(String.class);
-                    Log.d(TAG, "Place ID: " + placeId);
+                    String destiId = itinerarySnapshot.child("destiId").getValue(String.class);
+                    Log.d(TAG, "Desti ID: " + destiId);
 
-                    List<Place.Field> placeFields = Collections.singletonList(Place.Field.NAME);
-                    if (placeId != null && !placeId.isEmpty()) {
-                        FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, placeFields).build();
-                        placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
-                            Place place = response.getPlace();
-                            String placeName = place.getName();
-                            itineraryList.add(new Itinerary(date, endTime, placeName, startTime));
-                            sortItineraryList(itineraryList);
-                            // Set the sorted itineraryList to the adapter
-                            ItineraryAdapter adapter = new ItineraryAdapter(itineraryList);
-                            binding.itineraryRv.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
-                        }).addOnFailureListener((e) -> {
-                            Log.e(TAG, "Error fetching place details: " + e.getMessage());
-                        });
-                    }
+                    database.getReference("Destination").child(destiId).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            double placeLat = Double.parseDouble(snapshot.child("latitude").getValue().toString());
+                            Log.d(TAG, "Latitude: " + placeLat);
+                            double placeLng = Double.parseDouble(snapshot.child("longitude").getValue().toString());
+                            Log.d(TAG, "Longitude: " + placeLng);
+                            String placeName = snapshot.child("title").getValue(String.class);
+                            Log.d(TAG, "Place Name: " + placeName);
+
+                            if (ActivityCompat.checkSelfPermission(ItineraryList.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                                    ActivityCompat.checkSelfPermission(ItineraryList.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                ActivityCompat.requestPermissions(ItineraryList.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
+                            } else {
+                                fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                                    if (location != null) {
+                                        double currentLat = location.getLatitude();
+                                        double currentLng = location.getLongitude();
+                                        // Calculate distance between current location and itinerary location
+                                        float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
+                                        Log.d(TAG, "Distance: " + distance);
+                                        itineraryList.add(new Itinerary(date, endTime, placeName, startTime, placeLat, placeLng, distance));
+                                        sortItineraryList(itineraryList);
+                                        // Set the sorted itineraryList to the adapter
+                                        ItineraryAdapter adapter = new ItineraryAdapter(itineraryList);
+                                        binding.itineraryRv.setAdapter(adapter);
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                }).addOnFailureListener(e -> {
+                                    Log.e(TAG, "Error getting last known location: " + e.getMessage());
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
             }
 
@@ -182,48 +216,30 @@ public class ItineraryList extends AppCompatActivity {
         });
     }
 
-    LocationCallback locationCallback = new LocationCallback() {
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-            Location currentLocation = locationResult.getLastLocation();
+    private float calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        float[] results = new float[1];
+        Location.distanceBetween(lat1, lon1, lat2, lon2, results);
+        return results[0];
+    }
 
-            DatabaseReference userRef = database.getReference("Destination").child(destiId);
-            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Double destLatitude = dataSnapshot.child("latitude").getValue(Double.class);
-                    Log.d(TAG, "Destination Latitude: " + destLatitude);
-                    Double destLongitude = dataSnapshot.child("longitude").getValue(Double.class);
-                    Log.d(TAG, "Destination Longitude: " + destLongitude);
-
-                    // Get the distance and duration from current location to destination location
-                    LatLng destination = new LatLng(destLatitude, destLongitude);
-                    float[] results = new float[1];
-                    Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(),
-                            destination.latitude, destination.longitude, results);
-                    float distanceInMeters = results[0];
-                    float distanceInKm = distanceInMeters / 1000;
-                    float timeInMinutes = distanceInMeters / currentLocation.getSpeed() / 60;
-
-                    // Update the TextView with the distance and duration values
-                    TextView distanceTextView = findViewById(R.id.distanceTextView);
-                    distanceTextView.setText(String.format("%.2f km", distanceInKm));
-
-                    TextView durationTextView = findViewById(R.id.durationTextView);
-                    durationTextView.setText(String.format("%.1f minutes", timeInMinutes));
-                    Log.d(TAG, "Current Latitude: " + currentLocation.getLatitude());
-                    Log.d(TAG, "Current Longitude: " + currentLocation.getLongitude());
-                    Log.d(TAG, "Destination Latitude: " + destination.latitude);
-                    Log.d(TAG, "Destination Longitude: " + destination.longitude);
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    // Handle cancelled event
-                }
+    @SuppressLint("MissingPermission")
+    private void startLocationUpdates() {
+        // Check if GPS is enabled
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            // GPS is not enabled, show a dialog to ask the user to enable it
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("GPS not enabled");
+            builder.setMessage("Would you like to enable GPS?");
+            builder.setPositiveButton("Yes", (dialog, which) -> {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
             });
+            builder.setNegativeButton("No", null);
+            builder.show();
+        } else {
+            // GPS is enabled, start requesting location updates
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);
         }
-    };
+    }
 
 }

@@ -11,6 +11,7 @@ import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
 import com.binus.pekalongancityguide.R;
 
 import java.util.List;
+import java.util.Locale;
 
 public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.ItineraryViewHolder> {
     private final List<Itinerary> itineraryList;
@@ -31,8 +32,10 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         holder.dateTextView.setText(itinerary.getDate());
         holder.startTimeTextView.setText(itinerary.getStartTime());
         holder.endTimeTextView.setText(itinerary.getEndTime());
-        holder.placeNameTextView.setText(itinerary.getPlaceId());
+        holder.placeNameTextView.setText(itinerary.getPlaceName());
+        holder.distanceTextView.setText(String.format(Locale.getDefault(), "%.2f km", itinerary.getDistance()));
     }
+
 
     @Override
     public int getItemCount() {
@@ -40,7 +43,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
     }
 
     public static class ItineraryViewHolder extends RecyclerView.ViewHolder {
-        public TextView dateTextView, startTimeTextView, endTimeTextView, placeNameTextView;
+        public TextView dateTextView, startTimeTextView, endTimeTextView, placeNameTextView, distanceTextView;
 
         public ItineraryViewHolder(View itemView) {
             super(itemView);
@@ -48,6 +51,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             startTimeTextView = itemView.findViewById(R.id.startTimeTextView);
             endTimeTextView = itemView.findViewById(R.id.endTimeTextView);
             placeNameTextView = itemView.findViewById(R.id.placeNameTextView);
+            distanceTextView = itemView.findViewById(R.id.distanceTextView);
         }
     }
 }
