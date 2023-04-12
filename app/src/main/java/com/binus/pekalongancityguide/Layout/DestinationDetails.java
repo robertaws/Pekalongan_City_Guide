@@ -33,6 +33,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
@@ -385,6 +386,7 @@ public class DestinationDetails extends AppCompatActivity {
                             googleMap.addMarker(marker);
                             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 15);
                             googleMap.moveCamera(cameraUpdate);
+                            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(DestinationDetails.this, R.raw.map_style));
                         });
                     }
                     @Override
