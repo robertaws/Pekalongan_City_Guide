@@ -20,6 +20,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.binus.pekalongancityguide.Adapter.ItineraryAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
 import com.binus.pekalongancityguide.databinding.ActivityItineraryListBinding;
@@ -34,6 +38,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,6 +58,7 @@ public class ItineraryList extends AppCompatActivity {
     private LocationManager locationManager;
     private LocationListener locationListener;
     private static final String TAG = "ITER_TAG";
+    private static final String apiKey = MAPS_API_KEY;
     private static final int PERMISSION_REQUEST_LOCATION = 500;
     private final List<Itinerary> itineraryList = new ArrayList<>();
     public ActivityItineraryListBinding binding;
@@ -63,7 +72,7 @@ public class ItineraryList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityItineraryListBinding.inflate(getLayoutInflater());
-        Places.initialize(getApplicationContext(), MAPS_API_KEY);
+        Places.initialize(getApplicationContext(), apiKey);
         placesClient = Places.createClient(this);
         setContentView(binding.getRoot());
         firebaseAuth = FirebaseAuth.getInstance();
@@ -176,7 +185,9 @@ public class ItineraryList extends AppCompatActivity {
                                         // Calculate distance between current location and itinerary location
                                         float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
                                         Log.d(TAG, "Distance: " + distance);
-                                        itineraryList.add(new Itinerary(date, endTime, placeName, startTime, placeLat, placeLng, distance));
+                                        calculateDuration(currentLat, currentLng, placeLat, placeLng, durationText -> {
+                                            itineraryList.add(new Itinerary(date, endTime, placeName, startTime, durationText, placeLat, placeLng, distance));
+                                        });
                                         sortItineraryList(itineraryList);
                                         // Set the sorted itineraryList to the adapter
                                         ItineraryAdapter adapter = new ItineraryAdapter(itineraryList);
@@ -235,6 +246,35 @@ public class ItineraryList extends AppCompatActivity {
         return results[0] / 1000;
     }
 
+    private void calculateDuration(double lat1, double lon1, double lat2, double lon2, DurationCallback callback) {
+        String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + lat1 + "," + lon1 + "&destination=" + lat2 + "," + lon2 + "&key=" + apiKey;
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
+            try {
+                JSONArray routes = response.getJSONArray("routes");
+                if (routes.length() > 0) {
+                    JSONObject route = routes.getJSONObject(0);
+                    JSONArray legs = route.getJSONArray("legs");
+                    JSONObject leg = legs.getJSONObject(0);
+                    JSONObject duration = leg.getJSONObject("duration");
+                    String durationText = duration.getString("text");
+                    Log.d(TAG, "Duration: " + durationText);
+                    callback.onDurationReceived(durationText);
+                } else {
+                    Log.e(TAG, "No routes found");
+                    callback.onDurationReceived("No routes found");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }, error -> {
+            Log.e(TAG, "Error calculating travel duration: " + error.getMessage());
+            callback.onDurationReceived("Error calculating travel duration");
+        });
+        queue.add(request);
+    }
+
     @SuppressLint("MissingPermission")
     private void startLocationUpdates() {
         // Check if GPS is enabled
@@ -255,6 +295,10 @@ public class ItineraryList extends AppCompatActivity {
         }
     }
 
+    public interface DurationCallback {
+        void onDurationReceived(String durationText);
+    }
+
     private final Handler handler = new Handler();
     private final Runnable runnable = new Runnable() {
         @Override
@@ -263,6 +307,5 @@ public class ItineraryList extends AppCompatActivity {
             handler.postDelayed(this, 10000); // Run this Runnable every 10 seconds
         }
     };
-
 
 }

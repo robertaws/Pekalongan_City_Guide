@@ -42,6 +42,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             distanceString = String.format(Locale.getDefault(), "%.2f km", distance);
         }
         holder.distanceTextView.setText(distanceString);
+        holder.durationTextView.setText(itinerary.getDurationText());
     }
 
     @Override
@@ -50,7 +51,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
     }
 
     public static class ItineraryViewHolder extends RecyclerView.ViewHolder {
-        public TextView dateTextView, startTimeTextView, endTimeTextView, placeNameTextView, distanceTextView;
+        public TextView dateTextView, startTimeTextView, endTimeTextView, placeNameTextView, distanceTextView, durationTextView;
 
         public ItineraryViewHolder(View itemView) {
             super(itemView);
@@ -59,6 +60,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             endTimeTextView = itemView.findViewById(R.id.endTimeTextView);
             placeNameTextView = itemView.findViewById(R.id.placeNameTextView);
             distanceTextView = itemView.findViewById(R.id.distanceTextView);
+            durationTextView = itemView.findViewById(R.id.durationTextView);
         }
     }
 }
