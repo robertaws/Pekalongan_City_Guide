@@ -33,7 +33,15 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         holder.startTimeTextView.setText(itinerary.getStartTime());
         holder.endTimeTextView.setText(itinerary.getEndTime());
         holder.placeNameTextView.setText(itinerary.getPlaceName());
-        holder.distanceTextView.setText(String.format(Locale.getDefault(), "%.2f km", itinerary.getDistance()));
+        float distance = itinerary.getDistance();
+        String distanceString;
+        if (distance < 1) {
+            int distanceInMeters = (int) (distance * 1000);
+            distanceString = distanceInMeters + " m";
+        } else {
+            distanceString = String.format(Locale.getDefault(), "%.2f km", distance);
+        }
+        holder.distanceTextView.setText(distanceString);
     }
 
 

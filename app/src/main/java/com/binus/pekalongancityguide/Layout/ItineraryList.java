@@ -218,8 +218,15 @@ public class ItineraryList extends AppCompatActivity {
 
     private float calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         float[] results = new float[1];
-        Location.distanceBetween(lat1, lon1, lat2, lon2, results);
-        return results[0];
+        Location location1 = new Location("");
+        location1.setLatitude(lat1);
+        location1.setLongitude(lon1);
+        Location location2 = new Location("");
+        location2.setLatitude(lat2);
+        location2.setLongitude(lon2);
+        Location.distanceBetween(location1.getLatitude(), location1.getLongitude(),
+                location2.getLatitude(), location2.getLongitude(), results);
+        return results[0] / 1000;
     }
 
     @SuppressLint("MissingPermission")
