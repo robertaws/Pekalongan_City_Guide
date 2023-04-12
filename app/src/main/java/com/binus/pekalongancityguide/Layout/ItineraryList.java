@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
@@ -118,6 +119,12 @@ public class ItineraryList extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        handler.post(runnable); // Start the handler to run the runnable every 10 seconds
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUEST_LOCATION) {
@@ -134,7 +141,7 @@ public class ItineraryList extends AppCompatActivity {
     private void loadItinerary() {
         DatabaseReference userRef = database.getReference("Users").child(firebaseAuth.getUid());
         Query itineraryQuery = userRef.child("itinerary");
-        itineraryQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+        itineraryQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<Itinerary> itineraryList = new ArrayList<>();
@@ -174,7 +181,6 @@ public class ItineraryList extends AppCompatActivity {
                                         // Set the sorted itineraryList to the adapter
                                         ItineraryAdapter adapter = new ItineraryAdapter(itineraryList);
                                         binding.itineraryRv.setAdapter(adapter);
-                                        adapter.notifyDataSetChanged();
                                     }
                                 }).addOnFailureListener(e -> {
                                     Log.e(TAG, "Error getting last known location: " + e.getMessage());
@@ -248,5 +254,15 @@ public class ItineraryList extends AppCompatActivity {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);
         }
     }
+
+    private final Handler handler = new Handler();
+    private final Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            loadItinerary();
+            handler.postDelayed(this, 10000); // Run this Runnable every 10 seconds
+        }
+    };
+
 
 }

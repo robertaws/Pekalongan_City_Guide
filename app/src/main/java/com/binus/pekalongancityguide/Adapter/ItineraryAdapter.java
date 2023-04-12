@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.ItineraryViewHolder> {
-    private final List<Itinerary> itineraryList;
+    private List<Itinerary> itineraryList;
 
     public ItineraryAdapter(List<Itinerary> itineraryList) {
         this.itineraryList = itineraryList;
@@ -43,7 +43,6 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         }
         holder.distanceTextView.setText(distanceString);
     }
-
 
     @Override
     public int getItemCount() {
