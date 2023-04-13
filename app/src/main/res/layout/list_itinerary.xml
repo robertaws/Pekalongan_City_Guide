@@ -11,10 +11,12 @@
     app:cardElevation="4dp">
 
     <LinearLayout
+        android:id="@+id/itinerary_bg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:orientation="horizontal"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:background="@color/palette_4">
 
         <LinearLayout
             android:layout_marginStart="5dp"

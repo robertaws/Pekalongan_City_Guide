@@ -2,19 +2,23 @@ package com.binus.pekalongancityguide.ItemTemplate;
 
 public class Itinerary {
     private final String date;
+    private final String startTime;
     private final String endTime;
     private final String placeName;
-    private final String startTime;
+    private final String destiId;
+    private final String url;
     private String durationText;
     private final double latitude;
     private final double longitude;
     private float distance;
 
-    public Itinerary(String date, String endTime, String placeName, String startTime, String durationText, double latitude, double longitude, float distance) {
+    public Itinerary(String date, String startTime, String endTime, String placeName, String destiId, String url, String durationText, double latitude, double longitude, float distance) {
         this.date = date;
+        this.startTime = startTime;
         this.endTime = endTime;
         this.placeName = placeName;
-        this.startTime = startTime;
+        this.destiId = destiId;
+        this.url = url;
         this.durationText = durationText;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -25,6 +29,10 @@ public class Itinerary {
         return date;
     }
 
+    public String getStartTime() {
+        return startTime;
+    }
+
     public String getEndTime() {
         return endTime;
     }
@@ -33,8 +41,12 @@ public class Itinerary {
         return placeName;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public String getDestiId() {
+        return destiId;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public String getDurationText() {
