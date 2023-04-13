@@ -3,9 +3,11 @@ package com.binus.pekalongancityguide.Layout;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
@@ -19,12 +21,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityAddDestinationBinding;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.OpeningHours;
+import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.FetchPhotoRequest;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
@@ -55,13 +60,17 @@ import java.util.List;
 import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
 
 public class AddDestination extends AppCompatActivity {
+    public static final String TAG = "ADD_IMAGE_TAG";
+    private static final int PICK_IMAGE_REQUEST = 1;
+    PlacesClient placesClient;
+    ArrayList<String> categoriesTitleArrayList, categoryIdArrayList;
     private ActivityAddDestinationBinding binding;
     private FirebaseAuth firebaseAuth;
-    private Uri imageUri = null;
-    private static final int PICK_IMAGE_REQUEST = 1;
+    private Uri imageUri;
     private ProgressDialog progressDialog;
-    ArrayList<String> categoriesTitleArrayList, categoryIdArrayList;
-    public static final String TAG = "ADD_IMAGE_TAG";
+    private String title = "";
+    private String desc = "";
+    private String selectedCategoryId, selectedCategoryTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,28 +95,29 @@ public class AddDestination extends AppCompatActivity {
 
     }
 
-    private String title = "";
-    private String desc = "";
-    private final String address = "";
-    private Double latitude, longitude;
-
     private void validateData() {
         Log.d(TAG, "validate data : validating data ");
         title = binding.titleEt.getText().toString().trim();
         desc = binding.descEt.getText().toString().trim();
+        FindAutocompletePredictionsRequest request;
         if (TextUtils.isEmpty(title)) {
             binding.titleEt.setError("Enter destination title!");
-        } else if (TextUtils.isEmpty((desc))) {
-            binding.descEt.setError("Enter destination description!");
         } else if (TextUtils.isEmpty(selectedCategoryTitle)) {
             binding.categoryPick.setError("Pick a category!");
-        } else if (imageUri == null) {
-            Toast.makeText(this, "Pick an image!", Toast.LENGTH_SHORT).show();
         } else {
-            PlacesClient placesClient = Places.createClient(this);
-            List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.RATING, Place.Field.OPENING_HOURS, Place.Field.PHONE_NUMBER);
+            placesClient = Places.createClient(this);
+            List<Place.Field> placeFields = Arrays.asList(
+                    Place.Field.ID,
+                    Place.Field.NAME,
+                    Place.Field.ADDRESS,
+                    Place.Field.LAT_LNG,
+                    Place.Field.RATING,
+                    Place.Field.OPENING_HOURS,
+                    Place.Field.PHONE_NUMBER,
+                    Place.Field.PHOTO_METADATAS,
+                    Place.Field.TYPES);
             AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
-            FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+            request = FindAutocompletePredictionsRequest.builder()
                     .setTypeFilter(TypeFilter.ESTABLISHMENT)
                     .setSessionToken(token)
                     .setQuery(title)
@@ -118,7 +128,6 @@ public class AddDestination extends AppCompatActivity {
                     String placeId = response.getAutocompletePredictions().get(0).getPlaceId();
                     Log.d(TAG, "Place ID: " + placeId);
                     String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" + MAPS_API_KEY;
-
                     FetchPlaceRequest placeRequest = FetchPlaceRequest.builder(placeId, placeFields).build();
                     placesClient.fetchPlace(placeRequest).addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
@@ -134,15 +143,18 @@ public class AddDestination extends AppCompatActivity {
                             Log.d(TAG, "Longitude: " + longitude);
                             Log.d(TAG, "Rating: " + rating);
                             Log.d(TAG, "Phone number: " + phoneNumber);
+                            if (TextUtils.isEmpty((desc))) {
+                                desc = String.valueOf(place.getTypes());
+                            }
                             new GetReviewsTask() {
                                 @Override
                                 protected void onPostExecute(JSONArray reviews) {
                                     if (reviews != null) {
                                         Log.d(TAG, "Reviews: " + reviews);
                                         if (openingHours != null) {
-                                            uploadtoStorage(placeId, address, latitude, longitude, rating, reviews, phoneNumber, openingHours.getWeekdayText());
+                                            uploadtoStorage(placeId, address, latitude, longitude, rating, reviews, phoneNumber, openingHours.getWeekdayText(), place);
                                         } else {
-                                            uploadtoStorage(placeId, address, latitude, longitude, rating, reviews, phoneNumber, null);
+                                            uploadtoStorage(placeId, address, latitude, longitude, rating, reviews, phoneNumber, null, place);
                                         }
                                     } else {
                                         Toast.makeText(AddDestination.this, "Error getting reviews", Toast.LENGTH_SHORT).show();
@@ -164,10 +176,38 @@ public class AddDestination extends AppCompatActivity {
         }
     }
 
-    private void uploadtoStorage(String placeId, String address, double lat, double lng, double rating, JSONArray reviews, String phoneNumber, List<String> weekday) {
+    private void uploadtoStorage(String placeId, String address, double lat, double lng, double rating, JSONArray reviews, String phoneNumber, List<String> weekday, Place place) {
         Log.d(TAG, "uploadtoStorage : uploading to storage");
         progressDialog.setMessage("Uploading image");
         progressDialog.show();
+        if (imageUri == null) {
+            List<PhotoMetadata> photoMetadataList = place.getPhotoMetadatas();
+            if (photoMetadataList != null) {
+                PhotoMetadata photoMetadata = photoMetadataList.get(0);
+                FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                        .setMaxWidth(500)
+                        .setMaxHeight(300)
+                        .build();
+                placesClient.fetchPhoto(photoRequest).addOnSuccessListener(fetchPhotoResponse -> {
+                    Bitmap bitmap = fetchPhotoResponse.getBitmap();
+                    // Use the bitmap here
+                    imageUri = bitmapToUri(this, bitmap);
+                    Log.d(TAG, "image uri: " + imageUri);
+                    Glide.with(AddDestination.this)
+                            .load(imageUri)
+                            .placeholder(R.drawable.person)
+                            .centerCrop()
+                            .into(binding.addPicture);
+                }).addOnFailureListener(exception -> {
+                    // Handle error
+                    if (exception instanceof ApiException) {
+                        ApiException apiException = (ApiException) exception;
+                        int statusCode = apiException.getStatusCode();
+                        Log.e(TAG, "Place photo not found: " + exception.getMessage());
+                    }
+                });
+            }
+        }
         long timestamp = System.currentTimeMillis();
         String filePathandName = "Destination/" + timestamp;
         StorageReference storageReference = FirebaseStorage.getInstance("gs://pekalongan-city-guide-5bf2e.appspot.com").getReference(filePathandName);
@@ -269,8 +309,6 @@ public class AddDestination extends AppCompatActivity {
         });
     }
 
-    private String selectedCategoryId, selectedCategoryTitle;
-
     private void showCategoryDialog() {
         Log.d(TAG, "Category dialog : showing dialog ");
         String[] categoryArray = new String[categoriesTitleArrayList.size()];
@@ -328,6 +366,11 @@ public class AddDestination extends AppCompatActivity {
                     Log.e(TAG, "Place not found: " + exception.getMessage());
                 });
 
+    }
+
+    public Uri bitmapToUri(Context context, Bitmap bitmap) {
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
+        return Uri.parse(path);
     }
 
     private static abstract class GetReviewsTask extends AsyncTask<String, Void, JSONObject> {

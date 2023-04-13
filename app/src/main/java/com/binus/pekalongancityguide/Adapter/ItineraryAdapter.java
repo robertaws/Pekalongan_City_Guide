@@ -34,7 +34,7 @@ import java.util.Locale;
 
 public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.ItineraryViewHolder> {
     private final Context context;
-    private List<Itinerary> itineraryList;
+    private final List<Itinerary> itineraryList;
 
     public ItineraryAdapter(Context context, List<Itinerary> itineraryList) {
         this.context = context;
