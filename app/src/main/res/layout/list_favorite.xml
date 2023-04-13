@@ -18,7 +18,7 @@
             android:id="@+id/bookmarklayoutImage"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:background="@color/white"
+            android:background="@color/ic_launcher_background"
             android:backgroundTintMode="multiply">
             <ProgressBar
                 android:layout_centerInParent="true"
@@ -43,7 +43,10 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_alignParentRight="true"
-                android:layout_margin="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
                 android:background="#0000"
                 android:src="@drawable/bookmark" />
 

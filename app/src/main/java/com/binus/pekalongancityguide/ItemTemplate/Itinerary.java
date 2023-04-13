@@ -7,10 +7,10 @@ public class Itinerary {
     private final String placeName;
     private final String destiId;
     private final String url;
-    private String durationText;
+    private final String durationText;
     private final double latitude;
     private final double longitude;
-    private float distance;
+    private final float distance;
 
     public Itinerary(String date, String startTime, String endTime, String placeName, String destiId, String url, String durationText, double latitude, double longitude, float distance) {
         this.date = date;
@@ -53,10 +53,6 @@ public class Itinerary {
         return durationText;
     }
 
-    public void setDurationText(String durationText) {
-        this.durationText = durationText;
-    }
-
     public double getLatitude() {
         return latitude;
     }
@@ -67,9 +63,5 @@ public class Itinerary {
 
     public float getDistance() {
         return distance;
-    }
-
-    public void setDistance(float distance) {
-        this.distance = distance;
     }
 }

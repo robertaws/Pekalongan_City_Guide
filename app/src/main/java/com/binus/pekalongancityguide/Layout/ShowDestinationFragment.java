@@ -53,7 +53,6 @@ public class ShowDestinationFragment extends Fragment {
             uid = getArguments().getString("uid");
         }
     }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

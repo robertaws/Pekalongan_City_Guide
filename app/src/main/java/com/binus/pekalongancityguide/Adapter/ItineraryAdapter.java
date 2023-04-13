@@ -106,7 +106,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
     private void loadImage(Itinerary itinerary, ItineraryViewHolder holder) {
         String imageUrl = itinerary.getUrl();
         RequestOptions requestOptions = new RequestOptions()
-                .transforms(new CenterCrop(), new AlphaTransformation(0.85f));
+                .transforms(new CenterCrop(), new AlphaTransformation(0.75f));
 
         Glide.with(holder.itemView.getContext())
                 .load(imageUrl)
