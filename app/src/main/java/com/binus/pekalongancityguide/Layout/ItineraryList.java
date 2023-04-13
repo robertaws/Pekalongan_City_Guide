@@ -53,7 +53,7 @@ import java.util.Locale;
 import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
 
 public class ItineraryList extends AppCompatActivity {
-
+    String imageUrl;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private static final String TAG = "ITER_TAG";
@@ -75,7 +75,7 @@ public class ItineraryList extends AppCompatActivity {
         placesClient = Places.createClient(this);
         setContentView(binding.getRoot());
         firebaseAuth = FirebaseAuth.getInstance();
-        adapter = new ItineraryAdapter(itineraryList);
+        adapter = new ItineraryAdapter(ItineraryList.this, itineraryList);
         binding.backtoprofile.setOnClickListener(v -> {
             onBackPressed();
         });
@@ -166,6 +166,8 @@ public class ItineraryList extends AppCompatActivity {
                             Log.d(TAG, "Longitude: " + placeLng);
                             String placeName = snapshot.child("title").getValue(String.class);
                             Log.d(TAG, "Place Name: " + placeName);
+                            String url = "" + snapshot.child("url").getValue();
+                            imageUrl = url;
 
                             if (ActivityCompat.checkSelfPermission(ItineraryList.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                                     ActivityCompat.checkSelfPermission(ItineraryList.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -179,10 +181,10 @@ public class ItineraryList extends AppCompatActivity {
                                         float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
                                         Log.d(TAG, "Distance: " + distance);
                                         calculateDuration(currentLat, currentLng, placeLat, placeLng, durationText -> {
-                                            itineraryList.add(new Itinerary(date, endTime, placeName, startTime, durationText, placeLat, placeLng, distance));
+                                            itineraryList.add(new Itinerary(date, startTime, endTime, placeName, destiId, imageUrl, durationText, placeLat, placeLng, distance));
                                             sortItineraryList(itineraryList);
                                             // Set the sorted itineraryList to the adapter
-                                            ItineraryAdapter adapter = new ItineraryAdapter(itineraryList);
+                                            ItineraryAdapter adapter = new ItineraryAdapter(ItineraryList.this, itineraryList);
                                             binding.itineraryRv.setAdapter(adapter);
                                         });
                                     }
