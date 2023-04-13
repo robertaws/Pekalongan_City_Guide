@@ -275,7 +275,7 @@ public class DestinationDetails extends AppCompatActivity {
 
         if (allFieldsFilled) {
             uploadToDB(date, startTime, endTime);
-            Toast.makeText(this, "Destination Added!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Destination Added to Itinerary!", Toast.LENGTH_SHORT).show();
         }
 
     }

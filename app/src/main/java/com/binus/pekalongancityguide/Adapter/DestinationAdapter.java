@@ -66,7 +66,6 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
         String title = destination.getTitle();
         String description = destination.getDescription();
         holder.title.setText(title);
-        holder.description.setText(description);
         loadImage(destination, holder);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination")
                 .child(destiId);
@@ -143,13 +142,12 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
 
     class HolderDestination extends RecyclerView.ViewHolder{
         RelativeLayout layoutImage;
-        TextView title, description, rating;
+        TextView title,rating;
         ProgressBar progressBar;
         public HolderDestination(@NonNull View itemView) {
             super(itemView);
             layoutImage = binding.layoutImage;
             title = binding.locTitle;
-            description = binding.locDesc;
             rating = binding.locRat;
             progressBar = binding.progressBar;
         }
