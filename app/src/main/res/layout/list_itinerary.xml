@@ -11,19 +11,18 @@
     app:cardElevation="4dp">
 
     <LinearLayout
-        android:id="@+id/itinerary_bg"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/palette_4">
+        android:layout_gravity="center_horizontal">
 
         <LinearLayout
-            android:layout_marginStart="5dp"
-            android:layout_width="125dp"
+            android:id="@+id/itinerary_bg"
+            android:layout_width="130dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:background="@color/palette_4">
 
             <TextView
                 android:id="@+id/startTimeTextView"
