@@ -3,24 +3,27 @@ package com.binus.pekalongancityguide.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
 import com.binus.pekalongancityguide.Layout.DestinationDetails;
+import com.binus.pekalongancityguide.Misc.AlphaTransformation;
 import com.binus.pekalongancityguide.R;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -28,9 +31,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-
-import static android.content.ContentValues.TAG;
-import static com.binus.pekalongancityguide.Misc.Constants.MAX_BYTES_IMAGE;
 
 public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.ItineraryViewHolder> {
     private final Context context;
@@ -103,18 +103,24 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         return itineraryList.size();
     }
 
-    private void loadImage(Itinerary itinerary, ItineraryAdapter.ItineraryViewHolder holder) {
+    private void loadImage(Itinerary itinerary, ItineraryViewHolder holder) {
         String imageUrl = itinerary.getUrl();
-        StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
-        reference.getBytes(MAX_BYTES_IMAGE)
-                .addOnSuccessListener(bytes -> {
-                    Log.d(TAG, "on Success: " + itinerary.getPlaceName() + "successfully got the file");
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), bitmap);
-                    drawable.setGravity(Gravity.FILL);
-                    holder.itineraryBg.setBackground(drawable);
-                })
-                .addOnFailureListener(e -> Log.d(TAG, "on Failure: failed to getting file from url due to" + e.getMessage()));
+        RequestOptions requestOptions = new RequestOptions()
+                .transforms(new CenterCrop(), new AlphaTransformation(0.85f));
+
+        Glide.with(holder.itemView.getContext())
+                .load(imageUrl)
+                .apply(requestOptions)
+                .into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        holder.itineraryBg.setBackground(resource);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });
     }
 
     public static class ItineraryViewHolder extends RecyclerView.ViewHolder {
