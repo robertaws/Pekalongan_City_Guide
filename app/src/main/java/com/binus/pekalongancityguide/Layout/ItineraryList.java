@@ -10,7 +10,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
@@ -128,12 +127,6 @@ public class ItineraryList extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        handler.post(runnable); // Start the handler to run the runnable every 10 seconds
-    }
-
-    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUEST_LOCATION) {
@@ -187,11 +180,11 @@ public class ItineraryList extends AppCompatActivity {
                                         Log.d(TAG, "Distance: " + distance);
                                         calculateDuration(currentLat, currentLng, placeLat, placeLng, durationText -> {
                                             itineraryList.add(new Itinerary(date, endTime, placeName, startTime, durationText, placeLat, placeLng, distance));
+                                            sortItineraryList(itineraryList);
+                                            // Set the sorted itineraryList to the adapter
+                                            ItineraryAdapter adapter = new ItineraryAdapter(itineraryList);
+                                            binding.itineraryRv.setAdapter(adapter);
                                         });
-                                        sortItineraryList(itineraryList);
-                                        // Set the sorted itineraryList to the adapter
-                                        ItineraryAdapter adapter = new ItineraryAdapter(itineraryList);
-                                        binding.itineraryRv.setAdapter(adapter);
                                     }
                                 }).addOnFailureListener(e -> {
                                     Log.e(TAG, "Error getting last known location: " + e.getMessage());
@@ -298,14 +291,5 @@ public class ItineraryList extends AppCompatActivity {
     public interface DurationCallback {
         void onDurationReceived(String durationText);
     }
-
-    private final Handler handler = new Handler();
-    private final Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            loadItinerary();
-            handler.postDelayed(this, 10000); // Run this Runnable every 10 seconds
-        }
-    };
 
 }
