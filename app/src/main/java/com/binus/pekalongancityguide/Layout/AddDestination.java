@@ -190,14 +190,16 @@ public class AddDestination extends AppCompatActivity {
                         .build();
                 placesClient.fetchPhoto(photoRequest).addOnSuccessListener(fetchPhotoResponse -> {
                     Bitmap bitmap = fetchPhotoResponse.getBitmap();
-                    // Use the bitmap here
-                    imageUri = bitmapToUri(this, bitmap);
-                    Log.d(TAG, "image uri: " + imageUri);
-                    Glide.with(AddDestination.this)
-                            .load(imageUri)
-                            .placeholder(R.drawable.person)
-                            .centerCrop()
-                            .into(binding.addPicture);
+                    if (bitmap != null) { // Check if bitmap is not null
+                        imageUri = bitmapToUri(this, bitmap);
+                        Log.d(TAG, "image uri: " + imageUri);
+                        Glide.with(AddDestination.this)
+                                .load(imageUri)
+                                .centerCrop()
+                                .into(binding.addPicture);
+                    } else {
+                        // Handle error when bitmap is null
+                    }
                 }).addOnFailureListener(exception -> {
                     // Handle error
                     if (exception instanceof ApiException) {
@@ -207,7 +209,24 @@ public class AddDestination extends AppCompatActivity {
                     }
                 });
             }
+        } else {
+            // Use a default image if imageUri is still null
+            imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.logo);
         }
+
+// Check if imageUri is still null after the fetchPhoto call
+        if (imageUri == null) {
+            // Handle the case when imageUri is null
+            Log.e(TAG, "Failed to fetch image, using default image");
+            imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.logo);
+        }
+
+// Convert the bitmap to URI and set the image using Glide
+        Glide.with(AddDestination.this)
+                .load(imageUri)
+                .centerCrop()
+                .into(binding.addPicture);
+
         long timestamp = System.currentTimeMillis();
         String filePathandName = "Destination/" + timestamp;
         StorageReference storageReference = FirebaseStorage.getInstance("gs://pekalongan-city-guide-5bf2e.appspot.com").getReference(filePathandName);
