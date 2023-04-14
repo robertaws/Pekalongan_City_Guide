@@ -149,8 +149,11 @@ public class AddDestination extends AppCompatActivity {
                             if (TextUtils.isEmpty(desc)) {
                                 StringBuilder sb = new StringBuilder();
                                 for (Place.Type type : place.getTypes()) {
-                                    sb.append(type.name().replace("_", " "));
-                                    sb.append(", ");
+                                    String typeName = type.name().replace("_", " ");
+                                    if (!typeName.equals("POINT OF INTEREST")) {
+                                        sb.append(typeName.toLowerCase().substring(0, 1).toUpperCase() + typeName.toLowerCase().substring(1));
+                                        sb.append(", ");
+                                    }
                                 }
                                 desc = sb.toString().trim();
                                 if (desc.endsWith(",")) {
@@ -158,7 +161,6 @@ public class AddDestination extends AppCompatActivity {
                                 }
                                 Log.d(TAG, "Description: " + desc);
                             }
-
                             new GetReviewsTask() {
                                 @Override
                                 protected void onPostExecute(JSONArray reviews) {
