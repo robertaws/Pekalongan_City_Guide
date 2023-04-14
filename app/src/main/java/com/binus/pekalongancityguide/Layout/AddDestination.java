@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
@@ -48,6 +47,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -62,6 +64,7 @@ import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
 public class AddDestination extends AppCompatActivity {
     public static final String TAG = "ADD_IMAGE_TAG";
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final String SEARCH_ENGINE_ID = "b0bfb36873e2d440d";
     PlacesClient placesClient;
     ArrayList<String> categoriesTitleArrayList, categoryIdArrayList;
     private ActivityAddDestinationBinding binding;
@@ -137,15 +140,25 @@ public class AddDestination extends AppCompatActivity {
                             OpeningHours openingHours = place.getOpeningHours();
                             double latitude = place.getLatLng().latitude;
                             double longitude = place.getLatLng().longitude;
-                            double rating = place.getRating();
+                            double rating = place.getRating() != null ? place.getRating() : 0;
                             Log.d(TAG, "Address: " + address);
                             Log.d(TAG, "Latitude: " + latitude);
                             Log.d(TAG, "Longitude: " + longitude);
                             Log.d(TAG, "Rating: " + rating);
                             Log.d(TAG, "Phone number: " + phoneNumber);
-                            if (TextUtils.isEmpty((desc))) {
-                                desc = String.valueOf(place.getTypes());
+                            if (TextUtils.isEmpty(desc)) {
+                                StringBuilder sb = new StringBuilder();
+                                for (Place.Type type : place.getTypes()) {
+                                    sb.append(type.name().replace("_", " "));
+                                    sb.append(", ");
+                                }
+                                desc = sb.toString().trim();
+                                if (desc.endsWith(",")) {
+                                    desc = desc.substring(0, desc.length() - 1);
+                                }
+                                Log.d(TAG, "Description: " + desc);
                             }
+
                             new GetReviewsTask() {
                                 @Override
                                 protected void onPostExecute(JSONArray reviews) {
@@ -180,9 +193,12 @@ public class AddDestination extends AppCompatActivity {
         Log.d(TAG, "uploadtoStorage : uploading to storage");
         progressDialog.setMessage("Uploading image");
         progressDialog.show();
+        long timestamp = System.currentTimeMillis();
+        String filePathandName = "Destination/" + timestamp;
         if (imageUri == null) {
             List<PhotoMetadata> photoMetadataList = place.getPhotoMetadatas();
-            if (photoMetadataList != null) {
+            if (photoMetadataList != null && !photoMetadataList.isEmpty()) {
+                // If photo metadata is available, fetch the photo and set it as the image
                 PhotoMetadata photoMetadata = photoMetadataList.get(0);
                 FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
                         .setMaxWidth(500)
@@ -190,61 +206,76 @@ public class AddDestination extends AppCompatActivity {
                         .build();
                 placesClient.fetchPhoto(photoRequest).addOnSuccessListener(fetchPhotoResponse -> {
                     Bitmap bitmap = fetchPhotoResponse.getBitmap();
-                    if (bitmap != null) { // Check if bitmap is not null
-                        imageUri = bitmapToUri(this, bitmap);
+                    if (bitmap != null) {
+                        try {
+                            imageUri = bitmapToUri(this, bitmap);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                         Log.d(TAG, "image uri: " + imageUri);
                         Glide.with(AddDestination.this)
-                                .load(imageUri)
+                                .load(bitmap)
                                 .centerCrop()
                                 .into(binding.addPicture);
+                        StorageReference storageReference = FirebaseStorage.getInstance("gs://pekalongan-city-guide-5bf2e.appspot.com").getReference(filePathandName);
+                        storageReference.putFile(imageUri)
+                                .addOnSuccessListener(taskSnapshot -> {
+                                    Log.d(TAG, "on success : Image uploaded to Storage");
+                                    Log.d(TAG, "on success : getting image url");
+                                    Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                                    while (!uriTask.isSuccessful()) ;
+                                    String uploadedImageUrl = "" + uriTask.getResult();
+                                    uploadtoDB(uploadedImageUrl, timestamp, placeId, address, lat, lng, rating, reviews, phoneNumber, weekday);
+                                })
+                                .addOnFailureListener(e -> {
+                                    progressDialog.dismiss();
+                                    Log.d(TAG, "on Failure : Image upload failed due to " + e.getMessage());
+                                    Toast.makeText(AddDestination.this, "Image upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
                     } else {
-                        // Handle error when bitmap is null
+
                     }
                 }).addOnFailureListener(exception -> {
-                    // Handle error
+                    Log.e(TAG, "Failed to fetch image, using default image");
+                    imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.logo);
+                    Glide.with(AddDestination.this)
+                            .load(imageUri)
+                            .centerCrop()
+                            .into(binding.addPicture);
                     if (exception instanceof ApiException) {
                         ApiException apiException = (ApiException) exception;
                         int statusCode = apiException.getStatusCode();
                         Log.e(TAG, "Place photo not found: " + exception.getMessage());
                     }
                 });
+            } else {
+                imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.logo);
+                Glide.with(AddDestination.this)
+                        .load(imageUri)
+                        .centerCrop()
+                        .into(binding.addPicture);
             }
         } else {
-            // Use a default image if imageUri is still null
-            imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.logo);
+            Glide.with(AddDestination.this)
+                    .load(imageUri)
+                    .centerCrop()
+                    .into(binding.addPicture);
+            StorageReference storageReference = FirebaseStorage.getInstance("gs://pekalongan-city-guide-5bf2e.appspot.com").getReference(filePathandName);
+            storageReference.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        Log.d(TAG, "on success : Image uploaded to Storage");
+                        Log.d(TAG, "on success : getting image url");
+                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                        while (!uriTask.isSuccessful()) ;
+                        String uploadedImageUrl = "" + uriTask.getResult();
+                        uploadtoDB(uploadedImageUrl, timestamp, placeId, address, lat, lng, rating, reviews, phoneNumber, weekday);
+                    })
+                    .addOnFailureListener(e -> {
+                        progressDialog.dismiss();
+                        Log.d(TAG, "on Failure : Image upload failed due to " + e.getMessage());
+                        Toast.makeText(AddDestination.this, "Image upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
         }
-
-// Check if imageUri is still null after the fetchPhoto call
-        if (imageUri == null) {
-            // Handle the case when imageUri is null
-            Log.e(TAG, "Failed to fetch image, using default image");
-            imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.logo);
-        }
-
-// Convert the bitmap to URI and set the image using Glide
-        Glide.with(AddDestination.this)
-                .load(imageUri)
-                .centerCrop()
-                .into(binding.addPicture);
-
-        long timestamp = System.currentTimeMillis();
-        String filePathandName = "Destination/" + timestamp;
-        StorageReference storageReference = FirebaseStorage.getInstance("gs://pekalongan-city-guide-5bf2e.appspot.com").getReference(filePathandName);
-        storageReference.putFile(imageUri)
-                .addOnSuccessListener(taskSnapshot -> {
-                    Log.d(TAG, "on success : Image uploaded to Storage");
-                    Log.d(TAG, "on success : getting image url");
-                    Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                    while (!uriTask.isSuccessful()) ;
-                    String uploadedImageUrl = "" + uriTask.getResult();
-                    uploadtoDB(uploadedImageUrl, timestamp, placeId, address, lat, lng, rating, reviews, phoneNumber, weekday);
-                })
-                .addOnFailureListener(e -> {
-                    progressDialog.dismiss();
-                    Log.d(TAG, "on Failure : Image upload failed due to " + e.getMessage());
-                    Toast.makeText(AddDestination.this, "Image upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-
     }
 
     private void uploadtoDB(String uploadedImageUrl, long timestamp, String placeId, String address, double desLat, double desLong, double rating, JSONArray reviews, String phoneNumber, List<String> weekday) {
@@ -387,9 +418,18 @@ public class AddDestination extends AppCompatActivity {
 
     }
 
-    public Uri bitmapToUri(Context context, Bitmap bitmap) {
-        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
-        return Uri.parse(path);
+    public Uri bitmapToUri(Context context, Bitmap bitmap) throws IOException {
+        // Create a temporary file in the cache directory
+        File tempFile = File.createTempFile("tempImage", ".png", context.getCacheDir());
+
+        // Write the bitmap data to the temporary file
+        FileOutputStream fos = new FileOutputStream(tempFile);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        fos.flush();
+        fos.close();
+
+        // Return the Uri of the temporary file
+        return Uri.fromFile(tempFile);
     }
 
     private static abstract class GetReviewsTask extends AsyncTask<String, Void, JSONObject> {
@@ -418,14 +458,15 @@ public class AddDestination extends AppCompatActivity {
             }
             return json;
         }
-
         @Override
         protected void onPostExecute(JSONObject json) {
             if (json != null) {
                 try {
-                    // Extract the details and reviews from the JSON
                     JSONObject result = json.getJSONObject("result");
-                    JSONArray reviews = result.getJSONArray("reviews");
+                    JSONArray reviews = result.optJSONArray("reviews");
+                    if (reviews == null) {
+                        reviews = new JSONArray();
+                    }
                     for (int i = 0; i < reviews.length(); i++) {
                         JSONObject review = reviews.getJSONObject(i);
                         String authorName = review.getString("author_name");
@@ -443,9 +484,10 @@ public class AddDestination extends AppCompatActivity {
                 }
             } else {
                 Log.e(TAG, "Error getting reviews from server");
+                JSONArray emptyReviews = new JSONArray();
+                onPostExecute(emptyReviews);
             }
         }
-
         protected abstract void onPostExecute(JSONArray reviews);
     }
 
