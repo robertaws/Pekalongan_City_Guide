@@ -33,9 +33,10 @@ public class DottedLineView extends View {
     private void init() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setColor(getResources().getColor(R.color.palette_1));
-        mPaint.setStrokeWidth(5);
+        mPaint.setColor(getResources().getColor(R.color.white));
+        mPaint.setStrokeWidth(10);
         mPaint.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
+        mPaint.setShadowLayer(3, 3, 3, Color.BLACK);
     }
 
     @Override

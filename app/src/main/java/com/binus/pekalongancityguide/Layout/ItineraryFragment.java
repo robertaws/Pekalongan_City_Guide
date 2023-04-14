@@ -1,7 +1,5 @@
 package com.binus.pekalongancityguide.Layout;
 
-import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -12,12 +10,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,15 +17,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.binus.pekalongancityguide.Adapter.ItineraryAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
-import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.FragmentItineraryBinding;
-import com.binus.pekalongancityguide.databinding.FragmentShowDestinationBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.libraries.places.api.Places;
@@ -57,6 +52,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
 
 public class ItineraryFragment extends Fragment {
     private FragmentItineraryBinding binding;
@@ -166,9 +163,8 @@ public class ItineraryFragment extends Fragment {
                             String placeName = snapshot.child("title").getValue(String.class);
                             Log.d(TAG, "Place Name: " + placeName);
                             String url = "" + snapshot.child("url").getValue();
-                            imageUrl = url;
 
-                            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                            if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                                     ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
                             } else {
@@ -180,7 +176,7 @@ public class ItineraryFragment extends Fragment {
                                         float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
                                         Log.d(TAG, "Distance: " + distance);
                                         calculateDuration(currentLat, currentLng, placeLat, placeLng, durationText -> {
-                                            itineraryList.add(new Itinerary(date, startTime, endTime, placeName, destiId, imageUrl, durationText, placeLat, placeLng, distance));
+                                            itineraryList.add(new Itinerary(date, startTime, endTime, placeName, destiId, url, durationText, placeLat, placeLng, distance));
                                             sortItineraryList(itineraryList);
                                             // Set the sorted itineraryList to the adapter
                                             ItineraryAdapter adapter = new ItineraryAdapter(getContext(), itineraryList);
@@ -207,7 +203,6 @@ public class ItineraryFragment extends Fragment {
             }
         });
     }
-
     private void sortItineraryList(List<Itinerary> itineraryList) {
         Collections.sort(itineraryList, (itinerary1, itinerary2) -> {
             SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy hh:mm a", Locale.ENGLISH);

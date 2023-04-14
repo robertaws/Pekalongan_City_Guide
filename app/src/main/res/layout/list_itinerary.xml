@@ -30,11 +30,15 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:textAppearance="?attr/textAppearanceListItem"
-                android:textColor="@color/palette_1"
+                android:textColor="@color/white"
                 android:text="start"
                 android:textStyle="bold"
                 android:layout_marginTop="8dp"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:shadowColor="#000000"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="2" />
 
             <com.binus.pekalongancityguide.Misc.DottedLineView
                 android:layout_width="3dp"
@@ -46,11 +50,14 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:textAppearance="?attr/textAppearanceListItem"
-                android:textColor="@color/palette_1"
+                android:textColor="@color/white"
                 android:text="end"
                 android:textStyle="bold"
-                android:layout_marginTop="8dp"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:shadowColor="#000000"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="2" />
 
         </LinearLayout>
 
