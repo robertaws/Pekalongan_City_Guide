@@ -1,6 +1,8 @@
 package com.binus.pekalongancityguide.ItemTemplate;
 
-public class Itinerary {
+import java.io.Serializable;
+
+public class Itinerary implements Serializable {
     private final String date;
     private final String startTime;
     private final String endTime;
