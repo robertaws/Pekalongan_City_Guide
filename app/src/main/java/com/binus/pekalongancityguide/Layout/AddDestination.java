@@ -203,8 +203,8 @@ public class AddDestination extends AppCompatActivity {
                 // If photo metadata is available, fetch the photo and set it as the image
                 PhotoMetadata photoMetadata = photoMetadataList.get(0);
                 FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
-                        .setMaxWidth(500)
-                        .setMaxHeight(300)
+                        .setMaxWidth(800)
+                        .setMaxHeight(500)
                         .build();
                 placesClient.fetchPhoto(photoRequest).addOnSuccessListener(fetchPhotoResponse -> {
                     Bitmap bitmap = fetchPhotoResponse.getBitmap();
