@@ -24,6 +24,11 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ItineraryList extends Fragment {
     public FragmentItineraryListBinding binding;
@@ -62,14 +67,49 @@ public class ItineraryList extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 itineraryArrayList.clear();
                 viewPagerAdapter.notifyDataSetChanged();
+
+                // Step 1: Create a HashSet to store all the unique dates in the database
+                Set<String> uniqueDates = new HashSet<>();
+
+                // Step 2: Create a HashMap to map each date to its corresponding Itinerary objects
+                Map<String, List<Itinerary>> itinerariesByDate = new HashMap<>();
+
+                // Step 3: Loop through all the Itinerary objects in the database and add them to the HashMap
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Itinerary itinerary = dataSnapshot.getValue(Itinerary.class);
                     itineraryArrayList.add(itinerary);
-                    viewPagerAdapter.addFragment(ItineraryFragment.newInstance(
-                            "" + itinerary.getDate(),
-                            "" + itinerary.getUid()), itinerary.getDate()); //TODO change to DAY #
-                    viewPagerAdapter.notifyDataSetChanged();
+                    String date = itinerary.getDate();
+                    if (!itinerariesByDate.containsKey(date)) {
+                        itinerariesByDate.put(date, new ArrayList<>());
+                    }
+                    itinerariesByDate.get(date).add(itinerary);
+                    uniqueDates.add(date);
                 }
+
+                // Step 4: Loop through all the unique dates in the HashSet
+                int dayCounter = 1;
+                for (String date : uniqueDates) {
+                    List<Itinerary> itinerariesOnThisDay = itinerariesByDate.get(date);
+
+                    // Step 5: If the HashMap contains an Itinerary object for the current date, add it to the ViewPagerAdapter
+                    if (itinerariesOnThisDay != null && !itinerariesOnThisDay.isEmpty()) {
+                        viewPagerAdapter.addFragment(ItineraryFragment.newInstance(
+                                "" + date,
+                                "" + itinerariesOnThisDay.get(0).getUid()
+                        ), "Day " + dayCounter);
+                    }
+
+                    // Step 6: If the HashMap does not contain an Itinerary object for the current date, add a blank Fragment to the ViewPagerAdapter
+                    else {
+                        viewPagerAdapter.addFragment(ItineraryFragment.newInstance(
+                                "No itinerary on this day",
+                                ""), "Day " + dayCounter);
+                    }
+
+                    dayCounter++;
+                }
+
+                viewPagerAdapter.notifyDataSetChanged();
             }
 
             @Override
