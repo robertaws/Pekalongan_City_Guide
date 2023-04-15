@@ -57,7 +57,6 @@ import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
 
 public class ItineraryFragment extends Fragment {
     private FragmentItineraryBinding binding;
-    String imageUrl;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private static final String TAG = "ITER_TAG";
@@ -70,10 +69,6 @@ public class ItineraryFragment extends Fragment {
     private FusedLocationProviderClient fusedLocationClient;
     private final FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
     public ItineraryFragment() {}
-    public static ItineraryFragment newInstance(String param1, String param2) {
-        ItineraryFragment fragment = new ItineraryFragment();
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -221,7 +216,6 @@ public class ItineraryFragment extends Fragment {
             }
         });
     }
-
     private float calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         float[] results = new float[1];
         Location location1 = new Location("");
