@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 
 public class Register extends AppCompatActivity {
+    private long lastBackPressTime = 0;
     FirebaseAuth firebaseAuth;
     ImageButton back;
     EditText user, email, pass, cpass;
@@ -152,7 +153,16 @@ public class Register extends AppCompatActivity {
             createUser();
         }
     }
-
+    @Override
+    public void onBackPressed() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastBackPressTime < 2000) {
+            super.onBackPressed();
+        } else {
+            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
+            lastBackPressTime = currentTime;
+        }
+    }
     private boolean containsNumber(String password) {
         return password.matches(".*\\d.*");
     }

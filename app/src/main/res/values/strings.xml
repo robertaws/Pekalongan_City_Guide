@@ -57,4 +57,6 @@
     <string name="regispass_text">Enter Password</string>
     <string name="regiscfmpass_text">Confirm Your Password</string>
     <string name="regisbtn_text">Register</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 </resources>

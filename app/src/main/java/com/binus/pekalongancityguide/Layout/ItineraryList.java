@@ -1,6 +1,5 @@
 package com.binus.pekalongancityguide.Layout;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,7 +14,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
-import com.binus.pekalongancityguide.databinding.ActivityItineraryListBinding;
+import com.binus.pekalongancityguide.databinding.FragmentItineraryListBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,11 +26,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class ItineraryList extends Fragment {
-    public ActivityItineraryListBinding binding;
+    public FragmentItineraryListBinding binding;
     private final FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private FirebaseAuth firebaseAuth;
     public ArrayList<Itinerary> itineraryArrayList;
-    public ItineraryList.ViewPagerAdapter viewPagerAdapter;
+    public com.binus.pekalongancityguide.Layout.ItineraryList.ViewPagerAdapter viewPagerAdapter;
     private static final String TAG = "DESTI_USER_TAG";
 
     public ItineraryList() {
@@ -41,15 +40,15 @@ public class ItineraryList extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        firebaseAuth = FirebaseAuth.getInstance();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = ActivityItineraryListBinding.inflate(inflater, container, false);
+        binding = FragmentItineraryListBinding.inflate(inflater, container, false);
         setupViewPagerAdapter(binding.viewPager);
         binding.itineraryTab.setupWithViewPager(binding.viewPager);
-        firebaseAuth = FirebaseAuth.getInstance();
         return binding.getRoot();
     }
 

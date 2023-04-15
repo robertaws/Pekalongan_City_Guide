@@ -1,6 +1,7 @@
 package com.binus.pekalongancityguide.Layout;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,6 +10,7 @@ import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Home extends AppCompatActivity {
+    private long lastBackPressTime = 0;
     private static final int home = 1;
     HomeFragment homeFragment = new HomeFragment();
     DestinationFragment destinationFragment = new DestinationFragment();
@@ -65,5 +67,15 @@ public class Home extends AppCompatActivity {
         bottomNavigationView.setOnReselectListener(item -> {
         });
         bottomNavigationView.show(home, true);
+    }
+    @Override
+    public void onBackPressed() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastBackPressTime < 2000) {
+            super.onBackPressed();
+        } else {
+            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
+            lastBackPressTime = currentTime;
+        }
     }
 }

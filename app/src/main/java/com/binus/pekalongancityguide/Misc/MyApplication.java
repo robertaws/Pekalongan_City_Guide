@@ -19,6 +19,7 @@ import java.util.Locale;
 
 public class MyApplication extends Application {
     public static Locale locale;
+    private long lastBackPressTime = 0;
 
     @Override
     public void onCreate() {
@@ -31,6 +32,7 @@ public class MyApplication extends Application {
         String date = DateFormat.format("dd/MM/yyyy",calendar).toString();
         return date;
     }
+
     public static void deleteDesti(Context context, String destiId, String destiUrl, String destiTitle){
         String TAG = "DELETE_DESTI_TAG";
         Log.d(TAG,"delete desti : Deleting..");
