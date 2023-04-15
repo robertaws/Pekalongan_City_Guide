@@ -1,10 +1,14 @@
 package com.binus.pekalongancityguide.Adapter;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +17,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
-import com.binus.pekalongancityguide.Layout.DestinationDetails;
 import com.binus.pekalongancityguide.Misc.AlphaTransformation;
 import com.binus.pekalongancityguide.R;
 import com.bumptech.glide.Glide;
@@ -25,14 +30,11 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
 public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.ItineraryViewHolder> {
+    private static final int MAPS_PERMIT= 1;
     private final Context context;
     private final List<Itinerary> itineraryList;
 
@@ -66,37 +68,45 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         }
         holder.distanceTextView.setText(distanceString);
         holder.durationTextView.setText(itinerary.getDurationText());
-        holder.itemView.setOnClickListener(v -> {
-            Drawable drawable = holder.itineraryBg.getBackground();
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            Bitmap bitmap = bitmapDrawable.getBitmap();
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 25, stream);
-            byte[] byteArray = stream.toByteArray();
-
-            String filePath = context.getFilesDir().getPath() + "/image.png";
-            FileOutputStream fos;
-            try {
-                fos = new FileOutputStream(filePath);
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String destinationName = itinerary.getPlaceName();
+                double latitude = itinerary.getLatitude();
+                double longitude = itinerary.getLongitude();
+                String origin = getMyLocation();
+                String url = "https://www.google.com/maps/dir/?api=1&origin=" + origin + "&destination=" + latitude + "," + longitude + "&travelmode=driving";
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
+                    context.startActivity(mapIntent);
+                } else {
+                    Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    context.startActivity(webIntent);
+                }
             }
-            try {
-                fos.write(byteArray);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                fos.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Intent intent = new Intent(context, DestinationDetails.class);
-            intent.putExtra("destiId", destiId);
-            intent.putExtra("imageFilePath", filePath);
-            context.startActivity(intent);
         });
     }
+
+private String getMyLocation(){
+    LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+    if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+        ActivityCompat.requestPermissions((Activity) context,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                MAPS_PERMIT);
+        return null;
+    } else {
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (location != null) {
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            return latitude + "," + longitude;
+        } else {
+            return null;
+        }
+    }
+}
 
     @Override
     public int getItemCount() {
