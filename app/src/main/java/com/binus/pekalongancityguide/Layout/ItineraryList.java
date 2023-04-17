@@ -1,6 +1,4 @@
 package com.binus.pekalongancityguide.Layout;
-
-
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +25,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -82,7 +82,6 @@ public class ItineraryList extends AppCompatActivity {
     }
 
     public class ItineraryPagerAdapter extends FragmentPagerAdapter {
-
         private final List<Fragment> fragments;
         private final List<String> dates;
 
@@ -111,21 +110,33 @@ public class ItineraryList extends AppCompatActivity {
     private List<Fragment> createFragmentsList(List<String> dates) {
         List<Fragment> fragments = new ArrayList<>();
         DateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
-        for (String date : dates) {
-            try {
-                Date currentDate = dateFormat.parse(date);
-                ItineraryFragment fragment = new ItineraryFragment();
-                Bundle args = new Bundle();
-                args.putString("date", date);
-                fragment.setArguments(args);
-                fragments.add(fragment);
-            } catch (ParseException e) {
-                Log.e("ItineraryList", "Error parsing date: " + date, e);
-                Toast.makeText(ItineraryList.this, "Error parsing date: " + date, Toast.LENGTH_SHORT).show();
+        Collections.sort(dates, new Comparator<String>() {
+            DateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
+
+            @Override
+            public int compare(String date1, String date2) {
+                try {
+                    Date dateObj1 = dateFormat.parse(date1);
+                    Date dateObj2 = dateFormat.parse(date2);
+                    return dateObj1.compareTo(dateObj2);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return 0;
+                }
             }
+        });
+
+        for (String date : dates) {
+            ItineraryFragment fragment = new ItineraryFragment();
+            Bundle args = new Bundle();
+            args.putString("date", date);
+            fragment.setArguments(args);
+            fragments.add(fragment);
         }
+
         return fragments;
     }
+
 
     private String convertToIso8601(String dateStr) {
         try {
