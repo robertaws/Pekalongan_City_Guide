@@ -91,14 +91,13 @@ public class ItineraryList extends AppCompatActivity {
             this.fragments = fragments;
             this.dates = dates;
         }
-
         @Override
         public Fragment getItem(int position) {
             Fragment fragment = fragments.get(position);
-            Bundle args = fragment.getArguments();
-            args.putString("selectedDate", selectedDate);
-            Log.d(TAG, "passed date: " + args);
-            fragment.setArguments(args);
+//            Bundle args = fragment.getArguments();
+//            args.putString("selectedDate", selectedDate);
+//            Log.d(TAG, "passed date: " + args);
+//            fragment.setArguments(args);
             return fragment;
         }
 
@@ -141,10 +140,11 @@ public class ItineraryList extends AppCompatActivity {
             ItineraryFragment fragment = new ItineraryFragment();
             Bundle args = new Bundle();
             args.putString("date", date);
+            args.putString("selectedDate",date);
+            Log.d(TAG, "passed date: " + args);
             fragment.setArguments(args);
             fragments.add(fragment);
         }
-
         return fragments;
     }
 
