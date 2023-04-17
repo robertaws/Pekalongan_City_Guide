@@ -305,6 +305,7 @@ public class DestinationDetails extends AppCompatActivity {
                             if (progressDialog != null) {
                                 progressDialog.dismiss();
                             }
+                            recreate();
                             Log.d(TAG, "on Failure : " + e.getMessage());
                     Toast.makeText(DestinationDetails.this, "Data upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
