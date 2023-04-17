@@ -231,31 +231,34 @@ public class ItineraryFragment extends Fragment {
     private void calculateDuration(double lat1, double lon1, double lat2, double lon2, DurationCallback callback) {
         String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + lat1 + "," + lon1 + "&destination=" + lat2 + "," + lon2 + "&key=" + apiKey;
 
-        RequestQueue queue = Volley.newRequestQueue(getContext());
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
-            try {
-                JSONArray routes = response.getJSONArray("routes");
-                if (routes.length() > 0) {
-                    JSONObject route = routes.getJSONObject(0);
-                    JSONArray legs = route.getJSONArray("legs");
-                    JSONObject leg = legs.getJSONObject(0);
-                    JSONObject duration = leg.getJSONObject("duration");
-                    String durationText = duration.getString("text");
-                    Log.d(TAG, "Duration: " + durationText);
-                    callback.onDurationReceived(durationText);
-                } else {
-                    Log.e(TAG, "No routes found");
-                    callback.onDurationReceived("No routes found");
+        if (isAdded() && getContext() != null) {
+            RequestQueue queue = Volley.newRequestQueue(getContext().getApplicationContext());
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
+                try {
+                    JSONArray routes = response.getJSONArray("routes");
+                    if (routes.length() > 0) {
+                        JSONObject route = routes.getJSONObject(0);
+                        JSONArray legs = route.getJSONArray("legs");
+                        JSONObject leg = legs.getJSONObject(0);
+                        JSONObject duration = leg.getJSONObject("duration");
+                        String durationText = duration.getString("text");
+                        Log.d(TAG, "Duration: " + durationText);
+                        callback.onDurationReceived(durationText);
+                    } else {
+                        Log.e(TAG, "No routes found");
+                        callback.onDurationReceived("No routes found");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }, error -> {
-            Log.e(TAG, "Error calculating travel duration: " + error.getMessage());
-            callback.onDurationReceived("Error calculating travel duration");
-        });
-        queue.add(request);
+            }, error -> {
+                Log.e(TAG, "Error calculating travel duration: " + error.getMessage());
+                callback.onDurationReceived("Error calculating travel duration");
+            });
+            queue.add(request);
+        }
     }
+
     @SuppressLint("MissingPermission")
     private void startLocationUpdates() {
         // Check if GPS is enabled
