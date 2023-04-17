@@ -1,0 +1,433 @@
+Index: app/src/main/java/com/binus/pekalongancityguide/Layout/ItineraryList.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.Layout;\r\n\r\n\r\nimport android.content.Context;\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.annotation.Nullable;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.core.content.ContextCompat;\r\nimport androidx.fragment.app.Fragment;\r\nimport androidx.fragment.app.FragmentManager;\r\nimport androidx.fragment.app.FragmentPagerAdapter;\r\n\r\nimport com.binus.pekalongancityguide.R;\r\nimport com.binus.pekalongancityguide.databinding.ActivityItineraryListBinding;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.database.DataSnapshot;\r\nimport com.google.firebase.database.DatabaseError;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\nimport com.google.firebase.database.Query;\r\nimport com.google.firebase.database.ValueEventListener;\r\n\r\nimport java.text.DateFormat;\r\nimport java.text.ParseException;\r\nimport java.text.SimpleDateFormat;\r\nimport java.util.ArrayList;\r\nimport java.util.Date;\r\nimport java.util.List;\r\nimport java.util.Locale;\r\nimport java.util.Objects;\r\nimport java.util.concurrent.TimeUnit;\r\n\r\nimport static android.content.ContentValues.TAG;\r\n\r\npublic class ItineraryList extends AppCompatActivity {\r\n    public ActivityItineraryListBinding binding;\r\n    private final FirebaseDatabase database = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\");\r\n    private FirebaseAuth firebaseAuth;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        firebaseAuth = FirebaseAuth.getInstance();\r\n        binding = ActivityItineraryListBinding.inflate(getLayoutInflater());\r\n        setContentView(binding.getRoot());\r\n\r\n        binding.backtoprofile.setOnClickListener(v -> {\r\n            onBackPressed();\r\n        });\r\n\r\n        // Fetch data from Firebase and create list of dates\r\n        DatabaseReference userRef = database.getReference(\"Users\").child(Objects.requireNonNull(firebaseAuth.getUid()));\r\n        Query itineraryQuery = userRef.child(\"itinerary\");\r\n        itineraryQuery.addListenerForSingleValueEvent(new ValueEventListener() {\r\n            @Override\r\n            public void onDataChange(@NonNull DataSnapshot snapshot) {\r\n                List<String> dates = new ArrayList<>();\r\n                for (DataSnapshot itinerarySnapshot : snapshot.getChildren()) {\r\n                    String date = itinerarySnapshot.child(\"date\").getValue(String.class);\r\n                    if (date != null && !date.isEmpty()) {\r\n                        Log.d(TAG, \"date: \" + date);\r\n                        date = convertToIso8601(date);\r\n                        dates.add(date);\r\n                    }\r\n                }\r\n\r\n                List<Fragment> fragments = createFragmentsList(dates);\r\n\r\n                ItineraryPagerAdapter vpAdapter = new ItineraryPagerAdapter(ItineraryList.this, getSupportFragmentManager(), fragments, dates);\r\n                binding.viewPager.setAdapter(vpAdapter);\r\n                binding.itineraryTab.setupWithViewPager(binding.viewPager);\r\n                binding.itineraryTab.setSelectedTabIndicatorColor(ContextCompat.getColor(ItineraryList.this, R.color.white));\r\n            }\r\n\r\n            @Override\r\n            public void onCancelled(@NonNull DatabaseError error) {\r\n                // Handle error\r\n            }\r\n        });\r\n    }\r\n\r\n    public class ItineraryPagerAdapter extends FragmentPagerAdapter {\r\n\r\n        private final List<Fragment> fragments;\r\n        private final List<String> dates;\r\n\r\n        public ItineraryPagerAdapter(Context context, FragmentManager fm, List<Fragment> fragments, List<String> dates) {\r\n            super(fm);\r\n            this.fragments = fragments;\r\n            this.dates = dates;\r\n        }\r\n\r\n        @Override\r\n        public Fragment getItem(int position) {\r\n            return fragments.get(position);\r\n        }\r\n\r\n        @Override\r\n        public int getCount() {\r\n            return fragments.size();\r\n        }\r\n\r\n        @Override\r\n        public CharSequence getPageTitle(int position) {\r\n            return dates.get(position);\r\n        }\r\n    }\r\n\r\n    public static class EmptyFragment extends Fragment {\r\n        @Nullable\r\n        @Override\r\n        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {\r\n            return inflater.inflate(R.layout.fragment_empty, container, false);\r\n        }\r\n    }\r\n\r\n    private List<Fragment> createEmptyFragments(List<String> emptyDates) {\r\n        List<Fragment> fragments = new ArrayList<>();\r\n        for (String date : emptyDates) {\r\n            fragments.add(new EmptyFragment());\r\n        }\r\n        return fragments;\r\n    }\r\n\r\n    private List<Fragment> createFragmentsList(List<String> dates) {\r\n        List<Fragment> fragments = new ArrayList<>();\r\n        List<String> emptyDates = new ArrayList<>();\r\n        DateFormat dateFormat = new SimpleDateFormat(\"yyyy-MM-dd\", Locale.getDefault());\r\n        Date prevDate = null;\r\n        int dayCount = 1; // initialize the day count to 1\r\n        for (String date : dates) {\r\n            try {\r\n                Date currentDate = dateFormat.parse(date);\r\n                if (prevDate != null) {\r\n                    long diffInMs = currentDate.getTime() - prevDate.getTime();\r\n                    long diffInDays = TimeUnit.DAYS.convert(diffInMs, TimeUnit.MILLISECONDS);\r\n                    if (diffInDays > 1) {\r\n                        for (int i = 1; i < diffInDays; i++) {\r\n                            String emptyDate = dateFormat.format(new Date(prevDate.getTime() + i * TimeUnit.DAYS.toMillis(1)));\r\n                            emptyDates.add(emptyDate);\r\n                        }\r\n                    }\r\n                }\r\n                ItineraryFragment fragment = new ItineraryFragment();\r\n                Bundle args = new Bundle();\r\n                args.putInt(\"dayIndex\", dayCount); // pass the index of the date in the list\r\n                fragment.setArguments(args);\r\n                fragments.add(fragment);\r\n                prevDate = currentDate;\r\n                Log.d(TAG, \"current date: \" + currentDate);\r\n                dayCount++; // increment the day count\r\n            } catch (ParseException e) {\r\n                Log.e(\"ItineraryList\", \"Error parsing date: \" + date, e);\r\n                Toast.makeText(ItineraryList.this, \"Error parsing date: \" + date, Toast.LENGTH_SHORT).show();\r\n            }\r\n        }\r\n        fragments.addAll(createEmptyFragments(emptyDates));\r\n        dates.addAll(emptyDates);\r\n        return fragments;\r\n    }\r\n\r\n    private String convertToIso8601(String dateStr) {\r\n        try {\r\n            DateFormat originalDateFormat = new SimpleDateFormat(\"EEEE, dd MMMM yyyy\", Locale.getDefault());\r\n            Date date = originalDateFormat.parse(dateStr);\r\n            DateFormat targetDateFormat = new SimpleDateFormat(\"yyyy-MM-dd\", Locale.getDefault());\r\n            return targetDateFormat.format(date);\r\n        } catch (ParseException e) {\r\n            Log.e(\"ItineraryList\", \"Error parsing date: \" + dateStr, e);\r\n            Toast.makeText(ItineraryList.this, \"Error parsing date: \" + dateStr, Toast.LENGTH_SHORT).show();\r\n            return \"\";\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/Layout/ItineraryList.java b/app/src/main/java/com/binus/pekalongancityguide/Layout/ItineraryList.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/Layout/ItineraryList.java	(revision 54078f9d9a3418681eb455f55318ab0ac765ed24)
++++ b/app/src/main/java/com/binus/pekalongancityguide/Layout/ItineraryList.java	(date 1681551023902)
+@@ -2,23 +2,36 @@
+ 
+ 
+ import android.content.Context;
++import android.content.Intent;
++import android.content.pm.PackageManager;
++import android.location.Location;
++import android.location.LocationListener;
++import android.location.LocationManager;
+ import android.os.Bundle;
++import android.provider.Settings;
+ import android.util.Log;
+-import android.view.LayoutInflater;
+-import android.view.View;
+-import android.view.ViewGroup;
+ import android.widget.Toast;
+ 
+ import androidx.annotation.NonNull;
+-import androidx.annotation.Nullable;
+ import androidx.appcompat.app.AppCompatActivity;
++import androidx.core.app.ActivityCompat;
+ import androidx.core.content.ContextCompat;
+ import androidx.fragment.app.Fragment;
+ import androidx.fragment.app.FragmentManager;
+ import androidx.fragment.app.FragmentPagerAdapter;
+ 
++import com.android.volley.Request;
++import com.android.volley.RequestQueue;
++import com.android.volley.toolbox.JsonObjectRequest;
++import com.android.volley.toolbox.Volley;
++import com.binus.pekalongancityguide.Adapter.ItineraryAdapter;
++import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
+ import com.binus.pekalongancityguide.R;
+ import com.binus.pekalongancityguide.databinding.ActivityItineraryListBinding;
++import com.google.android.gms.location.FusedLocationProviderClient;
++import com.google.android.gms.location.LocationServices;
++import com.google.android.libraries.places.api.Places;
++import com.google.android.libraries.places.api.net.PlacesClient;
+ import com.google.firebase.auth.FirebaseAuth;
+ import com.google.firebase.database.DataSnapshot;
+ import com.google.firebase.database.DatabaseError;
+@@ -27,155 +40,66 @@
+ import com.google.firebase.database.Query;
+ import com.google.firebase.database.ValueEventListener;
+ 
+-import java.text.DateFormat;
++import org.json.JSONArray;
++import org.json.JSONException;
++import org.json.JSONObject;
++
+ import java.text.ParseException;
+ import java.text.SimpleDateFormat;
+ import java.util.ArrayList;
++import java.util.Collections;
+ import java.util.Date;
+ import java.util.List;
+ import java.util.Locale;
+-import java.util.Objects;
+-import java.util.concurrent.TimeUnit;
+ 
+-import static android.content.ContentValues.TAG;
++import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
+ 
+ public class ItineraryList extends AppCompatActivity {
+     public ActivityItineraryListBinding binding;
+-    private final FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
+-    private FirebaseAuth firebaseAuth;
+ 
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+-        firebaseAuth = FirebaseAuth.getInstance();
+         binding = ActivityItineraryListBinding.inflate(getLayoutInflater());
+         setContentView(binding.getRoot());
+ 
+         binding.backtoprofile.setOnClickListener(v -> {
+             onBackPressed();
+         });
+-
+-        // Fetch data from Firebase and create list of dates
+-        DatabaseReference userRef = database.getReference("Users").child(Objects.requireNonNull(firebaseAuth.getUid()));
+-        Query itineraryQuery = userRef.child("itinerary");
+-        itineraryQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+-            @Override
+-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+-                List<String> dates = new ArrayList<>();
+-                for (DataSnapshot itinerarySnapshot : snapshot.getChildren()) {
+-                    String date = itinerarySnapshot.child("date").getValue(String.class);
+-                    if (date != null && !date.isEmpty()) {
+-                        Log.d(TAG, "date: " + date);
+-                        date = convertToIso8601(date);
+-                        dates.add(date);
+-                    }
+-                }
+-
+-                List<Fragment> fragments = createFragmentsList(dates);
+-
+-                ItineraryPagerAdapter vpAdapter = new ItineraryPagerAdapter(ItineraryList.this, getSupportFragmentManager(), fragments, dates);
+-                binding.viewPager.setAdapter(vpAdapter);
+-                binding.itineraryTab.setupWithViewPager(binding.viewPager);
+-                binding.itineraryTab.setSelectedTabIndicatorColor(ContextCompat.getColor(ItineraryList.this, R.color.white));
+-            }
+-
+-            @Override
+-            public void onCancelled(@NonNull DatabaseError error) {
+-                // Handle error
+-            }
+-        });
++        ItineraryPagerAdapter vpAdapter = new ItineraryPagerAdapter(this, getSupportFragmentManager());
++        binding.viewPager.setAdapter(vpAdapter);
++        binding.itineraryTab.setupWithViewPager(binding.viewPager);
++        binding.itineraryTab.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.white));
+     }
+ 
+     public class ItineraryPagerAdapter extends FragmentPagerAdapter {
+ 
+-        private final List<Fragment> fragments;
+-        private final List<String> dates;
++        private final String[] tabTitles = new String[] {"Day 1"};
++        private final Context context;
+ 
+-        public ItineraryPagerAdapter(Context context, FragmentManager fm, List<Fragment> fragments, List<String> dates) {
++        public ItineraryPagerAdapter(Context context, FragmentManager fm) {
+             super(fm);
+-            this.fragments = fragments;
+-            this.dates = dates;
++            this.context = context;
+         }
+ 
+         @Override
+         public Fragment getItem(int position) {
+-            return fragments.get(position);
++            switch (position) {
++                case 0:
++                    return new ItineraryFragment();
++                default:
++                    return null;
++            }
+         }
+ 
+         @Override
+         public int getCount() {
+-            return fragments.size();
++            return tabTitles.length;
+         }
+ 
+         @Override
+         public CharSequence getPageTitle(int position) {
+-            return dates.get(position);
+-        }
+-    }
+-
+-    public static class EmptyFragment extends Fragment {
+-        @Nullable
+-        @Override
+-        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+-            return inflater.inflate(R.layout.fragment_empty, container, false);
+-        }
+-    }
+-
+-    private List<Fragment> createEmptyFragments(List<String> emptyDates) {
+-        List<Fragment> fragments = new ArrayList<>();
+-        for (String date : emptyDates) {
+-            fragments.add(new EmptyFragment());
++            return tabTitles[position];
+         }
+-        return fragments;
+     }
+-
+-    private List<Fragment> createFragmentsList(List<String> dates) {
+-        List<Fragment> fragments = new ArrayList<>();
+-        List<String> emptyDates = new ArrayList<>();
+-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+-        Date prevDate = null;
+-        int dayCount = 1; // initialize the day count to 1
+-        for (String date : dates) {
+-            try {
+-                Date currentDate = dateFormat.parse(date);
+-                if (prevDate != null) {
+-                    long diffInMs = currentDate.getTime() - prevDate.getTime();
+-                    long diffInDays = TimeUnit.DAYS.convert(diffInMs, TimeUnit.MILLISECONDS);
+-                    if (diffInDays > 1) {
+-                        for (int i = 1; i < diffInDays; i++) {
+-                            String emptyDate = dateFormat.format(new Date(prevDate.getTime() + i * TimeUnit.DAYS.toMillis(1)));
+-                            emptyDates.add(emptyDate);
+-                        }
+-                    }
+-                }
+-                ItineraryFragment fragment = new ItineraryFragment();
+-                Bundle args = new Bundle();
+-                args.putInt("dayIndex", dayCount); // pass the index of the date in the list
+-                fragment.setArguments(args);
+-                fragments.add(fragment);
+-                prevDate = currentDate;
+-                Log.d(TAG, "current date: " + currentDate);
+-                dayCount++; // increment the day count
+-            } catch (ParseException e) {
+-                Log.e("ItineraryList", "Error parsing date: " + date, e);
+-                Toast.makeText(ItineraryList.this, "Error parsing date: " + date, Toast.LENGTH_SHORT).show();
+-            }
+-        }
+-        fragments.addAll(createEmptyFragments(emptyDates));
+-        dates.addAll(emptyDates);
+-        return fragments;
+-    }
+-
+-    private String convertToIso8601(String dateStr) {
+-        try {
+-            DateFormat originalDateFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
+-            Date date = originalDateFormat.parse(dateStr);
+-            DateFormat targetDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+-            return targetDateFormat.format(date);
+-        } catch (ParseException e) {
+-            Log.e("ItineraryList", "Error parsing date: " + dateStr, e);
+-            Toast.makeText(ItineraryList.this, "Error parsing date: " + dateStr, Toast.LENGTH_SHORT).show();
+-            return "";
+-        }
+-    }
+-}
+\ No newline at end of file
++}
+Index: app/src/main/java/com/binus/pekalongancityguide/Layout/DestinationDetails.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.Layout;\r\n\r\nimport android.app.AlertDialog;\r\nimport android.app.DatePickerDialog;\r\nimport android.app.ProgressDialog;\r\nimport android.content.Intent;\r\nimport android.graphics.Bitmap;\r\nimport android.graphics.BitmapFactory;\r\nimport android.graphics.drawable.BitmapDrawable;\r\nimport android.graphics.drawable.Drawable;\r\nimport android.os.Bundle;\r\nimport android.text.TextUtils;\r\nimport android.util.Log;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\nimport android.widget.EditText;\r\nimport android.widget.ImageButton;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport com.binus.pekalongancityguide.Adapter.OpeningHoursAdapter;\r\nimport com.binus.pekalongancityguide.Adapter.ReviewAdapter;\r\nimport com.binus.pekalongancityguide.ItemTemplate.OpeningHours;\r\nimport com.binus.pekalongancityguide.ItemTemplate.Review;\r\nimport com.binus.pekalongancityguide.Misc.ImageFullscreen;\r\nimport com.binus.pekalongancityguide.Misc.MyApplication;\r\nimport com.binus.pekalongancityguide.R;\r\nimport com.binus.pekalongancityguide.databinding.ActivityDestinationDetailsBinding;\r\nimport com.google.android.gms.maps.CameraUpdate;\r\nimport com.google.android.gms.maps.CameraUpdateFactory;\r\nimport com.google.android.gms.maps.SupportMapFragment;\r\nimport com.google.android.gms.maps.model.LatLng;\r\nimport com.google.android.gms.maps.model.MapStyleOptions;\r\nimport com.google.android.gms.maps.model.MarkerOptions;\r\nimport com.google.android.material.timepicker.MaterialTimePicker;\r\nimport com.google.android.material.timepicker.TimeFormat;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.database.DataSnapshot;\r\nimport com.google.firebase.database.DatabaseError;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\nimport com.google.firebase.database.ValueEventListener;\r\n\r\nimport java.text.SimpleDateFormat;\r\nimport java.util.ArrayList;\r\nimport java.util.Calendar;\r\nimport java.util.Date;\r\nimport java.util.HashMap;\r\nimport java.util.List;\r\nimport java.util.Locale;\r\nimport java.util.Map;\r\n\r\npublic class DestinationDetails extends AppCompatActivity {\r\n    String imageUrl;\r\n    private ActivityDestinationDetailsBinding binding;\r\n    String destiId;\r\n    boolean inFavorite = false;\r\n    FirebaseAuth firebaseAuth;\r\n    private static final String TAG = \"REVIEW_TAG\";\r\n    private ProgressDialog progressDialog;\r\n    int startHour,startMinute,startHour1,startMinute1\r\n            ,endHour,endMinute,endHour1,endMinute1\r\n            ,dayDate,monthDate,yearDate,dayDate1,monthDate1,yearDate1;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        binding = ActivityDestinationDetailsBinding.inflate(getLayoutInflater());\r\n        setContentView(binding.getRoot());\r\n        Intent intent = getIntent();\r\n        destiId = intent.getStringExtra(\"destiId\");\r\n        firebaseAuth = FirebaseAuth.getInstance();\r\n        if (firebaseAuth.getCurrentUser() != null) {\r\n            checkFavorite();\r\n        }\r\n        loadDetails();\r\n        binding.backDesti.setOnClickListener(v -> onBackPressed());\r\n        binding.destiImage.setOnClickListener(v -> {\r\n            Intent intent1 = new Intent(this, ImageFullscreen.class);\r\n            intent1.putExtra(\"fullImg\", imageUrl);\r\n            startActivity(intent1);\r\n        });\r\n        binding.saveItem.setOnClickListener(v -> {\r\n            if (firebaseAuth.getCurrentUser() == null) {\r\n                Toast.makeText(DestinationDetails.this, \"You are not logged in!\", Toast.LENGTH_SHORT).show();\r\n            } else {\r\n                if (inFavorite) {\r\n                    MyApplication.removeFavorite(DestinationDetails.this, destiId);\r\n                } else {\r\n                    MyApplication.addtoFavorite(DestinationDetails.this, destiId);\r\n                }\r\n            }\r\n        });\r\n        binding.addItenary.setOnClickListener(v ->{\r\n            showAddItineraryDialog();\r\n        });\r\n    }\r\n\r\n    private void showAddItineraryDialog() {\r\n        AlertDialog.Builder builder = new AlertDialog.Builder(this);\r\n        View view = LayoutInflater.from(this).inflate(R.layout.dialog_add_to_itinerary, null);\r\n        builder.setView(view);\r\n        EditText dateEt,startEt,endEt;\r\n        ImageButton dateBtn,startBtn,endBtn;\r\n        Button addItinerary;\r\n        dateEt = view.findViewById(R.id.date_et);\r\n        startEt = view.findViewById(R.id.starttime_et);\r\n        endEt = view.findViewById(R.id.endtime_et);\r\n        dateBtn = view.findViewById(R.id.datepicker_btn);\r\n        startBtn = view.findViewById(R.id.startpicker_btn);\r\n        endBtn = view.findViewById(R.id.endpicker_btn);\r\n        addItinerary = view.findViewById(R.id.additinerary_btn);\r\n\r\n        startBtn.setOnClickListener(v -> {\r\n            Calendar calendar = Calendar.getInstance();\r\n            startHour = calendar.get(Calendar.HOUR_OF_DAY);\r\n            startMinute = calendar.get(Calendar.MINUTE);\r\n            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()\r\n                    .setTimeFormat(TimeFormat.CLOCK_12H)\r\n                    .setHour(startHour)\r\n                    .setMinute(startMinute)\r\n                    .setTitleText(\"Select start time\")\r\n                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);\r\n            MaterialTimePicker dialog = mybuilder.build();\r\n            dialog.addOnPositiveButtonClickListener(timeview -> {\r\n                startHour = dialog.getHour();\r\n                startMinute = dialog.getMinute();\r\n                if (startHour <= 12) {\r\n                    startEt.setText(String.format(Locale.getDefault(), \"%d:%02d am\", startHour, startMinute));\r\n                } else {\r\n                    startEt.setText(String.format(Locale.getDefault(), \"%d:%02d pm\", startHour - 12, startMinute));\r\n                }\r\n            });\r\n            dialog.show(getSupportFragmentManager(), \"startTimePicker\");\r\n        });\r\n        startEt.setOnClickListener(v -> {\r\n            Calendar calendar = Calendar.getInstance();\r\n            startHour1 = calendar.get(Calendar.HOUR_OF_DAY);\r\n            startMinute1 = calendar.get(Calendar.MINUTE);\r\n            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()\r\n                    .setTimeFormat(TimeFormat.CLOCK_12H)\r\n                    .setHour(startHour1)\r\n                    .setMinute(startMinute1)\r\n                    .setTitleText(\"Select start time\")\r\n                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);\r\n            MaterialTimePicker dialog = mybuilder.build();\r\n            dialog.addOnPositiveButtonClickListener(timeview -> {\r\n                startHour1 = dialog.getHour();\r\n                startMinute1 = dialog.getMinute();\r\n                if (startHour1 <= 12) {\r\n                    startEt.setText(String.format(Locale.getDefault(), \"%d:%02d am\", startHour1, startMinute1));\r\n                } else {\r\n                    startEt.setText(String.format(Locale.getDefault(), \"%d:%02d pm\", startHour1 - 12, startMinute1));\r\n                }\r\n            });\r\n            dialog.show(getSupportFragmentManager(), \"startTimePicker\");\r\n        });\r\n        endBtn.setOnClickListener(v -> {\r\n            Calendar calendar = Calendar.getInstance();\r\n            endHour = calendar.get(Calendar.HOUR_OF_DAY);\r\n            endMinute = calendar.get(Calendar.MINUTE);\r\n            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()\r\n                    .setTimeFormat(TimeFormat.CLOCK_12H)\r\n                    .setHour(endHour)\r\n                    .setMinute(endMinute)\r\n                    .setTitleText(\"Select start time\")\r\n                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);\r\n            MaterialTimePicker dialog = mybuilder.build();\r\n            dialog.addOnPositiveButtonClickListener(timeview -> {\r\n                endHour = dialog.getHour();\r\n                endMinute = dialog.getMinute();\r\n                if (endHour <= 12) {\r\n                    endEt.setText(String.format(Locale.getDefault(), \"%d:%02d am\", endHour, endMinute));\r\n                } else {\r\n                    endEt.setText(String.format(Locale.getDefault(), \"%d:%02d pm\", endHour - 12, endMinute));\r\n                }\r\n            });\r\n            dialog.show(getSupportFragmentManager(), \"startTimePicker\");\r\n        });\r\n        endEt.setOnClickListener(v -> {\r\n            Calendar calendar = Calendar.getInstance();\r\n            endHour1 = calendar.get(Calendar.HOUR_OF_DAY);\r\n            endMinute1 = calendar.get(Calendar.MINUTE);\r\n            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()\r\n                    .setTimeFormat(TimeFormat.CLOCK_12H)\r\n                    .setHour(endHour1)\r\n                    .setMinute(endMinute1)\r\n                    .setTitleText(\"Select start time\")\r\n                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);\r\n            MaterialTimePicker dialog = mybuilder.build();\r\n            dialog.addOnPositiveButtonClickListener(timeview -> {\r\n                endHour1 = dialog.getHour();\r\n                endMinute1 = dialog.getMinute();\r\n                if (endHour1 <= 12) {\r\n                    endEt.setText(String.format(Locale.getDefault(), \"%d:%02d am\", endHour1, endMinute1));\r\n                } else {\r\n                    endEt.setText(String.format(Locale.getDefault(), \"%d:%02d pm\", endHour1 - 12, endMinute1));\r\n                }\r\n            });\r\n            dialog.show(getSupportFragmentManager(), \"startTimePicker\");\r\n        });\r\n        dateBtn.setOnClickListener(v -> {\r\n            Calendar calendar = Calendar.getInstance();\r\n            yearDate = calendar.get(Calendar.YEAR);\r\n            monthDate = calendar.get(Calendar.MONTH);\r\n            dayDate = calendar.get(Calendar.DAY_OF_MONTH);\r\n            DatePickerDialog dialog;\r\n            dialog = new DatePickerDialog(this, (dateView, year, month, dayOfMonth) -> {\r\n                yearDate = year;\r\n                monthDate = month;\r\n                dayDate = dayOfMonth;\r\n                SimpleDateFormat format = new SimpleDateFormat(\"EEEE, dd MMMM yyyy\", Locale.getDefault());\r\n                String dateString = format.format(new Date(yearDate - 1900, monthDate, dayDate));\r\n                dateEt.setText(dateString);\r\n            }, yearDate, monthDate, dayDate);\r\n            dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);\r\n            dialog.show();\r\n        });\r\n        dateEt.setOnClickListener(v -> {\r\n            Calendar calendar = Calendar.getInstance();\r\n            yearDate1 = calendar.get(Calendar.YEAR);\r\n            monthDate1 = calendar.get(Calendar.MONTH);\r\n            dayDate1 = calendar.get(Calendar.DAY_OF_MONTH);\r\n            DatePickerDialog dialog;\r\n            dialog = new DatePickerDialog(this, (dateView, year, month, dayOfMonth) -> {\r\n                yearDate1 = year;\r\n                monthDate1 = month;\r\n                dayDate1 = dayOfMonth;\r\n                SimpleDateFormat format = new SimpleDateFormat(\"EEEE, dd MMMM yyyy\", Locale.getDefault());\r\n                String dateString = format.format(new Date(yearDate1 - 1900, monthDate1, dayDate1));\r\n                dateEt.setText(dateString);\r\n            }, yearDate1, monthDate1, dayDate1);\r\n            dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);\r\n            dialog.show();\r\n        });\r\n        addItinerary.setOnClickListener(v -> {\r\n            validateData(dateEt, startEt, endEt);\r\n        });\r\n        AlertDialog dialog = builder.create();\r\n        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);\r\n        dialog.show();\r\n    }\r\n\r\n    private String date = \"\", startTime = \"\", endTime = \"\";\r\n\r\n    private void validateData(EditText dateEt, EditText startTimeEt, EditText endTimeEt) {\r\n        date = dateEt.getText().toString().trim();\r\n        startTime = startTimeEt.getText().toString().trim();\r\n        endTime = endTimeEt.getText().toString().trim();\r\n        boolean allFieldsFilled = true;\r\n\r\n        if (TextUtils.isEmpty(date)) {\r\n            dateEt.setError(\"Please choose a date!\");\r\n            allFieldsFilled = false;\r\n        } else {\r\n            dateEt.setError(null);\r\n        }\r\n\r\n        if (TextUtils.isEmpty(startTime)) {\r\n            startTimeEt.setError(\"Please choose a starting time!\");\r\n            allFieldsFilled = false;\r\n        } else {\r\n            startTimeEt.setError(null);\r\n        }\r\n\r\n        if (TextUtils.isEmpty(endTime)) {\r\n            endTimeEt.setError(\"Please choose an end time!\");\r\n            allFieldsFilled = false;\r\n        } else {\r\n            endTimeEt.setError(null);\r\n        }\r\n\r\n        if (allFieldsFilled) {\r\n            uploadToDB(date, startTime, endTime);\r\n            Toast.makeText(this, \"Destination Added to Itinerary!\", Toast.LENGTH_SHORT).show();\r\n        }\r\n\r\n    }\r\n\r\n    private void uploadToDB(String date, String startTime, String endTime) {\r\n        String uid = firebaseAuth.getUid();\r\n        DatabaseReference reference = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Destination\");\r\n        reference.child(destiId).addListenerForSingleValueEvent(new ValueEventListener() {\r\n            @Override\r\n            public void onDataChange(@NonNull DataSnapshot snapshot) {\r\n                String placeID = \"\" + snapshot.child(\"placeId\").getValue();\r\n                Log.d(TAG, \"placeID: \" + placeID);\r\n                HashMap<String, Object> hashMap = new HashMap<>();\r\n                hashMap.put(\"startTime\", startTime);\r\n                hashMap.put(\"endTime\", endTime);\r\n                hashMap.put(\"date\", date);\r\n                hashMap.put(\"destiId\", destiId);\r\n                DatabaseReference itineraryRef = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Users\");\r\n                itineraryRef.child(uid).child(\"itinerary\").push().setValue(hashMap)\r\n                        .addOnSuccessListener(aVoid -> {\r\n                            if (progressDialog != null) {\r\n                                progressDialog.dismiss();\r\n\r\n                            }\r\n                            Toast.makeText(getApplicationContext(), \"Itinerary uploaded successfully\", Toast.LENGTH_LONG).show();\r\n                        }).addOnFailureListener(e -> {\r\n                            if (progressDialog != null) {\r\n                                progressDialog.dismiss();\r\n                            }\r\n                            Log.d(TAG, \"on Failure : \" + e.getMessage());\r\n                    Toast.makeText(DestinationDetails.this, \"Data upload failed due to \" + e.getMessage(), Toast.LENGTH_SHORT).show();\r\n                });\r\n            }\r\n\r\n            @Override\r\n            public void onCancelled(@NonNull DatabaseError error) {\r\n\r\n            }\r\n        });\r\n    }\r\n\r\n    private void loadDetails() {\r\n        DatabaseReference reference = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Destination\");\r\n        reference.child(destiId)\r\n                .addListenerForSingleValueEvent(new ValueEventListener() {\r\n                    @Override\r\n                    public void onDataChange(@NonNull DataSnapshot snapshot){\r\n                        String title = \"\" + snapshot.child(\"title\").getValue();\r\n                        String description = \"\" + snapshot.child(\"description\").getValue();\r\n                        String address = \"\" + snapshot.child(\"address\").getValue();\r\n                        String categoryId = \"\" + snapshot.child(\"categoryId\").getValue();\r\n                        String url = \"\" + snapshot.child(\"url\").getValue();\r\n                        String phone = \"\" + snapshot.child(\"phoneNumber\").getValue();\r\n                        double latitude = Double.parseDouble(snapshot.child(\"latitude\").getValue().toString());\r\n                        double longitude = Double.parseDouble(snapshot.child(\"longitude\").getValue().toString());\r\n                        binding.destiName.setText(title);\r\n                        binding.destiDesc.setText(description);\r\n                        binding.destiAddress.setText(address);\r\n                        binding.destiPhone.setText(\"Phone Number: \" + phone);\r\n                        imageUrl = url;\r\n                        Map<String, String> openingHoursMap = new HashMap<>();\r\n                        for (DataSnapshot hourSnapshot : snapshot.child(\"openingHours\").getChildren()) {\r\n                            String dayOfWeek = hourSnapshot.getKey();\r\n                            String openingHours = hourSnapshot.getValue(String.class);\r\n                            openingHoursMap.put(dayOfWeek, openingHours);\r\n                        }\r\n\r\n                        for (Map.Entry<String, String> entry : openingHoursMap.entrySet()) {\r\n                            String dayOfWeek = entry.getKey();\r\n                            String openingHours = entry.getValue();\r\n                            System.out.println(dayOfWeek + \": \" + openingHours);\r\n                        }\r\n                        List<OpeningHours> openingHoursList = new ArrayList<>();\r\n                        for (Map.Entry<String, String> entry : openingHoursMap.entrySet()) {\r\n                            String dayOfWeek = entry.getKey();\r\n                            String openingHours = entry.getValue();\r\n                            openingHoursList.add(new OpeningHours(dayOfWeek, openingHours));\r\n                        }\r\n\r\n                        OpeningHoursAdapter hoursAdapter = new OpeningHoursAdapter(openingHoursList);\r\n                        binding.openingRv.setAdapter(hoursAdapter);\r\n\r\n                        List<Review> reviews = new ArrayList<>();\r\n                        for (DataSnapshot reviewSnapshot : snapshot.child(\"reviews\").getChildren()) {\r\n                            String authorName = reviewSnapshot.child(\"authorName\").getValue(String.class);\r\n                            int rating = reviewSnapshot.child(\"rating\").getValue(int.class);\r\n                            String text = reviewSnapshot.child(\"text\").getValue(String.class);\r\n                            reviews.add(new Review(authorName, rating, text));\r\n                        }\r\n                        ReviewAdapter reviewAdapter = new ReviewAdapter(reviews);\r\n                        binding.reviewRv.setAdapter(reviewAdapter);\r\n\r\n                        binding.reviewRv.setAdapter(new ReviewAdapter(reviews));\r\n\r\n                        String filePath = getIntent().getStringExtra(\"imageFilePath\");\r\n                        if (filePath != null){\r\n                            Bitmap bitmap = BitmapFactory.decodeFile(filePath);\r\n                            Drawable drawable = new BitmapDrawable(getResources(), bitmap);\r\n                            binding.destiImage.setBackground(drawable);\r\n                        }\r\n                        SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager()\r\n                                .findFragmentById(R.id.map);\r\n                        fragment.getMapAsync(googleMap -> {\r\n                            LatLng coordinate = new LatLng(latitude, longitude);\r\n                            MarkerOptions marker = new MarkerOptions();\r\n                            marker.position(coordinate);\r\n                            marker.title(title);\r\n                            googleMap.addMarker(marker);\r\n                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 15);\r\n                            googleMap.moveCamera(cameraUpdate);\r\n                            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(DestinationDetails.this, R.raw.map_style));\r\n                        });\r\n                    }\r\n                    @Override\r\n                    public void onCancelled(@NonNull DatabaseError error) {\r\n\r\n                    }\r\n                });\r\n    }\r\n\r\n    private void checkFavorite(){\r\n        DatabaseReference reference = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Users\");\r\n        reference.child(firebaseAuth.getUid()).child(\"Favorites\").child(destiId)\r\n                .addValueEventListener(new ValueEventListener() {\r\n                    @Override\r\n                    public void onDataChange(@NonNull DataSnapshot snapshot) {\r\n                        inFavorite = snapshot.exists();\r\n                        if(inFavorite){\r\n                            binding.saveItem.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.bookmark,0,0);\r\n                            binding.saveItem.setText(\"Remove from Bookmark\");\r\n                        }else{\r\n                            binding.saveItem.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.remove_bookmark,0,0);\r\n                            binding.saveItem.setText(\"Bookmark Place\");\r\n                        }\r\n                    }\r\n\r\n                    @Override\r\n                    public void onCancelled(@NonNull DatabaseError error) {\r\n\r\n                    }\r\n                });\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/Layout/DestinationDetails.java b/app/src/main/java/com/binus/pekalongancityguide/Layout/DestinationDetails.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/Layout/DestinationDetails.java	(revision 54078f9d9a3418681eb455f55318ab0ac765ed24)
++++ b/app/src/main/java/com/binus/pekalongancityguide/Layout/DestinationDetails.java	(date 1681543039654)
+@@ -305,6 +305,7 @@
+                             if (progressDialog != null) {
+                                 progressDialog.dismiss();
+                             }
++                            recreate();
+                             Log.d(TAG, "on Failure : " + e.getMessage());
+                     Toast.makeText(DestinationDetails.this, "Data upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                 });
+Index: app/src/main/java/com/binus/pekalongancityguide/Layout/ShowDestinationFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.Layout;\r\n\r\nimport android.os.Bundle;\r\nimport android.text.Editable;\r\nimport android.text.TextWatcher;\r\nimport android.util.Log;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.fragment.app.Fragment;\r\n\r\nimport com.binus.pekalongancityguide.Adapter.DestinationAdapter;\r\nimport com.binus.pekalongancityguide.ItemTemplate.Destination;\r\nimport com.binus.pekalongancityguide.databinding.FragmentShowDestinationBinding;\r\nimport com.google.firebase.database.DataSnapshot;\r\nimport com.google.firebase.database.DatabaseError;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\nimport com.google.firebase.database.ValueEventListener;\r\n\r\nimport java.util.ArrayList;\r\n\r\npublic class ShowDestinationFragment extends Fragment {\r\n    private String categoryId;\r\n    private String category;\r\n    private String uid;\r\n    private ArrayList<Destination> destinationArrayList;\r\n    private DestinationAdapter destinationAdapter;\r\n    private static final String TAG = \"DESTI_USER_TAG\";\r\n    private FragmentShowDestinationBinding binding;\r\n\r\n    public ShowDestinationFragment() {\r\n\r\n    }\r\n    public static ShowDestinationFragment newInstance(String categoryId, String category, String uid) {\r\n        ShowDestinationFragment fragment = new ShowDestinationFragment();\r\n        Bundle args = new Bundle();\r\n        args.putString(\"categoryId\", categoryId);\r\n        args.putString(\"category\", category);\r\n        args.putString(\"uid\", uid);\r\n        fragment.setArguments(args);\r\n        return fragment;\r\n    }\r\n\r\n    @Override\r\n    public void onCreate(Bundle savedInstanceState){\r\n        super.onCreate(savedInstanceState);\r\n        if(getArguments()!=null){\r\n            categoryId = getArguments().getString(\"categoryId\");\r\n            category = getArguments().getString(\"category\");\r\n            uid = getArguments().getString(\"uid\");\r\n        }\r\n    }\r\n    @Override\r\n    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,\r\n                             Bundle savedInstanceState) {\r\n        binding = FragmentShowDestinationBinding.inflate(LayoutInflater.from(getContext()), container, false);\r\n        if (category.equals(\"All\")) {\r\n            loadDestinations();\r\n        } else {\r\n            loadCategoriedDestination();\r\n        }\r\n        binding.searchDesti.addTextChangedListener(new TextWatcher() {\r\n            @Override\r\n            public void beforeTextChanged(CharSequence s, int start, int count, int after) {\r\n\r\n            }\r\n\r\n            @Override\r\n            public void onTextChanged(CharSequence s, int start, int before, int count) {\r\n                try {\r\n                    destinationAdapter.getFilter().filter(s);\r\n                }catch (Exception e){\r\n                    Log.d(TAG,\"onTextChanged :\"+e.getMessage());\r\n                }\r\n            }\r\n\r\n            @Override\r\n            public void afterTextChanged(Editable s) {\r\n\r\n            }\r\n        });\r\n        return binding.getRoot();\r\n    }\r\n    private void loadDestinations(){\r\n        destinationArrayList = new ArrayList<>();\r\n        DatabaseReference reference = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Destination\");\r\n        reference.addListenerForSingleValueEvent(new ValueEventListener() {\r\n            @Override\r\n            public void onDataChange(@NonNull DataSnapshot snapshot) {\r\n                destinationArrayList.clear();\r\n                for(DataSnapshot dataSnapshot : snapshot.getChildren()){\r\n                    Destination destination = dataSnapshot.getValue(Destination.class);\r\n                    destinationArrayList.add(destination);\r\n                }\r\n                destinationAdapter = new DestinationAdapter(getContext(),destinationArrayList);\r\n                binding.destiRv.setAdapter(destinationAdapter);\r\n            }\r\n            @Override\r\n            public void onCancelled(@NonNull DatabaseError error) {\r\n\r\n            }\r\n        });\r\n    }\r\n    private void loadCategoriedDestination(){\r\n        destinationArrayList = new ArrayList<>();\r\n        DatabaseReference reference = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Destination\");\r\n        reference.orderByChild(\"categoryId\").equalTo(categoryId)\r\n                .addListenerForSingleValueEvent(new ValueEventListener() {\r\n                    @Override\r\n                    public void onDataChange(@NonNull DataSnapshot snapshot) {\r\n                        destinationArrayList.clear();\r\n                        for(DataSnapshot dataSnapshot : snapshot.getChildren()){\r\n                            Destination destination = dataSnapshot.getValue(Destination.class);\r\n                            destinationArrayList.add(destination);\r\n\r\n                        }\r\n                        destinationAdapter = new DestinationAdapter(getContext(),destinationArrayList);\r\n                        binding.destiRv.setAdapter(destinationAdapter);\r\n                    }\r\n                    @Override\r\n                    public void onCancelled(@NonNull DatabaseError error) {\r\n\r\n                    }\r\n                });\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/Layout/ShowDestinationFragment.java b/app/src/main/java/com/binus/pekalongancityguide/Layout/ShowDestinationFragment.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/Layout/ShowDestinationFragment.java	(revision 54078f9d9a3418681eb455f55318ab0ac765ed24)
++++ b/app/src/main/java/com/binus/pekalongancityguide/Layout/ShowDestinationFragment.java	(date 1681546186629)
+@@ -67,7 +67,6 @@
+             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+ 
+             }
+-
+             @Override
+             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                 try {
+Index: app/src/main/java/com/binus/pekalongancityguide/Layout/Home.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.Layout;\r\n\r\nimport android.os.Bundle;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport com.binus.pekalongancityguide.R;\r\nimport com.etebarian.meowbottomnavigation.MeowBottomNavigation;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\n\r\npublic class Home extends AppCompatActivity {\r\n    private static final int home = 1;\r\n    HomeFragment homeFragment = new HomeFragment();\r\n    DestinationFragment destinationFragment = new DestinationFragment();\r\n    ConversationFragment conversationFragment = new ConversationFragment();\r\n    BookmarkFragment bookmarkFragment = new BookmarkFragment();\r\n    ProfileFragment profileFragment = new ProfileFragment();\r\n    private static final int desti = 2;\r\n    private static final int bm = 3;\r\n    private static final int convo = 4;\r\n    private static final int pr = 5;\r\n    private FirebaseAuth firebaseAuth;\r\n    MeowBottomNavigation bottomNavigationView;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_home);\r\n        bottomNavigationView = findViewById(R.id.bottom_navi);\r\n        getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();\r\n        bottomNavigationView.add(new MeowBottomNavigation.Model(home, R.drawable.ic_home));\r\n        bottomNavigationView.add(new MeowBottomNavigation.Model(desti, R.drawable.destination));\r\n        bottomNavigationView.add(new MeowBottomNavigation.Model(bm, R.drawable.remove_bookmark));\r\n        bottomNavigationView.add(new MeowBottomNavigation.Model(convo, R.drawable.chat));\r\n        bottomNavigationView.add(new MeowBottomNavigation.Model(pr, R.drawable.profile));\r\n\r\n        bottomNavigationView.setOnShowListener(item -> {\r\n            String name;\r\n            switch (item.getId()) {\r\n                case home:\r\n                    getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commitAllowingStateLoss();\r\n                    break;\r\n\r\n                case desti:\r\n                    getSupportFragmentManager().beginTransaction().replace(R.id.container, destinationFragment).commitAllowingStateLoss();\r\n                    break;\r\n\r\n                case bm:\r\n                    getSupportFragmentManager().beginTransaction().replace(R.id.container, bookmarkFragment).commitAllowingStateLoss();\r\n                    break;\r\n\r\n                case convo:\r\n                    getSupportFragmentManager().beginTransaction().replace(R.id.container, conversationFragment).commitAllowingStateLoss();\r\n                    break;\r\n\r\n                case pr:\r\n                    getSupportFragmentManager().beginTransaction().replace(R.id.container, profileFragment).commitAllowingStateLoss();\r\n                    break;\r\n            }\r\n        });\r\n\r\n        bottomNavigationView.setOnClickMenuListener(item -> {\r\n        });\r\n\r\n        bottomNavigationView.setOnReselectListener(item -> {\r\n        });\r\n        bottomNavigationView.show(home, true);\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/Layout/Home.java b/app/src/main/java/com/binus/pekalongancityguide/Layout/Home.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/Layout/Home.java	(revision 54078f9d9a3418681eb455f55318ab0ac765ed24)
++++ b/app/src/main/java/com/binus/pekalongancityguide/Layout/Home.java	(date 1681550266829)
+@@ -1,6 +1,7 @@
+ package com.binus.pekalongancityguide.Layout;
+ 
+ import android.os.Bundle;
++import android.widget.Toast;
+ 
+ import androidx.appcompat.app.AppCompatActivity;
+ 
+@@ -9,6 +10,7 @@
+ import com.google.firebase.auth.FirebaseAuth;
+ 
+ public class Home extends AppCompatActivity {
++    private long lastBackPressTime = 0;
+     private static final int home = 1;
+     HomeFragment homeFragment = new HomeFragment();
+     DestinationFragment destinationFragment = new DestinationFragment();
+@@ -66,4 +68,14 @@
+         });
+         bottomNavigationView.show(home, true);
+     }
++    @Override
++    public void onBackPressed() {
++        long currentTime = System.currentTimeMillis();
++        if (currentTime - lastBackPressTime < 2000) {
++            super.onBackPressed();
++        } else {
++            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
++            lastBackPressTime = currentTime;
++        }
++    }
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/binus/pekalongancityguide/Layout/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.Layout;\r\n\r\nimport android.app.ProgressDialog;\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\nimport android.util.Patterns;\r\nimport android.view.inputmethod.InputMethodManager;\r\nimport android.widget.Button;\r\nimport android.widget.EditText;\r\nimport android.widget.TextView;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport com.binus.pekalongancityguide.R;\r\nimport com.binus.pekalongancityguide.databinding.ActivityMainBinding;\r\nimport com.google.android.material.snackbar.Snackbar;\r\nimport com.google.android.material.textfield.TextInputLayout;\r\nimport com.google.firebase.FirebaseApp;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.auth.FirebaseUser;\r\nimport com.google.firebase.database.DataSnapshot;\r\nimport com.google.firebase.database.DatabaseError;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\nimport com.google.firebase.database.ValueEventListener;\r\n\r\nimport static android.content.ContentValues.TAG;\r\n\r\npublic class MainActivity extends AppCompatActivity {\r\n    private ActivityMainBinding binding;\r\n    Button login, noLogin;\r\n    EditText email, pass;\r\n    TextInputLayout til,etil;\r\n    FirebaseAuth firebaseAuth;\r\n    ProgressDialog progressDialog;\r\n    TextView register;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        FirebaseDatabase.getInstance().setPersistenceEnabled(true);\r\n        binding = ActivityMainBinding.inflate(getLayoutInflater());\r\n        setContentView(binding.getRoot());\r\n\r\n        progressDialog = new ProgressDialog(this);\r\n        progressDialog.setTitle(\"Please Wait\");\r\n        progressDialog.setCanceledOnTouchOutside(false);\r\n\r\n        FirebaseDatabase database = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\");\r\n        FirebaseApp.initializeApp(this);\r\n\r\n        FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference().keepSynced(true);\r\n\r\n        DatabaseReference myRef = database.getReference(\"path/to/data\");\r\n\r\n        init();\r\n\r\n        binding.noLogin.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, Home.class)));\r\n        binding.loginBtn.setOnClickListener(v -> {\r\n            validate();\r\n            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);\r\n            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);\r\n        });\r\n\r\n        binding.mainRegis.setOnClickListener(view -> {\r\n            Log.d(TAG, \"mainRegis is not null: \" + (binding.mainRegis != null));\r\n            Intent regisIntent = new Intent(MainActivity.this, Register.class);\r\n            startActivity(regisIntent);\r\n        });\r\n\r\n        til.getEditText().setOnFocusChangeListener((v, hasFocus) -> {\r\n            if (hasFocus) {\r\n                // The user has clicked on the text input layout\r\n                til.setPasswordVisibilityToggleEnabled(true);\r\n            }  // The user has left the text input layout\r\n\r\n        });\r\n\r\n    }\r\n\r\n    String Email, Password;\r\n    void init(){\r\n        login = findViewById(R.id.login_btn);\r\n        noLogin = findViewById(R.id.no_login);\r\n        email = findViewById(R.id.login_email);\r\n        pass = findViewById(R.id.login_pass);\r\n        til = findViewById(R.id.loginpass_til);\r\n        firebaseAuth = FirebaseAuth.getInstance();\r\n        register = findViewById(R.id.main_regis);\r\n        etil = findViewById(R.id.loginemail_til);\r\n    }\r\n    void validate() {\r\n        Email = binding.loginEmail.getText().toString().trim();\r\n        Password = binding.loginPass.getText().toString().trim();\r\n\r\n        boolean hasError = false;\r\n\r\n        if (Email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {\r\n            hasError = true;\r\n            email.setError(\"Invalid Email Address!\");\r\n        }\r\n\r\n        if (Password.isEmpty()) {\r\n            hasError = true;\r\n            pass.setError(\"All field must not be empty!\");\r\n            til.setPasswordVisibilityToggleEnabled(false);\r\n        }\r\n\r\n        if (!hasError) {\r\n            tryLogin();\r\n        }\r\n    }\r\n\r\n\r\n    private void tryLogin() {\r\n        progressDialog.setMessage(\"Logging in..\");\r\n        progressDialog.show();\r\n\r\n        firebaseAuth.signInWithEmailAndPassword(Email,Password)\r\n                .addOnSuccessListener(authResult -> checkUser())\r\n                .addOnFailureListener(e -> {\r\n                    progressDialog.dismiss();\r\n                    Snackbar.make(binding.getRoot(), e.getMessage(), Snackbar.LENGTH_SHORT).show();\r\n                });\r\n    }\r\n\r\n    private void checkUser() {\r\n        progressDialog.setMessage(\"Checking user..\");\r\n        FirebaseUser firebaseUser =firebaseAuth.getCurrentUser();\r\n        FirebaseDatabase database = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\");\r\n        DatabaseReference databaseReference = database.getReference(\"Users\");\r\n        databaseReference.child(firebaseUser.getUid())\r\n                .addListenerForSingleValueEvent(new ValueEventListener() {\r\n                    @Override\r\n                    public void onDataChange(@NonNull DataSnapshot snapshot) {\r\n                        progressDialog.dismiss();\r\n                        String userType = \"\" + snapshot.child(\"userType\").getValue();\r\n                        if (userType.equals(\"user\")) {\r\n                            startActivity(new Intent(MainActivity.this, Home.class));\r\n                            finish();\r\n                        } else if (userType.equals(\"admin\")) {\r\n                            startActivity(new Intent(MainActivity.this, AdminHome.class));\r\n                            finish();\r\n                        } else {\r\n                            Snackbar.make(binding.getRoot(), \"Wrong password!\", Snackbar.LENGTH_SHORT).show();\r\n                        }\r\n                    }\r\n\r\n                    @Override\r\n                    public void onCancelled(@NonNull DatabaseError error) {\r\n                        progressDialog.dismiss();\r\n                        Snackbar.make(binding.getRoot(), error.getMessage(), Snackbar.LENGTH_SHORT).show();\r\n                    }\r\n                });\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/Layout/MainActivity.java b/app/src/main/java/com/binus/pekalongancityguide/Layout/MainActivity.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/Layout/MainActivity.java	(revision 54078f9d9a3418681eb455f55318ab0ac765ed24)
++++ b/app/src/main/java/com/binus/pekalongancityguide/Layout/MainActivity.java	(date 1681550208473)
+@@ -9,6 +9,7 @@
+ import android.widget.Button;
+ import android.widget.EditText;
+ import android.widget.TextView;
++import android.widget.Toast;
+ 
+ import androidx.annotation.NonNull;
+ import androidx.appcompat.app.AppCompatActivity;
+@@ -29,6 +30,7 @@
+ import static android.content.ContentValues.TAG;
+ 
+ public class MainActivity extends AppCompatActivity {
++    private long lastBackPressTime = 0;
+     private ActivityMainBinding binding;
+     Button login, noLogin;
+     EditText email, pass;
+@@ -79,7 +81,16 @@
+         });
+ 
+     }
+-
++    @Override
++    public void onBackPressed() {
++        long currentTime = System.currentTimeMillis();
++        if (currentTime - lastBackPressTime < 2000) {
++            super.onBackPressed();
++        } else {
++            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
++            lastBackPressTime = currentTime;
++        }
++    }
+     String Email, Password;
+     void init(){
+         login = findViewById(R.id.login_btn);
+Index: app/src/main/java/com/binus/pekalongancityguide/Layout/BookmarkFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.Layout;\r\n\r\nimport android.os.Bundle;\r\nimport android.text.Editable;\r\nimport android.text.TextWatcher;\r\nimport android.util.Log;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.fragment.app.Fragment;\r\n\r\nimport com.binus.pekalongancityguide.Adapter.BookmarkAdapter;\r\nimport com.binus.pekalongancityguide.ItemTemplate.Destination;\r\nimport com.binus.pekalongancityguide.databinding.FragmentBookmarkBinding;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.database.DataSnapshot;\r\nimport com.google.firebase.database.DatabaseError;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\nimport com.google.firebase.database.ValueEventListener;\r\n\r\nimport java.util.ArrayList;\r\n\r\nimport static com.binus.pekalongancityguide.Layout.AddDestination.TAG;\r\n\r\npublic class BookmarkFragment extends Fragment {\r\n    private ArrayList<Destination> destinationArrayList;\r\n    private BookmarkAdapter bookmarkAdapter;\r\n    private FragmentBookmarkBinding binding;\r\n    private FirebaseAuth firebaseAuth;\r\n\r\n    @Override\r\n    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,\r\n                             Bundle savedInstanceState) {\r\n        binding = FragmentBookmarkBinding.inflate(LayoutInflater.from(getContext()), container, false);\r\n        firebaseAuth = FirebaseAuth.getInstance();\r\n        loadBookmark();\r\n        binding.searchBookmark.addTextChangedListener(new TextWatcher() {\r\n            @Override\r\n            public void beforeTextChanged(CharSequence s, int start, int count, int after) {\r\n\r\n            }\r\n\r\n            @Override\r\n            public void onTextChanged(CharSequence s, int start, int before, int count) {\r\n                try {\r\n                    bookmarkAdapter.getFilter().filter(s);\r\n                }catch (Exception e){\r\n                    Log.d(TAG,\"onTextChanged :\"+e.getMessage());\r\n                }\r\n            }\r\n\r\n            @Override\r\n            public void afterTextChanged(Editable s) {\r\n\r\n            }\r\n        });\r\n        return binding.getRoot();\r\n    }\r\n    private void loadBookmark(){\r\n        destinationArrayList = new ArrayList<>();\r\n        DatabaseReference reference = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Users\");\r\n        reference.child(firebaseAuth.getUid()).child(\"Favorites\")\r\n                .addValueEventListener(new ValueEventListener() {\r\n                    @Override\r\n                    public void onDataChange(@NonNull DataSnapshot snapshot) {\r\n                        destinationArrayList.clear();\r\n                        for(DataSnapshot dataSnapshot : snapshot.getChildren()){\r\n                            String destiId = \"\"+dataSnapshot.child(\"destiId\").getValue();\r\n                            Destination destination = new Destination();\r\n                            destination.setId(destiId);\r\n                            destinationArrayList.add(destination);\r\n                        }\r\n                            bookmarkAdapter = new BookmarkAdapter(getContext(),destinationArrayList);\r\n                            binding.destiRV.setAdapter(bookmarkAdapter);\r\n                    }\r\n\r\n                    @Override\r\n                    public void onCancelled(@NonNull DatabaseError error) {\r\n\r\n                    }\r\n                });\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/Layout/BookmarkFragment.java b/app/src/main/java/com/binus/pekalongancityguide/Layout/BookmarkFragment.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/Layout/BookmarkFragment.java	(revision 54078f9d9a3418681eb455f55318ab0ac765ed24)
++++ b/app/src/main/java/com/binus/pekalongancityguide/Layout/BookmarkFragment.java	(date 1681550162085)
+@@ -51,7 +51,6 @@
+                     Log.d(TAG,"onTextChanged :"+e.getMessage());
+                 }
+             }
+-
+             @Override
+             public void afterTextChanged(Editable s) {
+ 
+Index: app/src/main/java/com/binus/pekalongancityguide/Misc/MyApplication.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.Misc;\r\n\r\nimport android.app.Application;\r\nimport android.app.ProgressDialog;\r\nimport android.content.Context;\r\nimport android.text.format.DateFormat;\r\nimport android.util.Log;\r\nimport android.widget.Toast;\r\n\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\nimport com.google.firebase.storage.FirebaseStorage;\r\nimport com.google.firebase.storage.StorageReference;\r\n\r\nimport java.util.Calendar;\r\nimport java.util.HashMap;\r\nimport java.util.Locale;\r\n\r\npublic class MyApplication extends Application {\r\n    public static Locale locale;\r\n\r\n    @Override\r\n    public void onCreate() {\r\n        super.onCreate();\r\n        locale = new Locale(\"en\");\r\n    }\r\n    public static final String formatTimeStamp(long timestamp){\r\n        Calendar calendar = Calendar.getInstance(Locale.ENGLISH);\r\n        calendar.setTimeInMillis(timestamp);\r\n        String date = DateFormat.format(\"dd/MM/yyyy\",calendar).toString();\r\n        return date;\r\n    }\r\n    public static void deleteDesti(Context context, String destiId, String destiUrl, String destiTitle){\r\n        String TAG = \"DELETE_DESTI_TAG\";\r\n        Log.d(TAG,\"delete desti : Deleting..\");\r\n        ProgressDialog dialog = new ProgressDialog(context);\r\n        dialog.setTitle(\"Please Wait\");\r\n        dialog.setMessage(\"Deleting \"+destiTitle+\". . .\");\r\n        dialog.show();\r\n        Log.d(TAG,\"delete desti : Deleting from storage\");\r\n        StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(destiUrl);\r\n        reference.delete()\r\n                .addOnSuccessListener(unused -> {\r\n\r\n                    Log.d(TAG, \"onSuccess : Succesfully deleted data\");\r\n                    DatabaseReference reference1 = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Destination\");\r\n                    reference1.child(destiId)\r\n                            .removeValue()\r\n                            .addOnSuccessListener(unused1 -> {\r\n                                Log.d(TAG, \"onSuccess: data deleted from db\");\r\n                                dialog.dismiss();\r\n                                Toast.makeText(context, \"Destination Deleted Succesfully !\", Toast.LENGTH_SHORT).show();\r\n                            })\r\n                            .addOnFailureListener(e -> {\r\n                                Log.d(TAG, \"onFAilure: error deleting data because of\" + e.getMessage());\r\n                                dialog.dismiss();\r\n                                Toast.makeText(context, \"\" + e.getMessage(), Toast.LENGTH_SHORT).show();\r\n                            });\r\n                })\r\n                .addOnFailureListener(e -> {\r\n                    Log.d(TAG, \"onFailure: fail detele data due to\" + e.getMessage());\r\n                    dialog.dismiss();\r\n                });\r\n\r\n    }\r\n    public static void addtoFavorite(Context context, String destiId){\r\n        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();\r\n        if(firebaseAuth.getCurrentUser() == null){\r\n            Toast.makeText(context, \"You are not logged in!\", Toast.LENGTH_SHORT).show();\r\n        }else{\r\n            long timestamp = System.currentTimeMillis();\r\n            HashMap<String,Object> hashMap = new HashMap<>();\r\n            hashMap.put(\"destiId\",destiId);\r\n            hashMap.put(\"timestamp\",timestamp);\r\n            DatabaseReference reference = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Users\");\r\n            reference.child(firebaseAuth.getUid()).child(\"Favorites\").child(destiId)\r\n                    .setValue(hashMap)\r\n                    .addOnSuccessListener(unused -> Toast.makeText(context, \"Added to Bookmark\", Toast.LENGTH_SHORT).show())\r\n                    .addOnFailureListener(e -> Toast.makeText(context, \"Failed to Added favorites due to\" + e.getMessage(), Toast.LENGTH_SHORT).show());\r\n        }\r\n    }\r\n    public static void removeFavorite(Context context, String destiId){\r\n        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();\r\n        if(firebaseAuth.getCurrentUser()==null){\r\n            Toast.makeText(context, \"You are not logged in!\", Toast.LENGTH_SHORT).show();\r\n        }else{\r\n            DatabaseReference reference = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Users\");\r\n            reference.child(firebaseAuth.getUid()).child(\"Favorites\").child(destiId)\r\n                    .removeValue()\r\n                    .addOnSuccessListener(unused -> Toast.makeText(context, \"Removed from Bookmark\", Toast.LENGTH_SHORT).show())\r\n                    .addOnFailureListener(e -> Toast.makeText(context, \"Failed to remove favorites due to\" + e.getMessage(), Toast.LENGTH_SHORT).show());\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/Misc/MyApplication.java b/app/src/main/java/com/binus/pekalongancityguide/Misc/MyApplication.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/Misc/MyApplication.java	(revision 54078f9d9a3418681eb455f55318ab0ac765ed24)
++++ b/app/src/main/java/com/binus/pekalongancityguide/Misc/MyApplication.java	(date 1681549857411)
+@@ -19,6 +19,7 @@
+ 
+ public class MyApplication extends Application {
+     public static Locale locale;
++    private long lastBackPressTime = 0;
+ 
+     @Override
+     public void onCreate() {
+@@ -31,6 +32,7 @@
+         String date = DateFormat.format("dd/MM/yyyy",calendar).toString();
+         return date;
+     }
++
+     public static void deleteDesti(Context context, String destiId, String destiUrl, String destiTitle){
+         String TAG = "DELETE_DESTI_TAG";
+         Log.d(TAG,"delete desti : Deleting..");
+Index: app/src/main/java/com/binus/pekalongancityguide/Layout/Register.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.Layout;\r\n\r\nimport android.app.ProgressDialog;\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.text.TextUtils;\r\nimport android.util.Patterns;\r\nimport android.widget.Button;\r\nimport android.widget.EditText;\r\nimport android.widget.ImageButton;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport com.binus.pekalongancityguide.R;\r\nimport com.binus.pekalongancityguide.databinding.ActivityRegisterBinding;\r\nimport com.google.android.material.textfield.TextInputLayout;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\n\r\nimport java.util.HashMap;\r\n\r\npublic class Register extends AppCompatActivity {\r\n    FirebaseAuth firebaseAuth;\r\n    ImageButton back;\r\n    EditText user, email, pass, cpass;\r\n    TextInputLayout til, ctil, etil, util;\r\n    Button register;\r\n    ProgressDialog progressDialog;\r\n    private ActivityRegisterBinding binding;\r\n\r\n    private static final String USERNAME_EMPTY_ERROR = \"Username cannot be empty!\";\r\n    private static final String USERNAME_LENGTH_ERROR = \"Username must be between 3-12 characters!\";\r\n    private static final String EMAIL_EMPTY_ERROR = \"Email cannot be empty!\";\r\n    private static final String EMAIL_FORMAT_ERROR = \"Invalid Email Address!\";\r\n    private static final String PASSWORD_EMPTY_ERROR = \"Password cannot be empty!\";\r\n    private static final String PASSWORD_LENGTH_ERROR = \"Password must be more than 8 characters!\";\r\n    private static final String PASSWORD_NUMBER_ERROR = \"Password must contain at least one number!\";\r\n    private static final String PASSWORD_SYMBOL_ERROR = \"Password must contain at least one symbol!\";\r\n    private static final String PASSWORD_MATCH_ERROR = \"Password does not match!\";\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n\r\n        binding = ActivityRegisterBinding.inflate(getLayoutInflater());\r\n        setContentView(binding.getRoot());\r\n        progressDialog = new ProgressDialog(this);\r\n        progressDialog.setTitle(\"Please Wait\");\r\n        progressDialog.setCanceledOnTouchOutside(false);\r\n\r\n        init();\r\n\r\n        back.setOnClickListener(v -> onBackPressed());\r\n\r\n        binding.regisBtn.setOnClickListener(v -> validate());\r\n        til.getEditText().setOnFocusChangeListener((v, hasFocus) -> {\r\n            if (hasFocus) {\r\n                til.setPasswordVisibilityToggleEnabled(true);\r\n            } else {\r\n            }\r\n        });\r\n\r\n        ctil.getEditText().setOnFocusChangeListener((v, hasFocus) -> {\r\n            if (hasFocus) {\r\n                ctil.setPasswordVisibilityToggleEnabled(true);\r\n            } else {\r\n            }\r\n        });\r\n\r\n    }\r\n    String Username, Email, Password, Cfmpass;\r\n    void init(){\r\n        back = findViewById(R.id.backtoLogin);\r\n        user = findViewById(R.id.regis_user);\r\n        email = findViewById(R.id.regis_email);\r\n        pass = findViewById(R.id.regis_pass);\r\n        til = findViewById(R.id.regispass_til);\r\n        register = findViewById(R.id.regis_btn);\r\n        cpass = findViewById(R.id.regis_cpass);\r\n        ctil = findViewById(R.id.regiscpass_til);\r\n        etil = findViewById(R.id.regisemail_til);\r\n        util = findViewById(R.id.regisuser_til);\r\n        firebaseAuth = FirebaseAuth.getInstance();\r\n        setupListeners();\r\n    }\r\n\r\n    void validate() {\r\n        Username = binding.regisUser.getText().toString().trim();\r\n        Email = binding.regisEmail.getText().toString().trim();\r\n        Password = binding.regisPass.getText().toString().trim();\r\n        Cfmpass = binding.regisCpass.getText().toString().trim();\r\n        boolean allFieldsValid = true;\r\n\r\n        if (TextUtils.isEmpty(Username)) {\r\n            binding.regisUser.setError(USERNAME_EMPTY_ERROR);\r\n            allFieldsValid = false;\r\n        } else if (Username.length() < 3 || Username.length() > 12) {\r\n            binding.regisUser.setError(USERNAME_LENGTH_ERROR);\r\n            allFieldsValid = false;\r\n        } else {\r\n            binding.regisUser.setError(null);\r\n        }\r\n\r\n        if (TextUtils.isEmpty(Email)) {\r\n            binding.regisEmail.setError(EMAIL_EMPTY_ERROR);\r\n            allFieldsValid = false;\r\n        } else if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {\r\n            binding.regisEmail.setError(EMAIL_FORMAT_ERROR);\r\n            allFieldsValid = false;\r\n        } else {\r\n            binding.regisEmail.setError(null);\r\n        }\r\n\r\n        if (TextUtils.isEmpty(Password)) {\r\n            til.setPasswordVisibilityToggleEnabled(false); // remove toggle\r\n            pass.setError(PASSWORD_EMPTY_ERROR);\r\n            allFieldsValid = false;\r\n        } else if (Password.length() < 8) {\r\n            til.setPasswordVisibilityToggleEnabled(false); // remove toggle\r\n            pass.setError(PASSWORD_LENGTH_ERROR);\r\n            allFieldsValid = false;\r\n        } else if (!containsNumber(Password)) {\r\n            til.setPasswordVisibilityToggleEnabled(false); // remove toggle\r\n            pass.setError(PASSWORD_NUMBER_ERROR);\r\n            allFieldsValid = false;\r\n        } else if (!containsSymbol(Password)) {\r\n            til.setPasswordVisibilityToggleEnabled(false); // remove toggle\r\n            pass.setError(PASSWORD_SYMBOL_ERROR);\r\n            allFieldsValid = false;\r\n        } else {\r\n            til.setPasswordVisibilityToggleEnabled(true); // show toggle\r\n            pass.setError(null);\r\n        }\r\n\r\n        if (TextUtils.isEmpty(Cfmpass)) {\r\n            ctil.setPasswordVisibilityToggleEnabled(false); // remove toggle\r\n            cpass.setError(PASSWORD_EMPTY_ERROR);\r\n            allFieldsValid = false;\r\n        } else if (!Cfmpass.equals(Password)) {\r\n            ctil.setPasswordVisibilityToggleEnabled(false); // remove toggle\r\n            cpass.setError(PASSWORD_MATCH_ERROR);\r\n            allFieldsValid = false;\r\n        } else {\r\n            ctil.setPasswordVisibilityToggleEnabled(true); // show toggle\r\n            cpass.setError(null);\r\n        }\r\n\r\n        if (allFieldsValid) {\r\n            Toast.makeText(this, \"Registered successfully!\", Toast.LENGTH_SHORT).show();\r\n            createUser();\r\n        }\r\n    }\r\n\r\n    private boolean containsNumber(String password) {\r\n        return password.matches(\".*\\\\d.*\");\r\n    }\r\n\r\n    private boolean containsSymbol(String password) {\r\n        return password.matches(\".*[!@#$%^&*()].*\");\r\n    }\r\n\r\n    private void setupListeners() {\r\n        pass.setOnFocusChangeListener((view, hasFocus) -> {\r\n            if (!hasFocus) {\r\n                validate();\r\n            }\r\n        });\r\n        cpass.setOnFocusChangeListener((view, hasFocus) -> {\r\n            if (!hasFocus) {\r\n                validate();\r\n            }\r\n        });\r\n\r\n        til.getEditText().setOnFocusChangeListener((v, hasFocus) -> {\r\n            til.setPasswordVisibilityToggleEnabled(hasFocus);\r\n        });\r\n\r\n        ctil.getEditText().setOnFocusChangeListener((v, hasFocus) -> {\r\n            ctil.setPasswordVisibilityToggleEnabled(hasFocus);\r\n        });\r\n\r\n    }\r\n\r\n    private void createUser() {\r\n        progressDialog.setMessage(\"Creating account...\");\r\n        progressDialog.show();\r\n        firebaseAuth.createUserWithEmailAndPassword(Email, Password)\r\n                .addOnSuccessListener(authResult -> {\r\n                    progressDialog.dismiss();\r\n                    addUser();\r\n                })\r\n                .addOnFailureListener(e -> Toast.makeText(Register.this, \"\"+e.getMessage(), Toast.LENGTH_SHORT).show());\r\n    }\r\n\r\n    private void addUser() {\r\n        progressDialog.setMessage(\"Saving user info\");\r\n        long timestamp = System.currentTimeMillis();\r\n        String uid = firebaseAuth.getUid();\r\n        HashMap<String, Object> hashMap = new HashMap<>();\r\n        hashMap.put(\"uid\",uid);\r\n        hashMap.put(\"Email\",Email);\r\n        hashMap.put(\"Username\",Username);\r\n        hashMap.put(\"profileImage\",\"\");\r\n        hashMap.put(\"userType\",\"user\");\r\n        hashMap.put(\"timestamp\", timestamp);\r\n        FirebaseDatabase database = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\");\r\n        DatabaseReference databaseReference = database.getReference(\"Users\");\r\n        databaseReference.child(uid)\r\n                .setValue(hashMap)\r\n                .addOnSuccessListener(unused -> {\r\n                    progressDialog.dismiss();\r\n                    Toast.makeText(Register.this, \"Account created!\", Toast.LENGTH_SHORT).show();\r\n                    startActivity(new Intent(Register.this,MainActivity.class));\r\n                    finish();\r\n                })\r\n                .addOnFailureListener(e -> Toast.makeText(Register.this, \"\"+e.getMessage(), Toast.LENGTH_SHORT).show());\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/Layout/Register.java b/app/src/main/java/com/binus/pekalongancityguide/Layout/Register.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/Layout/Register.java	(revision 54078f9d9a3418681eb455f55318ab0ac765ed24)
++++ b/app/src/main/java/com/binus/pekalongancityguide/Layout/Register.java	(date 1681550266841)
+@@ -22,6 +22,7 @@
+ import java.util.HashMap;
+ 
+ public class Register extends AppCompatActivity {
++    private long lastBackPressTime = 0;
+     FirebaseAuth firebaseAuth;
+     ImageButton back;
+     EditText user, email, pass, cpass;
+@@ -152,7 +153,16 @@
+             createUser();
+         }
+     }
+-
++    @Override
++    public void onBackPressed() {
++        long currentTime = System.currentTimeMillis();
++        if (currentTime - lastBackPressTime < 2000) {
++            super.onBackPressed();
++        } else {
++            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
++            lastBackPressTime = currentTime;
++        }
++    }
+     private boolean containsNumber(String password) {
+         return password.matches(".*\\d.*");
+     }

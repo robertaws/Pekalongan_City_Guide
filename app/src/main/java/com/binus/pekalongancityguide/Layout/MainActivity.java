@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity {
+    private long lastBackPressTime = 0;
     private ActivityMainBinding binding;
     Button login, noLogin;
     EditText email, pass;
@@ -79,7 +81,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
+    @Override
+    public void onBackPressed() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastBackPressTime < 2000) {
+            super.onBackPressed();
+        } else {
+            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
+            lastBackPressTime = currentTime;
+        }
+    }
     String Email, Password;
     void init(){
         login = findViewById(R.id.login_btn);

@@ -51,7 +51,6 @@ public class BookmarkFragment extends Fragment {
                     Log.d(TAG,"onTextChanged :"+e.getMessage());
                 }
             }
-
             @Override
             public void afterTextChanged(Editable s) {
 

@@ -10,11 +10,12 @@ public class Itinerary implements Serializable {
     private final String destiId;
     private final String url;
     private final String durationText;
+    private final String uid;
     private final double latitude;
     private final double longitude;
     private final float distance;
 
-    public Itinerary(String date, String startTime, String endTime, String placeName, String destiId, String url, String durationText, double latitude, double longitude, float distance) {
+    public Itinerary(String date, String startTime, String endTime, String placeName, String destiId, String url, String durationText, String uid, double latitude, double longitude, float distance) {
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -22,6 +23,7 @@ public class Itinerary implements Serializable {
         this.destiId = destiId;
         this.url = url;
         this.durationText = durationText;
+        this.uid = uid;
         this.latitude = latitude;
         this.longitude = longitude;
         this.distance = distance;
@@ -53,6 +55,10 @@ public class Itinerary implements Serializable {
 
     public String getDurationText() {
         return durationText;
+    }
+
+    public String getUid() {
+        return uid;
     }
 
     public double getLatitude() {

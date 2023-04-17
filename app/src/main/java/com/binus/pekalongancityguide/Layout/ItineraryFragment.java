@@ -65,14 +65,30 @@ public class ItineraryFragment extends Fragment {
     private final List<Itinerary> itineraryList = new ArrayList<>();
     ItineraryAdapter adapter;
     PlacesClient placesClient;
+    private String date, uid;
     private FirebaseAuth firebaseAuth;
     private FusedLocationProviderClient fusedLocationClient;
     private final FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
-    public ItineraryFragment() {}
+
+    public ItineraryFragment() {
+    }
+
+    public static ItineraryFragment newInstance(String date, String uid) {
+        ItineraryFragment fragment = new ItineraryFragment();
+        Bundle args = new Bundle();
+        args.putString("date", date);
+        args.putString("uid", uid);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            date = getArguments().getString("date");
+            uid = getArguments().getString("uid");
+        }
     }
 
     @Override
@@ -82,6 +98,7 @@ public class ItineraryFragment extends Fragment {
         Places.initialize(getContext().getApplicationContext(), apiKey);
         placesClient = Places.createClient(getContext());
         firebaseAuth = FirebaseAuth.getInstance();
+        uid = firebaseAuth.getUid();
         adapter = new ItineraryAdapter(getContext(), itineraryList);
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -90,15 +107,12 @@ public class ItineraryFragment extends Fragment {
                 // Do something with the new location
                 Log.d("Location", "Latitude: " + location.getLatitude() + ", Longitude: " + location.getLongitude());
             }
-
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
             }
-
             @Override
             public void onProviderEnabled(String provider) {
             }
-
             @Override
             public void onProviderDisabled(String provider) {
             }
@@ -132,9 +146,9 @@ public class ItineraryFragment extends Fragment {
         }
     }
     private void loadItinerary() {
-        DatabaseReference userRef = database.getReference("Users").child(firebaseAuth.getUid());
-        Query itineraryQuery = userRef.child("itinerary");
-        itineraryQuery.addValueEventListener(new ValueEventListener() {
+        DatabaseReference userRef = database.getReference("Users").child(uid);
+        Query itineraryQuery = userRef.child("itinerary").orderByChild("date").equalTo(date);
+        itineraryQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<Itinerary> itineraryList = new ArrayList<>();
@@ -171,7 +185,7 @@ public class ItineraryFragment extends Fragment {
                                         float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
                                         Log.d(TAG, "Distance: " + distance);
                                         calculateDuration(currentLat, currentLng, placeLat, placeLng, durationText -> {
-                                            itineraryList.add(new Itinerary(date, startTime, endTime, placeName, destiId, url, durationText, placeLat, placeLng, distance));
+                                            itineraryList.add(new Itinerary(date, startTime, endTime, placeName, destiId, url, durationText, uid, placeLat, placeLng, distance));
                                             sortItineraryList(itineraryList);
                                             // Set the sorted itineraryList to the adapter
                                             ItineraryAdapter adapter = new ItineraryAdapter(getContext(), itineraryList);
