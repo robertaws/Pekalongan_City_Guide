@@ -84,6 +84,7 @@ public class ItineraryList extends AppCompatActivity {
     public class ItineraryPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> fragments;
         private final List<String> dates;
+        private String selectedDate;
 
         public ItineraryPagerAdapter(Context context, FragmentManager fm, List<Fragment> fragments, List<String> dates) {
             super(fm);
@@ -93,7 +94,12 @@ public class ItineraryList extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return fragments.get(position);
+            Fragment fragment = fragments.get(position);
+            Bundle args = fragment.getArguments();
+            args.putString("selectedDate", selectedDate);
+            Log.d(TAG, "passed date: " + args);
+            fragment.setArguments(args);
+            return fragment;
         }
 
         @Override
@@ -104,6 +110,11 @@ public class ItineraryList extends AppCompatActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             return dates.get(position);
+        }
+
+        public void setSelectedDate(String date) {
+            this.selectedDate = date;
+            notifyDataSetChanged();
         }
     }
 
