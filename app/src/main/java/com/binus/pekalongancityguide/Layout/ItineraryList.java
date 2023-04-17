@@ -44,12 +44,20 @@ public class ItineraryList extends Fragment {
     private FragmentItineraryListBinding binding;
     private final FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private FirebaseAuth firebaseAuth;
-
-
     public ItineraryList() {}
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentItineraryListBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
+        binding.backtoprofile.setOnClickListener(v -> {
+            getActivity().onBackPressed();
+        });
         firebaseAuth = FirebaseAuth.getInstance();
         DatabaseReference userRef = database.getReference("Users").child(Objects.requireNonNull(firebaseAuth.getUid()));
         Query itineraryQuery = userRef.child("itinerary");
@@ -65,9 +73,7 @@ public class ItineraryList extends Fragment {
                         dates.add(date);
                     }
                 }
-
                 List<Fragment> fragments = createFragmentsList(dates);
-
                 ItineraryPagerAdapter vpAdapter = new ItineraryPagerAdapter(getContext(), getActivity().getSupportFragmentManager(), fragments, dates);
                 binding.viewPager.setAdapter(vpAdapter);
                 binding.itineraryTab.setupWithViewPager(binding.viewPager);
@@ -79,17 +85,7 @@ public class ItineraryList extends Fragment {
                 // Handle error
             }
         });
-    }
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        binding = FragmentItineraryListBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
-        binding.backtoprofile.setOnClickListener(v -> {
-            getActivity().onBackPressed();
-        });
         return view;
-
     }
 
     public class ItineraryPagerAdapter extends FragmentPagerAdapter {
