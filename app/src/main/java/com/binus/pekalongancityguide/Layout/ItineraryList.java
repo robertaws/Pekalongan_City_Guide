@@ -1,24 +1,27 @@
 package com.binus.pekalongancityguide.Layout;
 
+import static android.content.ContentValues.TAG;
 
 import android.content.Context;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-
+import com.binus.pekalongancityguide.Layout.ItineraryFragment;
 import com.binus.pekalongancityguide.R;
-import com.binus.pekalongancityguide.databinding.ActivityItineraryListBinding;
+import com.binus.pekalongancityguide.databinding.FragmentItineraryListBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,25 +40,17 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import static android.content.ContentValues.TAG;
-
-public class ItineraryList extends AppCompatActivity {
-    public ActivityItineraryListBinding binding;
+public class ItineraryList extends Fragment {
+    private FragmentItineraryListBinding binding;
     private final FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private FirebaseAuth firebaseAuth;
 
+
+    public ItineraryList() {}
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         firebaseAuth = FirebaseAuth.getInstance();
-        binding = ActivityItineraryListBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        binding.backtoprofile.setOnClickListener(v -> {
-            onBackPressed();
-        });
-
-        // Fetch data from Firebase and create list of dates
         DatabaseReference userRef = database.getReference("Users").child(Objects.requireNonNull(firebaseAuth.getUid()));
         Query itineraryQuery = userRef.child("itinerary");
         itineraryQuery.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -73,10 +68,10 @@ public class ItineraryList extends AppCompatActivity {
 
                 List<Fragment> fragments = createFragmentsList(dates);
 
-                ItineraryPagerAdapter vpAdapter = new ItineraryPagerAdapter(ItineraryList.this, getSupportFragmentManager(), fragments, dates);
+                ItineraryPagerAdapter vpAdapter = new ItineraryPagerAdapter(getContext(), getActivity().getSupportFragmentManager(), fragments, dates);
                 binding.viewPager.setAdapter(vpAdapter);
                 binding.itineraryTab.setupWithViewPager(binding.viewPager);
-                binding.itineraryTab.setSelectedTabIndicatorColor(ContextCompat.getColor(ItineraryList.this, R.color.white));
+                binding.itineraryTab.setSelectedTabIndicatorColor(ContextCompat.getColor(getContext(), R.color.white));
             }
 
             @Override
@@ -85,9 +80,19 @@ public class ItineraryList extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentItineraryListBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
+        binding.backtoprofile.setOnClickListener(v -> {
+            getActivity().onBackPressed();
+        });
+        return view;
+
+    }
 
     public class ItineraryPagerAdapter extends FragmentPagerAdapter {
-
         private final List<Fragment> fragments;
         private final List<String> dates;
 
@@ -124,7 +129,7 @@ public class ItineraryList extends AppCompatActivity {
     private List<Fragment> createEmptyFragments(List<String> emptyDates) {
         List<Fragment> fragments = new ArrayList<>();
         for (String date : emptyDates) {
-            fragments.add(new EmptyFragment());
+            fragments.add(new com.binus.pekalongancityguide.Layout.ItineraryList.EmptyFragment());
         }
         return fragments;
     }
@@ -158,7 +163,7 @@ public class ItineraryList extends AppCompatActivity {
                 dayCount++; // increment the day count
             } catch (ParseException e) {
                 Log.e("ItineraryList", "Error parsing date: " + date, e);
-                Toast.makeText(ItineraryList.this, "Error parsing date: " + date, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error parsing date: " + date, Toast.LENGTH_SHORT).show();
             }
         }
         fragments.addAll(createEmptyFragments(emptyDates));
@@ -174,7 +179,7 @@ public class ItineraryList extends AppCompatActivity {
             return targetDateFormat.format(date);
         } catch (ParseException e) {
             Log.e("ItineraryList", "Error parsing date: " + dateStr, e);
-            Toast.makeText(ItineraryList.this, "Error parsing date: " + dateStr, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Error parsing date: " + dateStr, Toast.LENGTH_SHORT).show();
             return "";
         }
     }

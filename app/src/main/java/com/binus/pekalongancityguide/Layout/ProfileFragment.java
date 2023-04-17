@@ -10,9 +10,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.binus.pekalongancityguide.Misc.ImageFullscreen;
 import com.binus.pekalongancityguide.Misc.MyApplication;
+import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.FragmentProfileBinding;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,8 +56,10 @@ public class ProfileFragment extends Fragment {
             logoutConfirm();
         });
         binding.showItineraryBtn.setOnClickListener(v -> {
-            Intent showIniterary = new Intent(getActivity(), ItineraryList.class);
-            startActivity(showIniterary);
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.container, new ItineraryList());
+            transaction.addToBackStack(null);
+            transaction.commit();
         });
         return view;
     }

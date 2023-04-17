@@ -20,13 +20,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <ImageButton
                 android:id="@+id/backtoprofile"
                 android:layout_gravity="center_vertical"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="#0000"
-                android:src="@drawable/back_icon"/>
+                android:src="@drawable/back_icon" />
 
             <TextView
                 android:layout_marginLeft="10dp"
@@ -38,6 +39,7 @@
                 android:textSize="20dp"
                 android:textColor="@color/palette_1" />
         </LinearLayout>
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/itinerary_tab"
             android:layout_width="match_parent"
@@ -50,9 +52,10 @@
             app:tabTextColor="@color/palette_2"
             app:tabSelectedTextColor="@color/palette_4"
             app:tabIndicatorFullWidth="false" />
+
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
     </LinearLayout>
 </layout>
