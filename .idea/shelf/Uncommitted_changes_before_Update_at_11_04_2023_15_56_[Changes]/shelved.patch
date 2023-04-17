@@ -1,0 +1,277 @@
+Index: app/src/main/java/com/binus/pekalongancityguide/Adapter/ItineraryAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.Adapter;\r\n\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.TextView;\r\n\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport com.binus.pekalongancityguide.ItemTemplate.Itinerary;\r\nimport com.binus.pekalongancityguide.R;\r\n\r\nimport java.util.List;\r\n\r\npublic class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.ItineraryViewHolder> {\r\n    private final List<Itinerary> itineraryList;\r\n\r\n    public ItineraryAdapter(List<Itinerary> itineraryList) {\r\n        this.itineraryList = itineraryList;\r\n    }\r\n\r\n    @Override\r\n    public ItineraryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {\r\n        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_itinerary, parent, false);\r\n        return new ItineraryViewHolder(view);\r\n    }\r\n\r\n    @Override\r\n    public void onBindViewHolder(ItineraryViewHolder holder, int position) {\r\n        Itinerary itinerary = itineraryList.get(position);\r\n        holder.dateTextView.setText(itinerary.getDate());\r\n        holder.startTimeTextView.setText(itinerary.getStartTime());\r\n        holder.endTimeTextView.setText(itinerary.getEndTime());\r\n        holder.placeNameTextView.setText(itinerary.getPlaceId());\r\n    }\r\n\r\n    @Override\r\n    public int getItemCount() {\r\n        return itineraryList.size();\r\n    }\r\n\r\n    public static class ItineraryViewHolder extends RecyclerView.ViewHolder {\r\n        public TextView dateTextView, startTimeTextView, endTimeTextView, placeNameTextView;\r\n\r\n        public ItineraryViewHolder(View itemView) {\r\n            super(itemView);\r\n            dateTextView = itemView.findViewById(R.id.dateTextView);\r\n            startTimeTextView = itemView.findViewById(R.id.startTimeTextView);\r\n            endTimeTextView = itemView.findViewById(R.id.endTimeTextView);\r\n            placeNameTextView = itemView.findViewById(R.id.placeNameTextView);\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/Adapter/ItineraryAdapter.java b/app/src/main/java/com/binus/pekalongancityguide/Adapter/ItineraryAdapter.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/Adapter/ItineraryAdapter.java	(revision cee97813a1549ca3cf73b1f31e3ab6e56416aa9c)
++++ b/app/src/main/java/com/binus/pekalongancityguide/Adapter/ItineraryAdapter.java	(date 1681123617910)
+@@ -1,5 +1,4 @@
+ package com.binus.pekalongancityguide.Adapter;
+-
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
+@@ -9,6 +8,8 @@
+ 
+ import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
+ import com.binus.pekalongancityguide.R;
++import com.github.vipulasri.timelineview.TimelineView;
++
+ 
+ import java.util.List;
+ 
+@@ -22,7 +23,7 @@
+     @Override
+     public ItineraryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_itinerary, parent, false);
+-        return new ItineraryViewHolder(view);
++        return new ItineraryViewHolder(view, viewType);
+     }
+ 
+     @Override
+@@ -32,6 +33,17 @@
+         holder.startTimeTextView.setText(itinerary.getStartTime());
+         holder.endTimeTextView.setText(itinerary.getEndTime());
+         holder.placeNameTextView.setText(itinerary.getPlaceId());
++
++        if(position == 0) {
++            holder.mTimelineView.setMarker(holder.itemView.getContext().getDrawable(R.drawable.marker_inactive));
++            holder.mTimelineView.setStartLine(null, 0);
++        } else if(position == itineraryList.size()-1) {
++            holder.mTimelineView.setMarker(holder.itemView.getContext().getDrawable(R.drawable.marker_active));
++            holder.mTimelineView.setEndLine(null, 0);
++        } else {
++            holder.mTimelineView.setMarker(holder.itemView.getContext().getDrawable(R.drawable.marker_inactive));
++            holder.mTimelineView.setLine(null, 0);
++        }
+     }
+ 
+     @Override
+@@ -39,11 +51,19 @@
+         return itineraryList.size();
+     }
+ 
++    @Override
++    public int getItemViewType(int position) {
++        return TimelineView.getTimeLineViewType(position, getItemCount());
++    }
++
+     public static class ItineraryViewHolder extends RecyclerView.ViewHolder {
+         public TextView dateTextView, startTimeTextView, endTimeTextView, placeNameTextView;
++        public TimelineView mTimelineView;
+ 
+-        public ItineraryViewHolder(View itemView) {
++        public ItineraryViewHolder(View itemView, int viewType) {
+             super(itemView);
++            mTimelineView = itemView.findViewById(R.id.timelineView);
++            mTimelineView.initLine(viewType);
+             dateTextView = itemView.findViewById(R.id.dateTextView);
+             startTimeTextView = itemView.findViewById(R.id.startTimeTextView);
+             endTimeTextView = itemView.findViewById(R.id.endTimeTextView);
+Index: app/src/main/res/layout/list_itinerary.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.cardview.widget.CardView xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    android:id=\"@+id/itinerary_item_cardview\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"wrap_content\"\r\n    android:layout_margin=\"8dp\"\r\n    android:elevation=\"4dp\">\r\n\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"vertical\">\r\n\r\n        <TextView\r\n            android:id=\"@+id/dateTextView\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:padding=\"8dp\"\r\n            android:textAppearance=\"?attr/textAppearanceListItem\"\r\n            android:textColor=\"@color/black\"\r\n            android:textStyle=\"bold\" />\r\n\r\n        <TextView\r\n            android:id=\"@+id/placeNameTextView\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:padding=\"8dp\"\r\n            android:textAppearance=\"?attr/textAppearanceListItem\"\r\n            android:textColor=\"@color/black\"\r\n            android:textStyle=\"bold\" />\r\n\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:orientation=\"horizontal\">\r\n\r\n            <TextView\r\n                android:id=\"@+id/startTimeTextView\"\r\n                android:layout_width=\"0dp\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_weight=\"1\"\r\n                android:padding=\"8dp\"\r\n                android:textAppearance=\"?attr/textAppearanceListItem\"\r\n                android:textColor=\"@color/black\" />\r\n\r\n            <TextView\r\n                android:id=\"@+id/endTimeTextView\"\r\n                android:layout_width=\"0dp\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_weight=\"1\"\r\n                android:padding=\"8dp\"\r\n                android:textAppearance=\"?attr/textAppearanceListItem\"\r\n                android:textColor=\"@color/black\" />\r\n        </LinearLayout>\r\n    </LinearLayout>\r\n</androidx.cardview.widget.CardView>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/list_itinerary.xml b/app/src/main/res/layout/list_itinerary.xml
+--- a/app/src/main/res/layout/list_itinerary.xml	(revision cee97813a1549ca3cf73b1f31e3ab6e56416aa9c)
++++ b/app/src/main/res/layout/list_itinerary.xml	(date 1681122491620)
+@@ -1,56 +1,75 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:id="@+id/itinerary_item_cardview"
+-    android:layout_width="match_parent"
+-    android:layout_height="wrap_content"
+-    android:layout_margin="8dp"
+-    android:elevation="4dp">
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    android:layout_width="match_parent"
++    android:layout_height="wrap_content"
++    android:orientation="horizontal"
++    android:padding="8dp">
++
++    <com.github.vipulasri.timelineview.TimelineView
++        android:id="@+id/timelineView"
++        android:layout_width="wrap_content"
++        android:layout_height="match_parent"
++        android:layout_marginRight="8dp"
++        android:layout_weight="1"
++        android:background="@color/black"
++        android:padding="8dp"
++        android:textColor="@color/white"
++        android:textSize="12sp"
++        android:textStyle="bold"
++        android:typeface="sans" />
++
++    <androidx.cardview.widget.CardView
++        android:id="@+id/itinerary_item_cardview"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:elevation="4dp">
+ 
+-    <LinearLayout
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:orientation="vertical">
++        <LinearLayout
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:orientation="vertical">
+ 
+-        <TextView
+-            android:id="@+id/dateTextView"
+-            android:layout_width="match_parent"
+-            android:layout_height="wrap_content"
+-            android:padding="8dp"
+-            android:textAppearance="?attr/textAppearanceListItem"
+-            android:textColor="@color/black"
+-            android:textStyle="bold" />
++            <TextView
++                android:id="@+id/dateTextView"
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:padding="8dp"
++                android:textAppearance="?attr/textAppearanceListItem"
++                android:textColor="@color/black"
++                android:textStyle="bold" />
+ 
+-        <TextView
+-            android:id="@+id/placeNameTextView"
+-            android:layout_width="match_parent"
+-            android:layout_height="wrap_content"
+-            android:padding="8dp"
+-            android:textAppearance="?attr/textAppearanceListItem"
+-            android:textColor="@color/black"
+-            android:textStyle="bold" />
++            <TextView
++                android:id="@+id/placeNameTextView"
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:padding="8dp"
++                android:textAppearance="?attr/textAppearanceListItem"
++                android:textColor="@color/black"
++                android:textStyle="bold" />
+ 
+-        <LinearLayout
+-            android:layout_width="match_parent"
+-            android:layout_height="wrap_content"
+-            android:orientation="horizontal">
++            <LinearLayout
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:orientation="horizontal">
+ 
+-            <TextView
+-                android:id="@+id/startTimeTextView"
+-                android:layout_width="0dp"
+-                android:layout_height="wrap_content"
+-                android:layout_weight="1"
+-                android:padding="8dp"
+-                android:textAppearance="?attr/textAppearanceListItem"
+-                android:textColor="@color/black" />
++                <TextView
++                    android:id="@+id/startTimeTextView"
++                    android:layout_width="0dp"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:padding="8dp"
++                    android:textAppearance="?attr/textAppearanceListItem"
++                    android:textColor="@color/black" />
+ 
+-            <TextView
+-                android:id="@+id/endTimeTextView"
+-                android:layout_width="0dp"
+-                android:layout_height="wrap_content"
+-                android:layout_weight="1"
+-                android:padding="8dp"
+-                android:textAppearance="?attr/textAppearanceListItem"
+-                android:textColor="@color/black" />
+-        </LinearLayout>
+-    </LinearLayout>
+-</androidx.cardview.widget.CardView>
++                <TextView
++                    android:id="@+id/endTimeTextView"
++                    android:layout_width="0dp"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:padding="8dp"
++                    android:textAppearance="?attr/textAppearanceListItem"
++                    android:textColor="@color/black" />
++            </LinearLayout>
++        </LinearLayout>
++    </androidx.cardview.widget.CardView>
++</LinearLayout>
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\r\n    id 'com.android.application'\r\n    id 'com.google.gms.google-services'\r\n    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'\r\n}\r\n\r\nandroid {\r\n    compileSdk 33\r\n\r\n    buildFeatures {\r\n        dataBinding true\r\n    }\r\n    defaultConfig {\r\n        applicationId \"com.binus.pekalongancityguide\"\r\n        minSdk 23\r\n        targetSdk 33\r\n        versionCode 1\r\n        versionName \"1.0\"\r\n\r\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            minifyEnabled false\r\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\r\n        }\r\n    }\r\n    compileOptions {\r\n        sourceCompatibility JavaVersion.VERSION_1_8\r\n        targetCompatibility JavaVersion.VERSION_1_8\r\n    }\r\n    namespace 'com.binus.pekalongancityguide'\r\n}\r\n\r\ndependencies {\r\n    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.7.21'\r\n    implementation 'com.github.lriccardo:TimelineView:1.1.2'\r\n    implementation 'com.google.android.gms:play-services-maps:18.1.0'\r\n    implementation 'androidx.appcompat:appcompat:1.6.1'\r\n    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'\r\n    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'\r\n    implementation 'com.google.android.material:material:1.8.0'\r\n    implementation 'com.github.denzcoskun:ImageSlideShow:0.1.0'\r\n    implementation 'com.github.chetankoli1.BottomNavigation:chetanbottomnavigation:0.0.3'\r\n    implementation 'com.etebarian:meow-bottom-navigation-java:1.2.0'\r\n    implementation 'androidx.navigation:navigation-fragment:2.5.3'\r\n    implementation 'com.github.bumptech.glide:glide:4.15.0'\r\n    implementation 'com.squareup.okhttp3:okhttp:4.9.3'\r\n    implementation 'com.firebaseui:firebase-ui-auth:8.0.0'\r\n    implementation 'com.google.code.gson:gson:2.9.0'\r\n    implementation 'com.google.firebase:firebase-auth:21.2.0'\r\n    implementation 'com.google.firebase:firebase-database:20.1.0'\r\n    implementation 'com.google.firebase:firebase-storage:20.1.0'\r\n    implementation 'com.google.android.libraries.places:places:3.0.0'\r\n    implementation 'com.google.openlocationcode:openlocationcode:1.0.4'\r\n    implementation 'com.squareup.retrofit2:retrofit:2.9.0'\r\n    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'\r\n    implementation 'com.squareup.picasso:picasso:2.71828'\r\n    implementation 'com.github.chrisbanes:PhotoView:2.3.0'\r\n    implementation 'com.github.KwabenBerko:News-API-Java:1.0.2'\r\n    testImplementation 'junit:junit:4.13.2'\r\n    annotationProcessor 'com.github.bumptech.glide:compiler:4.15.0'\r\n    androidTestImplementation 'androidx.test.ext:junit:1.1.5'\r\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle b/app/build.gradle
+--- a/app/build.gradle	(revision cee97813a1549ca3cf73b1f31e3ab6e56416aa9c)
++++ b/app/build.gradle	(date 1681118324361)
+@@ -34,8 +34,8 @@
+ }
+ 
+ dependencies {
++    implementation 'com.github.vipulasri:timelineview:1.1.5'
+     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.7.21'
+-    implementation 'com.github.lriccardo:TimelineView:1.1.2'
+     implementation 'com.google.android.gms:play-services-maps:18.1.0'
+     implementation 'androidx.appcompat:appcompat:1.6.1'
+     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+Index: app/src/main/res/drawable/marker_inactive.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/drawable/marker_inactive.xml b/app/src/main/res/drawable/marker_inactive.xml
+new file mode 100644
+--- /dev/null	(date 1681123302460)
++++ b/app/src/main/res/drawable/marker_inactive.xml	(date 1681123302460)
+@@ -0,0 +1,15 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24"
++    android:tint="@android:color/darker_gray"
++    android:alpha="0.8">
++    <path
++        android:fillColor="@android:color/transparent"
++        android:pathData="M12,22A10,10 0,1 1,22 12A10,10 0,0 1,12 22ZM12,2A10,10 0,1 0,22 12A10,10 0,0 0,12 2Z"/>
++    <path
++        android:fillColor="@android:color/darker_gray"
++        android:pathData="M12,18L12,8M12,18L18,12M12,18L6,12"/>
++</vector>
++
+Index: app/src/main/res/drawable/marker_active.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/drawable/marker_active.xml b/app/src/main/res/drawable/marker_active.xml
+new file mode 100644
+--- /dev/null	(date 1681123323790)
++++ b/app/src/main/res/drawable/marker_active.xml	(date 1681123323790)
+@@ -0,0 +1,14 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="24dp"
++    android:height="24dp"
++    android:viewportWidth="24"
++    android:viewportHeight="24"
++    android:tint="@color/colorPrimary"
++    android:alpha="0.8">
++    <path
++        android:fillColor="@android:color/transparent"
++        android:pathData="M12,22A10,10 0,1 1,22 12A10,10 0,0 1,12 22ZM12,2A10,10 0,1 0,22 12A10,10 0,0 0,12 2Z"/>
++    <path
++        android:fillColor="@color/colorPrimary"
++        android:pathData="M12,18L12,8M12,18L18,12M12,18L6,12"/>
++</vector>

@@ -1,0 +1,612 @@
+Index: app/src/main/res/layout/list_itinerary.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.cardview.widget.CardView xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    android:id=\"@+id/itinerary_item_cardview\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"wrap_content\"\r\n    android:layout_margin=\"16dp\"\r\n    android:layout_marginVertical=\"8dp\"\r\n    app:cardBackgroundColor=\"@color/white\"\r\n    app:cardCornerRadius=\"8dp\"\r\n    app:cardElevation=\"4dp\">\r\n\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        android:layout_gravity=\"center_horizontal\">\r\n\r\n        <LinearLayout\r\n            android:layout_marginStart=\"5dp\"\r\n            android:layout_width=\"125dp\"\r\n            android:layout_height=\"match_parent\"\r\n            android:orientation=\"vertical\"\r\n            android:gravity=\"center\">\r\n\r\n            <TextView\r\n                android:id=\"@+id/startTimeTextView\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"8dp\"\r\n                android:textAppearance=\"?attr/textAppearanceListItem\"\r\n                android:textColor=\"@color/black\"\r\n                android:layout_marginTop=\"8dp\"\r\n                android:textAlignment=\"center\" />\r\n\r\n            <com.binus.pekalongancityguide.Misc.DottedLineView\r\n                android:layout_width=\"3dp\"\r\n                android:layout_height=\"50dp\" />\r\n\r\n            <TextView\r\n                android:id=\"@+id/endTimeTextView\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"8dp\"\r\n                android:textAppearance=\"?attr/textAppearanceListItem\"\r\n                android:textColor=\"@color/black\"\r\n                android:layout_marginBottom=\"8dp\"\r\n                android:textAlignment=\"center\" />\r\n\r\n        </LinearLayout>\r\n\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"match_parent\"\r\n            android:orientation=\"vertical\"\r\n            android:padding=\"8dp\">\r\n\r\n            <TextView\r\n                android:id=\"@+id/dateTextView\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"8dp\"\r\n                android:textAppearance=\"?attr/textAppearanceListItem\"\r\n                android:textColor=\"@color/black\"\r\n                android:textStyle=\"bold\"\r\n                android:layout_weight=\"1\" />\r\n\r\n            <TextView\r\n                android:id=\"@+id/placeNameTextView\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"8dp\"\r\n                android:textAppearance=\"?attr/textAppearanceListItem\"\r\n                android:textColor=\"@color/black\"\r\n                android:textStyle=\"bold\"\r\n                android:layout_weight=\"1\" />\r\n\r\n            <LinearLayout\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:orientation=\"horizontal\"\r\n                android:layout_weight=\"1\">\r\n\r\n                <TextView\r\n                    android:id=\"@+id/distanceTextView\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:padding=\"8dp\"\r\n                    android:textAppearance=\"?attr/textAppearanceListItem\"\r\n                    android:textColor=\"@color/black\"\r\n                    android:textStyle=\"bold\"\r\n                    android:layout_weight=\"1\" />\r\n\r\n                <TextView\r\n                    android:id=\"@+id/durationTextView\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:padding=\"8dp\"\r\n                    android:textAppearance=\"?attr/textAppearanceListItem\"\r\n                    android:textColor=\"@color/black\"\r\n                    android:textStyle=\"bold\"\r\n                    android:layout_weight=\"1\" />\r\n\r\n            </LinearLayout>\r\n        </LinearLayout>\r\n\r\n    </LinearLayout>\r\n\r\n\r\n</androidx.cardview.widget.CardView>\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/list_itinerary.xml b/app/src/main/res/layout/list_itinerary.xml
+--- a/app/src/main/res/layout/list_itinerary.xml	(revision 4ce5a5273ccdf580e2324ea742f12526d8cbf131)
++++ b/app/src/main/res/layout/list_itinerary.xml	(date 1681367557864)
+@@ -6,7 +6,7 @@
+     android:layout_height="wrap_content"
+     android:layout_margin="16dp"
+     android:layout_marginVertical="8dp"
+-    app:cardBackgroundColor="@color/white"
++    app:cardBackgroundColor="@color/ic_launcher_background"
+     app:cardCornerRadius="8dp"
+     app:cardElevation="4dp">
+ 
+@@ -29,7 +29,9 @@
+                 android:layout_height="wrap_content"
+                 android:padding="8dp"
+                 android:textAppearance="?attr/textAppearanceListItem"
+-                android:textColor="@color/black"
++                android:textColor="@color/palette_1"
++                android:text="start"
++                android:textStyle="bold"
+                 android:layout_marginTop="8dp"
+                 android:textAlignment="center" />
+ 
+@@ -42,8 +44,10 @@
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:padding="8dp"
++                android:text="end"
++                android:textStyle="bold"
+                 android:textAppearance="?attr/textAppearanceListItem"
+-                android:textColor="@color/black"
++                android:textColor="@color/palette_1"
+                 android:layout_marginBottom="8dp"
+                 android:textAlignment="center" />
+ 
+@@ -59,46 +63,51 @@
+                 android:id="@+id/dateTextView"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+-                android:padding="8dp"
++                android:layout_marginStart="8dp"
++                android:text="date"
++                android:textSize="14dp"
+                 android:textAppearance="?attr/textAppearanceListItem"
+-                android:textColor="@color/black"
+-                android:textStyle="bold"
+-                android:layout_weight="1" />
++                android:textColor="@color/alfa"
++                android:textStyle="italic"/>
+ 
+             <TextView
+                 android:id="@+id/placeNameTextView"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:padding="8dp"
++                android:textSize="22dp"
++                android:text="Name"
+                 android:textAppearance="?attr/textAppearanceListItem"
+-                android:textColor="@color/black"
++                android:textColor="@color/palette_2"
+                 android:textStyle="bold"
+                 android:layout_weight="1" />
+ 
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+-                android:orientation="horizontal"
+-                android:layout_weight="1">
++                android:orientation="horizontal">
+ 
+                 <TextView
+                     android:id="@+id/distanceTextView"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+-                    android:padding="8dp"
++                    android:textSize="14dp"
++                    android:layout_marginBottom="8dp"
++                    android:layout_marginStart="8dp"
+                     android:textAppearance="?attr/textAppearanceListItem"
+-                    android:textColor="@color/black"
+-                    android:textStyle="bold"
++                    android:textColor="@color/palette_3"
++                    android:text="distance"
+                     android:layout_weight="1" />
+ 
+                 <TextView
+                     android:id="@+id/durationTextView"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+-                    android:padding="8dp"
++                    android:text="duration"
++                    android:textSize="14dp"
++                    android:layout_marginBottom="8dp"
+                     android:textAppearance="?attr/textAppearanceListItem"
+-                    android:textColor="@color/black"
+-                    android:textStyle="bold"
++                    android:textColor="@color/palette_3"
+                     android:layout_weight="1" />
+ 
+             </LinearLayout>
+Index: app/src/main/java/com/binus/pekalongancityguide/Layout/ItineraryList.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.Layout;\r\n\r\nimport android.Manifest;\r\nimport android.annotation.SuppressLint;\r\nimport android.app.AlertDialog;\r\nimport android.content.Context;\r\nimport android.content.Intent;\r\nimport android.content.pm.PackageManager;\r\nimport android.location.Location;\r\nimport android.location.LocationListener;\r\nimport android.location.LocationManager;\r\nimport android.os.Bundle;\r\nimport android.provider.Settings;\r\nimport android.util.Log;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.core.app.ActivityCompat;\r\nimport androidx.core.content.ContextCompat;\r\n\r\nimport com.android.volley.Request;\r\nimport com.android.volley.RequestQueue;\r\nimport com.android.volley.toolbox.JsonObjectRequest;\r\nimport com.android.volley.toolbox.Volley;\r\nimport com.binus.pekalongancityguide.Adapter.ItineraryAdapter;\r\nimport com.binus.pekalongancityguide.ItemTemplate.Itinerary;\r\nimport com.binus.pekalongancityguide.databinding.ActivityItineraryListBinding;\r\nimport com.google.android.gms.location.FusedLocationProviderClient;\r\nimport com.google.android.gms.location.LocationServices;\r\nimport com.google.android.libraries.places.api.Places;\r\nimport com.google.android.libraries.places.api.net.PlacesClient;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.database.DataSnapshot;\r\nimport com.google.firebase.database.DatabaseError;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\nimport com.google.firebase.database.Query;\r\nimport com.google.firebase.database.ValueEventListener;\r\n\r\nimport org.json.JSONArray;\r\nimport org.json.JSONException;\r\nimport org.json.JSONObject;\r\n\r\nimport java.text.ParseException;\r\nimport java.text.SimpleDateFormat;\r\nimport java.util.ArrayList;\r\nimport java.util.Collections;\r\nimport java.util.Date;\r\nimport java.util.List;\r\nimport java.util.Locale;\r\n\r\nimport static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;\r\n\r\npublic class ItineraryList extends AppCompatActivity {\r\n\r\n    private LocationManager locationManager;\r\n    private LocationListener locationListener;\r\n    private static final String TAG = \"ITER_TAG\";\r\n    private static final String apiKey = MAPS_API_KEY;\r\n    private static final int PERMISSION_REQUEST_LOCATION = 500;\r\n    private final List<Itinerary> itineraryList = new ArrayList<>();\r\n    public ActivityItineraryListBinding binding;\r\n    ItineraryAdapter adapter;\r\n    PlacesClient placesClient;\r\n    private FirebaseAuth firebaseAuth;\r\n    private FusedLocationProviderClient fusedLocationClient;\r\n    private final FirebaseDatabase database = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\");\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        binding = ActivityItineraryListBinding.inflate(getLayoutInflater());\r\n        Places.initialize(getApplicationContext(), apiKey);\r\n        placesClient = Places.createClient(this);\r\n        setContentView(binding.getRoot());\r\n        firebaseAuth = FirebaseAuth.getInstance();\r\n        adapter = new ItineraryAdapter(itineraryList);\r\n        binding.backtoprofile.setOnClickListener(v -> {\r\n            onBackPressed();\r\n        });\r\n\r\n        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);\r\n\r\n        // Create a location listener\r\n        locationListener = new LocationListener() {\r\n            @Override\r\n            public void onLocationChanged(Location location) {\r\n                // Do something with the new location\r\n                Log.d(\"Location\", \"Latitude: \" + location.getLatitude() + \", Longitude: \" + location.getLongitude());\r\n            }\r\n\r\n            @Override\r\n            public void onStatusChanged(String provider, int status, Bundle extras) {\r\n            }\r\n\r\n            @Override\r\n            public void onProviderEnabled(String provider) {\r\n            }\r\n\r\n            @Override\r\n            public void onProviderDisabled(String provider) {\r\n            }\r\n        };\r\n\r\n        // Check if location permission is granted\r\n        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {\r\n            // Request permission\r\n            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_LOCATION);\r\n        } else {\r\n            // Permission already granted, start requesting location updates\r\n            startLocationUpdates();\r\n        }\r\n\r\n\r\n        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);\r\n\r\n        loadItinerary();\r\n        binding.itineraryRv.setAdapter(adapter);\r\n    }\r\n\r\n    @Override\r\n    protected void onDestroy() {\r\n        super.onDestroy();\r\n        // Stop requesting location updates when the activity is destroyed\r\n        locationManager.removeUpdates(locationListener);\r\n    }\r\n\r\n    @Override\r\n    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {\r\n        super.onRequestPermissionsResult(requestCode, permissions, grantResults);\r\n        if (requestCode == PERMISSION_REQUEST_LOCATION) {\r\n            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {\r\n                // Permission granted, start requesting location updates\r\n                startLocationUpdates();\r\n            } else {\r\n                // Permission denied, show an error message\r\n                Toast.makeText(this, \"Location permission denied\", Toast.LENGTH_SHORT).show();\r\n            }\r\n        }\r\n    }\r\n\r\n    private void loadItinerary() {\r\n        DatabaseReference userRef = database.getReference(\"Users\").child(firebaseAuth.getUid());\r\n        Query itineraryQuery = userRef.child(\"itinerary\");\r\n        itineraryQuery.addValueEventListener(new ValueEventListener() {\r\n            @Override\r\n            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {\r\n                List<Itinerary> itineraryList = new ArrayList<>();\r\n                for (DataSnapshot itinerarySnapshot : dataSnapshot.getChildren()) {\r\n                    String date = itinerarySnapshot.child(\"date\").getValue(String.class);\r\n                    Log.d(TAG, \"Date: \" + date);\r\n                    String startTime = itinerarySnapshot.child(\"startTime\").getValue(String.class);\r\n                    Log.d(TAG, \"Start Time: \" + startTime);\r\n                    String endTime = itinerarySnapshot.child(\"endTime\").getValue(String.class);\r\n                    Log.d(TAG, \"End Time: \" + endTime);\r\n                    String destiId = itinerarySnapshot.child(\"destiId\").getValue(String.class);\r\n                    Log.d(TAG, \"Desti ID: \" + destiId);\r\n\r\n                    database.getReference(\"Destination\").child(destiId).addListenerForSingleValueEvent(new ValueEventListener() {\r\n                        @Override\r\n                        public void onDataChange(@NonNull DataSnapshot snapshot) {\r\n                            double placeLat = Double.parseDouble(snapshot.child(\"latitude\").getValue().toString());\r\n                            Log.d(TAG, \"Latitude: \" + placeLat);\r\n                            double placeLng = Double.parseDouble(snapshot.child(\"longitude\").getValue().toString());\r\n                            Log.d(TAG, \"Longitude: \" + placeLng);\r\n                            String placeName = snapshot.child(\"title\").getValue(String.class);\r\n                            Log.d(TAG, \"Place Name: \" + placeName);\r\n\r\n                            if (ActivityCompat.checkSelfPermission(ItineraryList.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&\r\n                                    ActivityCompat.checkSelfPermission(ItineraryList.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {\r\n                                ActivityCompat.requestPermissions(ItineraryList.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);\r\n                            } else {\r\n                                fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {\r\n                                    if (location != null) {\r\n                                        double currentLat = location.getLatitude();\r\n                                        double currentLng = location.getLongitude();\r\n                                        // Calculate distance between current location and itinerary location\r\n                                        float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);\r\n                                        Log.d(TAG, \"Distance: \" + distance);\r\n                                        calculateDuration(currentLat, currentLng, placeLat, placeLng, durationText -> {\r\n                                            itineraryList.add(new Itinerary(date, endTime, placeName, startTime, durationText, placeLat, placeLng, distance));\r\n                                            sortItineraryList(itineraryList);\r\n                                            // Set the sorted itineraryList to the adapter\r\n                                            ItineraryAdapter adapter = new ItineraryAdapter(itineraryList);\r\n                                            binding.itineraryRv.setAdapter(adapter);\r\n                                        });\r\n                                    }\r\n                                }).addOnFailureListener(e -> {\r\n                                    Log.e(TAG, \"Error getting last known location: \" + e.getMessage());\r\n                                });\r\n                            }\r\n                        }\r\n\r\n                        @Override\r\n                        public void onCancelled(@NonNull DatabaseError error) {\r\n\r\n                        }\r\n                    });\r\n                }\r\n            }\r\n\r\n            @Override\r\n            public void onCancelled(@NonNull DatabaseError databaseError) {\r\n                Log.e(TAG, \"Error fetching itinerary data: \" + databaseError.getMessage());\r\n            }\r\n        });\r\n    }\r\n\r\n    private void sortItineraryList(List<Itinerary> itineraryList) {\r\n        Collections.sort(itineraryList, (itinerary1, itinerary2) -> {\r\n            SimpleDateFormat sdf = new SimpleDateFormat(\"EEEE, dd MMMM yyyy hh:mm a\", Locale.ENGLISH);\r\n            try {\r\n                Date date1 = sdf.parse(itinerary1.getDate() + \" \" + itinerary1.getStartTime());\r\n                Date date2 = sdf.parse(itinerary2.getDate() + \" \" + itinerary2.getStartTime());\r\n                int dateComparison = date1.compareTo(date2);\r\n                if (dateComparison != 0) {\r\n                    return dateComparison;\r\n                } else {\r\n                    return itinerary1.getStartTime().compareTo(itinerary2.getStartTime());\r\n                }\r\n            } catch (ParseException e) {\r\n                Log.e(TAG, \"Error parsing date: \" + e.getMessage());\r\n                return 0;\r\n            }\r\n        });\r\n    }\r\n\r\n    private float calculateDistance(double lat1, double lon1, double lat2, double lon2) {\r\n        float[] results = new float[1];\r\n        Location location1 = new Location(\"\");\r\n        location1.setLatitude(lat1);\r\n        location1.setLongitude(lon1);\r\n        Location location2 = new Location(\"\");\r\n        location2.setLatitude(lat2);\r\n        location2.setLongitude(lon2);\r\n        Location.distanceBetween(location1.getLatitude(), location1.getLongitude(),\r\n                location2.getLatitude(), location2.getLongitude(), results);\r\n        return results[0] / 1000;\r\n    }\r\n\r\n    private void calculateDuration(double lat1, double lon1, double lat2, double lon2, DurationCallback callback) {\r\n        String url = \"https://maps.googleapis.com/maps/api/directions/json?origin=\" + lat1 + \",\" + lon1 + \"&destination=\" + lat2 + \",\" + lon2 + \"&key=\" + apiKey;\r\n\r\n        RequestQueue queue = Volley.newRequestQueue(this);\r\n        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, response -> {\r\n            try {\r\n                JSONArray routes = response.getJSONArray(\"routes\");\r\n                if (routes.length() > 0) {\r\n                    JSONObject route = routes.getJSONObject(0);\r\n                    JSONArray legs = route.getJSONArray(\"legs\");\r\n                    JSONObject leg = legs.getJSONObject(0);\r\n                    JSONObject duration = leg.getJSONObject(\"duration\");\r\n                    String durationText = duration.getString(\"text\");\r\n                    Log.d(TAG, \"Duration: \" + durationText);\r\n                    callback.onDurationReceived(durationText);\r\n                } else {\r\n                    Log.e(TAG, \"No routes found\");\r\n                    callback.onDurationReceived(\"No routes found\");\r\n                }\r\n            } catch (JSONException e) {\r\n                e.printStackTrace();\r\n            }\r\n        }, error -> {\r\n            Log.e(TAG, \"Error calculating travel duration: \" + error.getMessage());\r\n            callback.onDurationReceived(\"Error calculating travel duration\");\r\n        });\r\n        queue.add(request);\r\n    }\r\n\r\n    @SuppressLint(\"MissingPermission\")\r\n    private void startLocationUpdates() {\r\n        // Check if GPS is enabled\r\n        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {\r\n            // GPS is not enabled, show a dialog to ask the user to enable it\r\n            AlertDialog.Builder builder = new AlertDialog.Builder(this);\r\n            builder.setTitle(\"GPS not enabled\");\r\n            builder.setMessage(\"Would you like to enable GPS?\");\r\n            builder.setPositiveButton(\"Yes\", (dialog, which) -> {\r\n                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);\r\n                startActivity(intent);\r\n            });\r\n            builder.setNegativeButton(\"No\", null);\r\n            builder.show();\r\n        } else {\r\n            // GPS is enabled, start requesting location updates\r\n            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);\r\n        }\r\n    }\r\n\r\n    public interface DurationCallback {\r\n        void onDurationReceived(String durationText);\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/Layout/ItineraryList.java b/app/src/main/java/com/binus/pekalongancityguide/Layout/ItineraryList.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/Layout/ItineraryList.java	(revision 4ce5a5273ccdf580e2324ea742f12526d8cbf131)
++++ b/app/src/main/java/com/binus/pekalongancityguide/Layout/ItineraryList.java	(date 1681368034228)
+@@ -1,5 +1,7 @@
+ package com.binus.pekalongancityguide.Layout;
+ 
++import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
++
+ import android.Manifest;
+ import android.annotation.SuppressLint;
+ import android.app.AlertDialog;
+@@ -15,9 +17,14 @@
+ import android.widget.Toast;
+ 
+ import androidx.annotation.NonNull;
++import androidx.annotation.Nullable;
+ import androidx.appcompat.app.AppCompatActivity;
+ import androidx.core.app.ActivityCompat;
+ import androidx.core.content.ContextCompat;
++import androidx.fragment.app.Fragment;
++import androidx.fragment.app.FragmentManager;
++import androidx.fragment.app.FragmentPagerAdapter;
++import androidx.viewpager.widget.ViewPager;
+ 
+ import com.android.volley.Request;
+ import com.android.volley.RequestQueue;
+@@ -30,6 +37,7 @@
+ import com.google.android.gms.location.LocationServices;
+ import com.google.android.libraries.places.api.Places;
+ import com.google.android.libraries.places.api.net.PlacesClient;
++import com.google.android.material.tabs.TabLayout;
+ import com.google.firebase.auth.FirebaseAuth;
+ import com.google.firebase.database.DataSnapshot;
+ import com.google.firebase.database.DatabaseError;
+@@ -53,7 +61,7 @@
+ import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
+ 
+ public class ItineraryList extends AppCompatActivity {
+-
++    private TabLayout tabLayout;
+     private LocationManager locationManager;
+     private LocationListener locationListener;
+     private static final String TAG = "ITER_TAG";
+@@ -79,14 +87,38 @@
+         binding.backtoprofile.setOnClickListener(v -> {
+             onBackPressed();
+         });
++        tabLayout = binding.itineraryTab;
++        tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
++        tabLayout.addTab(tabLayout.newTab().setText("Tab 2"));
++        tabLayout.addTab(tabLayout.newTab().setText("Tab 3"));
++        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
++
++        final ViewPager viewPager = binding.itineraryViewpager;
++        final ItineraryAdapter adapter = new ItineraryAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
++        viewPager.setAdapter(adapter);
++        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
++
++        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
++            @Override
++            public void onTabSelected(TabLayout.Tab tab) {
++                viewPager.setCurrentItem(tab.getPosition());
++            }
++
++            @Override
++            public void onTabUnselected(TabLayout.Tab tab) {
++            }
++
++            @Override
++            public void onTabReselected(TabLayout.Tab tab) {
++            }
++        });
++
+ 
+         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+ 
+-        // Create a location listener
+         locationListener = new LocationListener() {
+             @Override
+             public void onLocationChanged(Location location) {
+-                // Do something with the new location
+                 Log.d("Location", "Latitude: " + location.getLatitude() + ", Longitude: " + location.getLongitude());
+             }
+ 
+@@ -119,10 +151,41 @@
+         binding.itineraryRv.setAdapter(adapter);
+     }
+ 
++    public class ViewPagerAdapter extends FragmentPagerAdapter {
++
++        private final List<Fragment> fragmentList = new ArrayList<>();
++        private final List<String> fragmentTitleList = new ArrayList<>();
++
++        public ViewPagerAdapter(FragmentManager fm) {
++            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
++        }
++
++        @NonNull
++        @Override
++        public Fragment getItem(int position) {
++            return fragmentList.get(position);
++        }
++
++        @Override
++        public int getCount() {
++            return fragmentList.size();
++        }
++
++        public void addFragment(Fragment fragment, String title) {
++            fragmentList.add(fragment);
++            fragmentTitleList.add(title);
++        }
++
++        @Nullable
++        @Override
++        public CharSequence getPageTitle(int position) {
++            return fragmentTitleList.get(position);
++        }
++    }
++
+     @Override
+     protected void onDestroy() {
+         super.onDestroy();
+-        // Stop requesting location updates when the activity is destroyed
+         locationManager.removeUpdates(locationListener);
+     }
+ 
+@@ -131,10 +194,8 @@
+         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+         if (requestCode == PERMISSION_REQUEST_LOCATION) {
+             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+-                // Permission granted, start requesting location updates
+                 startLocationUpdates();
+             } else {
+-                // Permission denied, show an error message
+                 Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
+             }
+         }
+@@ -270,9 +331,7 @@
+ 
+     @SuppressLint("MissingPermission")
+     private void startLocationUpdates() {
+-        // Check if GPS is enabled
+         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+-            // GPS is not enabled, show a dialog to ask the user to enable it
+             AlertDialog.Builder builder = new AlertDialog.Builder(this);
+             builder.setTitle("GPS not enabled");
+             builder.setMessage("Would you like to enable GPS?");
+@@ -283,7 +342,6 @@
+             builder.setNegativeButton("No", null);
+             builder.show();
+         } else {
+-            // GPS is enabled, start requesting location updates
+             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);
+         }
+     }
+Index: app/src/main/java/com/binus/pekalongancityguide/ItemTemplate/Itinerary.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.ItemTemplate;\r\n\r\npublic class Itinerary {\r\n    private final String date;\r\n    private final String endTime;\r\n    private final String placeName;\r\n    private final String startTime;\r\n    private String durationText;\r\n    private final double latitude;\r\n    private final double longitude;\r\n    private float distance;\r\n\r\n    public Itinerary(String date, String endTime, String placeName, String startTime, String durationText, double latitude, double longitude, float distance) {\r\n        this.date = date;\r\n        this.endTime = endTime;\r\n        this.placeName = placeName;\r\n        this.startTime = startTime;\r\n        this.durationText = durationText;\r\n        this.latitude = latitude;\r\n        this.longitude = longitude;\r\n        this.distance = distance;\r\n    }\r\n\r\n    public String getDate() {\r\n        return date;\r\n    }\r\n\r\n    public String getEndTime() {\r\n        return endTime;\r\n    }\r\n\r\n    public String getPlaceName() {\r\n        return placeName;\r\n    }\r\n\r\n    public String getStartTime() {\r\n        return startTime;\r\n    }\r\n\r\n    public String getDurationText() {\r\n        return durationText;\r\n    }\r\n\r\n    public void setDurationText(String durationText) {\r\n        this.durationText = durationText;\r\n    }\r\n\r\n    public double getLatitude() {\r\n        return latitude;\r\n    }\r\n\r\n    public double getLongitude() {\r\n        return longitude;\r\n    }\r\n\r\n    public float getDistance() {\r\n        return distance;\r\n    }\r\n\r\n    public void setDistance(float distance) {\r\n        this.distance = distance;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/ItemTemplate/Itinerary.java b/app/src/main/java/com/binus/pekalongancityguide/ItemTemplate/Itinerary.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/ItemTemplate/Itinerary.java	(revision 4ce5a5273ccdf580e2324ea742f12526d8cbf131)
++++ b/app/src/main/java/com/binus/pekalongancityguide/ItemTemplate/Itinerary.java	(date 1681365300557)
+@@ -5,10 +5,10 @@
+     private final String endTime;
+     private final String placeName;
+     private final String startTime;
+-    private String durationText;
++    private final String durationText;
+     private final double latitude;
+     private final double longitude;
+-    private float distance;
++    private final float distance;
+ 
+     public Itinerary(String date, String endTime, String placeName, String startTime, String durationText, double latitude, double longitude, float distance) {
+         this.date = date;
+@@ -41,10 +41,6 @@
+         return durationText;
+     }
+ 
+-    public void setDurationText(String durationText) {
+-        this.durationText = durationText;
+-    }
+-
+     public double getLatitude() {
+         return latitude;
+     }
+@@ -56,8 +52,4 @@
+     public float getDistance() {
+         return distance;
+     }
+-
+-    public void setDistance(float distance) {
+-        this.distance = distance;
+-    }
+ }
+Index: app/src/main/java/com/binus/pekalongancityguide/Adapter/ItineraryAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.Adapter;\r\n\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.TextView;\r\n\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport com.binus.pekalongancityguide.ItemTemplate.Itinerary;\r\nimport com.binus.pekalongancityguide.R;\r\n\r\nimport java.util.List;\r\nimport java.util.Locale;\r\n\r\npublic class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.ItineraryViewHolder> {\r\n    private List<Itinerary> itineraryList;\r\n\r\n    public ItineraryAdapter(List<Itinerary> itineraryList) {\r\n        this.itineraryList = itineraryList;\r\n    }\r\n\r\n    @Override\r\n    public ItineraryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {\r\n        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_itinerary, parent, false);\r\n        return new ItineraryViewHolder(view);\r\n    }\r\n\r\n    @Override\r\n    public void onBindViewHolder(ItineraryViewHolder holder, int position) {\r\n        Itinerary itinerary = itineraryList.get(position);\r\n        holder.dateTextView.setText(itinerary.getDate());\r\n        holder.startTimeTextView.setText(itinerary.getStartTime());\r\n        holder.endTimeTextView.setText(itinerary.getEndTime());\r\n        holder.placeNameTextView.setText(itinerary.getPlaceName());\r\n        float distance = itinerary.getDistance();\r\n        String distanceString;\r\n        if (distance < 1) {\r\n            int distanceInMeters = (int) (distance * 1000);\r\n            distanceString = distanceInMeters + \" m\";\r\n        } else {\r\n            distanceString = String.format(Locale.getDefault(), \"%.2f km\", distance);\r\n        }\r\n        holder.distanceTextView.setText(distanceString);\r\n        holder.durationTextView.setText(itinerary.getDurationText());\r\n    }\r\n\r\n    @Override\r\n    public int getItemCount() {\r\n        return itineraryList.size();\r\n    }\r\n\r\n    public static class ItineraryViewHolder extends RecyclerView.ViewHolder {\r\n        public TextView dateTextView, startTimeTextView, endTimeTextView, placeNameTextView, distanceTextView, durationTextView;\r\n\r\n        public ItineraryViewHolder(View itemView) {\r\n            super(itemView);\r\n            dateTextView = itemView.findViewById(R.id.dateTextView);\r\n            startTimeTextView = itemView.findViewById(R.id.startTimeTextView);\r\n            endTimeTextView = itemView.findViewById(R.id.endTimeTextView);\r\n            placeNameTextView = itemView.findViewById(R.id.placeNameTextView);\r\n            distanceTextView = itemView.findViewById(R.id.distanceTextView);\r\n            durationTextView = itemView.findViewById(R.id.durationTextView);\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/Adapter/ItineraryAdapter.java b/app/src/main/java/com/binus/pekalongancityguide/Adapter/ItineraryAdapter.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/Adapter/ItineraryAdapter.java	(revision 4ce5a5273ccdf580e2324ea742f12526d8cbf131)
++++ b/app/src/main/java/com/binus/pekalongancityguide/Adapter/ItineraryAdapter.java	(date 1681367861154)
+@@ -5,6 +5,7 @@
+ import android.view.ViewGroup;
+ import android.widget.TextView;
+ 
++import androidx.fragment.app.FragmentManager;
+ import androidx.recyclerview.widget.RecyclerView;
+ 
+ import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
+@@ -20,6 +21,9 @@
+         this.itineraryList = itineraryList;
+     }
+ 
++    public ItineraryAdapter(FragmentManager supportFragmentManager, int tabCount) {
++    }
++
+     @Override
+     public ItineraryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_itinerary, parent, false);
+Index: app/src/main/res/layout/activity_destination_details.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<layout xmlns:tools=\"http://schemas.android.com/tools\"\r\n    xmlns:android=\"http://schemas.android.com/apk/res/android\">\r\n\r\n    <data>\r\n\r\n    </data>\r\n\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\"\r\n        android:orientation=\"vertical\"\r\n        android:background=\"@color/palette_4\"\r\n        tools:context=\".Layout.DestinationDetails\">\r\n\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:orientation=\"horizontal\">\r\n\r\n            <ImageButton\r\n                android:id=\"@+id/backDesti\"\r\n                android:layout_gravity=\"start\"\r\n                android:layout_width=\"48dp\"\r\n                android:layout_height=\"48dp\"\r\n                android:background=\"#0000\"\r\n                android:src=\"@drawable/back_icon\"/>\r\n\r\n            <TextView\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"match_parent\"\r\n                android:layout_weight=\"1\"\r\n                android:gravity=\"center\"\r\n                android:text=\"Destination Details\"\r\n                android:textColor=\"@color/palette_1\"\r\n                android:textSize=\"20dp\"\r\n                android:textStyle=\"bold\" />\r\n\r\n            <ImageButton\r\n                android:id=\"@+id/addItenary\"\r\n                android:layout_gravity=\"end\"\r\n                android:layout_width=\"48dp\"\r\n                android:layout_height=\"48dp\"\r\n                android:background=\"#0000\"\r\n                android:src=\"@drawable/plus\" />\r\n        </LinearLayout>\r\n\r\n        <com.google.android.material.divider.MaterialDivider\r\n            android:layout_marginHorizontal=\"10dp\"\r\n            android:layout_marginTop=\"5dp\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\" />\r\n\r\n        <ScrollView\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\">\r\n\r\n            <LinearLayout\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"match_parent\"\r\n                android:orientation=\"vertical\">\r\n\r\n                <androidx.cardview.widget.CardView xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"230dp\"\r\n                    android:layout_margin=\"10dp\"\r\n                    app:cardCornerRadius=\"16dp\"\r\n                    app:cardElevation=\"5dp\">\r\n\r\n                    <ImageView\r\n                        android:id=\"@+id/desti_image\"\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"match_parent\"/>\r\n\r\n                </androidx.cardview.widget.CardView>\r\n\r\n                <androidx.cardview.widget.CardView xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:layout_margin=\"10dp\"\r\n                    app:cardBackgroundColor=\"@color/palette_3\"\r\n                    app:cardCornerRadius=\"6dp\"\r\n                    app:cardElevation=\"5dp\"\r\n                    app:contentPaddingBottom=\"10dp\"\r\n                    app:contentPaddingLeft=\"20dp\"\r\n                    app:contentPaddingRight=\"20dp\"\r\n                    app:contentPaddingTop=\"10dp\">\r\n\r\n                    <LinearLayout\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"match_parent\"\r\n                        android:orientation=\"vertical\">\r\n\r\n                        <TextView\r\n                            android:textSize=\"18dp\"\r\n                            android:id=\"@+id/desti_name\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:text=\"Destination Name\"\r\n                            android:textColor=\"@color/palette_1\"\r\n                            android:textStyle=\"bold\" />\r\n\r\n                        <com.google.android.material.divider.MaterialDivider\r\n                            android:layout_marginTop=\"5dp\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\" />\r\n\r\n                        <TextView\r\n                            android:layout_marginTop=\"10dp\"\r\n                            android:id=\"@+id/desti_desc\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:justificationMode=\"inter_word\"\r\n                            android:text=\"Destination Description\"\r\n                            android:textColor=\"@color/palette_1\" />\r\n\r\n                        <com.google.android.material.divider.MaterialDivider\r\n                            android:layout_marginTop=\"5dp\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\" />\r\n\r\n                        <TextView\r\n                            android:textStyle=\"bold\"\r\n                            android:id=\"@+id/desti_address\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_marginTop=\"10dp\"\r\n                            android:justificationMode=\"inter_word\"\r\n                            android:text=\"Destination Address\"\r\n                            android:textColor=\"@color/palette_1\"/>\r\n\r\n                        <com.google.android.material.divider.MaterialDivider\r\n                            android:layout_marginTop=\"5dp\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\" />\r\n                        <TextView\r\n                            android:textStyle=\"bold\"\r\n                            android:id=\"@+id/desti_phone\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_marginTop=\"10dp\"\r\n                            android:justificationMode=\"inter_word\"\r\n                            android:text=\"Destination Phone\"\r\n                            android:textColor=\"@color/palette_1\" />\r\n\r\n                        <com.google.android.material.divider.MaterialDivider\r\n                            android:layout_marginTop=\"5dp\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\" />\r\n\r\n                        <fragment\r\n                            android:layout_marginTop=\"20dp\"\r\n                            android:layout_marginBottom=\"20dp\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"200dp\"\r\n                            android:id=\"@+id/map\"\r\n                            android:name=\"com.google.android.gms.maps.SupportMapFragment\" />\r\n\r\n                        <com.google.android.material.divider.MaterialDivider\r\n                            android:layout_marginTop=\"5dp\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\" />\r\n\r\n                        <TextView\r\n                            android:gravity=\"center_vertical\"\r\n                            android:textStyle=\"bold\"\r\n                            android:textSize=\"18dp\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_marginVertical=\"10dp\"\r\n                            android:justificationMode=\"inter_word\"\r\n                            android:text=\"Opening Hours\"\r\n                            android:textColor=\"@color/palette_1\" />\r\n                                <androidx.recyclerview.widget.RecyclerView\r\n                                    android:padding=\"15dp\"\r\n                                    android:background=\"@color/ic_launcher_background\"\r\n                                    android:id=\"@+id/opening_rv\"\r\n                                    android:layout_width=\"match_parent\"\r\n                                    android:layout_height=\"0dp\"\r\n                                    android:layout_weight=\"1\"\r\n                                    android:layout_marginBottom=\"15dp\"\r\n                                    app:layoutManager=\"androidx.recyclerview.widget.LinearLayoutManager\"\r\n                                    tools:listitem=\"@layout/list_opening_hours\"/>\r\n\r\n                        <com.google.android.material.divider.MaterialDivider\r\n                            android:layout_marginTop=\"5dp\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\"/>\r\n                        <TextView\r\n                            android:drawableLeft=\"@drawable/comment_icon\"\r\n                            android:drawableTint=\"@color/palette_1\"\r\n                            android:drawablePadding=\"5dp\"\r\n                            android:gravity=\"center_vertical\"\r\n                            android:textStyle=\"bold\"\r\n                            android:textSize=\"18dp\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_marginVertical=\"10dp\"\r\n                            android:justificationMode=\"inter_word\"\r\n                            android:text=\"Place Reviews\"\r\n                            android:textColor=\"@color/palette_1\" />\r\n\r\n                        <androidx.recyclerview.widget.RecyclerView\r\n                            android:id=\"@+id/review_rv\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            app:layoutManager=\"androidx.recyclerview.widget.LinearLayoutManager\"\r\n                            tools:listitem=\"@layout/list_review\"\r\n                            android:nestedScrollingEnabled=\"false\" />\r\n                        <com.google.android.material.divider.MaterialDivider\r\n                            android:layout_marginTop=\"5dp\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\" />\r\n                        <Button\r\n                            android:id=\"@+id/save_item\"\r\n                            android:textAllCaps=\"false\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_marginTop=\"20dp\"\r\n                            android:drawableLeft=\"@drawable/remove_bookmark\"\r\n                            android:drawableTint=\"@color/palette_4\"\r\n                            android:text=\"Bookmark Place\"\r\n                            android:textAlignment=\"center\"\r\n                            android:textColor=\"@color/palette_4\" />\r\n                    </LinearLayout>\r\n                </androidx.cardview.widget.CardView>\r\n            </LinearLayout>\r\n        </ScrollView>\r\n\r\n    </LinearLayout>\r\n</layout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_destination_details.xml b/app/src/main/res/layout/activity_destination_details.xml
+--- a/app/src/main/res/layout/activity_destination_details.xml	(revision 4ce5a5273ccdf580e2324ea742f12526d8cbf131)
++++ b/app/src/main/res/layout/activity_destination_details.xml	(date 1681365300610)
+@@ -152,7 +152,7 @@
+                             android:layout_marginTop="20dp"
+                             android:layout_marginBottom="20dp"
+                             android:layout_width="match_parent"
+-                            android:layout_height="200dp"
++                            android:layout_height="300dp"
+                             android:id="@+id/map"
+                             android:name="com.google.android.gms.maps.SupportMapFragment" />
+ 
+Index: app/src/main/res/layout/activity_itinerary_list.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<layout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\">\r\n\r\n    <data>\r\n\r\n    </data>\r\n\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\"\r\n        android:orientation=\"vertical\"\r\n        tools:context=\".Layout.ItineraryList\">\r\n\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:orientation=\"horizontal\">\r\n            <ImageButton\r\n                android:id=\"@+id/backtoprofile\"\r\n                android:layout_gravity=\"center_vertical\"\r\n                android:layout_width=\"48dp\"\r\n                android:layout_height=\"48dp\"\r\n                android:background=\"#0000\"\r\n                android:src=\"@drawable/back_icon\"/>\r\n\r\n            <TextView\r\n                android:layout_marginLeft=\"10dp\"\r\n                android:layout_marginVertical=\"10dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:textStyle=\"bold\"\r\n                android:text=\"Itinerary List\"\r\n                android:textSize=\"20dp\"\r\n                android:textColor=\"@color/palette_1\" />\r\n        </LinearLayout>\r\n\r\n        <com.google.android.material.tabs.TabLayout\r\n            android:id=\"@+id/itinerary_tab\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:background=\"#D5BB91\"\r\n            app:tabBackground=\"@drawable/tab_selector\"\r\n            app:tabIndicatorHeight=\"0dp\"\r\n            app:tabMode=\"scrollable\"\r\n            app:tabUnboundedRipple=\"false\"\r\n            app:tabTextColor=\"@color/palette_2\"\r\n            app:tabSelectedTextColor=\"@color/palette_4\"\r\n            app:tabIndicatorFullWidth=\"false\" />\r\n\r\n        <androidx.recyclerview.widget.RecyclerView\r\n            android:id=\"@+id/itinerary_rv\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"match_parent\"\r\n            tools:listitem=\"@layout/list_itinerary\"\r\n            app:layoutManager=\"androidx.recyclerview.widget.LinearLayoutManager\" />\r\n    </LinearLayout>\r\n</layout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_itinerary_list.xml b/app/src/main/res/layout/activity_itinerary_list.xml
+--- a/app/src/main/res/layout/activity_itinerary_list.xml	(revision 4ce5a5273ccdf580e2324ea742f12526d8cbf131)
++++ b/app/src/main/res/layout/activity_itinerary_list.xml	(date 1681367783766)
+@@ -10,6 +10,9 @@
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
++        android:background="@drawable/background_batik"
++        android:backgroundTint="@color/palette_4"
++        android:backgroundTintMode="screen"
+         android:orientation="vertical"
+         tools:context=".Layout.ItineraryList">
+ 
+@@ -48,7 +51,11 @@
+             app:tabTextColor="@color/palette_2"
+             app:tabSelectedTextColor="@color/palette_4"
+             app:tabIndicatorFullWidth="false" />
+-
++        <androidx.viewpager.widget.ViewPager
++            android:id="@+id/itinerary_viewpager"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_below="@id/tab_layout"/>
+         <androidx.recyclerview.widget.RecyclerView
+             android:id="@+id/itinerary_rv"
+             android:layout_width="match_parent"
+Index: app/src/main/java/com/binus/pekalongancityguide/Misc/DottedLineView.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.Misc;\r\n\r\nimport android.content.Context;\r\nimport android.graphics.Canvas;\r\nimport android.graphics.Color;\r\nimport android.graphics.DashPathEffect;\r\nimport android.graphics.Paint;\r\nimport android.graphics.Path;\r\nimport android.util.AttributeSet;\r\nimport android.view.View;\r\n\r\npublic class DottedLineView extends View {\r\n\r\n    private Paint mPaint;\r\n\r\n    public DottedLineView(Context context) {\r\n        super(context);\r\n        init();\r\n    }\r\n\r\n    public DottedLineView(Context context, AttributeSet attrs) {\r\n        super(context, attrs);\r\n        init();\r\n    }\r\n\r\n    public DottedLineView(Context context, AttributeSet attrs, int defStyleAttr) {\r\n        super(context, attrs, defStyleAttr);\r\n        init();\r\n    }\r\n\r\n    private void init() {\r\n        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);\r\n        mPaint.setStyle(Paint.Style.STROKE);\r\n        mPaint.setColor(Color.GRAY);\r\n        mPaint.setStrokeWidth(3);\r\n        mPaint.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));\r\n    }\r\n\r\n    @Override\r\n    protected void onDraw(Canvas canvas) {\r\n        super.onDraw(canvas);\r\n\r\n        int x = getWidth() / 2;\r\n\r\n        Path path = new Path();\r\n        path.moveTo(x, 0);\r\n        path.lineTo(x, getHeight());\r\n\r\n        canvas.drawPath(path, mPaint);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/Misc/DottedLineView.java b/app/src/main/java/com/binus/pekalongancityguide/Misc/DottedLineView.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/Misc/DottedLineView.java	(revision 4ce5a5273ccdf580e2324ea742f12526d8cbf131)
++++ b/app/src/main/java/com/binus/pekalongancityguide/Misc/DottedLineView.java	(date 1681365304545)
+@@ -9,6 +9,8 @@
+ import android.util.AttributeSet;
+ import android.view.View;
+ 
++import com.binus.pekalongancityguide.R;
++
+ public class DottedLineView extends View {
+ 
+     private Paint mPaint;
+@@ -31,7 +33,7 @@
+     private void init() {
+         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+         mPaint.setStyle(Paint.Style.STROKE);
+-        mPaint.setColor(Color.GRAY);
++        mPaint.setColor(getResources().getColor(R.color.palette_3));
+         mPaint.setStrokeWidth(3);
+         mPaint.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
+     }
+Index: app/src/main/res/layout/list_destination.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<layout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\">\r\n\r\n    <data>\r\n\r\n    </data>\r\n\r\n    <androidx.cardview.widget.CardView\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_margin=\"8dp\"\r\n        app:cardCornerRadius=\"10dp\"\r\n        app:cardElevation=\"20dp\"\r\n        android:clickable=\"true\">\r\n\r\n        <RelativeLayout\r\n            android:id=\"@+id/layoutImage\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"250dp\"\r\n            android:background=\"@color/palette_4\"\r\n            android:backgroundTintMode=\"multiply\">\r\n            <ProgressBar\r\n                android:layout_centerInParent=\"true\"\r\n                android:id=\"@+id/progress_bar\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"/>\r\n            <TextView\r\n                android:id=\"@+id/loc_rat\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:background=\"#80000000\"\r\n                android:drawableEnd=\"@drawable/star\"\r\n                android:gravity=\"center_horizontal\"\r\n                android:padding=\"10dp\"\r\n                android:text=\"4.5\"\r\n                android:textColor=\"@color/palette_4\"\r\n                android:textSize=\"16dp\"\r\n                android:textStyle=\"bold\" />\r\n            <TextView\r\n                android:id=\"@+id/loc_desc\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:visibility=\"invisible\" />\r\n\r\n            <TextView\r\n                android:id=\"@+id/loc_title\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_alignParentBottom=\"true\"\r\n                android:layout_marginStart=\"10dp\"\r\n                android:layout_marginTop=\"10dp\"\r\n                android:layout_marginEnd=\"10dp\"\r\n                android:layout_marginBottom=\"10dp\"\r\n                android:textColor=\"@color/white\"\r\n                android:text=\"Test Text\"\r\n                android:shadowColor=\"#000000\"\r\n                android:shadowDx=\"2\"\r\n                android:shadowDy=\"2\"\r\n                android:shadowRadius=\"2\"\r\n                android:textSize=\"24dp\"\r\n                android:textStyle=\"bold\" />\r\n        </RelativeLayout>\r\n    </androidx.cardview.widget.CardView>\r\n</layout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/list_destination.xml b/app/src/main/res/layout/list_destination.xml
+--- a/app/src/main/res/layout/list_destination.xml	(revision 4ce5a5273ccdf580e2324ea742f12526d8cbf131)
++++ b/app/src/main/res/layout/list_destination.xml	(date 1681365304588)
+@@ -18,13 +18,14 @@
+             android:id="@+id/layoutImage"
+             android:layout_width="match_parent"
+             android:layout_height="250dp"
+-            android:background="@color/palette_4"
++            android:background="@color/ic_launcher_background"
+             android:backgroundTintMode="multiply">
++
+             <ProgressBar
+-                android:layout_centerInParent="true"
+                 android:id="@+id/progress_bar"
+                 android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"/>
++                android:layout_height="wrap_content"
++                android:layout_centerInParent="true" />
+             <TextView
+                 android:id="@+id/loc_rat"
+                 android:layout_width="wrap_content"
+@@ -36,12 +37,7 @@
+                 android:text="4.5"
+                 android:textColor="@color/palette_4"
+                 android:textSize="16dp"
+-                android:textStyle="bold" />
+-            <TextView
+-                android:id="@+id/loc_desc"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:visibility="invisible" />
++                android:textStyle="bold"/>
+ 
+             <TextView
+                 android:id="@+id/loc_title"
+Index: app/src/main/java/com/binus/pekalongancityguide/Layout/ShowDestinationFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.Layout;\r\n\r\nimport android.os.Bundle;\r\nimport android.text.Editable;\r\nimport android.text.TextWatcher;\r\nimport android.util.Log;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.fragment.app.Fragment;\r\n\r\nimport com.binus.pekalongancityguide.Adapter.DestinationAdapter;\r\nimport com.binus.pekalongancityguide.ItemTemplate.Destination;\r\nimport com.binus.pekalongancityguide.databinding.FragmentShowDestinationBinding;\r\nimport com.google.firebase.database.DataSnapshot;\r\nimport com.google.firebase.database.DatabaseError;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\nimport com.google.firebase.database.ValueEventListener;\r\n\r\nimport java.util.ArrayList;\r\n\r\npublic class ShowDestinationFragment extends Fragment {\r\n    private String categoryId;\r\n    private String category;\r\n    private String uid;\r\n    private ArrayList<Destination> destinationArrayList;\r\n    private DestinationAdapter destinationAdapter;\r\n    private static final String TAG = \"DESTI_USER_TAG\";\r\n    private FragmentShowDestinationBinding binding;\r\n\r\n    public ShowDestinationFragment() {\r\n\r\n    }\r\n    public static ShowDestinationFragment newInstance(String categoryId, String category, String uid) {\r\n        ShowDestinationFragment fragment = new ShowDestinationFragment();\r\n        Bundle args = new Bundle();\r\n        args.putString(\"categoryId\", categoryId);\r\n        args.putString(\"category\", category);\r\n        args.putString(\"uid\", uid);\r\n        fragment.setArguments(args);\r\n        return fragment;\r\n    }\r\n\r\n    @Override\r\n    public void onCreate(Bundle savedInstanceState){\r\n        super.onCreate(savedInstanceState);\r\n        if(getArguments()!=null){\r\n            categoryId = getArguments().getString(\"categoryId\");\r\n            category = getArguments().getString(\"category\");\r\n            uid = getArguments().getString(\"uid\");\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,\r\n                             Bundle savedInstanceState) {\r\n        binding = FragmentShowDestinationBinding.inflate(LayoutInflater.from(getContext()), container, false);\r\n        if (category.equals(\"All\")) {\r\n            loadDestinations();\r\n        } else {\r\n            loadCategoriedDestination();\r\n        }\r\n        binding.searchDesti.addTextChangedListener(new TextWatcher() {\r\n            @Override\r\n            public void beforeTextChanged(CharSequence s, int start, int count, int after) {\r\n\r\n            }\r\n\r\n            @Override\r\n            public void onTextChanged(CharSequence s, int start, int before, int count) {\r\n                try {\r\n                    destinationAdapter.getFilter().filter(s);\r\n                }catch (Exception e){\r\n                    Log.d(TAG,\"onTextChanged :\"+e.getMessage());\r\n                }\r\n            }\r\n\r\n            @Override\r\n            public void afterTextChanged(Editable s) {\r\n\r\n            }\r\n        });\r\n        return binding.getRoot();\r\n    }\r\n    private void loadDestinations(){\r\n        destinationArrayList = new ArrayList<>();\r\n        DatabaseReference reference = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Destination\");\r\n        reference.addListenerForSingleValueEvent(new ValueEventListener() {\r\n            @Override\r\n            public void onDataChange(@NonNull DataSnapshot snapshot) {\r\n                destinationArrayList.clear();\r\n                for(DataSnapshot dataSnapshot : snapshot.getChildren()){\r\n                    Destination destination = dataSnapshot.getValue(Destination.class);\r\n                    destinationArrayList.add(destination);\r\n                }\r\n                destinationAdapter = new DestinationAdapter(getContext(),destinationArrayList);\r\n                binding.destiRv.setAdapter(destinationAdapter);\r\n            }\r\n            @Override\r\n            public void onCancelled(@NonNull DatabaseError error) {\r\n\r\n            }\r\n        });\r\n    }\r\n    private void loadCategoriedDestination(){\r\n        destinationArrayList = new ArrayList<>();\r\n        DatabaseReference reference = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Destination\");\r\n        reference.orderByChild(\"categoryId\").equalTo(categoryId)\r\n                .addListenerForSingleValueEvent(new ValueEventListener() {\r\n                    @Override\r\n                    public void onDataChange(@NonNull DataSnapshot snapshot) {\r\n                        destinationArrayList.clear();\r\n                        for(DataSnapshot dataSnapshot : snapshot.getChildren()){\r\n                            Destination destination = dataSnapshot.getValue(Destination.class);\r\n                            destinationArrayList.add(destination);\r\n\r\n                        }\r\n                        destinationAdapter = new DestinationAdapter(getContext(),destinationArrayList);\r\n                        binding.destiRv.setAdapter(destinationAdapter);\r\n                    }\r\n                    @Override\r\n                    public void onCancelled(@NonNull DatabaseError error) {\r\n\r\n                    }\r\n                });\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/Layout/ShowDestinationFragment.java b/app/src/main/java/com/binus/pekalongancityguide/Layout/ShowDestinationFragment.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/Layout/ShowDestinationFragment.java	(revision 4ce5a5273ccdf580e2324ea742f12526d8cbf131)
++++ b/app/src/main/java/com/binus/pekalongancityguide/Layout/ShowDestinationFragment.java	(date 1681366952928)
+@@ -53,7 +53,6 @@
+             uid = getArguments().getString("uid");
+         }
+     }
+-
+     @Override
+     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
+Index: app/src/main/res/layout/list_favorite.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<layout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\">\r\n\r\n    <data>\r\n\r\n    </data>\r\n\r\n    <androidx.cardview.widget.CardView\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_margin=\"8dp\"\r\n        app:cardCornerRadius=\"10dp\"\r\n        app:cardElevation=\"3dp\"\r\n        android:clickable=\"true\">\r\n\r\n        <RelativeLayout\r\n            android:id=\"@+id/bookmarklayoutImage\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"250dp\"\r\n            android:background=\"@color/white\"\r\n            android:backgroundTintMode=\"multiply\">\r\n            <ProgressBar\r\n                android:layout_centerInParent=\"true\"\r\n                android:id=\"@+id/progress_bookmark\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"/>\r\n            <TextView\r\n                android:id=\"@+id/bookmark_loc_rat\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:background=\"#80000000\"\r\n                android:drawableEnd=\"@drawable/star\"\r\n                android:gravity=\"center_horizontal\"\r\n                android:padding=\"10dp\"\r\n                android:text=\"4.5\"\r\n                android:textColor=\"@color/palette_4\"\r\n                android:textSize=\"16dp\"\r\n                android:textStyle=\"bold\" />\r\n\r\n            <ImageButton\r\n                android:id=\"@+id/unbookmark_btn\"\r\n                android:layout_width=\"48dp\"\r\n                android:layout_height=\"48dp\"\r\n                android:layout_alignParentRight=\"true\"\r\n                android:layout_margin=\"5dp\"\r\n                android:background=\"#0000\"\r\n                android:src=\"@drawable/bookmark\" />\r\n\r\n            <TextView\r\n                android:id=\"@+id/bookmark_loc_desc\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:visibility=\"invisible\" />\r\n\r\n            <TextView\r\n                android:id=\"@+id/bookmark_loc_title\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_alignParentBottom=\"true\"\r\n                android:layout_marginStart=\"10dp\"\r\n                android:layout_marginTop=\"10dp\"\r\n                android:layout_marginEnd=\"10dp\"\r\n                android:layout_marginBottom=\"10dp\"\r\n                android:textColor=\"@color/white\"\r\n                android:shadowColor=\"#000000\"\r\n                android:shadowDx=\"2\"\r\n                android:shadowDy=\"2\"\r\n                android:text=\"SImple Text\"\r\n                android:shadowRadius=\"2\"\r\n                android:textSize=\"24dp\"\r\n                android:textStyle=\"bold\" />\r\n        </RelativeLayout>\r\n    </androidx.cardview.widget.CardView>\r\n</layout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/list_favorite.xml b/app/src/main/res/layout/list_favorite.xml
+--- a/app/src/main/res/layout/list_favorite.xml	(revision 4ce5a5273ccdf580e2324ea742f12526d8cbf131)
++++ b/app/src/main/res/layout/list_favorite.xml	(date 1681365304486)
+@@ -18,7 +18,7 @@
+             android:id="@+id/bookmarklayoutImage"
+             android:layout_width="match_parent"
+             android:layout_height="250dp"
+-            android:background="@color/white"
++            android:background="@color/ic_launcher_background"
+             android:backgroundTintMode="multiply">
+             <ProgressBar
+                 android:layout_centerInParent="true"
+@@ -43,7 +43,10 @@
+                 android:layout_width="48dp"
+                 android:layout_height="48dp"
+                 android:layout_alignParentRight="true"
+-                android:layout_margin="5dp"
++                android:layout_marginStart="5dp"
++                android:layout_marginTop="5dp"
++                android:layout_marginEnd="5dp"
++                android:layout_marginBottom="5dp"
+                 android:background="#0000"
+                 android:src="@drawable/bookmark" />
+ 
+Index: app/src/main/res/drawable/bookmark.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><vector xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    android:width=\"24dp\"\r\n    android:height=\"24dp\"\r\n    android:viewportWidth=\"24\"\r\n    android:viewportHeight=\"24\">\r\n    <path\r\n        android:fillColor=\"@color/palette_2\"\r\n        android:pathData=\"M19,21l-7,-5 -7,5V5a2,2 0,0 1,2 -2h10a2,2 0,0 1,2 2z\"\r\n        android:strokeWidth=\"2\"\r\n        android:strokeColor=\"@color/palette_2\"\r\n        android:strokeLineCap=\"round\"\r\n        android:strokeLineJoin=\"round\" />\r\n</vector>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/drawable/bookmark.xml b/app/src/main/res/drawable/bookmark.xml
+--- a/app/src/main/res/drawable/bookmark.xml	(revision 4ce5a5273ccdf580e2324ea742f12526d8cbf131)
++++ b/app/src/main/res/drawable/bookmark.xml	(date 1681365304497)
+@@ -1,6 +1,6 @@
+ <vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="24dp"
+-    android:height="24dp"
++    android:width="30dp"
++    android:height="30dp"
+     android:viewportWidth="24"
+     android:viewportHeight="24">
+     <path
+Index: app/src/main/java/com/binus/pekalongancityguide/Layout/DestinationDetails.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.Layout;\r\n\r\nimport android.app.AlertDialog;\r\nimport android.app.DatePickerDialog;\r\nimport android.app.ProgressDialog;\r\nimport android.content.Intent;\r\nimport android.graphics.Bitmap;\r\nimport android.graphics.BitmapFactory;\r\nimport android.graphics.drawable.BitmapDrawable;\r\nimport android.graphics.drawable.Drawable;\r\nimport android.os.Bundle;\r\nimport android.text.TextUtils;\r\nimport android.util.Log;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\nimport android.widget.EditText;\r\nimport android.widget.ImageButton;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport com.binus.pekalongancityguide.Adapter.OpeningHoursAdapter;\r\nimport com.binus.pekalongancityguide.Adapter.ReviewAdapter;\r\nimport com.binus.pekalongancityguide.ItemTemplate.OpeningHours;\r\nimport com.binus.pekalongancityguide.ItemTemplate.Review;\r\nimport com.binus.pekalongancityguide.Misc.ImageFullscreen;\r\nimport com.binus.pekalongancityguide.Misc.MyApplication;\r\nimport com.binus.pekalongancityguide.R;\r\nimport com.binus.pekalongancityguide.databinding.ActivityDestinationDetailsBinding;\r\nimport com.google.android.gms.maps.CameraUpdate;\r\nimport com.google.android.gms.maps.CameraUpdateFactory;\r\nimport com.google.android.gms.maps.SupportMapFragment;\r\nimport com.google.android.gms.maps.model.LatLng;\r\nimport com.google.android.gms.maps.model.MapStyleOptions;\r\nimport com.google.android.gms.maps.model.MarkerOptions;\r\nimport com.google.android.material.timepicker.MaterialTimePicker;\r\nimport com.google.android.material.timepicker.TimeFormat;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.database.DataSnapshot;\r\nimport com.google.firebase.database.DatabaseError;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\nimport com.google.firebase.database.ValueEventListener;\r\n\r\nimport java.text.SimpleDateFormat;\r\nimport java.util.ArrayList;\r\nimport java.util.Calendar;\r\nimport java.util.Date;\r\nimport java.util.HashMap;\r\nimport java.util.List;\r\nimport java.util.Locale;\r\nimport java.util.Map;\r\n\r\npublic class DestinationDetails extends AppCompatActivity {\r\n    String imageUrl;\r\n    private ActivityDestinationDetailsBinding binding;\r\n    String destiId;\r\n    boolean inFavorite = false;\r\n    FirebaseAuth firebaseAuth;\r\n    private static final String TAG = \"REVIEW_TAG\";\r\n    private ProgressDialog progressDialog;\r\n    int startHour,startMinute,startHour1,startMinute1\r\n            ,endHour,endMinute,endHour1,endMinute1\r\n            ,dayDate,monthDate,yearDate,dayDate1,monthDate1,yearDate1;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        binding = ActivityDestinationDetailsBinding.inflate(getLayoutInflater());\r\n        setContentView(binding.getRoot());\r\n        Intent intent = getIntent();\r\n        destiId = intent.getStringExtra(\"destiId\");\r\n        firebaseAuth = FirebaseAuth.getInstance();\r\n        if (firebaseAuth.getCurrentUser() != null) {\r\n            checkFavorite();\r\n        }\r\n        loadDetails();\r\n        binding.backDesti.setOnClickListener(v -> onBackPressed());\r\n        binding.destiImage.setOnClickListener(v -> {\r\n            Intent intent1 = new Intent(this, ImageFullscreen.class);\r\n            intent1.putExtra(\"fullImg\", imageUrl);\r\n            startActivity(intent1);\r\n        });\r\n        binding.saveItem.setOnClickListener(v -> {\r\n            if (firebaseAuth.getCurrentUser() == null) {\r\n                Toast.makeText(DestinationDetails.this, \"You are not logged in!\", Toast.LENGTH_SHORT).show();\r\n            } else {\r\n                if (inFavorite) {\r\n                    MyApplication.removeFavorite(DestinationDetails.this, destiId);\r\n                } else {\r\n                    MyApplication.addtoFavorite(DestinationDetails.this, destiId);\r\n                }\r\n            }\r\n        });\r\n        binding.addItenary.setOnClickListener(v ->{\r\n            showAddItineraryDialog();\r\n        });\r\n    }\r\n\r\n    private void showAddItineraryDialog() {\r\n        AlertDialog.Builder builder = new AlertDialog.Builder(this);\r\n        View view = LayoutInflater.from(this).inflate(R.layout.dialog_add_to_itinerary, null);\r\n        builder.setView(view);\r\n        EditText dateEt,startEt,endEt;\r\n        ImageButton dateBtn,startBtn,endBtn;\r\n        Button addItinerary;\r\n        dateEt = view.findViewById(R.id.date_et);\r\n        startEt = view.findViewById(R.id.starttime_et);\r\n        endEt = view.findViewById(R.id.endtime_et);\r\n        dateBtn = view.findViewById(R.id.datepicker_btn);\r\n        startBtn = view.findViewById(R.id.startpicker_btn);\r\n        endBtn = view.findViewById(R.id.endpicker_btn);\r\n        addItinerary = view.findViewById(R.id.additinerary_btn);\r\n\r\n        startBtn.setOnClickListener(v -> {\r\n            Calendar calendar = Calendar.getInstance();\r\n            startHour = calendar.get(Calendar.HOUR_OF_DAY);\r\n            startMinute = calendar.get(Calendar.MINUTE);\r\n            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()\r\n                    .setTimeFormat(TimeFormat.CLOCK_12H)\r\n                    .setHour(startHour)\r\n                    .setMinute(startMinute)\r\n                    .setTitleText(\"Select start time\")\r\n                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);\r\n            MaterialTimePicker dialog = mybuilder.build();\r\n            dialog.addOnPositiveButtonClickListener(timeview -> {\r\n                startHour = dialog.getHour();\r\n                startMinute = dialog.getMinute();\r\n                if (startHour <= 12) {\r\n                    startEt.setText(String.format(Locale.getDefault(), \"%d:%02d am\", startHour, startMinute));\r\n                } else {\r\n                    startEt.setText(String.format(Locale.getDefault(), \"%d:%02d pm\", startHour - 12, startMinute));\r\n                }\r\n            });\r\n            dialog.show(getSupportFragmentManager(), \"startTimePicker\");\r\n        });\r\n        startEt.setOnClickListener(v -> {\r\n            Calendar calendar = Calendar.getInstance();\r\n            startHour1 = calendar.get(Calendar.HOUR_OF_DAY);\r\n            startMinute1 = calendar.get(Calendar.MINUTE);\r\n            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()\r\n                    .setTimeFormat(TimeFormat.CLOCK_12H)\r\n                    .setHour(startHour1)\r\n                    .setMinute(startMinute1)\r\n                    .setTitleText(\"Select start time\")\r\n                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);\r\n            MaterialTimePicker dialog = mybuilder.build();\r\n            dialog.addOnPositiveButtonClickListener(timeview -> {\r\n                startHour1 = dialog.getHour();\r\n                startMinute1 = dialog.getMinute();\r\n                if (startHour1 <= 12) {\r\n                    startEt.setText(String.format(Locale.getDefault(), \"%d:%02d am\", startHour1, startMinute1));\r\n                } else {\r\n                    startEt.setText(String.format(Locale.getDefault(), \"%d:%02d pm\", startHour1 - 12, startMinute1));\r\n                }\r\n            });\r\n            dialog.show(getSupportFragmentManager(), \"startTimePicker\");\r\n        });\r\n        endBtn.setOnClickListener(v -> {\r\n            Calendar calendar = Calendar.getInstance();\r\n            endHour = calendar.get(Calendar.HOUR_OF_DAY);\r\n            endMinute = calendar.get(Calendar.MINUTE);\r\n            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()\r\n                    .setTimeFormat(TimeFormat.CLOCK_12H)\r\n                    .setHour(endHour)\r\n                    .setMinute(endMinute)\r\n                    .setTitleText(\"Select start time\")\r\n                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);\r\n            MaterialTimePicker dialog = mybuilder.build();\r\n            dialog.addOnPositiveButtonClickListener(timeview -> {\r\n                endHour = dialog.getHour();\r\n                endMinute = dialog.getMinute();\r\n                if (endHour <= 12) {\r\n                    endEt.setText(String.format(Locale.getDefault(), \"%d:%02d am\", endHour, endMinute));\r\n                } else {\r\n                    endEt.setText(String.format(Locale.getDefault(), \"%d:%02d pm\", endHour - 12, endMinute));\r\n                }\r\n            });\r\n            dialog.show(getSupportFragmentManager(), \"startTimePicker\");\r\n        });\r\n        endEt.setOnClickListener(v -> {\r\n            Calendar calendar = Calendar.getInstance();\r\n            endHour1 = calendar.get(Calendar.HOUR_OF_DAY);\r\n            endMinute1 = calendar.get(Calendar.MINUTE);\r\n            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()\r\n                    .setTimeFormat(TimeFormat.CLOCK_12H)\r\n                    .setHour(endHour1)\r\n                    .setMinute(endMinute1)\r\n                    .setTitleText(\"Select start time\")\r\n                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);\r\n            MaterialTimePicker dialog = mybuilder.build();\r\n            dialog.addOnPositiveButtonClickListener(timeview -> {\r\n                endHour1 = dialog.getHour();\r\n                endMinute1 = dialog.getMinute();\r\n                if (endHour1 <= 12) {\r\n                    endEt.setText(String.format(Locale.getDefault(), \"%d:%02d am\", endHour1, endMinute1));\r\n                } else {\r\n                    endEt.setText(String.format(Locale.getDefault(), \"%d:%02d pm\", endHour1 - 12, endMinute1));\r\n                }\r\n            });\r\n            dialog.show(getSupportFragmentManager(), \"startTimePicker\");\r\n        });\r\n        dateBtn.setOnClickListener(v -> {\r\n            Calendar calendar = Calendar.getInstance();\r\n            yearDate = calendar.get(Calendar.YEAR);\r\n            monthDate = calendar.get(Calendar.MONTH);\r\n            dayDate = calendar.get(Calendar.DAY_OF_MONTH);\r\n            DatePickerDialog dialog;\r\n            dialog = new DatePickerDialog(this, (dateView, year, month, dayOfMonth) -> {\r\n                yearDate = year;\r\n                monthDate = month;\r\n                dayDate = dayOfMonth;\r\n                SimpleDateFormat format = new SimpleDateFormat(\"EEEE, dd MMMM yyyy\", Locale.getDefault());\r\n                String dateString = format.format(new Date(yearDate - 1900, monthDate, dayDate));\r\n                dateEt.setText(dateString);\r\n            }, yearDate, monthDate, dayDate);\r\n            dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);\r\n            dialog.show();\r\n        });\r\n        dateEt.setOnClickListener(v -> {\r\n            Calendar calendar = Calendar.getInstance();\r\n            yearDate1 = calendar.get(Calendar.YEAR);\r\n            monthDate1 = calendar.get(Calendar.MONTH);\r\n            dayDate1 = calendar.get(Calendar.DAY_OF_MONTH);\r\n            DatePickerDialog dialog;\r\n            dialog = new DatePickerDialog(this, (dateView, year, month, dayOfMonth) -> {\r\n                yearDate1 = year;\r\n                monthDate1 = month;\r\n                dayDate1 = dayOfMonth;\r\n                SimpleDateFormat format = new SimpleDateFormat(\"EEEE, dd MMMM yyyy\", Locale.getDefault());\r\n                String dateString = format.format(new Date(yearDate1 - 1900, monthDate1, dayDate1));\r\n                dateEt.setText(dateString);\r\n            }, yearDate1, monthDate1, dayDate1);\r\n            dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);\r\n            dialog.show();\r\n        });\r\n        addItinerary.setOnClickListener(v -> {\r\n            validateData(dateEt, startEt, endEt);\r\n        });\r\n        AlertDialog dialog = builder.create();\r\n        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);\r\n        dialog.show();\r\n    }\r\n\r\n    private String date = \"\", startTime = \"\", endTime = \"\";\r\n\r\n    private void validateData(EditText dateEt, EditText startTimeEt, EditText endTimeEt) {\r\n        date = dateEt.getText().toString().trim();\r\n        startTime = startTimeEt.getText().toString().trim();\r\n        endTime = endTimeEt.getText().toString().trim();\r\n        boolean allFieldsFilled = true;\r\n\r\n        if (TextUtils.isEmpty(date)) {\r\n            dateEt.setError(\"Please choose a date!\");\r\n            allFieldsFilled = false;\r\n        } else {\r\n            dateEt.setError(null);\r\n        }\r\n\r\n        if (TextUtils.isEmpty(startTime)) {\r\n            startTimeEt.setError(\"Please choose a starting time!\");\r\n            allFieldsFilled = false;\r\n        } else {\r\n            startTimeEt.setError(null);\r\n        }\r\n\r\n        if (TextUtils.isEmpty(endTime)) {\r\n            endTimeEt.setError(\"Please choose an end time!\");\r\n            allFieldsFilled = false;\r\n        } else {\r\n            endTimeEt.setError(null);\r\n        }\r\n\r\n        if (allFieldsFilled) {\r\n            uploadToDB(date, startTime, endTime);\r\n            Toast.makeText(this, \"Destination Added!\", Toast.LENGTH_SHORT).show();\r\n        }\r\n\r\n    }\r\n\r\n    private void uploadToDB(String date, String startTime, String endTime) {\r\n        String uid = firebaseAuth.getUid();\r\n        DatabaseReference reference = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Destination\");\r\n        reference.child(destiId).addListenerForSingleValueEvent(new ValueEventListener() {\r\n            @Override\r\n            public void onDataChange(@NonNull DataSnapshot snapshot) {\r\n                String placeID = \"\" + snapshot.child(\"placeId\").getValue();\r\n                Log.d(TAG, \"placeID: \" + placeID);\r\n                HashMap<String, Object> hashMap = new HashMap<>();\r\n                hashMap.put(\"startTime\", startTime);\r\n                hashMap.put(\"endTime\", endTime);\r\n                hashMap.put(\"date\", date);\r\n                hashMap.put(\"destiId\", destiId);\r\n                DatabaseReference itineraryRef = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Users\");\r\n                itineraryRef.child(uid).child(\"itinerary\").push().setValue(hashMap)\r\n                        .addOnSuccessListener(aVoid -> {\r\n                            if (progressDialog != null) {\r\n                                progressDialog.dismiss();\r\n\r\n                            }\r\n                            Toast.makeText(getApplicationContext(), \"Itinerary uploaded successfully\", Toast.LENGTH_LONG).show();\r\n                        }).addOnFailureListener(e -> {\r\n                            if (progressDialog != null) {\r\n                                progressDialog.dismiss();\r\n                            }\r\n                            Log.d(TAG, \"on Failure : \" + e.getMessage());\r\n                    Toast.makeText(DestinationDetails.this, \"Data upload failed due to \" + e.getMessage(), Toast.LENGTH_SHORT).show();\r\n                });\r\n            }\r\n\r\n            @Override\r\n            public void onCancelled(@NonNull DatabaseError error) {\r\n\r\n            }\r\n        });\r\n    }\r\n\r\n    private void loadDetails() {\r\n        DatabaseReference reference = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Destination\");\r\n        reference.child(destiId)\r\n                .addListenerForSingleValueEvent(new ValueEventListener() {\r\n                    @Override\r\n                    public void onDataChange(@NonNull DataSnapshot snapshot){\r\n                        String title = \"\" + snapshot.child(\"title\").getValue();\r\n                        String description = \"\" + snapshot.child(\"description\").getValue();\r\n                        String address = \"\" + snapshot.child(\"address\").getValue();\r\n                        String categoryId = \"\" + snapshot.child(\"categoryId\").getValue();\r\n                        String url = \"\" + snapshot.child(\"url\").getValue();\r\n                        String phone = \"\" + snapshot.child(\"phoneNumber\").getValue();\r\n                        double latitude = Double.parseDouble(snapshot.child(\"latitude\").getValue().toString());\r\n                        double longitude = Double.parseDouble(snapshot.child(\"longitude\").getValue().toString());\r\n                        binding.destiName.setText(title);\r\n                        binding.destiDesc.setText(description);\r\n                        binding.destiAddress.setText(address);\r\n                        binding.destiPhone.setText(\"Phone Number: \" + phone);\r\n                        imageUrl = url;\r\n                        Map<String, String> openingHoursMap = new HashMap<>();\r\n                        for (DataSnapshot hourSnapshot : snapshot.child(\"openingHours\").getChildren()) {\r\n                            String dayOfWeek = hourSnapshot.getKey();\r\n                            String openingHours = hourSnapshot.getValue(String.class);\r\n                            openingHoursMap.put(dayOfWeek, openingHours);\r\n                        }\r\n\r\n                        for (Map.Entry<String, String> entry : openingHoursMap.entrySet()) {\r\n                            String dayOfWeek = entry.getKey();\r\n                            String openingHours = entry.getValue();\r\n                            System.out.println(dayOfWeek + \": \" + openingHours);\r\n                        }\r\n                        List<OpeningHours> openingHoursList = new ArrayList<>();\r\n                        for (Map.Entry<String, String> entry : openingHoursMap.entrySet()) {\r\n                            String dayOfWeek = entry.getKey();\r\n                            String openingHours = entry.getValue();\r\n                            openingHoursList.add(new OpeningHours(dayOfWeek, openingHours));\r\n                        }\r\n\r\n                        OpeningHoursAdapter hoursAdapter = new OpeningHoursAdapter(openingHoursList);\r\n                        binding.openingRv.setAdapter(hoursAdapter);\r\n\r\n                        List<Review> reviews = new ArrayList<>();\r\n                        for (DataSnapshot reviewSnapshot : snapshot.child(\"reviews\").getChildren()) {\r\n                            String authorName = reviewSnapshot.child(\"authorName\").getValue(String.class);\r\n                            int rating = reviewSnapshot.child(\"rating\").getValue(int.class);\r\n                            String text = reviewSnapshot.child(\"text\").getValue(String.class);\r\n                            reviews.add(new Review(authorName, rating, text));\r\n                        }\r\n                        ReviewAdapter reviewAdapter = new ReviewAdapter(reviews);\r\n                        binding.reviewRv.setAdapter(reviewAdapter);\r\n\r\n                        binding.reviewRv.setAdapter(new ReviewAdapter(reviews));\r\n\r\n                        String filePath = getIntent().getStringExtra(\"imageFilePath\");\r\n                        if (filePath != null){\r\n                            Bitmap bitmap = BitmapFactory.decodeFile(filePath);\r\n                            Drawable drawable = new BitmapDrawable(getResources(), bitmap);\r\n                            binding.destiImage.setBackground(drawable);\r\n                        }\r\n                        SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager()\r\n                                .findFragmentById(R.id.map);\r\n                        fragment.getMapAsync(googleMap -> {\r\n                            LatLng coordinate = new LatLng(latitude, longitude);\r\n                            MarkerOptions marker = new MarkerOptions();\r\n                            marker.position(coordinate);\r\n                            marker.title(title);\r\n                            googleMap.addMarker(marker);\r\n                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 15);\r\n                            googleMap.moveCamera(cameraUpdate);\r\n                            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(DestinationDetails.this, R.raw.map_style));\r\n                        });\r\n                    }\r\n                    @Override\r\n                    public void onCancelled(@NonNull DatabaseError error) {\r\n\r\n                    }\r\n                });\r\n    }\r\n\r\n    private void checkFavorite(){\r\n        DatabaseReference reference = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Users\");\r\n        reference.child(firebaseAuth.getUid()).child(\"Favorites\").child(destiId)\r\n                .addValueEventListener(new ValueEventListener() {\r\n                    @Override\r\n                    public void onDataChange(@NonNull DataSnapshot snapshot) {\r\n                        inFavorite = snapshot.exists();\r\n                        if(inFavorite){\r\n                            binding.saveItem.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.bookmark,0,0);\r\n                            binding.saveItem.setText(\"Remove from Bookmark\");\r\n                        }else{\r\n                            binding.saveItem.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.remove_bookmark,0,0);\r\n                            binding.saveItem.setText(\"Bookmark Place\");\r\n                        }\r\n                    }\r\n\r\n                    @Override\r\n                    public void onCancelled(@NonNull DatabaseError error) {\r\n\r\n                    }\r\n                });\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/Layout/DestinationDetails.java b/app/src/main/java/com/binus/pekalongancityguide/Layout/DestinationDetails.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/Layout/DestinationDetails.java	(revision 4ce5a5273ccdf580e2324ea742f12526d8cbf131)
++++ b/app/src/main/java/com/binus/pekalongancityguide/Layout/DestinationDetails.java	(date 1681365300622)
+@@ -275,7 +275,7 @@
+ 
+         if (allFieldsFilled) {
+             uploadToDB(date, startTime, endTime);
+-            Toast.makeText(this, "Destination Added!", Toast.LENGTH_SHORT).show();
++            Toast.makeText(this, "Destination Added to Itinerary!", Toast.LENGTH_SHORT).show();
+         }
+ 
+     }
+Index: app/src/main/java/com/binus/pekalongancityguide/Adapter/DestinationAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.Adapter;\r\n\r\nimport android.content.Context;\r\nimport android.content.Intent;\r\nimport android.graphics.Bitmap;\r\nimport android.graphics.BitmapFactory;\r\nimport android.graphics.drawable.BitmapDrawable;\r\nimport android.graphics.drawable.Drawable;\r\nimport android.util.Log;\r\nimport android.view.Gravity;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.Filter;\r\nimport android.widget.Filterable;\r\nimport android.widget.ProgressBar;\r\nimport android.widget.RelativeLayout;\r\nimport android.widget.TextView;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport com.binus.pekalongancityguide.ItemTemplate.Destination;\r\nimport com.binus.pekalongancityguide.Layout.DestinationDetails;\r\nimport com.binus.pekalongancityguide.Misc.FilterDestiUser;\r\nimport com.binus.pekalongancityguide.databinding.ListDestinationBinding;\r\nimport com.google.firebase.database.DataSnapshot;\r\nimport com.google.firebase.database.DatabaseError;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\nimport com.google.firebase.database.ValueEventListener;\r\nimport com.google.firebase.storage.FirebaseStorage;\r\nimport com.google.firebase.storage.StorageReference;\r\n\r\nimport java.io.ByteArrayOutputStream;\r\nimport java.io.FileNotFoundException;\r\nimport java.io.FileOutputStream;\r\nimport java.io.IOException;\r\nimport java.util.ArrayList;\r\n\r\nimport static com.binus.pekalongancityguide.Misc.Constants.MAX_BYTES_IMAGE;\r\n\r\npublic class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.HolderDestination> implements Filterable {\r\n    private final Context context;\r\n    public ArrayList<Destination> destinations, filterList;\r\n    private ListDestinationBinding binding;\r\n    private FilterDestiUser filterDestiUser;\r\n    private static final String TAG = \"ADAPTER_USER_TAG\";\r\n\r\n    public DestinationAdapter(Context context, ArrayList<Destination> destinations) {\r\n        this.context = context;\r\n        this.destinations = destinations;\r\n        this.filterList = destinations;\r\n    }\r\n\r\n    @NonNull\r\n    @Override\r\n    public HolderDestination onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {\r\n        binding = ListDestinationBinding.inflate(LayoutInflater.from(context),parent,false);\r\n        return new HolderDestination(binding.getRoot());\r\n    }\r\n    @Override\r\n    public void onBindViewHolder(@NonNull HolderDestination holder, int position){\r\n        Destination destination = destinations.get(position);\r\n        String destiId = destination.getId();\r\n        String title = destination.getTitle();\r\n        String description = destination.getDescription();\r\n        holder.title.setText(title);\r\n        holder.description.setText(description);\r\n        loadImage(destination, holder);\r\n        DatabaseReference databaseReference = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Destination\")\r\n                .child(destiId);\r\n        databaseReference.addValueEventListener(new ValueEventListener() {\r\n            @Override\r\n            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {\r\n                String desRating = \"\"+dataSnapshot.child(\"rating\").getValue();\r\n                holder.rating.setText(desRating);\r\n            }\r\n            @Override\r\n            public void onCancelled(@NonNull DatabaseError databaseError) {\r\n                Log.d(TAG, \"onCancelled: \" + databaseError.getMessage());\r\n            }\r\n        });\r\n        holder.itemView.setOnClickListener(v -> {\r\n            Drawable drawable = holder.layoutImage.getBackground();\r\n            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;\r\n            Bitmap bitmap = bitmapDrawable.getBitmap();\r\n            ByteArrayOutputStream stream = new ByteArrayOutputStream();\r\n            bitmap.compress(Bitmap.CompressFormat.PNG, 25, stream);\r\n            byte[] byteArray = stream.toByteArray();\r\n\r\n            String filePath = context.getFilesDir().getPath() + \"/image.png\";\r\n            FileOutputStream fos;\r\n            try {\r\n                fos = new FileOutputStream(filePath);\r\n            } catch (FileNotFoundException e) {\r\n                throw new RuntimeException(e);\r\n            }\r\n            try {\r\n                fos.write(byteArray);\r\n            } catch (IOException e) {\r\n                throw new RuntimeException(e);\r\n            }\r\n            try {\r\n                fos.close();\r\n            } catch (IOException e) {\r\n                throw new RuntimeException(e);\r\n            }\r\n            Intent intent = new Intent(context, DestinationDetails.class);\r\n            intent.putExtra(\"destiId\",destiId);\r\n            intent.putExtra(\"imageFilePath\", filePath);\r\n            context.startActivity(intent);\r\n        });\r\n    }\r\n\r\n    private void loadImage(Destination destination, HolderDestination holder){\r\n        String imageUrl = destination.getUrl();\r\n        StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);\r\n        reference.getBytes(MAX_BYTES_IMAGE)\r\n                .addOnSuccessListener(bytes -> {\r\n                    Log.d(TAG, \"on Success: \" + destination.getTitle() + \"successfully got the file\");\r\n                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);\r\n                    BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), bitmap);\r\n                    drawable.setGravity(Gravity.FILL);\r\n                    holder.layoutImage.setBackground(drawable);\r\n                    holder.progressBar.setVisibility(View.GONE);\r\n                })\r\n                .addOnFailureListener(e -> Log.d(TAG, \"on Failure: failed to getting file from url due to\" + e.getMessage()));\r\n    }\r\n    @Override\r\n    public int getItemCount() {\r\n        return destinations.size();\r\n    }\r\n\r\n    @Override\r\n    public Filter getFilter() {\r\n        if(filterDestiUser==null){\r\n            filterDestiUser = new FilterDestiUser(filterList,this);\r\n\r\n        }\r\n        return filterDestiUser;\r\n    }\r\n\r\n    class HolderDestination extends RecyclerView.ViewHolder{\r\n        RelativeLayout layoutImage;\r\n        TextView title, description, rating;\r\n        ProgressBar progressBar;\r\n        public HolderDestination(@NonNull View itemView) {\r\n            super(itemView);\r\n            layoutImage = binding.layoutImage;\r\n            title = binding.locTitle;\r\n            description = binding.locDesc;\r\n            rating = binding.locRat;\r\n            progressBar = binding.progressBar;\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/Adapter/DestinationAdapter.java b/app/src/main/java/com/binus/pekalongancityguide/Adapter/DestinationAdapter.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/Adapter/DestinationAdapter.java	(revision 4ce5a5273ccdf580e2324ea742f12526d8cbf131)
++++ b/app/src/main/java/com/binus/pekalongancityguide/Adapter/DestinationAdapter.java	(date 1681365304576)
+@@ -66,7 +66,6 @@
+         String title = destination.getTitle();
+         String description = destination.getDescription();
+         holder.title.setText(title);
+-        holder.description.setText(description);
+         loadImage(destination, holder);
+         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination")
+                 .child(destiId);
+@@ -143,13 +142,12 @@
+ 
+     class HolderDestination extends RecyclerView.ViewHolder{
+         RelativeLayout layoutImage;
+-        TextView title, description, rating;
++        TextView title,rating;
+         ProgressBar progressBar;
+         public HolderDestination(@NonNull View itemView) {
+             super(itemView);
+             layoutImage = binding.layoutImage;
+             title = binding.locTitle;
+-            description = binding.locDesc;
+             rating = binding.locRat;
+             progressBar = binding.progressBar;
+         }
+Index: app/src/main/res/layout/activity_image_fullscreen.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout\r\n    xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".Misc.ImageFullscreen\">\r\n\r\n    <com.github.chrisbanes.photoview.PhotoView\r\n        android:id=\"@+id/photo_view\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintLeft_toLeftOf=\"parent\"\r\n        app:layout_constraintRight_toRightOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\"/>\r\n\r\n    <ImageButton\r\n        android:id=\"@+id/back_button\"\r\n        android:layout_margin=\"15dp\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:background=\"@drawable/rounded_back\"\r\n        android:padding=\"16dp\"\r\n        android:src=\"@drawable/back_icon\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\"/>\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_image_fullscreen.xml b/app/src/main/res/layout/activity_image_fullscreen.xml
+--- a/app/src/main/res/layout/activity_image_fullscreen.xml	(revision 4ce5a5273ccdf580e2324ea742f12526d8cbf131)
++++ b/app/src/main/res/layout/activity_image_fullscreen.xml	(date 1681365304646)
+@@ -18,13 +18,15 @@
+ 
+     <ImageButton
+         android:id="@+id/back_button"
+-        android:layout_margin="15dp"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
++        android:layout_margin="15dp"
++        android:layout_marginBottom="16dp"
+         android:background="@drawable/rounded_back"
+         android:padding="16dp"
+         android:src="@drawable/back_icon"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent"/>
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintStart_toStartOf="parent" />
+ 
+ </androidx.constraintlayout.widget.ConstraintLayout>
