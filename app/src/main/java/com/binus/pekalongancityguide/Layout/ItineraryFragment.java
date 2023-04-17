@@ -113,7 +113,7 @@ public class ItineraryFragment extends Fragment {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
         Bundle args = getArguments();
         if (args != null) {
-            selectedDate = args.getString("selectedDate");
+            selectedDate = args.getString("selectedDate", selectedDate);
             Log.d(TAG, "selected date: " + selectedDate);
         }
         loadItinerary(selectedDate);
@@ -139,7 +139,7 @@ public class ItineraryFragment extends Fragment {
 
     private void loadItinerary(String date) {
         DatabaseReference userRef = database.getReference("Users").child(firebaseAuth.getUid());
-        Query itineraryQuery = userRef.child("itinerary");
+        Query itineraryQuery = userRef.child("itinerary").orderByChild("date").equalTo(date);
         Log.d(TAG, "itineraryQuery: " + itineraryQuery);
         itineraryQuery.addValueEventListener(new ValueEventListener() {
             @Override

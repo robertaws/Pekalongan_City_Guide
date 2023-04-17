@@ -25,6 +25,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -119,7 +120,6 @@ public class ItineraryList extends AppCompatActivity {
 
     private List<Fragment> createFragmentsList(List<String> dates) {
         List<Fragment> fragments = new ArrayList<>();
-        DateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
         Collections.sort(dates, new Comparator<String>() {
             DateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
 
@@ -140,7 +140,7 @@ public class ItineraryList extends AppCompatActivity {
             ItineraryFragment fragment = new ItineraryFragment();
             Bundle args = new Bundle();
             args.putString("date", date);
-            args.putString("selectedDate",date);
+            args.putString("selectedDate", convertToNormalDate(date));
             Log.d(TAG, "passed date: " + args);
             fragment.setArguments(args);
             fragments.add(fragment);
@@ -148,6 +148,23 @@ public class ItineraryList extends AppCompatActivity {
         return fragments;
     }
 
+    private String convertToNormalDate(String dateStr) {
+        try {
+            DateFormat originalDateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
+            Date date = originalDateFormat.parse(dateStr);
+            Calendar calendar = Calendar.getInstance();
+            int currentYear = calendar.get(Calendar.YEAR);
+            calendar.setTime(date);
+            calendar.set(Calendar.YEAR, currentYear);
+            Date dateWithYear = calendar.getTime();
+            DateFormat targetDateFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
+            return targetDateFormat.format(dateWithYear);
+        } catch (ParseException e) {
+            Log.e("ItineraryList", "Error parsing date: " + dateStr, e);
+            Toast.makeText(ItineraryList.this, "Error parsing date: " + dateStr, Toast.LENGTH_SHORT).show();
+            return "";
+        }
+    }
 
     private String convertToIso8601(String dateStr) {
         try {
