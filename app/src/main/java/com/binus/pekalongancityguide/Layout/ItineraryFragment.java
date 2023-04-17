@@ -65,6 +65,7 @@ public class ItineraryFragment extends Fragment {
     private final List<Itinerary> itineraryList = new ArrayList<>();
     ItineraryAdapter adapter;
     PlacesClient placesClient;
+    private String selectedDate;
     private FirebaseAuth firebaseAuth;
     private FusedLocationProviderClient fusedLocationClient;
     private final FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
@@ -110,8 +111,12 @@ public class ItineraryFragment extends Fragment {
             startLocationUpdates();
         }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
-
-        loadItinerary();
+        Bundle args = getArguments();
+        if (args != null) {
+            selectedDate = args.getString("selectedDate");
+            Log.d(TAG, "selected date: " + selectedDate);
+        }
+        loadItinerary(selectedDate);
         binding.itineraryRv.setAdapter(adapter);
         return binding.getRoot();
     }
@@ -131,9 +136,11 @@ public class ItineraryFragment extends Fragment {
             }
         }
     }
-    private void loadItinerary() {
+
+    private void loadItinerary(String date) {
         DatabaseReference userRef = database.getReference("Users").child(firebaseAuth.getUid());
         Query itineraryQuery = userRef.child("itinerary");
+        Log.d(TAG, "itineraryQuery: " + itineraryQuery);
         itineraryQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
