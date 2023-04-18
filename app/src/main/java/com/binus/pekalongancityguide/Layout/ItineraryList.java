@@ -29,6 +29,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -50,24 +51,23 @@ public class ItineraryList extends AppCompatActivity {
         binding.backtoprofile.setOnClickListener(v -> {
             onBackPressed();
         });
-
-        // Fetch data from Firebase and create list of dates
         DatabaseReference userRef = database.getReference("Users").child(Objects.requireNonNull(firebaseAuth.getUid()));
         Query itineraryQuery = userRef.child("itinerary");
         itineraryQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<String> dates = new ArrayList<>();
+                HashSet<String> uniqueDates = new HashSet<>();
                 for (DataSnapshot itinerarySnapshot : snapshot.getChildren()) {
                     String date = itinerarySnapshot.child("date").getValue(String.class);
                     if (date != null && !date.isEmpty()) {
                         Log.d(TAG, "date: " + date);
-                        date = convertToIso8601(date);
-                        dates.add(date);
+                        date = convertWithoutDay(date);
+                        uniqueDates.add(date);
                     }
                 }
 
-                List<Fragment> fragments = createFragmentsList(dates);
+                List<Fragment> fragments = createFragmentsList(new ArrayList<>(uniqueDates));
+                List<String> dates = new ArrayList<>(uniqueDates);
 
                 ItineraryPagerAdapter vpAdapter = new ItineraryPagerAdapter(ItineraryList.this, getSupportFragmentManager(), fragments, dates);
                 binding.viewPager.setAdapter(vpAdapter);
@@ -81,12 +81,10 @@ public class ItineraryList extends AppCompatActivity {
             }
         });
     }
-
     public class ItineraryPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> fragments;
         private final List<String> dates;
         private String selectedDate;
-
         public ItineraryPagerAdapter(Context context, FragmentManager fm, List<Fragment> fragments, List<String> dates) {
             super(fm);
             this.fragments = fragments;
@@ -95,13 +93,8 @@ public class ItineraryList extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             Fragment fragment = fragments.get(position);
-//            Bundle args = fragment.getArguments();
-//            args.putString("selectedDate", selectedDate);
-//            Log.d(TAG, "passed date: " + args);
-//            fragment.setArguments(args);
             return fragment;
         }
-
         @Override
         public int getCount() {
             return fragments.size();
@@ -166,7 +159,7 @@ public class ItineraryList extends AppCompatActivity {
         }
     }
 
-    private String convertToIso8601(String dateStr) {
+    private String convertWithoutDay(String dateStr) {
         try {
             DateFormat originalDateFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
             Date date = originalDateFormat.parse(dateStr);
