@@ -66,8 +66,24 @@ public class ItineraryList extends AppCompatActivity {
                     }
                 }
 
-                List<Fragment> fragments = createFragmentsList(new ArrayList<>(uniqueDates));
                 List<String> dates = new ArrayList<>(uniqueDates);
+                Collections.sort(dates, new Comparator<String>() {
+                    DateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
+
+                    @Override
+                    public int compare(String date1, String date2) {
+                        try {
+                            Date dateObj1 = dateFormat.parse(date1);
+                            Date dateObj2 = dateFormat.parse(date2);
+                            return dateObj1.compareTo(dateObj2);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            return 0;
+                        }
+                    }
+                });
+
+                List<Fragment> fragments = createFragmentsList(dates);
 
                 ItineraryPagerAdapter vpAdapter = new ItineraryPagerAdapter(ItineraryList.this, getSupportFragmentManager(), fragments, dates);
                 binding.viewPager.setAdapter(vpAdapter);
