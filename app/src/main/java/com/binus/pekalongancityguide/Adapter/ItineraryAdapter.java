@@ -67,9 +67,8 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         }
         holder.distanceTextView.setText(distanceString);
         holder.durationTextView.setText(itinerary.getDurationText());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.itemView.setOnClickListener(v -> {
+            if (holder.isImageLoaded) {
                 String destinationName = itinerary.getPlaceName();
                 double latitude = itinerary.getLatitude();
                 double longitude = itinerary.getLongitude();
@@ -124,6 +123,7 @@ private String getMyLocation(){
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                         holder.itineraryBg.setBackground(resource);
+                        holder.isImageLoaded = true;
                     }
 
                     @Override
@@ -134,7 +134,12 @@ private String getMyLocation(){
 
     public static class ItineraryViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout itineraryBg;
-        public TextView dateTextView, startTimeTextView, endTimeTextView, placeNameTextView, distanceTextView, durationTextView;
+        public TextView startTimeTextView;
+        public TextView endTimeTextView;
+        public TextView placeNameTextView;
+        public TextView distanceTextView;
+        public TextView durationTextView;
+        public boolean isImageLoaded;
 
         public ItineraryViewHolder(View itemView) {
             super(itemView);
@@ -144,6 +149,7 @@ private String getMyLocation(){
             distanceTextView = itemView.findViewById(R.id.distanceTextView);
             durationTextView = itemView.findViewById(R.id.durationTextView);
             itineraryBg = itemView.findViewById(R.id.itinerary_bg);
+            isImageLoaded = false;
         }
     }
 }
