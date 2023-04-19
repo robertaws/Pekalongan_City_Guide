@@ -50,6 +50,7 @@
                 android:background="@drawable/et_style"
                 android:layout_marginHorizontal="30dp"
                 android:layout_width="match_parent"
+                android:fontFamily="@font/poppins_regular"
                 android:layout_height="wrap_content"
                 android:hint="Add New Destination" />
 
@@ -59,37 +60,11 @@
                 android:padding="15dp"
                 android:background="@drawable/et_style"
                 android:layout_marginHorizontal="30dp"
+                android:fontFamily="@font/poppins_regular"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Destination Description" />
 
-            <!--            <EditText-->
-            <!--                android:id="@+id/address_et"-->
-            <!--                android:layout_marginTop="20dp"-->
-            <!--                android:padding="15dp"-->
-            <!--                android:background="@drawable/et_style"-->
-            <!--                android:layout_marginHorizontal="30dp"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:hint="Destination Address" />-->
-            <!--            <EditText-->
-            <!--                android:id="@+id/lat_et"-->
-            <!--                android:layout_marginTop="20dp"-->
-            <!--                android:padding="15dp"-->
-            <!--                android:background="@drawable/et_style"-->
-            <!--                android:layout_marginHorizontal="30dp"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:hint="Destination Lattitude" />-->
-            <!--            <EditText-->
-            <!--                android:id="@+id/long_et"-->
-            <!--                android:layout_marginTop="20dp"-->
-            <!--                android:padding="15dp"-->
-            <!--                android:background="@drawable/et_style"-->
-            <!--                android:layout_marginHorizontal="30dp"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:hint="Destination Longitude" />-->
             <TextView
                 android:id="@+id/category_pick"
                 android:drawablePadding="10dp"
@@ -100,6 +75,7 @@
                 android:hint="Pick Category"
                 android:drawableStart="@drawable/category"
                 android:padding="10dp"
+                android:fontFamily="@font/poppins_semibold"
                 android:layout_marginHorizontal="30dp"
                 android:drawableEnd="@drawable/dropdown_icon"
                 android:textStyle="bold"
@@ -109,6 +85,7 @@
             <Button
                 android:id="@+id/add_btn"
                 android:layout_marginTop="20dp"
+                android:fontFamily="@font/poppins_semibold"
                 android:layout_width="match_parent"
                 android:textColor="@color/palette_4"
                 android:layout_height="wrap_content"

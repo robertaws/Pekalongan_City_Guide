@@ -33,6 +33,7 @@
                 android:drawableEnd="@drawable/star"
                 android:gravity="center_horizontal"
                 android:padding="10dp"
+                android:fontFamily="@font/poppins_regular"
                 android:text="4.5"
                 android:textColor="@color/palette_4"
                 android:textSize="16dp"
@@ -51,18 +52,13 @@
                 android:src="@drawable/bookmark" />
 
             <TextView
-                android:id="@+id/bookmark_loc_desc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="invisible" />
-
-            <TextView
                 android:id="@+id/bookmark_loc_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
+                android:fontFamily="@font/poppins_semibold"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 android:textColor="@color/white"

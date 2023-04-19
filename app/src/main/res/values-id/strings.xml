@@ -21,7 +21,7 @@
     <string name="coat_arms_new">Lambang Kota (Sekarang)</string>
     <string name="city_flag">Bendera Kota</string>
     #culinary detail
-    <string name="culinary_header">Kuliner</string>
+    <string name="culinary_header">Kuliner Lokal</string>
     <string name="culinary_image">Galeri Kuliner</string>
     #destination fragment
     <string name="search_hint">Cari Tujuan</string>

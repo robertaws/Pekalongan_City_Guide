@@ -23,6 +23,7 @@
                 android:layout_height="wrap_content"
                 android:text="Daily conversation examples:"
                 android:textSize="24dp"
+                android:fontFamily="@font/poppins_semibold"
                 android:layout_marginBottom="20dp"
                 android:textStyle="bold"
                 android:textColor="@color/palette_1"/>
@@ -39,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:text="Frequent phrases:"
                 android:textSize="24dp"
+                android:fontFamily="@font/poppins_semibold"
                 android:textStyle="bold"
                 android:layout_marginTop="20dp"
                 android:textColor="@color/palette_1"

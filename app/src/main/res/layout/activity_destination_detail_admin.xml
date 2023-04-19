@@ -29,9 +29,11 @@
                 android:src="@drawable/back_icon" />
 
             <TextView
+                android:includeFontPadding="false"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center"
+                android:gravity="center_vertical"
+                android:fontFamily="@font/poppins_semibold"
                 android:text="Destination Details"
                 android:textColor="@color/palette_1"
                 android:textSize="20dp"
@@ -88,6 +90,7 @@
                             android:textSize="18dp"
                             android:id="@+id/desti_admin_name"
                             android:layout_width="match_parent"
+                            android:fontFamily="@font/poppins_regular"
                             android:layout_height="wrap_content"
                             android:text="Destination Name"
                             android:textColor="@color/palette_1"
@@ -103,6 +106,7 @@
                             android:id="@+id/desti_admin_desc"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_regular"
                             android:justificationMode="inter_word"
                             android:text="Destination Description"
                             android:textColor="@color/palette_1" />
@@ -117,6 +121,7 @@
                             android:id="@+id/desti_admin_address"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_semibold"
                             android:layout_marginTop="10dp"
                             android:justificationMode="inter_word"
                             android:text="Destination Address"

@@ -29,6 +29,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:text="Dashboard Admin"
+                android:fontFamily="@font/poppins_semibold"
                 android:textStyle="bold"
                 android:textSize="16dp" />
             <TextView
@@ -38,6 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
+                android:fontFamily="@font/poppins_regular"
                 android:text="Admin Info"
                 android:textStyle="bold"
                 android:textSize="14dp" />
@@ -56,6 +58,7 @@
             android:drawableStart="@drawable/search_icon"
             android:drawablePadding="5dp"
             android:padding="5dp"
+            android:fontFamily="@font/poppins_regular"
             android:background="@color/bg"
             android:layout_marginHorizontal="10dp"
             android:layout_width="match_parent"

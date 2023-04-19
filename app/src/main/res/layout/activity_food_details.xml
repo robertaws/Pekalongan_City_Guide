@@ -26,11 +26,11 @@
                 android:src="@drawable/back_icon" />
 
             <TextView
-                android:layout_marginStart="-20dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:text="Culinary"
+                android:fontFamily="@font/poppins_semibold"
                 android:textColor="@color/palette_1"
                 android:textSize="20dp"
                 android:textStyle="bold" />
@@ -72,6 +72,7 @@
                     android:textSize="20dp"
                     android:id="@+id/cul_name"
                     android:layout_width="match_parent"
+                    android:fontFamily="@font/poppins_semibold"
                     android:layout_height="wrap_content"
                     android:text="Culinary Name"
                     android:textColor="@color/palette_1"
@@ -81,6 +82,7 @@
                     android:layout_marginTop="10dp"
                     android:id="@+id/cul_desc"
                     android:layout_width="match_parent"
+                    android:fontFamily="@font/poppins_regular"
                     android:layout_height="wrap_content"
                     android:justificationMode="inter_word"
                     android:text="Culinary Description"
@@ -92,6 +94,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Culinary Gallery"
+                    android:fontFamily="@font/poppins_semibold"
                     android:textColor="@color/palette_1"
                     android:textStyle="bold"/>
                 <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"

@@ -21,12 +21,9 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class MyApplication extends Application {
-    public static Locale locale;
-
     @Override
     public void onCreate() {
         super.onCreate();
-        locale = new Locale("en");
     }
 
     public static final String formatTimeStamp(long timestamp){

@@ -35,6 +35,7 @@
             android:textAlignment="center"
             android:layout_marginTop="80dp"
             android:padding="15dp"
+            android:fontFamily="@font/poppins_regular"
             android:background="@drawable/et_style"
             android:layout_marginHorizontal="30dp"
             android:layout_width="match_parent"
@@ -47,6 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/palette_4"
+            android:fontFamily="@font/poppins_semibold"
             android:text="Submit"
             android:layout_marginHorizontal="30dp" />
 
