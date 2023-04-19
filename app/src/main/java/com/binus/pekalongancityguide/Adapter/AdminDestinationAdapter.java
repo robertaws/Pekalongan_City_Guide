@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -20,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
@@ -28,22 +28,20 @@ import com.binus.pekalongancityguide.Layout.EditDestination;
 import com.binus.pekalongancityguide.Misc.FilterDestiAdmin;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.databinding.ListDestiAdminBinding;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import static com.binus.pekalongancityguide.Misc.Constants.MAX_BYTES_IMAGE;
 
 public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinationAdapter.HolderAdminDestination> implements Filterable {
     private final Context context;
@@ -94,34 +92,36 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
         loadImage(destination, holder);
         holder.options.setOnClickListener(v -> showOptionsDialog(destination, holder));
         holder.itemView.setOnClickListener(v -> {
-            Drawable drawable = holder.layoutImage.getBackground();
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            Bitmap bitmap = bitmapDrawable.getBitmap();
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 25, stream);
-            byte[] byteArray = stream.toByteArray();
+            if (holder.isImageLoaded) {
+                Drawable drawable = holder.layoutImage.getBackground();
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                Bitmap bitmap = bitmapDrawable.getBitmap();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 25, stream);
+                byte[] byteArray = stream.toByteArray();
 
-            String filePath = context.getFilesDir().getPath() + "/image.png";
-            FileOutputStream fos;
-            try {
-                fos = new FileOutputStream(filePath);
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
+                String filePath = context.getFilesDir().getPath() + "/image.png";
+                FileOutputStream fos;
+                try {
+                    fos = new FileOutputStream(filePath);
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                    fos.write(byteArray);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                Intent intent = new Intent(context, DestinationDetailAdmin.class);
+                intent.putExtra("destiId", destiId);
+                intent.putExtra("imageFilePath", filePath);
+                context.startActivity(intent);
             }
-            try {
-                fos.write(byteArray);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                fos.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Intent intent = new Intent(context, DestinationDetailAdmin.class);
-            intent.putExtra("destiId",destiId);
-            intent.putExtra("imageFilePath", filePath);
-            context.startActivity(intent);
         });
     }
     private void showOptionsDialog(Destination destination, HolderAdminDestination holder){
@@ -148,21 +148,27 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
                 .show();
     }
 
-    public void loadImage(Destination destination, HolderAdminDestination holder){
+    public void loadImage(Destination destination, HolderAdminDestination holder) {
         String imageUrl = destination.getUrl();
-        StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
-        reference.getBytes(MAX_BYTES_IMAGE)
-                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        Glide.with(context)
+                .asBitmap()
+                .load(imageUrl)
+                .into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onSuccess(byte[] bytes) {
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         Log.d(TAG, "on Success: " + destination.getTitle() + "successfully got the file");
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), bitmap);
+                        BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), resource);
                         drawable.setGravity(Gravity.FILL);
                         holder.layoutImage.setBackground(drawable);
+                        holder.isImageLoaded = true;
                     }
-                })
-                .addOnFailureListener(e -> Log.d(TAG,"on Failure: failed to getting file from url due to"+e.getMessage()));
+
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
+                        Log.d(TAG, "on Failure: failed to getting file from url due to");
+                    }
+                });
     }
 
     @Override
@@ -180,6 +186,7 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
     }
 
     public class HolderAdminDestination extends RecyclerView.ViewHolder {
+        public boolean isImageLoaded;
         RelativeLayout layoutImage;
         TextView title, description, rating;
         ImageButton options;
@@ -191,6 +198,7 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
             description = binding.adminlocDesc;
             rating = binding.adminlocRat;
             options = binding.optionBtn;
+            isImageLoaded = false;
         }
     }
 }

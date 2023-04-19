@@ -26,8 +26,6 @@ import com.binus.pekalongancityguide.Layout.DestinationDetails;
 import com.binus.pekalongancityguide.Misc.FilterBookmark;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.databinding.ListFavoriteBinding;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -69,34 +67,37 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
         Destination destination = destiArray.get(position);
         loadDestination(destination,holder);
         holder.itemView.setOnClickListener(v -> {
-            Drawable drawable = holder.layoutImage.getBackground();
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            Bitmap bitmap = bitmapDrawable.getBitmap();
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 25, stream);
-            byte[] byteArray = stream.toByteArray();
+            if (holder.isImageLoaded) {
 
-            String filePath = context.getFilesDir().getPath() + "/image.png";
-            FileOutputStream fos;
-            try {
-                fos = new FileOutputStream(filePath);
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
+                Drawable drawable = holder.layoutImage.getBackground();
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                Bitmap bitmap = bitmapDrawable.getBitmap();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 25, stream);
+                byte[] byteArray = stream.toByteArray();
+
+                String filePath = context.getFilesDir().getPath() + "/image.png";
+                FileOutputStream fos;
+                try {
+                    fos = new FileOutputStream(filePath);
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                    fos.write(byteArray);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                Intent intent = new Intent(context, DestinationDetails.class);
+                intent.putExtra("destiId", destination.getId());
+                intent.putExtra("imageFilePath", filePath);
+                context.startActivity(intent);
             }
-            try {
-                fos.write(byteArray);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                fos.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Intent intent = new Intent(context, DestinationDetails.class);
-            intent.putExtra("destiId",destination.getId());
-            intent.putExtra("imageFilePath", filePath);
-            context.startActivity(intent);
         });
         holder.unBookmark.setOnClickListener(v -> {
             MyApplication.removeFavorite(context,destination.getId());
@@ -131,23 +132,16 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
                             destination.setRating(desRating);
                             StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(url);
                             reference.getBytes(MAX_BYTES_IMAGE)
-                                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                        @Override
-                                        public void onSuccess(byte[] bytes) {
-                                            Log.d(TAG, "on Success: " + destination.getTitle() + "successfully got the file");
-                                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                            BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), bitmap);
-                                            drawable.setGravity(Gravity.FILL);
-                                            holder.layoutImage.setBackground(drawable);
-                                            holder.progressBar.setVisibility(View.GONE);
-                                        }
+                                    .addOnSuccessListener(bytes -> {
+                                        Log.d(TAG, "on Success: " + destination.getTitle() + "successfully got the file");
+                                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                        BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), bitmap);
+                                        drawable.setGravity(Gravity.FILL);
+                                        holder.isImageLoaded = true;
+                                        holder.layoutImage.setBackground(drawable);
+                                        holder.progressBar.setVisibility(View.GONE);
                                     })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.d(TAG, "on Failure: failed to getting file from url due to" + e.getMessage());
-                                        }
-                                    });
+                                    .addOnFailureListener(e -> Log.d(TAG, "on Failure: failed to getting file from url due to" + e.getMessage()));
                             holder.title.setText(title);
                             holder.rating.setText(desRating);
                         }
@@ -175,6 +169,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
     }
 
     class HolderBookmark extends RecyclerView.ViewHolder{
+        public boolean isImageLoaded;
         RelativeLayout layoutImage;
         TextView title, rating;
         ImageButton unBookmark;
@@ -186,6 +181,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
             rating = binding.bookmarkLocRat;
             unBookmark = binding.unbookmarkBtn;
             progressBar = binding.progressBookmark;
+            isImageLoaded = false;
         }
     }
 }

@@ -29,7 +29,6 @@ public class ShowDestinationAdmin extends AppCompatActivity {
     private TextView rating;
     private static final String TAG = "DESTI_LIST_TAG";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

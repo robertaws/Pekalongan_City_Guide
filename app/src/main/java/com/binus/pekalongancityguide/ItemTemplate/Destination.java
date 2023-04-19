@@ -6,6 +6,7 @@ public class Destination implements Serializable{
     String uid,id,title,description,categoryId,url,rating,address;
     double desLat,desLong;
     boolean favorite;
+    private boolean isLoaded;
     public Destination(){
 
     }
@@ -22,6 +23,7 @@ public class Destination implements Serializable{
         this.desLat = desLat;
         this.desLong = desLong;
         this.favorite = favorite;
+        this.isLoaded = false;
     }
 
     public String getUid() {
@@ -110,5 +112,13 @@ public class Destination implements Serializable{
 
     public void setFavorite(boolean favorite) {
         this.favorite = favorite;
+    }
+
+    public boolean isLoaded() {
+        return isLoaded;
+    }
+
+    public void setLoaded(boolean loaded) {
+        isLoaded = loaded;
     }
 }

@@ -274,8 +274,11 @@ public class ItineraryFragment extends Fragment {
                     JSONArray routes = response.getJSONArray("routes");
                     if (routes.length() > 0) {
                         JSONObject route = routes.getJSONObject(0);
+                        Log.d(TAG, "route: " + route);
                         JSONArray legs = route.getJSONArray("legs");
+                        Log.d(TAG, "legs: " + legs);
                         JSONObject leg = legs.getJSONObject(0);
+                        Log.d(TAG, "leg: " + leg);
                         JSONObject duration = leg.getJSONObject("duration");
                         String durationText = duration.getString("text");
                         Log.d(TAG, "Duration: " + durationText);
