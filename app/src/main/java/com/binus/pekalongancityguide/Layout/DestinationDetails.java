@@ -29,6 +29,7 @@ import com.binus.pekalongancityguide.Misc.ImageFullscreen;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityDestinationDetailsBinding;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -52,6 +53,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class DestinationDetails extends AppCompatActivity {
     String imageUrl;
@@ -319,6 +322,7 @@ public class DestinationDetails extends AppCompatActivity {
 
     private void loadDetails() {
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        reference.keepSynced(true);
         reference.child(destiId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -370,12 +374,12 @@ public class DestinationDetails extends AppCompatActivity {
 
                         binding.reviewRv.setAdapter(new ReviewAdapter(reviews));
 
-                        String filePath = getIntent().getStringExtra("imageFilePath");
-                        if (filePath != null){
-                            Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-                            Drawable drawable = new BitmapDrawable(getResources(), bitmap);
-                            binding.destiImage.setBackground(drawable);
-                        }
+                        Glide.with(DestinationDetails.this)
+                                .load(url)
+                                .centerCrop()
+                                .error(R.drawable.logo)
+                                .into(binding.destiImage);
+
                         SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager()
                                 .findFragmentById(R.id.map);
                         fragment.getMapAsync(googleMap -> {

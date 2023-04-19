@@ -62,7 +62,6 @@ public class DestinationFragment extends Fragment {
                         ""+allCategories.getCategory(),
                         ""+allCategories.getUid()
                 ),allCategories.getCategory());
-                viewPagerAdapter.notifyDataSetChanged();
                 for(DataSnapshot dataSnapshot: snapshot.getChildren()){
                     Categories categories = dataSnapshot.getValue(Categories.class);
                     categoriesArrayList.add(categories);
@@ -70,8 +69,8 @@ public class DestinationFragment extends Fragment {
                             ""+categories.getId(),
                             ""+categories.getCategory(),
                             ""+categories.getUid()),categories.getCategory());
-                    viewPagerAdapter.notifyDataSetChanged();
                 }
+                viewPagerAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -82,6 +81,7 @@ public class DestinationFragment extends Fragment {
         viewPager.setAdapter(viewPagerAdapter);
         viewPager.setOffscreenPageLimit(1);
     }
+
     public class ViewPagerAdapter extends FragmentPagerAdapter {
         private final ArrayList<ShowDestinationFragment> fragmentList = new ArrayList<>();
         private final ArrayList<String> fragmentTitleList = new ArrayList<>();

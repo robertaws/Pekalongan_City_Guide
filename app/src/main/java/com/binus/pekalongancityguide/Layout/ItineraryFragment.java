@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -180,7 +181,34 @@ public class ItineraryFragment extends Fragment {
                                         calculateDuration(currentLat, currentLng, placeLat, placeLng, durationText -> {
                                             itineraryList.add(new Itinerary(date, startTime, endTime, placeName, destiId, url, durationText, placeLat, placeLng, distance));
                                             sortItineraryList(itineraryList);
-                                            // Set the sorted itineraryList to the adapter
+                                            binding.showRoutes.setOnClickListener(v -> {
+                                                if (itineraryList.size() > 0) {
+                                                    String origin = "current location";
+                                                    Itinerary firstItinerary = itineraryList.get(0);
+                                                    double latitude = firstItinerary.getLatitude();
+                                                    double longitude = firstItinerary.getLongitude();
+                                                    StringBuilder waypoints = new StringBuilder();
+                                                    for (int i = 1; i < itineraryList.size(); i++) {
+                                                        Itinerary itinerary = itineraryList.get(i);
+                                                        waypoints.append(itinerary.getLatitude()).append(",").append(itinerary.getLongitude()).append("|");
+                                                    }
+                                                    waypoints.setLength(waypoints.length() - 1); // Remove the last "|"
+                                                    String routeUrl = "https://www.google.com/maps/dir/?api=1&origin=" + origin + "&destination=" + latitude + "," + longitude + "&waypoints=" + waypoints + "&travelmode=driving";
+                                                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(routeUrl));
+                                                    mapIntent.setPackage("com.google.android.apps.maps");
+                                                    if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                                                        startActivity(mapIntent);
+                                                    } else {
+                                                        Toast.makeText(getContext(), "Google Maps is not installed on your device. Opening Google Maps website...", Toast.LENGTH_SHORT).show();
+                                                        String websiteUrl = "https://www.google.com/maps/dir/?api=1&origin=" + origin + "&destination=" + latitude + "," + longitude + "&waypoints=" + waypoints + "&travelmode=driving";
+                                                        Intent websiteIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl));
+                                                        startActivity(websiteIntent);
+                                                    }
+                                                } else {
+                                                    Toast.makeText(getContext(), "There is no destination in the itinerary", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+
                                             ItineraryAdapter adapter = new ItineraryAdapter(getContext(), itineraryList);
                                             binding.itineraryRv.setAdapter(adapter);
                                         });
@@ -205,6 +233,7 @@ public class ItineraryFragment extends Fragment {
             }
         });
     }
+
     private void sortItineraryList(List<Itinerary> itineraryList) {
         Collections.sort(itineraryList, (itinerary1, itinerary2) -> {
             SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy hh:mm a", Locale.ENGLISH);

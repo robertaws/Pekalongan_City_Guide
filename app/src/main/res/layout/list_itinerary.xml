@@ -37,7 +37,7 @@
                 android:textAlignment="center"
                 android:shadowColor="#000000"
                 android:shadowDx="2"
-                android:shadowDy="2"
+                android:shadowDy="4"
                 android:shadowRadius="2" />
 
             <com.binus.pekalongancityguide.Misc.DottedLineView
@@ -56,8 +56,8 @@
                 android:textAlignment="center"
                 android:shadowColor="#000000"
                 android:shadowDx="2"
-                android:shadowDy="2"
-                android:shadowRadius="2" />
+                android:shadowDy="4"
+                android:shadowRadius="4" />
 
         </LinearLayout>
 
@@ -68,31 +68,30 @@
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/dateTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="end"
-                android:textAppearance="?attr/textAppearanceListItem"
-                android:textColor="@color/alfa"
-                android:textStyle="italic"/>
-
-            <TextView
                 android:id="@+id/placeNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:textSize="22dp"
+                android:textSize="18dp"
+                android:maxLines="3"
                 android:text="Name"
                 android:textAppearance="?attr/textAppearanceListItem"
                 android:textColor="@color/palette_2"
                 android:textStyle="bold"
-                android:layout_weight="1" />
-
+                android:layout_weight="2" />
+            <com.google.android.material.divider.MaterialDivider
+                app:dividerColor="@color/palette_4"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_weight="1">
 
                 <TextView
                     android:drawablePadding="5dp"
@@ -102,15 +101,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="14dp"
-                    android:layout_marginBottom="8dp"
                     android:layout_marginStart="8dp"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textColor="@color/palette_3"
                     android:text="distance"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"/>
 
                 <TextView
-                    android:drawableLeft="@drawable/baseline_access_time_24"
+                    android:drawableLeft="@drawable/duration_icon"
                     android:drawablePadding="5dp"
                     android:drawableTint="@color/palette_1"
                     android:id="@+id/durationTextView"
@@ -118,17 +116,14 @@
                     android:layout_height="wrap_content"
                     android:text="duration"
                     android:textSize="14dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="8dp"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textColor="@color/palette_3"
                     android:layout_weight="1" />
 
             </LinearLayout>
         </LinearLayout>
-
     </LinearLayout>
-
-
 </androidx.cardview.widget.CardView>
 
 

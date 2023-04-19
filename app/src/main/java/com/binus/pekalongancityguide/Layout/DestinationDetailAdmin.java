@@ -14,6 +14,7 @@ import com.binus.pekalongancityguide.Adapter.ReviewAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Review;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityDestinationDetailAdminBinding;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -71,12 +72,11 @@ public class DestinationDetailAdmin extends AppCompatActivity {
                         binding.adminreviewRv.setAdapter(reviewAdapter);
 
                         binding.adminreviewRv.setAdapter(new ReviewAdapter(reviews));
-                        String filePath = getIntent().getStringExtra("imageFilePath");
-                        if (filePath != null) {
-                            Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-                            Drawable drawable = new BitmapDrawable(getResources(), bitmap);
-                            binding.destiAdminImage.setBackground(drawable);
-                        }
+                        Glide.with(DestinationDetailAdmin.this)
+                                .load(url)
+                                .centerCrop()
+                                .error(R.drawable.logo)
+                                .into(binding.destiAdminImage);
                         SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager()
                                 .findFragmentById(R.id.admin_map);
                         fragment.getMapAsync(googleMap -> {

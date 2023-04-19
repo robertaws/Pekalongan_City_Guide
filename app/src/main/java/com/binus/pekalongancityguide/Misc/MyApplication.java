@@ -3,8 +3,11 @@ package com.binus.pekalongancityguide.Misc;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.format.DateFormat;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +28,7 @@ public class MyApplication extends Application {
         super.onCreate();
         locale = new Locale("en");
     }
+
     public static final String formatTimeStamp(long timestamp){
         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
         calendar.setTimeInMillis(timestamp);

@@ -22,6 +22,7 @@
             android:text="Bookmark List"
             android:textStyle="bold"
             android:textSize="24dp"
+            android:fontFamily="@font/poppins_semibold"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="30dp"
             android:textColor="@color/palette_1" />
@@ -31,9 +32,12 @@
             android:drawableStart="@drawable/search_icon"
             android:drawablePadding="5dp"
             android:padding="5dp"
+            android:fontFamily="@font/poppins_regular"
             android:background="@drawable/et_style"
             android:layout_marginHorizontal="10dp"
             android:layout_width="match_parent"
+            android:textColor="@color/palette_1"
+            android:textColorHint="@color/palette_3"
             android:layout_height="wrap_content"
             android:hint="Search Bookmark" />
 
