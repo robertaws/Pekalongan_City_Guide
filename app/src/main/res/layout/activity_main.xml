@@ -38,6 +38,7 @@
                 android:drawableLeft="@drawable/mail_icon"
                 android:id="@+id/login_email"
                 android:padding="12dp"
+                android:fontFamily="@font/poppins_regular"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="10dp"
                 android:layout_width="match_parent"
@@ -62,6 +63,7 @@
                 android:drawablePadding="15dp"
                 android:drawableStart="@drawable/pass_icon"
                 android:id="@+id/login_pass"
+                android:fontFamily="@font/poppins_regular"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10dp"
@@ -79,6 +81,7 @@
             android:layout_marginTop="50dp"
             android:layout_marginHorizontal="20dp"
             android:background="@drawable/et_style"
+            android:fontFamily="@font/poppins_semibold"
             android:textColor="@color/palette_4"
             android:text="Login"
             android:textSize="16dp"
@@ -91,6 +94,7 @@
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/et_style"
+            android:fontFamily="@font/poppins_semibold"
             android:text="Continue without Login"
             android:textColor="@color/palette_4"
             android:textSize="16dp"
@@ -108,6 +112,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/palette_1"
                 android:textSize="14dp"
+                android:fontFamily="@font/poppins_regular"
                 android:text="Dont have any account?" />
 
             <TextView
@@ -115,6 +120,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
                 android:textStyle="bold"
                 android:textColor="@color/palette_3"
                 android:textSize="16dp"

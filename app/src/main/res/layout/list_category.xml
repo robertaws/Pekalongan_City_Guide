@@ -27,6 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
+                android:fontFamily="@font/poppins_regular"
                 android:textColor="@color/palette_1"
                 android:text="Title" />
 

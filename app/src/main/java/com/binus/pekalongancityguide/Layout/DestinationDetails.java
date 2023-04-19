@@ -301,7 +301,6 @@ public class DestinationDetails extends AppCompatActivity {
                         .addOnSuccessListener(aVoid -> {
                             if (progressDialog != null) {
                                 progressDialog.dismiss();
-
                             }
                             Toast.makeText(getApplicationContext(), "Itinerary uploaded successfully", Toast.LENGTH_LONG).show();
                         }).addOnFailureListener(e -> {

@@ -29,6 +29,7 @@
                 android:drawableEnd="@drawable/star"
                 android:gravity="center_horizontal"
                 android:padding="10dp"
+                android:fontFamily="@font/poppins_regular"
                 android:text="4.5"
                 android:textColor="@color/palette_4"
                 android:textSize="16dp"

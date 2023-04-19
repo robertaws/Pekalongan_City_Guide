@@ -33,11 +33,13 @@
                 android:layout_marginTop="5dp"
                 android:layout_height="wrap_content"
                 android:text="Destination"
+                android:fontFamily="@font/poppins_semibold"
                 android:textStyle="bold"
                 android:textColor="@color/palette_1" />
 
             <TextView
                 android:id="@+id/subtitle_tv"
+                android:fontFamily="@font/poppins_regular"
                 android:layout_below="@id/title_tv"
                 android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
@@ -52,6 +54,7 @@
             android:drawableStart="@drawable/search_icon"
             android:drawablePadding="5dp"
             android:padding="5dp"
+            android:fontFamily="@font/poppins_regular"
             android:background="@color/bg"
             android:layout_marginHorizontal="10dp"
             android:layout_width="match_parent"
