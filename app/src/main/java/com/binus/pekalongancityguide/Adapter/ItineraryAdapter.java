@@ -54,7 +54,6 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         Itinerary itinerary = itineraryList.get(position);
         String destiId = itinerary.getDestiId();
         loadImage(itinerary, holder);
-        holder.dateTextView.setText(itinerary.getDate());
         holder.startTimeTextView.setText(itinerary.getStartTime());
         holder.endTimeTextView.setText(itinerary.getEndTime());
         holder.placeNameTextView.setText(itinerary.getPlaceName());
@@ -139,7 +138,6 @@ private String getMyLocation(){
 
         public ItineraryViewHolder(View itemView) {
             super(itemView);
-            dateTextView = itemView.findViewById(R.id.dateTextView);
             startTimeTextView = itemView.findViewById(R.id.startTimeTextView);
             endTimeTextView = itemView.findViewById(R.id.endTimeTextView);
             placeNameTextView = itemView.findViewById(R.id.placeNameTextView);

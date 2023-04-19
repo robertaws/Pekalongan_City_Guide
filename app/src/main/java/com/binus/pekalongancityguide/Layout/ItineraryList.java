@@ -69,7 +69,6 @@ public class ItineraryList extends AppCompatActivity {
                 List<String> dates = new ArrayList<>(uniqueDates);
                 Collections.sort(dates, new Comparator<String>() {
                     DateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
-
                     @Override
                     public int compare(String date1, String date2) {
                         try {

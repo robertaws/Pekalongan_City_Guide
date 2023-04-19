@@ -87,6 +87,7 @@ public class ShowDestinationFragment extends Fragment {
     private void loadDestinations(){
         destinationArrayList = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        reference.keepSynced(true);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -107,6 +108,7 @@ public class ShowDestinationFragment extends Fragment {
     private void loadCategoriedDestination(){
         destinationArrayList = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        reference.keepSynced(true);
         reference.orderByChild("categoryId").equalTo(categoryId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

@@ -197,7 +197,7 @@ public class AddDestination extends AppCompatActivity {
         progressDialog.show();
         long timestamp = System.currentTimeMillis();
         String filePathandName = "Destination/" + timestamp;
-        if (imageUri == null) {
+        if (imageUri == null){
             List<PhotoMetadata> photoMetadataList = place.getPhotoMetadatas();
             if (photoMetadataList != null && !photoMetadataList.isEmpty()) {
                 // If photo metadata is available, fetch the photo and set it as the image
@@ -235,15 +235,25 @@ public class AddDestination extends AppCompatActivity {
                                     Toast.makeText(AddDestination.this, "Image upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
                     } else {
-
                     }
                 }).addOnFailureListener(exception -> {
-                    Log.e(TAG, "Failed to fetch image, using default image");
-                    imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.logo);
-                    Glide.with(AddDestination.this)
-                            .load(imageUri)
-                            .centerCrop()
-                            .into(binding.addPicture);
+                    Log.e(TAG, "Failed to fetch image, asking user to add an image from the gallery");
+                    new AlertDialog.Builder(AddDestination.this)
+                            .setTitle("Failed to fetch image")
+                            .setMessage("Do you want to add an image from the gallery?")
+                            .setPositiveButton("Yes", (dialog, which) -> {
+                                addPhoto();
+                            })
+                            .setNegativeButton("No", (dialog, which) -> {
+                                this.imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.logo);
+                                Glide.with(AddDestination.this)
+                                        .load(this.imageUri)
+                                        .centerCrop()
+                                        .into(binding.addPicture);
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                    progressDialog.dismiss();
                     if (exception instanceof ApiException) {
                         ApiException apiException = (ApiException) exception;
                         int statusCode = apiException.getStatusCode();
@@ -251,17 +261,25 @@ public class AddDestination extends AppCompatActivity {
                     }
                 });
             } else {
-                imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.logo);
-                Glide.with(AddDestination.this)
-                        .load(imageUri)
-                        .centerCrop()
-                        .into(binding.addPicture);
+                Log.e(TAG, "Failed to fetch image, asking user to add an image from the gallery");
+                new AlertDialog.Builder(AddDestination.this)
+                        .setTitle("Failed to fetch image")
+                        .setMessage("Do you want to add an image from the gallery?")
+                        .setPositiveButton("Yes", (dialog, which) -> {
+                            addPhoto();
+                        })
+                        .setNegativeButton("No", (dialog, which) -> {
+                            this.imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.logo);
+                            Glide.with(AddDestination.this)
+                                    .load(this.imageUri)
+                                    .centerCrop()
+                                    .into(binding.addPicture);
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+                progressDialog.dismiss();
             }
         } else {
-            Glide.with(AddDestination.this)
-                    .load(imageUri)
-                    .centerCrop()
-                    .into(binding.addPicture);
             StorageReference storageReference = FirebaseStorage.getInstance("gs://pekalongan-city-guide-5bf2e.appspot.com").getReference(filePathandName);
             storageReference.putFile(imageUri)
                     .addOnSuccessListener(taskSnapshot -> {
@@ -270,6 +288,7 @@ public class AddDestination extends AppCompatActivity {
                         Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                         while (!uriTask.isSuccessful()) ;
                         String uploadedImageUrl = "" + uriTask.getResult();
+                        progressDialog.dismiss();
                         uploadtoDB(uploadedImageUrl, timestamp, placeId, address, lat, lng, rating, reviews, phoneNumber, weekday);
                     })
                     .addOnFailureListener(e -> {
@@ -426,7 +445,7 @@ public class AddDestination extends AppCompatActivity {
 
         // Write the bitmap data to the temporary file
         FileOutputStream fos = new FileOutputStream(tempFile);
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 25, fos);
         fos.flush();
         fos.close();
 

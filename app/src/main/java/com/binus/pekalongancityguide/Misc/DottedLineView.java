@@ -36,7 +36,7 @@ public class DottedLineView extends View {
         mPaint.setColor(getResources().getColor(R.color.white));
         mPaint.setStrokeWidth(10);
         mPaint.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
-        mPaint.setShadowLayer(3, 3, 3, Color.BLACK);
+        mPaint.setShadowLayer(5, 2, 2, Color.BLACK);
     }
 
     @Override
