@@ -28,7 +28,7 @@
             android:padding="10dp"
             android:fontFamily="@font/poppins_semibold"
             android:justificationMode="inter_word"
-            android:text="Pekalongan is a city of Central Java, Indonesia. It was formerly the seat of Pekalongan Regency on the northern coast of the province, but is now an independent municipality within the province. The city is Central Java's most important port, and is known for its batik."
+            android:text="@string/short_explain"
             android:textColor="@color/white"
             android:textSize="16dp"
             android:textStyle="bold"/>

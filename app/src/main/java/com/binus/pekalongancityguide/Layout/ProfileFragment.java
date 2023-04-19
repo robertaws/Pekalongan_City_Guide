@@ -1,14 +1,8 @@
 package com.binus.pekalongancityguide.Layout;
 
-import static android.content.Context.MODE_PRIVATE;
-
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.binus.pekalongancityguide.Misc.ImageFullscreen;
 import com.binus.pekalongancityguide.Misc.MyApplication;
+import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.FragmentProfileBinding;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -64,20 +59,27 @@ public class ProfileFragment extends Fragment {
         });
 
         binding.changeLang.setOnClickListener(v -> {
+//            showLanguageDialog();
             Locale currentLocale = getResources().getConfiguration().locale;
 
             // Set the new locale based on the current locale
             Locale newLocale = currentLocale.equals(Locale.getDefault())
-                    ? new Locale("id", "ID") // Indonesian locale
+                    ? new Locale("en", "NG") // Indonesian locale
                     : Locale.getDefault(); // Default locale
 
             // Update the app's configuration to use the new locale
             Configuration config = new Configuration(getResources().getConfiguration());
             config.setLocale(newLocale);
             getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+            Log.d("Language", "Language configuration set to " + newLocale);
 
             // Restart the activity to apply the language changes
             getActivity().recreate();
+            Log.d("Language", "Activity recreated");
+            String myString = getResources().getString(R.string.numbers);
+            Log.d("Language", "myString value: " + myString);
+            binding.profileUser.setText(myString);
+
         });
 
         binding.showItineraryBtn.setOnClickListener(v -> {
@@ -92,37 +94,38 @@ public class ProfileFragment extends Fragment {
 //        if (context != null) {
 //            AlertDialog.Builder builder = new AlertDialog.Builder(context);
 //            builder.setTitle("Select Language")
-//                    .setItems(new CharSequence[]{"Default", "Indonesian"}, (dialog, which) -> {
+//                    .setItems(new CharSequence[]{"English", "Indonesian"}, (dialog, which) -> {
 //                        if (which == 0) {
-//                            setLocale("", context);
+//                            setLocale("en", getActivity());
 //                        } else if (which == 1) {
-//                            setLocale("id", context);
+//                            setLocale("id", getActivity());
 //                        }
 //                    });
 //            AlertDialog dialog = builder.create();
 //            dialog.show();
 //        }
 //    }
-
-
+//
 //    private void setLocale(String languageCode, Context context) {
 //        Locale locale = new Locale(languageCode);
 //        Resources resources = context.getResources();
 //        Configuration configuration = resources.getConfiguration();
 //        configuration.setLocale(locale);
 //        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-//        // Refresh UI
-//        Intent intent = new Intent(context, Home.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        context.startActivity(intent);
+//        Log.d("Language", "Language configuration set to " + languageCode);
+//        // Refresh UI by restarting the current fragment
+//        FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
+//        fragmentTransaction.detach(this);
+//        fragmentTransaction.attach(this);
+//        fragmentTransaction.commit();
 //    }
 
 
-    private void logoutConfirm(){
+    private void logoutConfirm() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Logout");
         builder.setMessage("Are you sure you want to log out?");
-        builder.setPositiveButton("Yes", (dialog, which) ->{
+        builder.setPositiveButton("Yes", (dialog, which) -> {
             firebaseAuth.signOut();
             checkUser();
         } );
