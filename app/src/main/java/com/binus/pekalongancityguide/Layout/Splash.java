@@ -1,8 +1,12 @@
 package com.binus.pekalongancityguide.Layout;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +20,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Locale;
+
 public class Splash extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     @Override
@@ -24,6 +30,14 @@ public class Splash extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
+        }
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String language = preferences.getString("language", "");
+        if (!TextUtils.isEmpty(language)) {
+            Locale locale = new Locale(language);
+            Configuration config = new Configuration(getResources().getConfiguration());
+            config.setLocale(locale);
+            getResources().updateConfiguration(config, getResources().getDisplayMetrics());
         }
         firebaseAuth = FirebaseAuth.getInstance();
         new Handler().postDelayed(() -> checkUser(), 3000);
