@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.binus.pekalongancityguide.Misc.ImageFullscreen;
@@ -37,6 +38,8 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private static final String TAG = "PROFILE_TAG";
     private String mProfileImgUrl;
+    private SharedPreferences prefs;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,49 +63,26 @@ public class ProfileFragment extends Fragment {
             logoutConfirm();
         });
 
-//            showLanguageDialog();
-//        binding.changeLang.setOnClickListener(v -> {
-//            Locale currentLocale = getResources().getConfiguration().locale;
-//            // Set the new locale based on the current locale
-//            Locale newLocale = currentLocale.equals(Locale.getDefault())
-//                    ? new Locale("id", "ID") // Indonesian locale
-//                    : Locale.getDefault(); // Default locale
-//            // Update the app's configuration to use the new locale
-//            Configuration config = new Configuration(getResources().getConfiguration());
-//            config.setLocale(newLocale);
-//            getResources().updateConfiguration(config, getResources().getDisplayMetrics());
-//            Log.d("Language", "Language configuration set to " + newLocale);
-//            // Restart the activity to apply the language changes
-//            getActivity().recreate();
-//            Log.d("Language", "Activity recreated");
-//        });
         binding.changeLang.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle(R.string.select_language)
                     .setItems(new CharSequence[]{getString(R.string.english_opt), getString(R.string.indo_opt)}, (dialog, which) -> {
                         Locale newLocale;
                         if (which == 0) {
-                            // Set to default locale
-                            newLocale = Locale.getDefault();
+                            newLocale = new Locale("en","US");
                         } else {
-                            // Set to Indonesian locale
                             newLocale = new Locale("id", "ID");
                         }
                         Locale currentLocale = getResources().getConfiguration().locale;
                         if (!currentLocale.equals(newLocale)) {
+                            // Save the selected language preference
+                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                            preferences.edit().putString("language", newLocale.getLanguage()).apply();
                             // Update the app's configuration to use the new locale
                             Configuration config = new Configuration(getResources().getConfiguration());
                             config.setLocale(newLocale);
                             getResources().updateConfiguration(config, getResources().getDisplayMetrics());
                             Log.d("Language", "Language configuration set to " + newLocale);
-
-                            // Save the new locale to shared preferences
-                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putString("lang", newLocale.toString());
-                            editor.apply();
-
-                            // Restart the activity to apply the language changes
                             getActivity().recreate();
                             Log.d("Language", "Activity recreated");
                         }
@@ -117,38 +97,6 @@ public class ProfileFragment extends Fragment {
         });
         return view;
     }
-//    public void showLanguageDialog() {
-//        Context context = getContext();
-//        if (context != null) {
-//            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-//            builder.setTitle("Select Language")
-//                    .setItems(new CharSequence[]{"English", "Indonesian"}, (dialog, which) -> {
-//                        if (which == 0) {
-//                            setLocale("en", getActivity());
-//                        } else if (which == 1) {
-//                            setLocale("id", getActivity());
-//                        }
-//                    });
-//            AlertDialog dialog = builder.create();
-//            dialog.show();
-//        }
-//    }
-//
-//    private void setLocale(String languageCode, Context context) {
-//        Locale locale = new Locale(languageCode);
-//        Resources resources = context.getResources();
-//        Configuration configuration = resources.getConfiguration();
-//        configuration.setLocale(locale);
-//        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-//        Log.d("Language", "Language configuration set to " + languageCode);
-//        // Refresh UI by restarting the current fragment
-//        FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
-//        fragmentTransaction.detach(this);
-//        fragmentTransaction.attach(this);
-//        fragmentTransaction.commit();
-//    }
-
-
     private void logoutConfirm() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(R.string.logout_text);
