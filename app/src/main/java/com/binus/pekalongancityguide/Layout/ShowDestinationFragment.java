@@ -37,6 +37,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ShowDestinationFragment extends Fragment {
     private final FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
@@ -159,6 +160,7 @@ public class ShowDestinationFragment extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Destination destination = dataSnapshot.getValue(Destination.class);
                     destinationArrayList.add(destination);
+//                    sortDestination(destinationArrayList);
                 }
                 updateDistances();
             }
@@ -181,6 +183,7 @@ public class ShowDestinationFragment extends Fragment {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             Destination destination = dataSnapshot.getValue(Destination.class);
                             destinationArrayList.add(destination);
+//                            sortDestination(destinationArrayList);
                         }
                         updateDistances();
                     }
@@ -209,9 +212,9 @@ public class ShowDestinationFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 double placeLat = Double.parseDouble(snapshot.child("latitude").getValue().toString());
-                Log.d(TAG, "Latitude: " + placeLat);
+//                Log.d(TAG, "Latitude: " + placeLat);
                 double placeLng = Double.parseDouble(snapshot.child("longitude").getValue().toString());
-                Log.d(TAG, "Longitude: " + placeLng);
+//                Log.d(TAG, "Longitude: " + placeLng);
                 if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                         ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
@@ -222,7 +225,8 @@ public class ShowDestinationFragment extends Fragment {
                             double currentLng = location.getLongitude();
                             float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
                             destination.setDistance(distance);
-                            Log.d(TAG, "clng: " + currentLng + " clat: " + currentLat + " dist: " + distance);
+                            sortDestination(destinationArrayList);
+//                            Log.d(TAG, "clng: " + currentLng + " clat: " + currentLat + " dist: " + distance);
                             destinationAdapter.notifyDataSetChanged();
                         }
                     });
@@ -246,6 +250,24 @@ public class ShowDestinationFragment extends Fragment {
         Location.distanceBetween(location1.getLatitude(), location1.getLongitude(),
                 location2.getLatitude(), location2.getLongitude(), results);
         return results[0] / 1000;
+    }
+
+    private void sortDestination(ArrayList<Destination> destinationArrayList) {
+        Collections.sort(destinationArrayList, (destination1, destination2) -> {
+            Double rating1 = Double.parseDouble(destination1.getRating());
+            Double rating2 = Double.parseDouble(destination2.getRating());
+            Float distance1 = destination1.getDistance();
+            Float distance2 = destination2.getDistance();
+
+            // Compare by rating first
+            int distanceCompare = distance1.compareTo(distance2); // reverse order
+            if (distanceCompare != 0) {
+                return distanceCompare;
+            }
+
+            // If rating is the same, compare by distance
+            return Double.compare(rating1, rating2);
+        });
     }
 
     @SuppressLint("MissingPermission")

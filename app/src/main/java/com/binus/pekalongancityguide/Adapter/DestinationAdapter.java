@@ -114,7 +114,7 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
             }
         });
         float distance = destination.getDistance();
-        Log.d(TAG, "DISTANCE: " + distance);
+//        Log.d(TAG, "DISTANCE: " + distance);
         String distanceString;
         if (distance < 1) {
             int distanceInMeters = (int) (distance * 1000);
