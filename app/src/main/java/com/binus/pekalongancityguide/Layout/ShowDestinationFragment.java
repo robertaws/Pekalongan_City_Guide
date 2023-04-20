@@ -51,9 +51,7 @@ public class ShowDestinationFragment extends Fragment {
     private LocationManager locationManager;
     private LocationListener locationListener;
 
-    public ShowDestinationFragment() {
-
-    }
+    public ShowDestinationFragment() {}
 
     public static ShowDestinationFragment newInstance(String categoryId, String category, String uid) {
         ShowDestinationFragment fragment = new ShowDestinationFragment();
@@ -222,18 +220,14 @@ public class ShowDestinationFragment extends Fragment {
                         if (location != null) {
                             double currentLat = location.getLatitude();
                             double currentLng = location.getLongitude();
-                            // Calculate distance  current location and itinerary location
                             float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
                             destination.setDistance(distance);
                             Log.d(TAG, "clng: " + currentLng + " clat: " + currentLat + " dist: " + distance);
-
-                            // notify the adapter that the data has changed
                             destinationAdapter.notifyDataSetChanged();
                         }
                     });
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e(TAG, "Error: " + error.getMessage());
@@ -256,9 +250,7 @@ public class ShowDestinationFragment extends Fragment {
 
     @SuppressLint("MissingPermission")
     private void startLocationUpdates() {
-        // Check if GPS is enabled
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            // GPS is not enabled, show a dialog to ask the user to enable it
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle(R.string.gpsnotEnabled);
             builder.setMessage(R.string.enable_gps_confirm);
@@ -269,7 +261,6 @@ public class ShowDestinationFragment extends Fragment {
             builder.setNegativeButton(R.string.no_txt, null);
             builder.show();
         } else {
-            // GPS is enabled, start requesting location updates
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);
         }
     }
