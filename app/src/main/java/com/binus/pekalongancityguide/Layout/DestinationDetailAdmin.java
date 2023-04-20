@@ -10,7 +10,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.binus.pekalongancityguide.Adapter.OpeningHoursAdapter;
 import com.binus.pekalongancityguide.Adapter.ReviewAdapter;
+import com.binus.pekalongancityguide.ItemTemplate.OpeningHours;
 import com.binus.pekalongancityguide.ItemTemplate.Review;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityDestinationDetailAdminBinding;
@@ -27,11 +29,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DestinationDetailAdmin extends AppCompatActivity {
     private ActivityDestinationDetailAdminBinding binding;
     String destiId;
+    boolean inFavorite = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,11 +60,33 @@ public class DestinationDetailAdmin extends AppCompatActivity {
                         String address = ""+snapshot.child("address").getValue();
                         String categoryId = ""+snapshot.child("categoryId").getValue();
                         String url = ""+snapshot.child("url").getValue();
+                        String phone = "" + snapshot.child("phoneNumber").getValue();
                         double latitude = Double.parseDouble(snapshot.child("latitude").getValue().toString());
                         double longitude = Double.parseDouble(snapshot.child("longitude").getValue().toString());
                         binding.destiAdminName.setText(title);
                         binding.destiAdminDesc.setText(description);
                         binding.destiAdminAddress.setText(address);
+                        binding.destiAdminPhone.setText("Phone Number: " + phone);
+                        Map<String, String> openingHoursMap = new HashMap<>();
+                        for (DataSnapshot hourSnapshot : snapshot.child("openingHours").getChildren()) {
+                            String dayOfWeek = hourSnapshot.getKey();
+                            String openingHours = hourSnapshot.getValue(String.class);
+                            openingHoursMap.put(dayOfWeek, openingHours);
+                        }
+
+                        for (Map.Entry<String, String> entry : openingHoursMap.entrySet()) {
+                            String dayOfWeek = entry.getKey();
+                            String openingHours = entry.getValue();
+                            System.out.println(dayOfWeek + ": " + openingHours);
+                        }
+                        List<OpeningHours> openingHoursList = new ArrayList<>();
+                        for (Map.Entry<String, String> entry : openingHoursMap.entrySet()) {
+                            String dayOfWeek = entry.getKey();
+                            String openingHours = entry.getValue();
+                            openingHoursList.add(new OpeningHours(dayOfWeek, openingHours));
+                        }
+                        OpeningHoursAdapter hoursAdapter = new OpeningHoursAdapter(openingHoursList);
+                        binding.adminOpeningRv.setAdapter(hoursAdapter);
 
                         List<Review> reviews = new ArrayList<>();
                         for (DataSnapshot reviewSnapshot : snapshot.child("reviews").getChildren()) {

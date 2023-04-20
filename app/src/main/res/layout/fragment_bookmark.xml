@@ -19,7 +19,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bookmark List"
+            android:text="@string/bookmark_list"
             android:textStyle="bold"
             android:textSize="24dp"
             android:fontFamily="@font/poppins_semibold"
@@ -39,8 +39,7 @@
             android:textColor="@color/palette_1"
             android:textColorHint="@color/palette_3"
             android:layout_height="wrap_content"
-            android:hint="Search Bookmark" />
-
+            android:hint="@string/search_bookmark"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/destiRV"
             android:layout_width="match_parent"

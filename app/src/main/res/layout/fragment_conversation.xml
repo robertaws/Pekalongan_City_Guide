@@ -21,7 +21,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Daily conversation examples:"
+                android:text="@string/convo_header"
                 android:textSize="24dp"
                 android:fontFamily="@font/poppins_semibold"
                 android:layout_marginBottom="20dp"
@@ -38,7 +38,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Frequent phrases:"
+                android:text="@string/phrases_header"
                 android:textSize="24dp"
                 android:fontFamily="@font/poppins_semibold"
                 android:textStyle="bold"

@@ -67,7 +67,6 @@ public class DestinationDetails extends AppCompatActivity {
     int startHour,startMinute,startHour1,startMinute1
             ,endHour,endMinute,endHour1,endMinute1
             ,dayDate,monthDate,yearDate,dayDate1,monthDate1,yearDate1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +87,7 @@ public class DestinationDetails extends AppCompatActivity {
         });
         binding.saveItem.setOnClickListener(v -> {
             if (firebaseAuth.getCurrentUser() == null) {
-                Toast.makeText(DestinationDetails.this, "You are not logged in!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DestinationDetails.this,R.string.notLogin, Toast.LENGTH_SHORT).show();
             } else {
                 if (inFavorite) {
                     MyApplication.removeFavorite(DestinationDetails.this, destiId);
@@ -408,10 +407,10 @@ public class DestinationDetails extends AppCompatActivity {
                         inFavorite = snapshot.exists();
                         if(inFavorite){
                             binding.saveItem.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.bookmark,0,0);
-                            binding.saveItem.setText("Remove from Bookmark");
+                            binding.saveItem.setText(R.string.unbookmark_text);
                         }else{
                             binding.saveItem.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.remove_bookmark,0,0);
-                            binding.saveItem.setText("Bookmark Place");
+                            binding.saveItem.setText(R.string.bookmark_text);
                         }
                     }
 

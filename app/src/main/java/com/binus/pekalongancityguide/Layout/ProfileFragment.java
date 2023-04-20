@@ -2,12 +2,15 @@ package com.binus.pekalongancityguide.Layout;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -34,7 +37,6 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private static final String TAG = "PROFILE_TAG";
     private String mProfileImgUrl;
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,28 +60,55 @@ public class ProfileFragment extends Fragment {
             logoutConfirm();
         });
 
-        binding.changeLang.setOnClickListener(v -> {
 //            showLanguageDialog();
-            Locale currentLocale = getResources().getConfiguration().locale;
+//        binding.changeLang.setOnClickListener(v -> {
+//            Locale currentLocale = getResources().getConfiguration().locale;
+//            // Set the new locale based on the current locale
+//            Locale newLocale = currentLocale.equals(Locale.getDefault())
+//                    ? new Locale("id", "ID") // Indonesian locale
+//                    : Locale.getDefault(); // Default locale
+//            // Update the app's configuration to use the new locale
+//            Configuration config = new Configuration(getResources().getConfiguration());
+//            config.setLocale(newLocale);
+//            getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+//            Log.d("Language", "Language configuration set to " + newLocale);
+//            // Restart the activity to apply the language changes
+//            getActivity().recreate();
+//            Log.d("Language", "Activity recreated");
+//        });
+        binding.changeLang.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle(R.string.select_language)
+                    .setItems(new CharSequence[]{getString(R.string.english_opt), getString(R.string.indo_opt)}, (dialog, which) -> {
+                        Locale newLocale;
+                        if (which == 0) {
+                            // Set to default locale
+                            newLocale = Locale.getDefault();
+                        } else {
+                            // Set to Indonesian locale
+                            newLocale = new Locale("id", "ID");
+                        }
+                        Locale currentLocale = getResources().getConfiguration().locale;
+                        if (!currentLocale.equals(newLocale)) {
+                            // Update the app's configuration to use the new locale
+                            Configuration config = new Configuration(getResources().getConfiguration());
+                            config.setLocale(newLocale);
+                            getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+                            Log.d("Language", "Language configuration set to " + newLocale);
 
-            // Set the new locale based on the current locale
-            Locale newLocale = currentLocale.equals(Locale.getDefault())
-                    ? new Locale("en", "NG") // Indonesian locale
-                    : Locale.getDefault(); // Default locale
+                            // Save the new locale to shared preferences
+                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putString("lang", newLocale.toString());
+                            editor.apply();
 
-            // Update the app's configuration to use the new locale
-            Configuration config = new Configuration(getResources().getConfiguration());
-            config.setLocale(newLocale);
-            getResources().updateConfiguration(config, getResources().getDisplayMetrics());
-            Log.d("Language", "Language configuration set to " + newLocale);
-
-            // Restart the activity to apply the language changes
-            getActivity().recreate();
-            Log.d("Language", "Activity recreated");
-            String myString = getResources().getString(R.string.numbers);
-            Log.d("Language", "myString value: " + myString);
-            binding.profileUser.setText(myString);
-
+                            // Restart the activity to apply the language changes
+                            getActivity().recreate();
+                            Log.d("Language", "Activity recreated");
+                        }
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         });
 
         binding.showItineraryBtn.setOnClickListener(v -> {
@@ -88,7 +117,6 @@ public class ProfileFragment extends Fragment {
         });
         return view;
     }
-
 //    public void showLanguageDialog() {
 //        Context context = getContext();
 //        if (context != null) {
@@ -123,13 +151,13 @@ public class ProfileFragment extends Fragment {
 
     private void logoutConfirm() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Logout");
-        builder.setMessage("Are you sure you want to log out?");
-        builder.setPositiveButton("Yes", (dialog, which) -> {
+        builder.setTitle(R.string.logout_text);
+        builder.setMessage(R.string.logout_confirm);
+        builder.setPositiveButton(R.string.yes_txt, (dialog, which) -> {
             firebaseAuth.signOut();
             checkUser();
         } );
-        builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
+        builder.setNegativeButton(R.string.no_txt, (dialog, which) -> dialog.dismiss());
         AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -138,6 +166,7 @@ public class ProfileFragment extends Fragment {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if(firebaseUser==null){
             startActivity(new Intent(getActivity(),MainActivity.class));
+            Toast.makeText(getContext(),R.string.notLogin, Toast.LENGTH_SHORT).show();
             getActivity().finish();
         }
     }

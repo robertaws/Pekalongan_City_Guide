@@ -29,6 +29,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.binus.pekalongancityguide.Adapter.ItineraryAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
+import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.FragmentItineraryBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -304,13 +305,13 @@ public class ItineraryFragment extends Fragment {
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             // GPS is not enabled, show a dialog to ask the user to enable it
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setTitle("GPS not enabled");
-            builder.setMessage("Would you like to enable GPS?");
-            builder.setPositiveButton("Yes", (dialog, which) -> {
+            builder.setTitle(R.string.gpsnotEnabled);
+            builder.setMessage(R.string.enable_gps_confirm);
+            builder.setPositiveButton(R.string.yes_txt, (dialog, which) -> {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
             });
-            builder.setNegativeButton("No", null);
+            builder.setNegativeButton(R.string.no_txt, null);
             builder.show();
         } else {
             // GPS is enabled, start requesting location updates

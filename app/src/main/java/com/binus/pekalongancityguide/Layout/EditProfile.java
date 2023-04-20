@@ -95,7 +95,7 @@ public class EditProfile extends AppCompatActivity {
     private void validatedata() {
         name = binding.editName.getText().toString().trim();
         if(TextUtils.isEmpty(name)){
-            Toast.makeText(this, "Enter new name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.enter_name_edit, Toast.LENGTH_SHORT).show();
         }else{
             if(imguri==null){
                 updateProfile("");

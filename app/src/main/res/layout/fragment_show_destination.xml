@@ -29,7 +29,7 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Search Destination" />
+                android:hint="@string/search_hint"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_marginTop="15dp"
