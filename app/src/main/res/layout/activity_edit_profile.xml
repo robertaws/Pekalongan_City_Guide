@@ -37,7 +37,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:fontFamily="@font/poppins_semibold"
-                android:text="Edit Profile"
+                android:text="@string/edit_header"
                 android:textColor="@color/palette_1"
                 android:textSize="20dp"
                 android:textStyle="bold" />
@@ -64,13 +64,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/et_style"
-            android:hint="Enter new username ..." />
+            android:hint="@string/enter_new_username" />
 
         <Button
             android:id="@+id/update_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Update"
+            android:text="@string/update_text"
             android:fontFamily="@font/poppins_semibold"
             android:padding="15dp"
             android:layout_marginHorizontal="40dp"

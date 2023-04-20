@@ -37,7 +37,7 @@
             android:fontFamily="@font/poppins_semibold"
             android:layout_marginHorizontal="10dp"
             android:layout_alignParentBottom="true"
-            android:text="Show Routes"
+            android:text="@string/show_routes"
             android:textColor="@color/palette_4"/>
     </RelativeLayout>
 

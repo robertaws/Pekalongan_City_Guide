@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="show_routes">Show Routes</string>
+    <string name="search_bookmark">Search Bookmark</string>
+    <string name="add_to_itinerary">Add to Itinerary</string>
+    <string name="select_date_iter">Select date</string>
+    <string name="select_start_time_iter">Select start time</string>
+    <string name="select_end_time_iter">Select end time</string>
+    <string name="add_to_itinerary_btn">Add to Itinerary</string>
+    <string name="search_destination_admin">Search Destination</string>
+    <string name="destination_admin">Destination</string>
+    <string name="category_admin">Category</string>
+    <string name="detail_news">Detail News</string>
+    <string name="itinerary_list_header">Itinerary List</string>
+    <string name="enter_new_username">Enter new username</string>
+    <string name="edit_destination_header">Edit Destination</string>
+    <string name="edit_destination_name">Destination Name</string>
+    <string name="edit_destination_description">Destination Description</string>
+    <string name="edit_pick_category">Pick Category</string>
+    <string name="update_destination_btn">Update Destination</string>
+    <string name="opening_hours_detail">Opening Hours</string>
+    <string name="place_reviews_detail">Place Reviews</string>
+    <string name="logout_confirm">Are you sure you want to log out?</string>
+    <string name="yes_txt">Yes</string>
+    <string name="no_txt">No</string>
+    <string name="gpsnotEnabled">GPS not enabled</string>
+    <string name="enable_gps_confirm">Would you like to enable GPS?</string>
+    <string name="enter_name_edit">Enter new name</string>
+    <string name="enter_cur_pass">Enter current password!</string>
+    <string name="pass8chara">Password must be more than 8 characters!</string>
+    <string name="pass1num">Password must contain at least one number!</string>
+    <string name="pass1Symbol">Password must contain at least one symbol!</string>
+    <string name="enternewPass">Enter new password!</string>
+    <string name="passcantSame">Your new password cannot be the same as your current password!</string>
+    <string name="cfmpassEnter">Enter confirm password!</string>
+    <string name="passnotMatch">Password does not match!</string>
+    <string name="pass_updated_txt">Password updated successfully</string>
+    <string name="failed_update_pass">Failed to update password</string>
+    <string name="failed_authentic">Failed to re-authenticate user</string>
+    <string name="removed_bookmark">Removed from Bookmark</string>
+    <string name="added_bookmark">Added to Bookmark</string>
+    <string name="notLogin">You Are Not Logged In</string>
+    <string name="select_language">Select Language</string>
+    <string name="english_opt">English</string>
+    <string name="indo_opt">Indonesian</string>
+</resources>

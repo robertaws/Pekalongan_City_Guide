@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.binus.pekalongancityguide.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -68,7 +69,7 @@ public class MyApplication extends Application {
     public static void addtoFavorite(Context context, String destiId){
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         if(firebaseAuth.getCurrentUser() == null){
-            Toast.makeText(context, "You are not logged in!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,R.string.notLogin, Toast.LENGTH_SHORT).show();
         }else{
             long timestamp = System.currentTimeMillis();
             HashMap<String,Object> hashMap = new HashMap<>();
@@ -77,19 +78,19 @@ public class MyApplication extends Application {
             DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
             reference.child(firebaseAuth.getUid()).child("Favorites").child(destiId)
                     .setValue(hashMap)
-                    .addOnSuccessListener(unused -> Toast.makeText(context, "Added to Bookmark", Toast.LENGTH_SHORT).show())
+                    .addOnSuccessListener(unused -> Toast.makeText(context,R.string.added_bookmark, Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> Toast.makeText(context, "Failed to Added favorites due to" + e.getMessage(), Toast.LENGTH_SHORT).show());
         }
     }
     public static void removeFavorite(Context context, String destiId){
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         if(firebaseAuth.getCurrentUser()==null){
-            Toast.makeText(context, "You are not logged in!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,R.string.notLogin, Toast.LENGTH_SHORT).show();
         }else{
             DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
             reference.child(firebaseAuth.getUid()).child("Favorites").child(destiId)
                     .removeValue()
-                    .addOnSuccessListener(unused -> Toast.makeText(context, "Removed from Bookmark", Toast.LENGTH_SHORT).show())
+                    .addOnSuccessListener(unused -> Toast.makeText(context,R.string.removed_bookmark, Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> Toast.makeText(context, "Failed to remove favorites due to" + e.getMessage(), Toast.LENGTH_SHORT).show());
         }
     }

@@ -42,6 +42,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/user_header"
                 android:layout_marginTop="20dp"
                 android:gravity="center_vertical"
                 android:drawablePadding="5dp"
@@ -213,7 +214,7 @@
                     android:textStyle="italic"
                     android:fontFamily="@font/poppins_regular"
                     android:textColor="@color/palette_2"
-                    android:text="Itinerary List" />
+                    android:text="@string/itinerary_profile"/>
             </LinearLayout>
 
             <Button
@@ -226,7 +227,7 @@
                 android:layout_width="match_parent"
                 android:fontFamily="@font/poppins_semibold"
                 android:layout_height="wrap_content"
-                android:text="Change Password" />
+                android:text="@string/change_password"/>
             <Button
                 android:padding="10dp"
                 android:id="@+id/change_lang"
@@ -234,10 +235,10 @@
                 android:layout_gravity="center"
                 android:textColor="@color/palette_4"
                 android:layout_marginHorizontal="10dp"
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
                 android:fontFamily="@font/poppins_semibold"
                 android:layout_height="wrap_content"
-                android:text="Change Languages"/>
+                android:text="@string/change_lang"/>
             <Button
                 android:padding="10dp"
                 android:id="@+id/logout_btn"

@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
-                android:hint="Enter E-mail"
+                android:hint="@string/email_hint"
                 android:background="@drawable/et_style" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10dp"
                 android:layout_marginHorizontal="20dp"
-                android:hint="Enter Password"
+                android:hint="@string/pass_hint"
                 android:padding="12dp"
                 android:inputType="textPassword"
                 android:background="@drawable/et_style" />
@@ -83,7 +83,7 @@
             android:background="@drawable/et_style"
             android:fontFamily="@font/poppins_semibold"
             android:textColor="@color/palette_4"
-            android:text="Login"
+            android:text="@string/login_text"
             android:textSize="16dp"
             android:padding="10dp" />
 
@@ -95,7 +95,7 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/et_style"
             android:fontFamily="@font/poppins_semibold"
-            android:text="Continue without Login"
+            android:text="@string/without_text"
             android:textColor="@color/palette_4"
             android:textSize="16dp"
             android:padding="10dp" />
@@ -113,7 +113,7 @@
                 android:textColor="@color/palette_1"
                 android:textSize="14dp"
                 android:fontFamily="@font/poppins_regular"
-                android:text="Dont have any account?" />
+                android:text="@string/donthave_text" />
 
             <TextView
                 android:id="@+id/main_regis"
@@ -124,7 +124,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/palette_3"
                 android:textSize="16dp"
-                android:text="REGISTER NOW" />
+                android:text="@string/toRegister_text" />
         </LinearLayout>
 
     </LinearLayout>

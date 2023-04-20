@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:fontFamily="@font/poppins_semibold"
-                android:text="Itinerary List"
+                android:text="@string/itinerary_list_header"
                 android:textSize="20dp"
                 android:textColor="@color/palette_1" />
         </LinearLayout>

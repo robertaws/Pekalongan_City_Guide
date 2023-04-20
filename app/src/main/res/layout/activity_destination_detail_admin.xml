@@ -34,7 +34,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:fontFamily="@font/poppins_semibold"
-                android:text="Destination Details"
+                android:text="@string/detail_header"
                 android:textColor="@color/palette_1"
                 android:textSize="20dp"
                 android:textStyle="bold" />
@@ -131,6 +131,21 @@
                             android:layout_marginTop="5dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
+                        <TextView
+                            android:textStyle="bold"
+                            android:id="@+id/desti_admin_phone"
+                            android:fontFamily="@font/poppins_semibold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:justificationMode="inter_word"
+                            android:text="Destination Phone"
+                            android:textColor="@color/palette_1" />
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_marginTop="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
                                     <fragment
                                         android:layout_marginTop="20dp"
                                         android:layout_marginBottom="20dp"
@@ -143,6 +158,20 @@
                             android:layout_marginTop="5dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:padding="15dp"
+                            android:background="@color/ic_launcher_background"
+                            android:id="@+id/admin_opening_rv"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:layout_marginBottom="15dp"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:listitem="@layout/list_opening_hours"/>
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_marginTop="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/adminreview_rv"
                             android:layout_width="match_parent"

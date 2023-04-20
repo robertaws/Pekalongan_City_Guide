@@ -29,11 +29,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="Culinary"
+                android:text="@string/culinary_header"
                 android:fontFamily="@font/poppins_semibold"
                 android:textColor="@color/palette_1"
                 android:textSize="20dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
         </LinearLayout>
 
         <androidx.cardview.widget.CardView
@@ -93,7 +93,7 @@
                     android:textSize="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Culinary Gallery"
+                    android:text="@string/culinary_image"
                     android:fontFamily="@font/poppins_semibold"
                     android:textColor="@color/palette_1"
                     android:textStyle="bold"/>

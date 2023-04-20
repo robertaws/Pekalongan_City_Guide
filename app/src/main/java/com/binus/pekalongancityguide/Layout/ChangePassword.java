@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityChangePasswordBinding;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -40,19 +41,19 @@ public class ChangePassword extends AppCompatActivity {
 
         if (TextUtils.isEmpty(currPass)) {
             binding.currentpassTil.setPasswordVisibilityToggleEnabled(false);
-            binding.currPass.setError("Enter current password!");
+            binding.currPass.setError(getString(R.string.enter_cur_pass));
             allFieldsValid = false;
         } else if (currPass.length() < 8) {
-            binding.currentpassTil.setPasswordVisibilityToggleEnabled(false); // remove toggle
-            binding.currPass.setError("Password must be more than 8 characters!");
+            binding.currentpassTil.setPasswordVisibilityToggleEnabled(false);
+            binding.currPass.setError(getString(R.string.pass8chara));
             allFieldsValid = false;
         } else if (!containsNumber(currPass)) {
-            binding.currentpassTil.setPasswordVisibilityToggleEnabled(false); // remove toggle
-            binding.currPass.setError("Password must contain at least one number!");
+            binding.currentpassTil.setPasswordVisibilityToggleEnabled(false);
+            binding.currPass.setError(getString(R.string.pass1num));
             allFieldsValid = false;
         } else if (!containsSymbol(currPass)) {
-            binding.currentpassTil.setPasswordVisibilityToggleEnabled(false); // remove toggle
-            binding.currPass.setError("Password must contain at least one symbol!");
+            binding.currentpassTil.setPasswordVisibilityToggleEnabled(false);
+            binding.currPass.setError(getString(R.string.pass1Symbol));
             allFieldsValid = false;
         } else {
             binding.currentpassTil.setPasswordVisibilityToggleEnabled(true);
@@ -60,40 +61,40 @@ public class ChangePassword extends AppCompatActivity {
         }
 
         if (TextUtils.isEmpty(editPass)) {
-            binding.editpassTil.setPasswordVisibilityToggleEnabled(false); // remove toggle
-            binding.editPass.setError("Enter new password!");
+            binding.editpassTil.setPasswordVisibilityToggleEnabled(false);
+            binding.editPass.setError(getString(R.string.enternewPass));
             allFieldsValid = false;
         } else if (editPass.equals(currPass)) {
-            binding.editpassTil.setPasswordVisibilityToggleEnabled(false); // remove toggle
-            binding.editPass.setError("Your new password cannot be the same as your current password!");
+            binding.editpassTil.setPasswordVisibilityToggleEnabled(false);
+            binding.editPass.setError(getString(R.string.passcantSame));
             allFieldsValid = false;
         } else if (editPass.length() < 8) {
-            binding.editpassTil.setPasswordVisibilityToggleEnabled(false); // remove toggle
-            binding.editPass.setError("Password must be more than 8 characters!");
+            binding.editpassTil.setPasswordVisibilityToggleEnabled(false);
+            binding.editPass.setError(getString(R.string.pass8chara));
             allFieldsValid = false;
         } else if (!containsNumber(editPass)) {
-            binding.editpassTil.setPasswordVisibilityToggleEnabled(false); // remove toggle
-            binding.editPass.setError("Password must contain at least one number!");
+            binding.editpassTil.setPasswordVisibilityToggleEnabled(false);
+            binding.editPass.setError(getString(R.string.pass1num));
             allFieldsValid = false;
         } else if (!containsSymbol(editPass)) {
-            binding.editpassTil.setPasswordVisibilityToggleEnabled(false); // remove toggle
-            binding.editPass.setError("Password must contain at least one symbol!");
+            binding.editpassTil.setPasswordVisibilityToggleEnabled(false);
+            binding.editPass.setError(getString(R.string.pass1Symbol));
             allFieldsValid = false;
         } else {
-            binding.editpassTil.setPasswordVisibilityToggleEnabled(true); // show toggle
+            binding.editpassTil.setPasswordVisibilityToggleEnabled(true);
             binding.editPass.setError(null);
         }
 
         if (TextUtils.isEmpty(cfmeditPass)) {
-            binding.editcfmpassTil.setPasswordVisibilityToggleEnabled(false); // remove toggle
-            binding.cfmeditPass.setError("Enter confirm password!");
+            binding.editcfmpassTil.setPasswordVisibilityToggleEnabled(false);
+            binding.cfmeditPass.setError(getString(R.string.cfmpassEnter));
             allFieldsValid = false;
         } else if (!cfmeditPass.equals(editPass)) {
-            binding.editcfmpassTil.setPasswordVisibilityToggleEnabled(false); // remove toggle
-            binding.cfmeditPass.setError("Password does not match!");
+            binding.editcfmpassTil.setPasswordVisibilityToggleEnabled(false);
+            binding.cfmeditPass.setError(getString(R.string.passnotMatch));
             allFieldsValid = false;
         } else {
-            binding.editcfmpassTil.setPasswordVisibilityToggleEnabled(true); // show toggle
+            binding.editcfmpassTil.setPasswordVisibilityToggleEnabled(true);
             binding.cfmeditPass.setError(null);
         }
 
@@ -134,15 +135,15 @@ public class ChangePassword extends AppCompatActivity {
                                     )
                                     .addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful()) {
-                                            Toast.makeText(this, "Password updated successfully", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(this,R.string.pass_updated_txt, Toast.LENGTH_SHORT).show();
                                             finish();
                                         } else {
-                                            Toast.makeText(this, "Failed to update password", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(this,R.string.failed_update_pass, Toast.LENGTH_SHORT).show();
                                             Log.e("ChangePassword", "Password update failed: " + task1.getException().getMessage());
                                         }
                                     });
                         } else {
-                            Toast.makeText(this, "Failed to re-authenticate user", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, R.string.failed_authentic, Toast.LENGTH_SHORT).show();
                             Log.e("ChangePassword", "Re-authentication failed: " + task.getException().getMessage());
                         }
                     });
