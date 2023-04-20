@@ -61,7 +61,7 @@
                 android:id="@+id/loc_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:textColor="@color/palette_1"
@@ -73,11 +73,12 @@
 
             <com.google.android.material.divider.MaterialDivider
                 app:dividerColor="@color/palette_4"
-                android:layout_marginHorizontal="5dp"
+                android:layout_marginHorizontal="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <TextView
+                android:includeFontPadding="false"
                 android:id="@+id/loc_distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -86,12 +87,12 @@
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/distance"
                 android:drawablePadding="5dp"
-                android:drawableTint="@color/palette_1"
+                android:drawableTint="@color/palette_2"
                 android:fontFamily="@font/poppins_regular"
                 android:padding="5dp"
                 android:text="distance"
                 android:textAppearance="?attr/textAppearanceListItem"
-                android:textColor="@color/palette_2"
+                android:textColor="@color/palette_3"
                 android:textSize="14dp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>

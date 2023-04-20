@@ -190,7 +190,6 @@ public class AddDestination extends AppCompatActivity {
             });
         }
     }
-
     private void uploadtoStorage(String placeId, String address, double lat, double lng, double rating, JSONArray reviews, String phoneNumber, List<String> weekday, Place place) {
         Log.d(TAG, "uploadtoStorage : uploading to storage");
         progressDialog.setMessage("Uploading image");

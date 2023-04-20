@@ -3,13 +3,7 @@ package com.binus.pekalongancityguide.ItemTemplate;
 import java.io.Serializable;
 
 public class Itinerary implements Serializable {
-    private final String date;
-    private final String startTime;
-    private final String endTime;
-    private final String placeName;
-    private final String destiId;
-    private final String url;
-    private final String durationText;
+    private final String date,startTime,endTime,placeName,destiId,url,durationText;
     private final double latitude;
     private final double longitude;
     private final float distance;
