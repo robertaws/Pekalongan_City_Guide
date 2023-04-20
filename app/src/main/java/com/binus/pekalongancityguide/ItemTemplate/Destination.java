@@ -7,11 +7,12 @@ public class Destination implements Serializable{
     double desLat,desLong;
     boolean favorite;
     private boolean isLoaded;
+    private float distance;
     public Destination(){
 
     }
 
-    public Destination(String uid, String id, String title, String description, String categoryId, String url, String rating, String address, double desLat, double desLong, boolean favorite) {
+    public Destination(String uid, String id, String title, String description, String categoryId, String url, String rating, String address, double desLat, double desLong, boolean favorite, boolean isLoaded, float distance) {
         this.uid = uid;
         this.id = id;
         this.title = title;
@@ -23,7 +24,8 @@ public class Destination implements Serializable{
         this.desLat = desLat;
         this.desLong = desLong;
         this.favorite = favorite;
-        this.isLoaded = false;
+        this.isLoaded = isLoaded;
+        this.distance = distance;
     }
 
     public String getUid() {
@@ -82,10 +84,6 @@ public class Destination implements Serializable{
         this.rating = rating;
     }
 
-    public boolean isFavorite() {
-        return favorite;
-    }
-
     public String getAddress() {
         return address;
     }
@@ -110,6 +108,10 @@ public class Destination implements Serializable{
         this.desLong = desLong;
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
     public void setFavorite(boolean favorite) {
         this.favorite = favorite;
     }
@@ -120,5 +122,13 @@ public class Destination implements Serializable{
 
     public void setLoaded(boolean loaded) {
         isLoaded = loaded;
+    }
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
     }
 }

@@ -52,7 +52,6 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
     @Override
     public void onBindViewHolder(ItineraryViewHolder holder, int position) {
         Itinerary itinerary = itineraryList.get(position);
-        String destiId = itinerary.getDestiId();
         loadImage(itinerary, holder);
         holder.startTimeTextView.setText(itinerary.getStartTime());
         holder.endTimeTextView.setText(itinerary.getEndTime());
