@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -131,7 +132,6 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
                         holder.layoutImage.setBackground(drawable);
                         holder.progressBar.setVisibility(View.GONE);
                     }
-
                     @Override
                     public void onLoadFailed(@Nullable Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
@@ -155,8 +155,8 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
     }
 
     class HolderDestination extends RecyclerView.ViewHolder{
-        RelativeLayout layoutImage;
-        TextView title,rating;
+        LinearLayout layoutImage;
+        TextView title,rating,distance;
         ProgressBar progressBar;
         boolean isImageLoaded;
         public HolderDestination(@NonNull View itemView) {
@@ -165,6 +165,7 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
             title = binding.locTitle;
             rating = binding.locRat;
             progressBar = binding.progressBar;
+            distance = binding.locDistance;
             isImageLoaded = false;
         }
     }
