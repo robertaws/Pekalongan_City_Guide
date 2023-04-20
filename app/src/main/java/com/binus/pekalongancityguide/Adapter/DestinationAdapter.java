@@ -12,9 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,6 +39,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.HolderDestination> implements Filterable {
     private final Context context;
@@ -66,7 +66,6 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
         Destination destination = destinations.get(position);
         String destiId = destination.getId();
         String title = destination.getTitle();
-        String description = destination.getDescription();
         holder.title.setText(title);
         loadImage(destination, holder);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination")
@@ -114,6 +113,16 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
                 context.startActivity(intent);
             }
         });
+        float distance = destination.getDistance();
+        Log.d(TAG, "DISTANCE: " + distance);
+        String distanceString;
+        if (distance < 1) {
+            int distanceInMeters = (int) (distance * 1000);
+            distanceString = distanceInMeters + " m";
+        } else {
+            distanceString = String.format(Locale.getDefault(), "%.2f km", distance);
+        }
+        holder.distance.setText(distanceString);
     }
 
     private void loadImage(Destination destination, HolderDestination holder) {
@@ -155,7 +164,7 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
     }
 
     class HolderDestination extends RecyclerView.ViewHolder{
-        LinearLayout layoutImage;
+        FrameLayout layoutImage;
         TextView title,rating,distance;
         ProgressBar progressBar;
         boolean isImageLoaded;

@@ -4,10 +4,6 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -53,8 +49,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class DestinationDetails extends AppCompatActivity {
     String imageUrl;
@@ -328,7 +322,6 @@ public class DestinationDetails extends AppCompatActivity {
                         String title = "" + snapshot.child("title").getValue();
                         String description = "" + snapshot.child("description").getValue();
                         String address = "" + snapshot.child("address").getValue();
-                        String categoryId = "" + snapshot.child("categoryId").getValue();
                         String url = "" + snapshot.child("url").getValue();
                         String phone = "" + snapshot.child("phoneNumber").getValue();
                         double latitude = Double.parseDouble(snapshot.child("latitude").getValue().toString());
