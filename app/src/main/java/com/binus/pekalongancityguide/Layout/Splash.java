@@ -1,12 +1,17 @@
 package com.binus.pekalongancityguide.Layout;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,31 +50,39 @@ public class Splash extends AppCompatActivity {
 
     private void checkUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if(firebaseUser == null){
-            startActivity (new Intent(Splash.this, MainActivity.class));
+        if (firebaseUser == null) {
+            startActivity(new Intent(Splash.this, MainActivity.class));
             finish();
-        }else {
-            FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
-            DatabaseReference databaseReference = database.getReference("Users");
-            databaseReference.child(firebaseUser.getUid())
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String userType = "" + snapshot.child("userType").getValue();
-                            if (userType.equals("user")) {
-                                startActivity(new Intent(Splash.this, Home.class));
-                                finish();
-                            } else if (userType.equals("admin")) {
-                                startActivity(new Intent(Splash.this, AdminHome.class));
+        } else {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            if (networkInfo != null && networkInfo.isConnected()) {
+                databaseReference.child(firebaseUser.getUid())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String userType = "" + snapshot.child("userType").getValue();
+                                if (userType.equals("user")) {
+                                    startActivity(new Intent(Splash.this, Home.class));
+                                    finish();
+                                } else if (userType.equals("admin")) {
+                                    startActivity(new Intent(Splash.this, AdminHome.class));
+                                    finish();
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Toast.makeText(Splash.this,R.string.error_connect_database,Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(Splash.this, MainActivity.class));
                                 finish();
                             }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
+                        });
+            } else {
+                Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Splash.this, Home.class));
+                finish();
+            }
         }
     }
 }

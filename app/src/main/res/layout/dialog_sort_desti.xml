@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="16dp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/palette_4"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/dialog_title"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:text="@string/sort_by"
+                android:textStyle="bold"
+                android:fontFamily="@font/poppins_semibold"
+                android:layout_marginBottom="15dp"
+                android:textSize="20dp"
+                android:textColor="@color/palette_1" />
+
+            <CheckBox
+                android:includeFontPadding="false"
+                android:id="@+id/rating_sort"
+                android:text="@string/rating_txt"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:fontFamily="@font/poppins_regular"
+                android:layout_marginBottom="15dp"
+                android:textSize="20dp"
+                android:textColor="@color/palette_2"
+                android:layout_height="wrap_content"
+                android:checked="false" />
+            <CheckBox
+                android:includeFontPadding="false"
+                android:id="@+id/distance_sort"
+                android:text="@string/distance_txt"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:fontFamily="@font/poppins_regular"
+                android:layout_marginBottom="15dp"
+                android:textSize="20dp"
+                android:textColor="@color/palette_2"
+                android:layout_height="wrap_content"
+                android:checked="false" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</layout>
+
+
+
+

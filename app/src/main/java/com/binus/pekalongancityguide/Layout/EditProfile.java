@@ -34,6 +34,7 @@ import com.binus.pekalongancityguide.databinding.ActivityEditProfileBinding;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -62,7 +63,13 @@ public class EditProfile extends AppCompatActivity {
         progressDialog.setCanceledOnTouchOutside(false);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        getInfo();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user != null) {
+            getInfo();
+        } else {
+            Toast.makeText(this, "You are not logged in", Toast.LENGTH_SHORT).show();
+            onBackPressed();
+        }
 
         binding.backProfile.setOnClickListener(v -> {
             onBackPressed();
@@ -89,7 +96,6 @@ public class EditProfile extends AppCompatActivity {
                 });
             }
         });
-
     }
 
     private void validatedata() {
@@ -255,7 +261,6 @@ public class EditProfile extends AppCompatActivity {
 
                     }
                 });
-
     }
     public int dpToPx(int dp) {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();

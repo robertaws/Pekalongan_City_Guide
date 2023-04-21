@@ -17,6 +17,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,6 +32,7 @@ import androidx.fragment.app.Fragment;
 import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.R;
+import com.binus.pekalongancityguide.databinding.DialogSortDestiBinding;
 import com.binus.pekalongancityguide.databinding.FragmentShowDestinationBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -45,6 +51,7 @@ public class ShowDestinationFragment extends Fragment {
     private String categoryId;
     private String category;
     private ArrayList<Destination> destinationArrayList;
+    private ArrayList<Destination> filteredAndSortedDestinations = new ArrayList<>();
     private DestinationAdapter destinationAdapter;
     private static final String TAG = "DESTI_USER_TAG";
     private FragmentShowDestinationBinding binding;
@@ -113,7 +120,6 @@ public class ShowDestinationFragment extends Fragment {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
@@ -128,9 +134,54 @@ public class ShowDestinationFragment extends Fragment {
 
             }
         });
+        binding.sortButton.setOnClickListener(v ->{
+            showSortDialog();
+        });
         return binding.getRoot();
     }
+    private void showSortDialog() {
+        DialogSortDestiBinding binding1 = DialogSortDestiBinding.inflate(LayoutInflater.from(getContext()));
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(binding1.getRoot());
+        CheckBox ratingCheck = binding1.ratingSort;
+        CheckBox distanceCheck = binding1.distanceSort;
+        builder.setPositiveButton(R.string.sort_txt, (dialog, which) -> {
+            if (ratingCheck.isChecked() && distanceCheck.isChecked()) {
+                Collections.sort(destinationArrayList, (destination1, destination2) -> {
+                    Double rating1 = Double.parseDouble(destination1.getRating());
+                    Double rating2 = Double.parseDouble(destination2.getRating());
+                    Float distance1 = destination1.getDistance();
+                    Float distance2 = destination2.getDistance();
+                    int distanceCompare = distance1.compareTo(distance2);
+                    if (distanceCompare != 0) {
+                        return distanceCompare;
+                    }
+                    return Double.compare(rating1, rating2);
+                });
+            } else if (ratingCheck.isChecked()) {
+                Collections.sort(destinationArrayList, (destination1, destination2) -> {
+                    Double rating1 = Double.parseDouble(destination1.getRating());
+                    Double rating2 = Double.parseDouble(destination2.getRating());
+                    return Double.compare(rating2, rating1);
+                });
+            } else if (distanceCheck.isChecked()) {
+                Collections.sort(destinationArrayList, (destination1, destination2) -> {
+                    Float distance1 = destination1.getDistance();
+                    Float distance2 = destination2.getDistance();
+                    return distance1.compareTo(distance2);
+                });
+            }
+            destinationAdapter.notifyItemRangeChanged(0, destinationArrayList.size());
+        });
 
+        builder.setNegativeButton(R.string.cancel_txt, (dialog, which) -> {
+            dialog.dismiss();
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
+        dialog.show();
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -160,7 +211,6 @@ public class ShowDestinationFragment extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Destination destination = dataSnapshot.getValue(Destination.class);
                     destinationArrayList.add(destination);
-//                    sortDestination(destinationArrayList);
                 }
                 updateDistances();
             }
@@ -183,7 +233,6 @@ public class ShowDestinationFragment extends Fragment {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             Destination destination = dataSnapshot.getValue(Destination.class);
                             destinationArrayList.add(destination);
-//                            sortDestination(destinationArrayList);
                         }
                         updateDistances();
                     }
@@ -206,15 +255,12 @@ public class ShowDestinationFragment extends Fragment {
             destinationAdapter.notifyDataSetChanged();
         }
     }
-
     private void getDestinationDistance(Destination destination) {
         database.getReference("Destination").child(destination.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 double placeLat = Double.parseDouble(snapshot.child("latitude").getValue().toString());
-//                Log.d(TAG, "Latitude: " + placeLat);
                 double placeLng = Double.parseDouble(snapshot.child("longitude").getValue().toString());
-//                Log.d(TAG, "Longitude: " + placeLng);
                 if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                         ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
@@ -225,7 +271,6 @@ public class ShowDestinationFragment extends Fragment {
                             double currentLng = location.getLongitude();
                             float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
                             destination.setDistance(distance);
-                            sortDestination(destinationArrayList);
 //                            Log.d(TAG, "clng: " + currentLng + " clat: " + currentLat + " dist: " + distance);
                             destinationAdapter.notifyDataSetChanged();
                         }
@@ -252,23 +297,6 @@ public class ShowDestinationFragment extends Fragment {
         return results[0] / 1000;
     }
 
-    private void sortDestination(ArrayList<Destination> destinationArrayList) {
-        Collections.sort(destinationArrayList, (destination1, destination2) -> {
-            Double rating1 = Double.parseDouble(destination1.getRating());
-            Double rating2 = Double.parseDouble(destination2.getRating());
-            Float distance1 = destination1.getDistance();
-            Float distance2 = destination2.getDistance();
-
-            // Compare by rating first
-            int distanceCompare = distance1.compareTo(distance2); // reverse order
-            if (distanceCompare != 0) {
-                return distanceCompare;
-            }
-
-            // If rating is the same, compare by distance
-            return Double.compare(rating1, rating2);
-        });
-    }
 
     @SuppressLint("MissingPermission")
     private void startLocationUpdates() {

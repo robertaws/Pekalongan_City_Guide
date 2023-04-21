@@ -16,6 +16,7 @@ public class FilterDestiUser extends Filter {
         this.destinationAdapter = destinationAdapter;
     }
 
+
     @Override
     protected FilterResults performFiltering(CharSequence constraint) {
         FilterResults results = new FilterResults();

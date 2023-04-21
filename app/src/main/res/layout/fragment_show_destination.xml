@@ -7,52 +7,55 @@
 
     </data>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context=".Layout.ShowDestinationFragment">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content">
             <EditText
+                android:includeFontPadding="false"
                 android:layout_marginTop="10dp"
                 android:id="@+id/search_desti"
                 android:drawableStart="@drawable/search_icon"
                 android:drawablePadding="5dp"
                 android:padding="5dp"
+                android:layout_weight="2"
                 android:fontFamily="@font/poppins_regular"
                 android:textColor="@color/palette_1"
                 android:textColorHint="@color/palette_3"
                 android:background="@drawable/et_style"
                 android:layout_marginHorizontal="10dp"
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
+                android:textSize="17dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/search_hint"/>
-
             <ImageButton
-                android:id="@+id/sort_btn"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="8dp"
+                android:id="@+id/sort_button"
+                app:tint="@color/palette_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_back"
+                android:layout_marginEnd="10dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="#0000"
+                android:layout_marginBottom="10dp"
+                android:padding="8dp"
                 android:src="@drawable/sort_icon"
-                app:tint="@color/palette_3"></ImageButton>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_marginTop="15dp"
-                android:id="@+id/desti_rv"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:layout_below="@id/search_desti"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:listitem="@layout/list_destination" />
-        </RelativeLayout>
-
-    </FrameLayout>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/desti_rv"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_below="@id/search_desti"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/list_destination" />
+    </LinearLayout>
 </layout>

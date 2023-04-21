@@ -25,12 +25,19 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
     public static final String formatTimeStamp(long timestamp){
         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
         calendar.setTimeInMillis(timestamp);
         String date = DateFormat.format("dd/MM/yyyy",calendar).toString();
+        return date;
+    }
+    public static final String formatProfileDate(long timestamp){
+        Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
+        calendar.setTimeInMillis(timestamp);
+        String date = DateFormat.format("dd/MMMM/yyyy",calendar).toString();
         return date;
     }
     public static void deleteDesti(Context context, String destiId, String destiUrl, String destiTitle){

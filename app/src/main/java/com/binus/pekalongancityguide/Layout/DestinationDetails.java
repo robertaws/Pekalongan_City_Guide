@@ -232,7 +232,7 @@ public class DestinationDetails extends AppCompatActivity {
             dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);
             dialog.show();
         });
-        addItinerary.setOnClickListener(v -> {
+        addItinerary.setOnClickListener(v ->{
             validateData(dateEt, startEt, endEt);
         });
         AlertDialog dialog = builder.create();
@@ -249,21 +249,21 @@ public class DestinationDetails extends AppCompatActivity {
         boolean allFieldsFilled = true;
 
         if (TextUtils.isEmpty(date)) {
-            dateEt.setError("Please choose a date!");
+            dateEt.setError(getString(R.string.choose_date));
             allFieldsFilled = false;
         } else {
             dateEt.setError(null);
         }
 
         if (TextUtils.isEmpty(startTime)) {
-            startTimeEt.setError("Please choose a starting time!");
+            startTimeEt.setError(getString(R.string.choose_start));
             allFieldsFilled = false;
         } else {
             startTimeEt.setError(null);
         }
 
         if (TextUtils.isEmpty(endTime)) {
-            endTimeEt.setError("Please choose an end time!");
+            endTimeEt.setError(getString(R.string.choose_end));
             allFieldsFilled = false;
         } else {
             endTimeEt.setError(null);
@@ -271,7 +271,7 @@ public class DestinationDetails extends AppCompatActivity {
 
         if (allFieldsFilled) {
             uploadToDB(date, startTime, endTime);
-            Toast.makeText(this, "Destination Added to Itinerary!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.added_to_iter, Toast.LENGTH_SHORT).show();
         }
 
     }

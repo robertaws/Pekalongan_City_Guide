@@ -25,6 +25,7 @@
             android:background="@color/palette_4">
 
             <TextView
+                android:background="@color/alfa"
                 android:id="@+id/startTimeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -34,7 +35,6 @@
                 android:text="start"
                 android:textStyle="bold"
                 android:fontFamily="@font/poppins_regular"
-                android:layout_marginTop="8dp"
                 android:textAlignment="center"
                 android:shadowColor="#000000"
                 android:shadowDx="2"
@@ -46,6 +46,7 @@
                 android:layout_height="50dp" />
 
             <TextView
+                android:background="@color/alfa"
                 android:id="@+id/endTimeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -81,7 +82,7 @@
                 android:textAppearance="?attr/textAppearanceListItem"
                 android:textColor="@color/palette_2"
                 android:textStyle="bold"
-                android:layout_weight="2" />
+                android:layout_weight="1" />
             <com.google.android.material.divider.MaterialDivider
                 app:dividerColor="@color/palette_4"
                 android:layout_marginStart="8dp"

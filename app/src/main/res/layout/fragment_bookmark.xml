@@ -32,6 +32,8 @@
             android:drawableStart="@drawable/search_icon"
             android:drawablePadding="5dp"
             android:padding="5dp"
+            android:includeFontPadding="false"
+            android:textSize="17dp"
             android:fontFamily="@font/poppins_regular"
             android:background="@drawable/et_style"
             android:layout_marginHorizontal="10dp"
