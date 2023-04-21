@@ -58,7 +58,6 @@ public class ShowDestinationFragment extends Fragment {
     private FusedLocationProviderClient fusedLocationClient;
     private LocationManager locationManager;
     private LocationListener locationListener;
-
     public ShowDestinationFragment() {}
 
     public static ShowDestinationFragment newInstance(String categoryId, String category, String uid) {
@@ -139,13 +138,14 @@ public class ShowDestinationFragment extends Fragment {
         });
         return binding.getRoot();
     }
-    private void showSortDialog() {
+    public void showSortDialog(){
         DialogSortDestiBinding binding1 = DialogSortDestiBinding.inflate(LayoutInflater.from(getContext()));
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setView(binding1.getRoot());
         CheckBox ratingCheck = binding1.ratingSort;
         CheckBox distanceCheck = binding1.distanceSort;
+        builder.setView(binding1.getRoot());
         builder.setPositiveButton(R.string.sort_txt, (dialog, which) -> {
+            int start = 0;
             if (ratingCheck.isChecked() && distanceCheck.isChecked()) {
                 Collections.sort(destinationArrayList, (destination1, destination2) -> {
                     Double rating1 = Double.parseDouble(destination1.getRating());
@@ -171,7 +171,10 @@ public class ShowDestinationFragment extends Fragment {
                     return distance1.compareTo(distance2);
                 });
             }
-            destinationAdapter.notifyItemRangeChanged(0, destinationArrayList.size());
+            String searchText = binding.searchDesti.getText().toString().trim();
+            destinationAdapter.getFilter().filter(searchText);
+            int itemCount = destinationArrayList.size() - start;
+            destinationAdapter.notifyItemRangeChanged(start, itemCount);
         });
 
         builder.setNegativeButton(R.string.cancel_txt, (dialog, which) -> {
