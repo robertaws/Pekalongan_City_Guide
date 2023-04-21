@@ -17,11 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -51,7 +47,6 @@ public class ShowDestinationFragment extends Fragment {
     private String categoryId;
     private String category;
     private ArrayList<Destination> destinationArrayList;
-    private ArrayList<Destination> filteredAndSortedDestinations = new ArrayList<>();
     private DestinationAdapter destinationAdapter;
     private static final String TAG = "DESTI_USER_TAG";
     private FragmentShowDestinationBinding binding;
@@ -274,7 +269,7 @@ public class ShowDestinationFragment extends Fragment {
                             double currentLng = location.getLongitude();
                             float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
                             destination.setDistance(distance);
-//                            Log.d(TAG, "clng: " + currentLng + " clat: " + currentLat + " dist: " + distance);
+                            sortDestination(destinationArrayList);
                             destinationAdapter.notifyDataSetChanged();
                         }
                     });
@@ -300,6 +295,15 @@ public class ShowDestinationFragment extends Fragment {
         return results[0] / 1000;
     }
 
+    private void sortDestination(ArrayList<Destination> destinationArrayList) {
+        Collections.sort(destinationArrayList, (destination1, destination2) -> {
+            String title1 = destination1.getTitle().toLowerCase();
+            String title2 = destination2.getTitle().toLowerCase();
+
+            // Compare by title
+            return title1.compareTo(title2);
+        });
+    }
 
     @SuppressLint("MissingPermission")
     private void startLocationUpdates() {
