@@ -51,7 +51,6 @@ public class BookmarkFragment extends Fragment {
                     Log.d(TAG,"onTextChanged :"+e.getMessage());
                 }
             }
-
             @Override
             public void afterTextChanged(Editable s) {
 
@@ -76,7 +75,6 @@ public class BookmarkFragment extends Fragment {
                             bookmarkAdapter = new BookmarkAdapter(getContext(),destinationArrayList);
                             binding.destiRV.setAdapter(bookmarkAdapter);
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 

@@ -67,7 +67,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="John Cena"
+                    android:text="-"
                     android:fontFamily="@font/poppins_semibold"
                     android:textSize="18dp"
                     android:textStyle="bold" />
@@ -147,7 +147,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
-                android:text="5-1-1999"
+                android:text="-"
                 android:textColor="#55545A"
                 android:textSize="18dp"
                 android:textStyle="bold"></TextView>
@@ -159,32 +159,46 @@
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
             <TextView
+                android:layout_marginTop="20dp"
                 android:gravity="center_vertical"
                 android:drawablePadding="5dp"
                 android:drawableTint="#ACA2A2"
-                android:drawableLeft="@drawable/type_icon"
-                android:layout_marginTop="10dp"
-                android:textColor="#ACA2A2"
                 android:fontFamily="@font/poppins_regular"
+                android:drawableLeft="@drawable/language_icon"
+                android:textColor="#ACA2A2"
                 android:layout_marginStart="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/type_txt"
+                android:text="@string/change_lang"
                 android:textSize="16dp" />
-
-            <TextView
-                android:id="@+id/profile_type"
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/poppins_semibold"
-                android:text="Admin"
-                android:textColor="#55545A"
-                android:textSize="18dp"
-                android:textStyle="bold"></TextView>
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/lang_text"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#55545A"
+                    android:layout_marginStart="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="English"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
+                <ImageButton
+                    android:id="@+id/edit_lang"
+                    android:padding="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/edit_icon"
+                    android:background="#0000"/>
+            </RelativeLayout>
             <com.google.android.material.divider.MaterialDivider
                 app:dividerColor="@color/palette_4"
                 android:layout_marginStart="16dp"
@@ -228,17 +242,6 @@
                 android:fontFamily="@font/poppins_semibold"
                 android:layout_height="wrap_content"
                 android:text="@string/change_password"/>
-            <Button
-                android:padding="10dp"
-                android:id="@+id/change_lang"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center"
-                android:textColor="@color/palette_4"
-                android:layout_marginHorizontal="10dp"
-                android:layout_width="match_parent"
-                android:fontFamily="@font/poppins_semibold"
-                android:layout_height="wrap_content"
-                android:text="@string/change_lang"/>
             <Button
                 android:padding="10dp"
                 android:id="@+id/logout_btn"

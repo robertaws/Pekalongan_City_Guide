@@ -79,7 +79,7 @@ public class DestinationFragment extends Fragment {
             }
         });
         viewPager.setAdapter(viewPagerAdapter);
-        viewPager.setOffscreenPageLimit(1);
+        viewPager.setOffscreenPageLimit(10);
     }
 
     public class ViewPagerAdapter extends FragmentPagerAdapter {

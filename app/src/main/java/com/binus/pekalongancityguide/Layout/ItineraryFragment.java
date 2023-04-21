@@ -70,12 +70,12 @@ public class ItineraryFragment extends Fragment {
     private String selectedDate;
     private FirebaseAuth firebaseAuth;
     private FusedLocationProviderClient fusedLocationClient;
-    private final FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
     public ItineraryFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
     @Override
@@ -140,7 +140,9 @@ public class ItineraryFragment extends Fragment {
     }
 
     private void loadItinerary(String date) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference userRef = database.getReference("Users").child(firebaseAuth.getUid());
+        userRef.keepSynced(true);
         Query itineraryQuery = userRef.child("itinerary").orderByChild("date").equalTo(date);
         Log.d(TAG, "itineraryQuery: " + itineraryQuery);
         itineraryQuery.addValueEventListener(new ValueEventListener() {

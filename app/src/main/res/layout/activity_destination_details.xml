@@ -94,9 +94,9 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:textSize="18dp"
+                            android:textSize="20dp"
                             android:id="@+id/desti_name"
-                            android:fontFamily="@font/poppins_regular"
+                            android:fontFamily="@font/poppins_semibold"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Destination Name"

@@ -40,7 +40,7 @@
     <string name="time_txt">Date Joined</string>
     <string name="type_txt">User Type</string>
     <string name="logout_text">Logout</string>
-    <string name="change_lang">Change Language</string>
+    <string name="change_lang">Language</string>
     #edit profile
     <string name="edit_header">Edit Profile</string>
     <string name="update_text">Update</string>
@@ -106,4 +106,15 @@
     <string name="select_language">Select Language</string>
     <string name="english_opt">English</string>
     <string name="indo_opt">Indonesian</string>
+    <string name="no_internet">No internet connection</string>
+    <string name="error_connect_database">Error connecting to the database</string>
+    <string name="choose_date">Please choose a date!</string>
+    <string name="choose_start">Please choose a starting time!</string>
+    <string name="choose_end">Please choose an end time!</string>
+    <string name="added_to_iter">Destination Added to Itinerary!</string>
+    <string name="sort_txt">Sort</string>
+    <string name="cancel_txt">Cancel</string>
+    <string name="sort_by">Sort By :</string>
+    <string name="rating_txt">Rating</string>
+    <string name="distance_txt">Distance</string>
 </resources>

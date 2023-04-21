@@ -38,20 +38,22 @@ import static android.content.ContentValues.TAG;
 
 public class ItineraryList extends AppCompatActivity {
     public ActivityItineraryListBinding binding;
-    private final FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         binding = ActivityItineraryListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         binding.backtoprofile.setOnClickListener(v -> {
             onBackPressed();
         });
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference userRef = database.getReference("Users").child(Objects.requireNonNull(firebaseAuth.getUid()));
+        userRef.keepSynced(true);
         Query itineraryQuery = userRef.child("itinerary");
         itineraryQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -86,6 +88,7 @@ public class ItineraryList extends AppCompatActivity {
 
                 ItineraryPagerAdapter vpAdapter = new ItineraryPagerAdapter(ItineraryList.this, getSupportFragmentManager(), fragments, dates);
                 binding.viewPager.setAdapter(vpAdapter);
+                binding.viewPager.setOffscreenPageLimit(5);
                 binding.itineraryTab.setupWithViewPager(binding.viewPager);
                 binding.itineraryTab.setSelectedTabIndicatorColor(ContextCompat.getColor(ItineraryList.this, R.color.white));
             }

@@ -66,9 +66,8 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
     public void onBindViewHolder(@NonNull HolderBookmark holder, int position){
         Destination destination = destiArray.get(position);
         loadDestination(destination,holder);
-        holder.itemView.setOnClickListener(v -> {
+        holder.itemView.setOnClickListener(v ->{
             if (holder.isImageLoaded) {
-
                 Drawable drawable = holder.layoutImage.getBackground();
                 BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
                 Bitmap bitmap = bitmapDrawable.getBitmap();
@@ -163,7 +162,6 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
     public Filter getFilter() {
         if(filterBookmark==null){
             filterBookmark = new FilterBookmark(filterListBookmark,this);
-
         }
         return filterBookmark;
     }

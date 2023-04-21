@@ -56,7 +56,7 @@
     <string name="regispass_text">Masukkan Kata Sandi</string>
     <string name="regiscfmpass_text">Konfirmasikan Kata Sandi</string>
     <string name="regisbtn_text">Daftar</string>
-    <string name="change_lang">Ubah Bahasa</string>
+    <string name="change_lang">Setelan Bahasa</string>
     <string name="change_password">Ubah Kata Sandi</string>
     <string name="curr_pass">Masukkan Kata Sandi anda saat ini</string>
     <string name="edit_pass">Masukkan kata sandi</string>
@@ -106,4 +106,15 @@
     <string name="select_language">Pilih Bahasa</string>
     <string name="english_opt">Bahasa Inggris</string>
     <string name="indo_opt">Bahasa Indonesia</string>
+    <string name="no_internet">Tidak Ada Koneksi Internet</string>
+    <string name="error_connect_database">Tidak dapat menghubungkan ke Database</string>
+    <string name="choose_date">Pilih tanggal perjalanan!</string>
+    <string name="choose_start">Pilih waktu mulai!</string>
+    <string name="choose_end">Pilih waktu selesai!</string>
+    <string name="added_to_iter">Berhasil Menambah destinasi ke rencana perjalanan!</string>
+    <string name="sort_txt">Sortir</string>
+    <string name="cancel_txt">Batal</string>
+    <string name="sort_by">Sortir Berdasarkan :</string>
+    <string name="rating_txt">Rating</string>
+    <string name="distance_txt">Jarak</string>
 </resources>

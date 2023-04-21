@@ -39,6 +39,11 @@ public class ProfileFragment extends Fragment {
     private static final String TAG = "PROFILE_TAG";
     private String mProfileImgUrl;
     private SharedPreferences prefs;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -48,6 +53,14 @@ public class ProfileFragment extends Fragment {
         View view = binding.getRoot();
         firebaseAuth = FirebaseAuth.getInstance();
         getInfo();
+        prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String selectedLanguage = prefs.getString("language", "");
+        if(selectedLanguage.equals("in")){
+            binding.langText.setText(R.string.indo_opt);
+        } else {
+            binding.langText.setText(R.string.english_opt);
+        }
+
         binding.profileImg.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), ImageFullscreen.class);
             intent.putExtra("fullImg", mProfileImgUrl);
@@ -63,7 +76,7 @@ public class ProfileFragment extends Fragment {
             logoutConfirm();
         });
 
-        binding.changeLang.setOnClickListener(v -> {
+        binding.editLang.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle(R.string.select_language)
                     .setItems(new CharSequence[]{getString(R.string.english_opt), getString(R.string.indo_opt)}, (dialog, which) -> {
@@ -75,14 +88,12 @@ public class ProfileFragment extends Fragment {
                         }
                         Locale currentLocale = getResources().getConfiguration().locale;
                         if (!currentLocale.equals(newLocale)) {
-                            // Save the selected language preference
                             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
                             preferences.edit().putString("language", newLocale.getLanguage()).apply();
-                            // Update the app's configuration to use the new locale
                             Configuration config = new Configuration(getResources().getConfiguration());
                             config.setLocale(newLocale);
                             getResources().updateConfiguration(config, getResources().getDisplayMetrics());
-                            Log.d("Language", "Language configuration set to " + newLocale);
+                            Log.d("Language", "Language configuration set to " + newLocale.getDisplayLanguage());
                             getActivity().recreate();
                             Log.d("Language", "Activity recreated");
                         }
@@ -115,45 +126,43 @@ public class ProfileFragment extends Fragment {
         if(firebaseUser==null){
             startActivity(new Intent(getActivity(),MainActivity.class));
             Toast.makeText(getContext(),R.string.notLogin, Toast.LENGTH_SHORT).show();
-            getActivity().finish();
         }
     }
 
     private void getInfo(){
-        Log.e(TAG,"Loading User Info..."+firebaseAuth.getUid());
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        DatabaseReference r = database.getReference("Users");
-        r.child(Objects.requireNonNull(firebaseAuth.getUid()))
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String email = ""+snapshot.child("Email").getValue();
-                        String name = ""+snapshot.child("Username").getValue();
-                        String profile_img = "" + snapshot.child("profileImage").getValue();
-                        String timestamp = "" + snapshot.child("timestamp").getValue();
-                        String userId = "" + snapshot.child("uid").getValue();
-                        String formatDate = MyApplication.formatTimeStamp(Long.parseLong(timestamp));
-                        String type = "" + snapshot.child("userType").getValue();
-
-                        binding.profileEmail.setText(email);
-                        binding.profileUser.setText(name);
-                        binding.profileJoined.setText(formatDate);
-                        binding.profileType.setText(type);
-                        if (isAdded()) {
-                            String imageUrl = snapshot.child("profileImage").getValue(String.class);
-                            if (imageUrl != null) {
-                                Glide.with(ProfileFragment.this)
-                                        .load(profile_img)
-                                        .centerCrop()
-                                        .into(binding.profileImg);
+        Log.e(TAG,"Loading User Info..."+firebaseAuth.getUid());
+        if (firebaseAuth.getUid() != null) { // add null check here
+            DatabaseReference r = database.getReference("Users");
+            r.keepSynced(true);
+            r.child(Objects.requireNonNull(firebaseAuth.getUid()))
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String email = ""+snapshot.child("Email").getValue();
+                            String name = ""+snapshot.child("Username").getValue();
+                            String profile_img = "" + snapshot.child("profileImage").getValue();
+                            String timestamp = "" + snapshot.child("timestamp").getValue();
+                            String formatDate = MyApplication.formatProfileDate(Long.parseLong(timestamp));
+                            binding.profileEmail.setText(email);
+                            binding.profileUser.setText(name);
+                            binding.profileJoined.setText(formatDate);
+                            if (isAdded()) {
+                                String imageUrl = snapshot.child("profileImage").getValue(String.class);
+                                if (imageUrl != null) {
+                                    Glide.with(ProfileFragment.this)
+                                            .load(profile_img)
+                                            .centerCrop()
+                                            .into(binding.profileImg);
+                                }
                             }
+                            mProfileImgUrl = profile_img;
                         }
-                        mProfileImgUrl = profile_img;
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                        }
+                    });
+        }
     }
 }
