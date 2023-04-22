@@ -88,7 +88,7 @@ public class ItineraryList extends AppCompatActivity {
 
                 ItineraryPagerAdapter vpAdapter = new ItineraryPagerAdapter(ItineraryList.this, getSupportFragmentManager(), fragments, dates);
                 binding.viewPager.setAdapter(vpAdapter);
-                binding.viewPager.setOffscreenPageLimit(5);
+                binding.viewPager.setOffscreenPageLimit(10);
                 binding.itineraryTab.setupWithViewPager(binding.viewPager);
                 binding.itineraryTab.setSelectedTabIndicatorColor(ContextCompat.getColor(ItineraryList.this, R.color.white));
             }
@@ -133,7 +133,6 @@ public class ItineraryList extends AppCompatActivity {
         List<Fragment> fragments = new ArrayList<>();
         Collections.sort(dates, new Comparator<String>() {
             DateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
-
             @Override
             public int compare(String date1, String date2) {
                 try {

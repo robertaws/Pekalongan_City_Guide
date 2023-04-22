@@ -40,7 +40,7 @@
     <string name="time_txt">Date Joined</string>
     <string name="type_txt">User Type</string>
     <string name="logout_text">Logout</string>
-    <string name="change_lang">Language</string>
+    <string name="change_lang">Change Language</string>
     #edit profile
     <string name="edit_header">Edit Profile</string>
     <string name="update_text">Update</string>
@@ -117,4 +117,7 @@
     <string name="sort_by">Sort By :</string>
     <string name="rating_txt">Rating</string>
     <string name="distance_txt">Distance</string>
+    <string name="press_back">Press back button again to exit</string>
+    <string name="no_map_app">Google Maps is not installed on your device. Opening Google Maps website...</string>
+    <string name="no_desttination_iter">There is no destination in the itinerary</string>
 </resources>

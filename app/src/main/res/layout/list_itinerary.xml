@@ -42,9 +42,9 @@
                 android:shadowRadius="2" />
 
             <com.binus.pekalongancityguide.Misc.DottedLineView
+                android:background="@color/alfa"
                 android:layout_width="3dp"
-                android:layout_height="50dp" />
-
+                android:layout_height="70dp"/>
             <TextView
                 android:background="@color/alfa"
                 android:id="@+id/endTimeTextView"
@@ -60,8 +60,7 @@
                 android:shadowColor="#000000"
                 android:shadowDx="2"
                 android:shadowDy="4"
-                android:shadowRadius="4" />
-
+                android:shadowRadius="4"/>
         </LinearLayout>
 
         <LinearLayout

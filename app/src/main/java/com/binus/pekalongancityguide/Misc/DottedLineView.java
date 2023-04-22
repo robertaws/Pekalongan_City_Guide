@@ -12,24 +12,19 @@ import android.view.View;
 import com.binus.pekalongancityguide.R;
 
 public class DottedLineView extends View {
-
     private Paint mPaint;
-
     public DottedLineView(Context context) {
         super(context);
         init();
     }
-
     public DottedLineView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
-
     public DottedLineView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
-
     private void init() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.STROKE);
@@ -38,17 +33,13 @@ public class DottedLineView extends View {
         mPaint.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
         mPaint.setShadowLayer(5, 2, 2, Color.BLACK);
     }
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
         int x = getWidth() / 2;
-
         Path path = new Path();
         path.moveTo(x, 0);
         path.lineTo(x, getHeight());
-
         canvas.drawPath(path, mPaint);
     }
 }

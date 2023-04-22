@@ -299,8 +299,6 @@ public class ShowDestinationFragment extends Fragment {
         Collections.sort(destinationArrayList, (destination1, destination2) -> {
             String title1 = destination1.getTitle().toLowerCase();
             String title2 = destination2.getTitle().toLowerCase();
-
-            // Compare by title
             return title1.compareTo(title2);
         });
     }

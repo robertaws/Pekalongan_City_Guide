@@ -54,4 +54,7 @@
     <string name="sort_by">Sort By :</string>
     <string name="rating_txt">Rating</string>
     <string name="distance_txt">Distance</string>
+    <string name="press_back">Press back button again to exit</string>
+    <string name="no_map_app">Google Maps is not installed on your device. Opening Google Maps website...</string>
+    <string name="no_desttination_iter">There is no destination in the itinerary</string>
 </resources>

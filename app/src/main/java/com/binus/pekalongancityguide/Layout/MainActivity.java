@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.Patterns;
@@ -13,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     ProgressDialog progressDialog;
     TextView register;
+    private boolean doubleTap = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +121,21 @@ public class MainActivity extends AppCompatActivity {
             tryLogin();
         }
     }
-
+    @Override
+    public void onBackPressed() {
+        if (doubleTap) {
+            super.onBackPressed();
+            return;
+        }
+        this.doubleTap = true;
+        Toast.makeText(this,R.string.press_back, Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doubleTap = false;
+            }
+        }, 2000);
+    }
 
     private void tryLogin() {
         progressDialog.setMessage("Logging in..");
