@@ -117,4 +117,7 @@
     <string name="sort_by">Sortir Berdasarkan :</string>
     <string name="rating_txt">Rating</string>
     <string name="distance_txt">Jarak</string>
+    <string name="press_back">Tekan sekali lagi untuk keluar</string>
+    <string name="no_map_app">Google Maps tidak terinstall pada handphone. Membuka melalui halaman web . . .</string>
+    <string name="no_desttination_iter">Tidak ada destinasi pada rencana perjalanan</string>
 </resources>

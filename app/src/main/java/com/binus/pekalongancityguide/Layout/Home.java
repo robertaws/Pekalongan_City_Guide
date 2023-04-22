@@ -6,7 +6,9 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -29,7 +31,7 @@ public class Home extends AppCompatActivity {
     private static final int pr = 5;
     private FirebaseAuth firebaseAuth;
     MeowBottomNavigation bottomNavigationView;
-
+    private boolean doubleTap = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -74,5 +76,20 @@ public class Home extends AppCompatActivity {
         bottomNavigationView.setOnReselectListener(item -> {
         });
         bottomNavigationView.show(home, true);
+    }
+    @Override
+    public void onBackPressed() {
+        if (doubleTap) {
+            super.onBackPressed();
+            return;
+        }
+        this.doubleTap = true;
+        Toast.makeText(this,R.string.press_back, Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doubleTap = false;
+            }
+        }, 2000);
     }
 }

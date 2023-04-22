@@ -29,6 +29,8 @@ import java.util.Locale;
 
 public class Splash extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
+    private boolean doubleTap = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +49,21 @@ public class Splash extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         new Handler().postDelayed(() -> checkUser(), 3000);
     }
-
+    @Override
+    public void onBackPressed() {
+        if (doubleTap) {
+            super.onBackPressed();
+            return;
+        }
+        this.doubleTap = true;
+        Toast.makeText(this,R.string.press_back, Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doubleTap = false;
+            }
+        }, 2000);
+    }
     private void checkUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null) {

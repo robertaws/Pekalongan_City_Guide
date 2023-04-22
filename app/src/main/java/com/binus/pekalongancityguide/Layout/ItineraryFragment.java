@@ -202,13 +202,13 @@ public class ItineraryFragment extends Fragment {
                                                     if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                                                         startActivity(mapIntent);
                                                     } else {
-                                                        Toast.makeText(getContext(), "Google Maps is not installed on your device. Opening Google Maps website...", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(getContext(),R.string.no_map_app, Toast.LENGTH_SHORT).show();
                                                         String websiteUrl = "https://www.google.com/maps/dir/?api=1&origin=" + origin + "&destination=" + latitude + "," + longitude + "&waypoints=" + waypoints + "&travelmode=driving";
                                                         Intent websiteIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl));
                                                         startActivity(websiteIntent);
                                                     }
                                                 } else {
-                                                    Toast.makeText(getContext(), "There is no destination in the itinerary", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(getContext(),R.string.no_desttination_iter, Toast.LENGTH_SHORT).show();
                                                 }
                                             });
 
@@ -239,7 +239,7 @@ public class ItineraryFragment extends Fragment {
 
     private void sortItineraryList(List<Itinerary> itineraryList) {
         Collections.sort(itineraryList, (itinerary1, itinerary2) -> {
-            SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy hh:mm a", Locale.ENGLISH);
+            SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy hh:mm a", Locale.getDefault());
             try {
                 Date date1 = sdf.parse(itinerary1.getDate() + " " + itinerary1.getStartTime());
                 Date date2 = sdf.parse(itinerary2.getDate() + " " + itinerary2.getStartTime());

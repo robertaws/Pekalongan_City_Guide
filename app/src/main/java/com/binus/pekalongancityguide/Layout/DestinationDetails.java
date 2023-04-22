@@ -124,8 +124,10 @@ public class DestinationDetails extends AppCompatActivity {
             dialog.addOnPositiveButtonClickListener(timeview -> {
                 startHour = dialog.getHour();
                 startMinute = dialog.getMinute();
-                if (startHour <= 12) {
+                if (startHour < 12) {
                     startEt.setText(String.format(Locale.getDefault(), "%d:%02d am", startHour, startMinute));
+                } else if (startHour == 12) {
+                    startEt.setText(String.format(Locale.getDefault(), "12:%02d pm", startMinute));
                 } else {
                     startEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", startHour - 12, startMinute));
                 }
@@ -146,8 +148,10 @@ public class DestinationDetails extends AppCompatActivity {
             dialog.addOnPositiveButtonClickListener(timeview -> {
                 startHour1 = dialog.getHour();
                 startMinute1 = dialog.getMinute();
-                if (startHour1 <= 12) {
+                if (startHour1 < 12) {
                     startEt.setText(String.format(Locale.getDefault(), "%d:%02d am", startHour1, startMinute1));
+                } else if (startHour1 == 12) {
+                    startEt.setText(String.format(Locale.getDefault(), "12:%02d pm", startMinute1));
                 } else {
                     startEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", startHour1 - 12, startMinute1));
                 }
@@ -168,10 +172,12 @@ public class DestinationDetails extends AppCompatActivity {
             dialog.addOnPositiveButtonClickListener(timeview -> {
                 endHour = dialog.getHour();
                 endMinute = dialog.getMinute();
-                if (endHour <= 12) {
-                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d am", endHour, endMinute));
+                if (endHour < 12) {
+                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d am", endHour, endMinute));
+                } else if (endHour == 12) {
+                    startEt.setText(String.format(Locale.getDefault(), "12:%02d pm", endMinute));
                 } else {
-                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", endHour - 12, endMinute));
+                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", endHour - 12, endMinute));
                 }
             });
             dialog.show(getSupportFragmentManager(), "startTimePicker");
@@ -190,10 +196,12 @@ public class DestinationDetails extends AppCompatActivity {
             dialog.addOnPositiveButtonClickListener(timeview -> {
                 endHour1 = dialog.getHour();
                 endMinute1 = dialog.getMinute();
-                if (endHour1 <= 12) {
-                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d am", endHour1, endMinute1));
+                if (endHour1 < 12) {
+                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d am", endHour1, endMinute1));
+                } else if (endHour1 == 12) {
+                    startEt.setText(String.format(Locale.getDefault(), "12:%02d pm", endMinute1));
                 } else {
-                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", endHour1 - 12, endMinute1));
+                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", endHour1 - 12, endMinute1));
                 }
             });
             dialog.show(getSupportFragmentManager(), "startTimePicker");
