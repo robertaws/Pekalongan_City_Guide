@@ -67,7 +67,6 @@ public class EditDestination extends AppCompatActivity {
                                         binding.categoryTV.setText(category);
 
                                     }
-
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
 

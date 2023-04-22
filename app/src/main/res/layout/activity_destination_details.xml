@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
@@ -92,7 +93,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
-
                         <TextView
                             android:textSize="20dp"
                             android:id="@+id/desti_name"
@@ -196,7 +196,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
                         <TextView
-                            android:drawableLeft="@drawable/comment_icon"
+                            android:drawableLeft="@drawable/review_icon"
                             android:drawableTint="@color/palette_1"
                             android:drawablePadding="5dp"
                             android:gravity="center_vertical"
@@ -220,7 +220,46 @@
                         <com.google.android.material.divider.MaterialDivider
                             android:layout_marginTop="5dp"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"/>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:drawableLeft="@drawable/comment_icon"
+                                android:drawableTint="@color/palette_1"
+                                android:drawablePadding="5dp"
+                                android:gravity="center_vertical"
+                                android:textStyle="bold"
+                                android:textSize="18dp"
+                                android:fontFamily="@font/poppins_semibold"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginVertical="10dp"
+                                android:justificationMode="inter_word"
+                                android:text="@string/comment_text"
+                                android:textColor="@color/palette_1"/>
+                            <ImageButton
+                                android:id="@+id/add_comment_btn"
+                                android:padding="5dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                android:src="@drawable/add_comment"
+                                android:background="#0000"
+                                app:tint="@color/palette_4"/>
+                        </RelativeLayout>
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/comment_rv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            tools:listitem="@layout/list_comment"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            android:nestedScrollingEnabled="false"/>
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_marginTop="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
                         <Button
                             android:id="@+id/save_item"
                             android:textAllCaps="false"

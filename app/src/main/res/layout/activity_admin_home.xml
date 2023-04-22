@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="Dashboard Admin"
+                android:text="@string/dashboard_admin"
                 android:fontFamily="@font/poppins_semibold"
                 android:textStyle="bold"
                 android:textSize="16dp" />
@@ -64,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/toolbar"
-            android:hint="Search Category"/>
+            android:hint="@string/search_category"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_marginHorizontal="10dp"
@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:textColor="@color/palette_4"
-                android:text="Add category"
+                android:text="@string/add_category"
                 android:layout_gravity="center_vertical" />
 
             <ImageButton

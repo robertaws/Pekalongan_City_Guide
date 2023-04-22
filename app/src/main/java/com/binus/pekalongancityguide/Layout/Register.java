@@ -30,15 +30,15 @@ public class Register extends AppCompatActivity {
     ProgressDialog progressDialog;
     private ActivityRegisterBinding binding;
 
-    private static final String USERNAME_EMPTY_ERROR = "Username cannot be empty!";
-    private static final String USERNAME_LENGTH_ERROR = "Username must be between 3-12 characters!";
-    private static final String EMAIL_EMPTY_ERROR = "Email cannot be empty!";
-    private static final String EMAIL_FORMAT_ERROR = "Invalid Email Address!";
-    private static final String PASSWORD_EMPTY_ERROR = "Password cannot be empty!";
-    private static final String PASSWORD_LENGTH_ERROR = "Password must be more than 8 characters!";
-    private static final String PASSWORD_NUMBER_ERROR = "Password must contain at least one number!";
-    private static final String PASSWORD_SYMBOL_ERROR = "Password must contain at least one symbol!";
-    private static final String PASSWORD_MATCH_ERROR = "Password does not match!";
+    private final String USERNAME_EMPTY_ERROR = getString(R.string.empty_username);
+    private final String USERNAME_LENGTH_ERROR = getString(R.string.user_length);
+    private final String EMAIL_EMPTY_ERROR = getString(R.string.empty_email);
+    private final String EMAIL_FORMAT_ERROR = getString(R.string.wrong_email);
+    private final String PASSWORD_EMPTY_ERROR = getString(R.string.empty_pass);
+    private final String PASSWORD_LENGTH_ERROR = getString(R.string.pass_length);
+    private final String PASSWORD_NUMBER_ERROR = getString(R.string.pass_1num);
+    private final String PASSWORD_SYMBOL_ERROR = getString(R.string.pass1Symbol);
+    private final String PASSWORD_MATCH_ERROR = getString(R.string.passnotMatch);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class Register extends AppCompatActivity {
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Please Wait");
+        progressDialog.setTitle(R.string.please_wait);
         progressDialog.setCanceledOnTouchOutside(false);
 
         init();
@@ -182,9 +182,8 @@ public class Register extends AppCompatActivity {
         });
 
     }
-
     private void createUser() {
-        progressDialog.setMessage("Creating account...");
+        progressDialog.setMessage(getString(R.string.create_account));
         progressDialog.show();
         firebaseAuth.createUserWithEmailAndPassword(Email, Password)
                 .addOnSuccessListener(authResult -> {
@@ -195,7 +194,7 @@ public class Register extends AppCompatActivity {
     }
 
     private void addUser() {
-        progressDialog.setMessage("Saving user info");
+        progressDialog.setMessage(getString(R.string.saving_user_info));
         long timestamp = System.currentTimeMillis();
         String uid = firebaseAuth.getUid();
         HashMap<String, Object> hashMap = new HashMap<>();
