@@ -59,7 +59,7 @@ public class EditProfile extends AppCompatActivity {
         binding = ActivityEditProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Please Wait");
+        progressDialog.setTitle(R.string.please_wait);
         progressDialog.setCanceledOnTouchOutside(false);
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -113,7 +113,7 @@ public class EditProfile extends AppCompatActivity {
 
     private void updateProfile(String imageUri) {
         Log.d(TAG, "Update profile: updating user profile");
-        progressDialog.setMessage("updating user profile...");
+        progressDialog.setMessage(getString(R.string.updating_profile));
         progressDialog.show();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("Username",""+name);
@@ -137,7 +137,7 @@ public class EditProfile extends AppCompatActivity {
     }
     private void uploadImage() {
         Log.d(TAG,"UploadImage: Uploading profile image..");
-        progressDialog.setMessage("Updating profile image");
+        progressDialog.setMessage(getString(R.string.updating_image));
         progressDialog.show();
 
         String filePathAndName = "ProfileImages/"+firebaseAuth.getUid();

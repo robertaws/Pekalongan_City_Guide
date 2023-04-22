@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Please Wait");
+        progressDialog.setTitle(R.string.please_wait);
         progressDialog.setCanceledOnTouchOutside(false);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
@@ -108,15 +108,14 @@ public class MainActivity extends AppCompatActivity {
 
         if (Email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
             hasError = true;
-            email.setError("Invalid Email Address!");
+            email.setError(getString(R.string.empty_email));
         }
 
         if (Password.isEmpty()) {
             hasError = true;
-            pass.setError("All field must not be empty!");
+            pass.setError(getString(R.string.empty_pass));
             til.setPasswordVisibilityToggleEnabled(false);
         }
-
         if (!hasError) {
             tryLogin();
         }
@@ -138,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void tryLogin() {
-        progressDialog.setMessage("Logging in..");
+        progressDialog.setMessage(getString(R.string.login_try));
         progressDialog.show();
 
         firebaseAuth.signInWithEmailAndPassword(Email,Password)
@@ -150,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkUser() {
-        progressDialog.setMessage("Checking user..");
+        progressDialog.setMessage(getString(R.string.check_user));
         FirebaseUser firebaseUser =firebaseAuth.getCurrentUser();
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference databaseReference = database.getReference("Users");
@@ -167,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(new Intent(MainActivity.this, AdminHome.class));
                             finish();
                         } else {
-                            Snackbar.make(binding.getRoot(), "Wrong password!", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(binding.getRoot(), R.string.wrong_pass, Snackbar.LENGTH_SHORT).show();
                         }
                     }
 

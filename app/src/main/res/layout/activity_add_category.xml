@@ -40,7 +40,7 @@
             android:layout_marginHorizontal="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Add New Destination Category" />
+            android:hint="@string/add_new_destination_category" />
 
         <Button
             android:id="@+id/submit_btn"
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/palette_4"
             android:fontFamily="@font/poppins_semibold"
-            android:text="Submit"
+            android:text="@string/submit_text"
             android:layout_marginHorizontal="30dp" />
 
     </LinearLayout>

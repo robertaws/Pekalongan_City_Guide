@@ -17,14 +17,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.binus.pekalongancityguide.Adapter.CommentAdapter;
 import com.binus.pekalongancityguide.Adapter.OpeningHoursAdapter;
 import com.binus.pekalongancityguide.Adapter.ReviewAdapter;
+import com.binus.pekalongancityguide.ItemTemplate.Comments;
 import com.binus.pekalongancityguide.ItemTemplate.OpeningHours;
 import com.binus.pekalongancityguide.ItemTemplate.Review;
 import com.binus.pekalongancityguide.Misc.ImageFullscreen;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityDestinationDetailsBinding;
+import com.binus.pekalongancityguide.databinding.DialogAddCommentBinding;
+import com.binus.pekalongancityguide.databinding.DialogAddToItineraryBinding;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,6 +36,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,6 +62,8 @@ public class DestinationDetails extends AppCompatActivity {
     String destiId;
     boolean inFavorite = false;
     FirebaseAuth firebaseAuth;
+    private ArrayList<Comments> commentsArrayList;
+    private CommentAdapter commentAdapter;
     private static final String TAG = "REVIEW_TAG";
     private ProgressDialog progressDialog;
     int startHour,startMinute,startHour1,startMinute1
@@ -68,16 +76,26 @@ public class DestinationDetails extends AppCompatActivity {
         setContentView(binding.getRoot());
         Intent intent = getIntent();
         destiId = intent.getStringExtra("destiId");
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle(getString(R.string.please_wait));
+        progressDialog.setCanceledOnTouchOutside(false);
         firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() != null) {
             checkFavorite();
         }
+        if(firebaseAuth.getCurrentUser()==null) {
+            binding.addCommentBtn.setVisibility(View.INVISIBLE);
+        }
         loadDetails();
+        loadComments();
         binding.backDesti.setOnClickListener(v -> onBackPressed());
         binding.destiImage.setOnClickListener(v -> {
             Intent intent1 = new Intent(this, ImageFullscreen.class);
             intent1.putExtra("fullImg", imageUrl);
             startActivity(intent1);
+        });
+            binding.addCommentBtn.setOnClickListener(v ->{
+                showAddCommentDialog();
         });
         binding.saveItem.setOnClickListener(v -> {
             if (firebaseAuth.getCurrentUser() == null) {
@@ -95,20 +113,81 @@ public class DestinationDetails extends AppCompatActivity {
         });
     }
 
+    private void loadComments(){
+        commentsArrayList = new ArrayList<>();
+        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        reference.child(destiId).child("Comments")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        commentsArrayList.clear();
+                        for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                            Comments comments = dataSnapshot.getValue(Comments.class);
+                            commentsArrayList.add(comments);
+                        }
+                        commentAdapter = new CommentAdapter(DestinationDetails.this,commentsArrayList);
+                        binding.commentRv.setAdapter(commentAdapter);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
+
+    private String comment = "";
+    private void showAddCommentDialog(){
+        DialogAddCommentBinding commentBinding = DialogAddCommentBinding.inflate(getLayoutInflater());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(commentBinding.getRoot());
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
+        dialog.show();
+        commentBinding.addcommentBtn.setOnClickListener(v -> {
+            comment = commentBinding.commentEt.getText().toString().trim();
+            if(TextUtils.isEmpty(comment)){
+                commentBinding.commentTil.setError(getString(R.string.comment_empty));
+            }else{
+                progressDialog.setMessage(getString(R.string.adding_comment));
+                progressDialog.show();
+                String timestamp = ""+System.currentTimeMillis();
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("id",""+timestamp);
+                hashMap.put("destiId",""+destiId);
+                hashMap.put("timestamp",""+timestamp);
+                hashMap.put("comment",""+comment);
+                hashMap.put("uid",""+firebaseAuth.getUid());
+                DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+                reference.child(destiId).child("Comments").child(timestamp)
+                        .setValue(hashMap)
+                        .addOnSuccessListener(unused -> {
+                            Toast.makeText(DestinationDetails.this,R.string.success_add_comment, Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                            dialog.dismiss();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(DestinationDetails.this, getString(R.string.failed_add_comment)+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                            dialog.dismiss();
+                        });
+            }
+        });
+    }
     private void showAddItineraryDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_add_to_itinerary, null);
-        builder.setView(view);
+        DialogAddToItineraryBinding addToItineraryBinding = DialogAddToItineraryBinding.inflate(getLayoutInflater());
+        builder.setView(addToItineraryBinding.getRoot());
         EditText dateEt,startEt,endEt;
         ImageButton dateBtn,startBtn,endBtn;
         Button addItinerary;
-        dateEt = view.findViewById(R.id.date_et);
-        startEt = view.findViewById(R.id.starttime_et);
-        endEt = view.findViewById(R.id.endtime_et);
-        dateBtn = view.findViewById(R.id.datepicker_btn);
-        startBtn = view.findViewById(R.id.startpicker_btn);
-        endBtn = view.findViewById(R.id.endpicker_btn);
-        addItinerary = view.findViewById(R.id.additinerary_btn);
+        dateEt = addToItineraryBinding.dateEt;
+        startEt = addToItineraryBinding.starttimeEt;
+        endEt = addToItineraryBinding.endtimeEt;
+        dateBtn = addToItineraryBinding.datepickerBtn;
+        startBtn = addToItineraryBinding.startpickerBtn;
+        endBtn = addToItineraryBinding.endpickerBtn;
+        addItinerary = addToItineraryBinding.additineraryBtn;
 
         startBtn.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();

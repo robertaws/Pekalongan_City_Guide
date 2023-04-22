@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:fontFamily="@font/poppins_regular"
                 android:layout_height="wrap_content"
-                android:hint="Add New Destination" />
+                android:hint="@string/add_new_destination" />
 
             <EditText
                 android:id="@+id/desc_et"
@@ -63,7 +63,7 @@
                 android:fontFamily="@font/poppins_regular"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Destination Description" />
+                android:hint="@string/destination_description" />
 
             <TextView
                 android:id="@+id/category_pick"
@@ -89,7 +89,7 @@
                 android:layout_width="match_parent"
                 android:textColor="@color/palette_4"
                 android:layout_height="wrap_content"
-                android:text="Add ITEM"
+                android:text="@string/add_item"
                 android:layout_marginHorizontal="30dp" />
 
         </LinearLayout>

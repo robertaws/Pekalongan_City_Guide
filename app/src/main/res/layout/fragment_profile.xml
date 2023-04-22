@@ -31,14 +31,16 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center"
+                android:background="@drawable/circle_bg"
                 android:layout_marginTop="-150dp">
-
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/profileImg"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/palette_4"
-                    app:shapeAppearance="@style/roundedImage" />
+                    android:background="@drawable/user_icon"
+                    app:strokeColor="@color/palette_2"
+                    app:strokeWidth="5dp"
+                    app:shapeAppearance="@style/circleImage"/>
             </FrameLayout>
 
             <TextView
