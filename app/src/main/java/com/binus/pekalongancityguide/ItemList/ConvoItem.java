@@ -94,7 +94,7 @@ public class ConvoItem {
             "I found this item is better",
             "okay, we should buy that one then",
             "Sir, we want to buy this. How much is it?",
-            "It is fifty thousand rupiah kiddo",
+            "It is fifty thousand rupiah kid",
             "Can we ask for discount sir?",
             "No kid, the price is already good",
             "Okay sir, here is seventy five thousand rupiah",

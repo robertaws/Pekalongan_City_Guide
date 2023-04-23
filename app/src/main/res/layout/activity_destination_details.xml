@@ -185,7 +185,7 @@
                                     android:background="@color/ic_launcher_background"
                                     android:id="@+id/opening_rv"
                                     android:layout_width="match_parent"
-                                    android:layout_height="0dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:layout_marginBottom="15dp"
                                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -214,9 +214,9 @@
                             android:id="@+id/review_rv"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                            tools:listitem="@layout/list_review"
-                            android:nestedScrollingEnabled="false" />
+                            tools:listitem="@layout/list_review"/>
                         <com.google.android.material.divider.MaterialDivider
                             android:layout_marginTop="5dp"
                             android:layout_width="match_parent"

@@ -77,9 +77,9 @@ public class PhrasesItem {
             "Saya tidak suka",
             "Nama saya",
             "Senang bertemu anda",
-            "Bagaimana kabar mu?",
+            "Bagaimana kabarmu?",
             "Asal saya dari negara/kota...",
-            "Berapa harga nya ?",
+            "Berapa harga-nya ?",
             "Boleh saya minta diskon?",
             "Makanannya enak",
             "Barangnya bagus"

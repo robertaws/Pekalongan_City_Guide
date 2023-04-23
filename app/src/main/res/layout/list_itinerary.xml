@@ -20,47 +20,49 @@
             android:id="@+id/itinerary_bg"
             android:layout_width="130dp"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:gravity="center"
-            android:background="@color/palette_4">
+            android:background="@color/palette_4"
+            android:orientation="vertical">
 
             <TextView
-                android:background="@color/alfa"
                 android:id="@+id/startTimeTextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:textAppearance="?attr/textAppearanceListItem"
-                android:textColor="@color/white"
-                android:text="start"
-                android:textStyle="bold"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/alfa"
                 android:fontFamily="@font/poppins_regular"
-                android:textAlignment="center"
+                android:padding="8dp"
                 android:shadowColor="#000000"
                 android:shadowDx="2"
                 android:shadowDy="4"
-                android:shadowRadius="2" />
-
+                android:shadowRadius="2"
+                android:text="start"
+                android:textAlignment="center"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
             <com.binus.pekalongancityguide.Misc.DottedLineView
-                android:background="@color/alfa"
+                android:id="@+id/dot_line"
                 android:layout_width="3dp"
-                android:layout_height="70dp"/>
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
             <TextView
-                android:background="@color/alfa"
                 android:id="@+id/endTimeTextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:textAppearance="?attr/textAppearanceListItem"
-                android:textColor="@color/white"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/alfa"
                 android:fontFamily="@font/poppins_regular"
-                android:text="end"
-                android:textStyle="bold"
-                android:textAlignment="center"
+                android:padding="8dp"
                 android:shadowColor="#000000"
                 android:shadowDx="2"
                 android:shadowDy="4"
-                android:shadowRadius="4"/>
+                android:shadowRadius="4"
+                android:text="end"
+                android:textAlignment="center"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
