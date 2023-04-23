@@ -1,19 +1,23 @@
 package com.binus.pekalongancityguide.Layout;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.binus.pekalongancityguide.Misc.ImageFullscreen;
@@ -115,12 +119,17 @@ public class ProfileFragment extends Fragment {
         builder.setPositiveButton(R.string.yes_txt, (dialog, which) -> {
             firebaseAuth.signOut();
             checkUser();
-        } );
+        });
         builder.setNegativeButton(R.string.no_txt, (dialog, which) -> dialog.dismiss());
         AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(dialogInterface -> {
+            Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+            Button negativeButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+            positiveButton.setTextColor(getResources().getColor(R.color.white));
+            negativeButton.setTextColor(getResources().getColor(R.color.white));
+        });
         dialog.show();
     }
-
     private void checkUser(){
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if(firebaseUser==null){

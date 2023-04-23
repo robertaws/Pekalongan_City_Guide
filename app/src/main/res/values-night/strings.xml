@@ -95,4 +95,6 @@
     <string name="destination_description">Destination Description</string>
     <string name="add_new_destination">Add New Destination</string>
     <string name="add_item">Add ITEM</string>
+    <string name="basic_javanese_characters">Basic Javanese Characters</string>
+    <string name="city_logo">City Logo\n(2014-2017)</string>
 </resources>

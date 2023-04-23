@@ -29,9 +29,8 @@ public class DottedLineView extends View {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setColor(getResources().getColor(R.color.white));
-        mPaint.setStrokeWidth(10);
+        mPaint.setStrokeWidth(40);
         mPaint.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
-        mPaint.setShadowLayer(5, 2, 2, Color.BLACK);
     }
     @Override
     protected void onDraw(Canvas canvas) {
@@ -43,3 +42,4 @@ public class DottedLineView extends View {
         canvas.drawPath(path, mPaint);
     }
 }
+

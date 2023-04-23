@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,14 +30,12 @@ import java.util.Date;
 
 import static com.binus.pekalongancityguide.BuildConfig.NEWS_API_KEY;
 
-
 public class HomeFragment extends Fragment {
     RecyclerView foodRV, newsRV;
     RecyclerView.Adapter foodRVAdapter;
     RecyclerView.LayoutManager foodRVLayoutManager, newsRVLayoutManager;
     ArrayList<Food> foodData;
     TextView cityDesc;
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);

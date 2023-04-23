@@ -6,25 +6,36 @@
     tools:context=".Layout.ConversationFragment"
     android:background="@color/bg">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:orientation="vertical">
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/basic_javanese_characters"
+                android:textSize="24dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:textStyle="bold"
+                android:textColor="@color/palette_1"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="683px"
+                android:layout_gravity="center"
+                android:src="@drawable/aksara"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/convo_header"
                 android:textSize="24dp"
                 android:fontFamily="@font/poppins_semibold"
-                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
                 android:textStyle="bold"
                 android:textColor="@color/palette_1"/>
 
@@ -52,7 +63,7 @@
                 android:id="@+id/phrases_rv"
                 android:layout_marginBottom="20dp"
                 tools:listitem="@layout/list_phrases"
-                android:layout_weight="1" />
+                android:layout_weight="1"/>
 
         </LinearLayout>
 
