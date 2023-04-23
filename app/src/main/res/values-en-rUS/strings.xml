@@ -161,4 +161,6 @@
     <string name="add_item">Add ITEM</string>
     <string name="basic_javanese_characters">Basic Javanese Characters</string>
     <string name="city_logo">City Logo\n(2014-2017)</string>
+    <string name="remove_bookmark">Remove Bookmark</string>
+    <string name="remove_confirm">Are you sure to remove this item ?</string>
 </resources>

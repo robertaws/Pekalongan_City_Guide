@@ -160,4 +160,6 @@
     <string name="add_item">Tambah item</string>
     <string name="basic_javanese_characters">Aksara Jawa Dasar</string>
     <string name="city_logo">Logo Kota\n(2014-2017)</string>
+    <string name="remove_bookmark">Hapus Favorit</string>
+    <string name="remove_confirm">Apakah anda yakin untuk menghapus item ini ?</string>
 </resources>
