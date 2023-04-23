@@ -1,6 +1,8 @@
 package com.binus.pekalongancityguide.Adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +13,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
@@ -25,6 +28,7 @@ import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.Layout.DestinationDetails;
 import com.binus.pekalongancityguide.Misc.FilterBookmark;
 import com.binus.pekalongancityguide.Misc.MyApplication;
+import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ListFavoriteBinding;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -98,11 +102,24 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
                 context.startActivity(intent);
             }
         });
-        holder.unBookmark.setOnClickListener(v -> {
-            MyApplication.removeFavorite(context,destination.getId());
+        holder.unBookmark.setOnClickListener(v ->{
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle(R.string.remove_bookmark);
+            builder.setMessage(R.string.remove_confirm);
+            builder.setPositiveButton(R.string.yes_txt, (dialog, which) -> {
+                MyApplication.removeFavorite(context,destination.getId());
+            });
+            builder.setNegativeButton(R.string.no_txt, (dialog, which) -> dialog.dismiss());
+            AlertDialog dialog = builder.create();
+            dialog.setOnShowListener(dialogInterface -> {
+                Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                Button negativeButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+                positiveButton.setTextColor(context.getResources().getColor(R.color.white));
+                negativeButton.setTextColor(context.getResources().getColor(R.color.white));
+            });
+            dialog.show();
         });
     }
-
     private void loadDestination(Destination destination, HolderBookmark holder) {
         String destiId = destination.getId();
         Log.d(TAG,"loadDesti : Destination details of  desti ID : "+destiId);
