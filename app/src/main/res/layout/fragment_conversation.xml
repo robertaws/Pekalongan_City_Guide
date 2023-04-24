@@ -28,7 +28,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:gravity="center">
 
                 <LinearLayout
@@ -37,13 +37,14 @@
                     android:orientation="vertical"
                     android:layout_weight="1"
                     android:background="@drawable/border"
-                    android:layout_marginHorizontal="1dp">
+                    android:layout_marginVertical="1dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="AKSARA CARAKAN \n(ngelgena)"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:text="@string/carakan_letters_n_ngelgena"
                         android:textStyle="bold"
                         android:textColor="@color/palette_1"
                         android:textAlignment="center" />
@@ -51,7 +52,7 @@
                     <TableLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/border"
+                        android:background="@drawable/border2"
                         android:paddingBottom="5dp">
 
                         <TableRow android:layout_weight="1">
@@ -63,8 +64,10 @@
 
                                 <TextView
                                     android:layout_width="match_parent"
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:text="ꦲ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textColor="@color/palette_1"
                                     android:textStyle="bold"
                                     android:textAlignment="center" />
@@ -85,9 +88,12 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="ꦤ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
+                                    android:elegantTextHeight="true"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -108,9 +114,12 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="ꦕ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
+                                    android:elegantTextHeight="true"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -131,9 +140,12 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="ꦫ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
+                                    android:elegantTextHeight="true"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -154,9 +166,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="ꦏ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -181,8 +195,10 @@
 
                                 <TextView
                                     android:layout_width="match_parent"
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:text="ꦢ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textColor="@color/palette_1"
                                     android:textStyle="bold"
                                     android:textAlignment="center" />
@@ -203,9 +219,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="ꦠ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -226,9 +244,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="ꦱ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -249,9 +269,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="ꦮ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -272,9 +294,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="ꦭ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -299,8 +323,10 @@
 
                                 <TextView
                                     android:layout_width="match_parent"
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:text="ꦥ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textColor="@color/palette_1"
                                     android:textStyle="bold"
                                     android:textAlignment="center" />
@@ -321,9 +347,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="ꦝ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -344,9 +372,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="ꦗ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -367,9 +397,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="ꦪ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -390,9 +422,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="ꦚ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -417,8 +451,10 @@
 
                                 <TextView
                                     android:layout_width="match_parent"
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:text="ꦩ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textColor="@color/palette_1"
                                     android:textStyle="bold"
                                     android:textAlignment="center" />
@@ -439,9 +475,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="ꦒ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -462,9 +500,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="ꦧ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -485,9 +525,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="ꦛ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -506,11 +548,12 @@
                                 android:paddingTop="5dp"
                                 android:orientation="vertical"
                                 android:layout_weight="1">
-
                                 <TextView
-                                    android:layout_height="20dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="ꦔ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -536,13 +579,14 @@
                     android:orientation="vertical"
                     android:layout_weight="1"
                     android:background="@drawable/border"
-                    android:layout_marginHorizontal="1dp">
+                    android:layout_marginVertical="1dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="AKSARA PASANGAN \n(Mati)"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:text="@string/couple_letters_n_mati"
                         android:textStyle="bold"
                         android:textColor="@color/palette_1"
                         android:textAlignment="center" />
@@ -550,7 +594,7 @@
                     <TableLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/border"
+                        android:background="@drawable/border2"
                         android:paddingBottom="5dp">
 
                         <TableRow>
@@ -562,8 +606,10 @@
 
                                 <TextView
                                     android:layout_width="match_parent"
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:text="꧀ꦲ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textColor="@color/palette_1"
                                     android:textStyle="bold"
                                     android:textAlignment="center" />
@@ -584,9 +630,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦤ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -607,9 +655,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦕ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -630,9 +680,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦫ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -653,9 +705,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦏ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -680,8 +734,10 @@
 
                                 <TextView
                                     android:layout_width="match_parent"
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:text="꧀ꦢ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textColor="@color/palette_1"
                                     android:textStyle="bold"
                                     android:textAlignment="center" />
@@ -702,9 +758,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦠ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -725,9 +783,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦱ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -748,9 +808,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦮ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -771,9 +833,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦭ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -798,8 +862,11 @@
 
                                 <TextView
                                     android:layout_width="match_parent"
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:text="꧀ꦥ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
+                                    android:layout_gravity="center"
                                     android:textColor="@color/palette_1"
                                     android:textStyle="bold"
                                     android:textAlignment="center" />
@@ -820,9 +887,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦝ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -843,9 +912,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦗ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -866,9 +937,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦪ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -889,9 +962,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦚ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -916,8 +991,10 @@
 
                                 <TextView
                                     android:layout_width="match_parent"
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:text="꧀ꦩ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textColor="@color/palette_1"
                                     android:textStyle="bold"
                                     android:textAlignment="center" />
@@ -938,9 +1015,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦒ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -961,9 +1040,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦧ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -984,9 +1065,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦛ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -1007,9 +1090,11 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="30dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦔ"
+                                    android:fontFamily="@font/noto_sans_javanese_regular"
+                                    android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/palette_1"
                                     android:textAlignment="center" />
@@ -1024,7 +1109,6 @@
                                     android:textAlignment="center" />
                             </LinearLayout>
                         </TableRow>
-
                     </TableLayout>
 
                 </LinearLayout>

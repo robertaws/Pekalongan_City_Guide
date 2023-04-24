@@ -61,6 +61,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:justificationMode="inter_word"
+                    android:fontFamily="@font/noto_sans_javanese_regular"
                     android:text="꧋ꦱꦺꦭꦩꦠ꧀ꦥꦒꦶ"
                     android:textColor="@color/palette_4"
                     android:textSize="18dp"

@@ -46,6 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:gravity="top"
+                android:fontFamily="@font/noto_sans_javanese_regular"
                 android:justificationMode="inter_word"
                 android:text="ꦥꦏ꧀‌ꦏꦶꦠꦧꦣꦺꦠꦸꦩ꧀ꦧꦱ꧀ꦥꦸꦤꦶꦏꦶ꧉ꦥꦶꦤ꧀ꦠꦺꦤ꧀ꦫꦺꦒꦶꦤꦶꦥꦸꦤ꧀ꦔ꧀ꦒꦶꦃ?"
                 android:textColor="@color/palette_4"
