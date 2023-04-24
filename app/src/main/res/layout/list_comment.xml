@@ -27,7 +27,8 @@
                 android:src="@drawable/user_icon"
                 app:strokeColor="@color/palette_2"
                 app:strokeWidth="1dp"
-                app:shapeAppearanceOverlay="@style/circleImage" />
+                app:shapeAppearanceOverlay="@style/circleImage"
+                android:padding="5dp" />
 
             <TextView
                 android:id="@+id/user_name"

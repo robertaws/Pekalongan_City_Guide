@@ -122,7 +122,7 @@
     <string name="no_map_app">Google Maps is not installed on your device. Opening Google Maps website...</string>
     <string name="no_desttination_iter">There is no destination in the itinerary</string>
     <string name="add_comment">Add Comment</string>
-    <string name="comment_text">Comment</string>
+    <string name="comment_text">Comments</string>
     <string name="submit_text">submit</string>
     <string name="comment_empty">Enter your comment!</string>
     <string name="please_wait">Please Wait</string>

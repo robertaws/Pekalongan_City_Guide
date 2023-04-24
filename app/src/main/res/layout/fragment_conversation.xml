@@ -14,6 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:orientation="vertical">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -22,12 +23,1013 @@
                 android:layout_marginBottom="5dp"
                 android:fontFamily="@font/poppins_semibold"
                 android:textStyle="bold"
-                android:textColor="@color/palette_1"/>
-            <ImageView
+                android:textColor="@color/palette_1" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="683px"
-                android:layout_gravity="center"
-                android:src="@drawable/aksara"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:background="@drawable/border"
+                    android:layout_marginHorizontal="1dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="AKSARA CARAKAN (ngelgena)"
+                        android:textStyle="bold"
+                        android:textColor="@color/palette_1"
+                        android:textAlignment="center" />
+
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border"
+                        android:paddingBottom="5dp">
+
+                        <TableRow android:layout_weight="1">
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp"
+                                    android:text="ꦲ"
+                                    android:textColor="@color/palette_1"
+                                    android:textStyle="bold"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:text="Ha"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="20dp"
+                                    android:layout_width="match_parent"
+                                    android:text="ꦤ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Na"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="20dp"
+                                    android:layout_width="match_parent"
+                                    android:text="ꦕ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Ca"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="20dp"
+                                    android:layout_width="match_parent"
+                                    android:text="ꦫ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Ra"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="20dp"
+                                    android:layout_width="match_parent"
+                                    android:text="ꦏ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Ka"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+                        </TableRow>
+
+                        <TableRow android:layout_weight="1">
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp"
+                                    android:text="ꦢ"
+                                    android:textColor="@color/palette_1"
+                                    android:textStyle="bold"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:text="Da"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="20dp"
+                                    android:layout_width="match_parent"
+                                    android:text="ꦠ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Ta"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="20dp"
+                                    android:layout_width="match_parent"
+                                    android:text="ꦱ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Sa"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="20dp"
+                                    android:layout_width="match_parent"
+                                    android:text="ꦮ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Wa"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="20dp"
+                                    android:layout_width="match_parent"
+                                    android:text="ꦭ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="La"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+                        </TableRow>
+
+                        <TableRow android:layout_weight="1">
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp"
+                                    android:text="ꦥ"
+                                    android:textColor="@color/palette_1"
+                                    android:textStyle="bold"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:text="Pa"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="20dp"
+                                    android:layout_width="match_parent"
+                                    android:text="ꦝ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Dha"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="20dp"
+                                    android:layout_width="match_parent"
+                                    android:text="ꦗ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Ja"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="20dp"
+                                    android:layout_width="match_parent"
+                                    android:text="ꦪ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Ya"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="20dp"
+                                    android:layout_width="match_parent"
+                                    android:text="ꦚ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Nya"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+                        </TableRow>
+
+                        <TableRow android:layout_weight="1">
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp"
+                                    android:text="ꦩ"
+                                    android:textColor="@color/palette_1"
+                                    android:textStyle="bold"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:text="Ma"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="20dp"
+                                    android:layout_width="match_parent"
+                                    android:text="ꦒ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Ga"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="20dp"
+                                    android:layout_width="match_parent"
+                                    android:text="ꦧ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Ba"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="20dp"
+                                    android:layout_width="match_parent"
+                                    android:text="ꦛ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Tha"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="20dp"
+                                    android:layout_width="match_parent"
+                                    android:text="ꦔ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Nga"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+                        </TableRow>
+
+                    </TableLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:background="@drawable/border"
+                    android:layout_marginHorizontal="1dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="AKSARA PASANGAN \n(Mati)"
+                        android:textStyle="bold"
+                        android:textColor="@color/palette_1"
+                        android:textAlignment="center" />
+
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border"
+                        android:paddingBottom="5dp">
+
+                        <TableRow>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="꧀ꦲ"
+                                    android:textColor="@color/palette_1"
+                                    android:textStyle="bold"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:text="H"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:text="꧀ꦤ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="N"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:text="꧀ꦕ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="C"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:text="꧀ꦫ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="R"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:text="꧀ꦏ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="K"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+                        </TableRow>
+
+                        <TableRow>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="꧀ꦢ"
+                                    android:textColor="@color/palette_1"
+                                    android:textStyle="bold"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:text="D"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:text="꧀ꦠ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="T"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:text="꧀ꦱ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="S"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:text="꧀ꦮ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="W"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:text="꧀ꦭ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="L"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+                        </TableRow>
+
+                        <TableRow>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="꧀ꦥ"
+                                    android:textColor="@color/palette_1"
+                                    android:textStyle="bold"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:text="P"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:text="꧀ꦝ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Dh"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:text="꧀ꦗ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="J"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:text="꧀ꦪ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="N"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:text="꧀ꦚ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Ny"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+                        </TableRow>
+
+                        <TableRow>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="꧀ꦩ"
+                                    android:textColor="@color/palette_1"
+                                    android:textStyle="bold"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:text="M"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:text="꧀ꦒ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="G"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:text="꧀ꦧ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="B"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:text="꧀ꦛ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Th"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:paddingTop="5dp"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:text="꧀ꦔ"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+
+                                <TextView
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Ng"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/palette_1"
+                                    android:textAlignment="center" />
+                            </LinearLayout>
+                        </TableRow>
+
+                    </TableLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -37,7 +1039,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
                 android:textStyle="bold"
-                android:textColor="@color/palette_1"/>
+                android:textColor="@color/palette_1" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
