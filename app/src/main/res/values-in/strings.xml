@@ -62,7 +62,7 @@
     <string name="edit_pass">Kata Sandi baru</string>
     <string name="cfmeditpass">Pastikan Kata Sandi</string>
     <string name="update_pass">Perbarui Sandi</string>
-    <string name="itinerary_profile">Daftar Rencana Perjalanan</string>
+    <string name="itinerary_profile">Daftar Rencana\nPerjalanan</string>
     <string name="show_routes">Lihat Rute</string>
     <string name="search_bookmark">"Cari Destinasi Favorit"</string>
     <string name="add_to_itinerary">Tambah Rencana Perjalanan</string>
