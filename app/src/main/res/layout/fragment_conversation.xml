@@ -43,7 +43,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="AKSARA CARAKAN (ngelgena)"
+                        android:text="AKSARA CARAKAN \n(ngelgena)"
                         android:textStyle="bold"
                         android:textColor="@color/palette_1"
                         android:textAlignment="center" />
@@ -562,7 +562,7 @@
 
                                 <TextView
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:text="꧀ꦲ"
                                     android:textColor="@color/palette_1"
                                     android:textStyle="bold"
@@ -584,7 +584,7 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦤ"
                                     android:textStyle="bold"
@@ -607,7 +607,7 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦕ"
                                     android:textStyle="bold"
@@ -630,7 +630,7 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦫ"
                                     android:textStyle="bold"
@@ -653,7 +653,7 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦏ"
                                     android:textStyle="bold"
@@ -680,7 +680,7 @@
 
                                 <TextView
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:text="꧀ꦢ"
                                     android:textColor="@color/palette_1"
                                     android:textStyle="bold"
@@ -702,7 +702,7 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦠ"
                                     android:textStyle="bold"
@@ -725,7 +725,7 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦱ"
                                     android:textStyle="bold"
@@ -748,7 +748,7 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦮ"
                                     android:textStyle="bold"
@@ -771,7 +771,7 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦭ"
                                     android:textStyle="bold"
@@ -798,7 +798,7 @@
 
                                 <TextView
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:text="꧀ꦥ"
                                     android:textColor="@color/palette_1"
                                     android:textStyle="bold"
@@ -820,7 +820,7 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦝ"
                                     android:textStyle="bold"
@@ -843,7 +843,7 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦗ"
                                     android:textStyle="bold"
@@ -866,7 +866,7 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦪ"
                                     android:textStyle="bold"
@@ -889,7 +889,7 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦚ"
                                     android:textStyle="bold"
@@ -916,7 +916,7 @@
 
                                 <TextView
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:text="꧀ꦩ"
                                     android:textColor="@color/palette_1"
                                     android:textStyle="bold"
@@ -938,7 +938,7 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦒ"
                                     android:textStyle="bold"
@@ -961,7 +961,7 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦧ"
                                     android:textStyle="bold"
@@ -984,7 +984,7 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦛ"
                                     android:textStyle="bold"
@@ -1007,7 +1007,7 @@
                                 android:layout_weight="1">
 
                                 <TextView
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="30dp"
                                     android:layout_width="match_parent"
                                     android:text="꧀ꦔ"
                                     android:textStyle="bold"
