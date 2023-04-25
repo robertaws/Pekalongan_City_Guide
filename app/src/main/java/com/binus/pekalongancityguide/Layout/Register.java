@@ -30,19 +30,29 @@ public class Register extends AppCompatActivity {
     ProgressDialog progressDialog;
     private ActivityRegisterBinding binding;
 
-    private final String USERNAME_EMPTY_ERROR = getString(R.string.empty_username);
-    private final String USERNAME_LENGTH_ERROR = getString(R.string.user_length);
-    private final String EMAIL_EMPTY_ERROR = getString(R.string.empty_email);
-    private final String EMAIL_FORMAT_ERROR = getString(R.string.wrong_email);
-    private final String PASSWORD_EMPTY_ERROR = getString(R.string.empty_pass);
-    private final String PASSWORD_LENGTH_ERROR = getString(R.string.pass_length);
-    private final String PASSWORD_NUMBER_ERROR = getString(R.string.pass_1num);
-    private final String PASSWORD_SYMBOL_ERROR = getString(R.string.pass1Symbol);
-    private final String PASSWORD_MATCH_ERROR = getString(R.string.passnotMatch);
+    private String USERNAME_EMPTY_ERROR;
+    private String USERNAME_LENGTH_ERROR;
+    private String EMAIL_EMPTY_ERROR;
+    private String EMAIL_FORMAT_ERROR;
+    private String PASSWORD_EMPTY_ERROR;
+    private String PASSWORD_LENGTH_ERROR;
+    private String PASSWORD_NUMBER_ERROR;
+    private String PASSWORD_SYMBOL_ERROR;
+    private String PASSWORD_MATCH_ERROR;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        USERNAME_EMPTY_ERROR = getString(R.string.empty_username);
+        USERNAME_LENGTH_ERROR = getString(R.string.user_length);
+        EMAIL_EMPTY_ERROR = getString(R.string.empty_email);
+        EMAIL_FORMAT_ERROR = getString(R.string.wrong_email);
+        PASSWORD_EMPTY_ERROR = getString(R.string.empty_pass);
+        PASSWORD_LENGTH_ERROR = getString(R.string.pass_length);
+        PASSWORD_NUMBER_ERROR = getString(R.string.pass_1num);
+        PASSWORD_SYMBOL_ERROR = getString(R.string.pass1Symbol);
+        PASSWORD_MATCH_ERROR = getString(R.string.passnotMatch);
 
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -185,12 +195,32 @@ public class Register extends AppCompatActivity {
     private void createUser() {
         progressDialog.setMessage(getString(R.string.create_account));
         progressDialog.show();
-        firebaseAuth.createUserWithEmailAndPassword(Email, Password)
-                .addOnSuccessListener(authResult -> {
-                    progressDialog.dismiss();
-                    addUser();
+
+        // Check if email already exists in database
+        firebaseAuth.fetchSignInMethodsForEmail(Email)
+                .addOnSuccessListener(signInMethodsResult -> {
+                    boolean isNewUser = signInMethodsResult.getSignInMethods().isEmpty();
+                    if (isNewUser) {
+                        // Email is not already used, create new user
+                        firebaseAuth.createUserWithEmailAndPassword(Email, Password)
+                                .addOnSuccessListener(authResult -> {
+                                    progressDialog.dismiss();
+                                    addUser();
+                                })
+                                .addOnFailureListener(e -> {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(Register.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
+                    } else {
+                        // Email is already used, show error
+                        progressDialog.dismiss();
+                        binding.regisEmail.setError(EMAIL_ALREADY_USED_ERROR);
+                    }
                 })
-                .addOnFailureListener(e -> Toast.makeText(Register.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(Register.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void addUser() {
