@@ -103,7 +103,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
             }
         });
         holder.unBookmark.setOnClickListener(v ->{
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
             builder.setTitle(R.string.remove_bookmark);
             builder.setMessage(R.string.remove_confirm);
             builder.setPositiveButton(R.string.yes_txt, (dialog, which) -> {
@@ -111,12 +111,6 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
             });
             builder.setNegativeButton(R.string.no_txt, (dialog, which) -> dialog.dismiss());
             AlertDialog dialog = builder.create();
-            dialog.setOnShowListener(dialogInterface -> {
-                Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                Button negativeButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-                positiveButton.setTextColor(context.getResources().getColor(R.color.white));
-                negativeButton.setTextColor(context.getResources().getColor(R.color.white));
-            });
             dialog.show();
         });
     }

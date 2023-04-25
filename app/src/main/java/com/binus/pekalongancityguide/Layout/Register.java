@@ -39,6 +39,7 @@ public class Register extends AppCompatActivity {
     private String PASSWORD_NUMBER_ERROR;
     private String PASSWORD_SYMBOL_ERROR;
     private String PASSWORD_MATCH_ERROR;
+    private String EMAIL_ALREADY_USED_ERROR;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class Register extends AppCompatActivity {
         PASSWORD_NUMBER_ERROR = getString(R.string.pass_1num);
         PASSWORD_SYMBOL_ERROR = getString(R.string.pass1Symbol);
         PASSWORD_MATCH_ERROR = getString(R.string.passnotMatch);
+        EMAIL_ALREADY_USED_ERROR = getString(R.string.used_email);
 
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -97,6 +99,15 @@ public class Register extends AppCompatActivity {
     }
 
     void validate() {
+        String USERNAME_EMPTY_ERROR = getString(R.string.empty_username);
+        String USERNAME_LENGTH_ERROR = getString(R.string.user_length);
+        String EMAIL_EMPTY_ERROR = getString(R.string.empty_email);
+        String EMAIL_FORMAT_ERROR = getString(R.string.wrong_email);
+        String PASSWORD_EMPTY_ERROR = getString(R.string.empty_pass);
+        String PASSWORD_LENGTH_ERROR = getString(R.string.pass_length);
+        String PASSWORD_NUMBER_ERROR = getString(R.string.pass_1num);
+        String PASSWORD_SYMBOL_ERROR = getString(R.string.pass1Symbol);
+        String PASSWORD_MATCH_ERROR = getString(R.string.passnotMatch);
         Username = binding.regisUser.getText().toString().trim();
         Email = binding.regisEmail.getText().toString().trim();
         Password = binding.regisPass.getText().toString().trim();
@@ -158,7 +169,6 @@ public class Register extends AppCompatActivity {
         }
 
         if (allFieldsValid) {
-            Toast.makeText(this, "Registered successfully!", Toast.LENGTH_SHORT).show();
             createUser();
         }
     }
@@ -195,24 +205,21 @@ public class Register extends AppCompatActivity {
     private void createUser() {
         progressDialog.setMessage(getString(R.string.create_account));
         progressDialog.show();
-
-        // Check if email already exists in database
         firebaseAuth.fetchSignInMethodsForEmail(Email)
                 .addOnSuccessListener(signInMethodsResult -> {
                     boolean isNewUser = signInMethodsResult.getSignInMethods().isEmpty();
                     if (isNewUser) {
-                        // Email is not already used, create new user
                         firebaseAuth.createUserWithEmailAndPassword(Email, Password)
                                 .addOnSuccessListener(authResult -> {
                                     progressDialog.dismiss();
                                     addUser();
+                                    Toast.makeText(this, "Registered successfully!", Toast.LENGTH_SHORT).show();
                                 })
                                 .addOnFailureListener(e -> {
                                     progressDialog.dismiss();
                                     Toast.makeText(Register.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
                     } else {
-                        // Email is already used, show error
                         progressDialog.dismiss();
                         binding.regisEmail.setError(EMAIL_ALREADY_USED_ERROR);
                     }
@@ -222,7 +229,6 @@ public class Register extends AppCompatActivity {
                     Toast.makeText(Register.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
-
     private void addUser() {
         progressDialog.setMessage(getString(R.string.saving_user_info));
         long timestamp = System.currentTimeMillis();
