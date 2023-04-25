@@ -27,15 +27,12 @@ import com.kwabenaberko.newsapilib.NewsApiClient;
 import com.kwabenaberko.newsapilib.models.Article;
 import com.kwabenaberko.newsapilib.models.request.EverythingRequest;
 import com.kwabenaberko.newsapilib.models.response.ArticleResponse;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import static com.binus.pekalongancityguide.BuildConfig.NEWS_API_KEY;
-
 public class HomeFragment extends Fragment {
     RecyclerView foodRV, newsRV;
     RecyclerView.Adapter foodRVAdapter;
@@ -109,7 +106,5 @@ public class HomeFragment extends Fragment {
         });
         return view;
     }
-
-
 }
 
