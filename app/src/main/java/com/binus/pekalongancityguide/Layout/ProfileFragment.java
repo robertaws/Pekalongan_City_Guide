@@ -115,7 +115,7 @@ public class ProfileFragment extends Fragment {
         return view;
     }
     private void logoutConfirm() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme);
         builder.setTitle(R.string.logout_text);
         builder.setMessage(R.string.logout_confirm);
         builder.setPositiveButton(R.string.yes_txt, (dialog, which) -> {
@@ -124,12 +124,6 @@ public class ProfileFragment extends Fragment {
         });
         builder.setNegativeButton(R.string.no_txt, (dialog, which) -> dialog.dismiss());
         AlertDialog dialog = builder.create();
-        dialog.setOnShowListener(dialogInterface -> {
-            Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-            Button negativeButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-            positiveButton.setTextColor(getResources().getColor(R.color.white));
-            negativeButton.setTextColor(getResources().getColor(R.color.white));
-        });
         dialog.show();
     }
     private void checkUser(){
