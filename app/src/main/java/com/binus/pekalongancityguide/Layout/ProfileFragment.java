@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.binus.pekalongancityguide.Misc.ImageFullscreen;
@@ -58,8 +56,12 @@ public class ProfileFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         getInfo();
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String selectedLanguage = prefs.getString("language", "");
-        if(selectedLanguage.equals("in")){
+        String selectedLanguage = prefs.getString("language", "en"); // retrieve the stored language preference, defaulting to "en"
+        if (selectedLanguage.equals("in")) {
+            Locale newLocale = new Locale("in");
+            Configuration config = new Configuration(getResources().getConfiguration());
+            config.setLocale(newLocale);
+            getResources().updateConfiguration(config, getResources().getDisplayMetrics());
             binding.langText.setText(R.string.indo_opt);
         } else {
             binding.langText.setText(R.string.english_opt);
@@ -86,14 +88,14 @@ public class ProfileFragment extends Fragment {
                     .setItems(new CharSequence[]{getString(R.string.english_opt), getString(R.string.indo_opt)}, (dialog, which) -> {
                         Locale newLocale;
                         if (which == 0) {
-                            newLocale = new Locale("en","US");
+                            newLocale = new Locale("en", "US");
+                            prefs.edit().putString("language", "en").apply(); // store "en" as language preference
                         } else {
-                            newLocale = new Locale("id", "ID");
+                            newLocale = new Locale("in");
+                            prefs.edit().putString("language", "in").apply(); // store "id" as language preference
                         }
                         Locale currentLocale = getResources().getConfiguration().locale;
                         if (!currentLocale.equals(newLocale)) {
-                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                            preferences.edit().putString("language", newLocale.getLanguage()).apply();
                             Configuration config = new Configuration(getResources().getConfiguration());
                             config.setLocale(newLocale);
                             getResources().updateConfiguration(config, getResources().getDisplayMetrics());
