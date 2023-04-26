@@ -126,7 +126,6 @@ public class ProfileFragment extends Fragment {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
     private void checkUser(){
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if(firebaseUser==null){

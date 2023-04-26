@@ -29,7 +29,6 @@ public class Register extends AppCompatActivity {
     Button register;
     ProgressDialog progressDialog;
     private ActivityRegisterBinding binding;
-
     private String USERNAME_EMPTY_ERROR;
     private String USERNAME_LENGTH_ERROR;
     private String EMAIL_EMPTY_ERROR;
@@ -40,7 +39,6 @@ public class Register extends AppCompatActivity {
     private String PASSWORD_SYMBOL_ERROR;
     private String PASSWORD_MATCH_ERROR;
     private String EMAIL_ALREADY_USED_ERROR;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -205,6 +203,7 @@ public class Register extends AppCompatActivity {
     private void createUser() {
         progressDialog.setMessage(getString(R.string.create_account));
         progressDialog.show();
+        
         firebaseAuth.fetchSignInMethodsForEmail(Email)
                 .addOnSuccessListener(signInMethodsResult -> {
                     boolean isNewUser = signInMethodsResult.getSignInMethods().isEmpty();

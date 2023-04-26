@@ -11,5 +11,4 @@
     <style name="AlertDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:textColorPrimary">@color/palette_1</item>
     </style>
-
 </resources>
