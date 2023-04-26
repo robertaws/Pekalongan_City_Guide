@@ -169,7 +169,7 @@ public class AddDestination extends AppCompatActivity {
                                     for (Place.Type type : place.getTypes()) {
                                         String typeName = type.name().replace("_", " ");
                                         if (!typeName.equals("POINT OF INTEREST")) {
-                                            sb.append(typeName.toLowerCase().substring(0, 1).toUpperCase() + typeName.toLowerCase().substring(1));
+                                            sb.append(typeName.toLowerCase().substring(0, 1).toUpperCase()).append(typeName.toLowerCase().substring(1));
                                             sb.append(", ");
                                         }
                                     }
@@ -253,7 +253,6 @@ public class AddDestination extends AppCompatActivity {
                                     Log.d(TAG, "on Failure : Image upload failed due to " + e.getMessage());
                                     Toast.makeText(AddDestination.this, "Image upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
-                    } else {
                     }
                 }).addOnFailureListener(exception -> {
                     Log.e(TAG, "Failed to fetch image, asking user to add an image from the gallery");
@@ -459,16 +458,14 @@ public class AddDestination extends AppCompatActivity {
     }
 
     public Uri bitmapToUri(Context context, Bitmap bitmap) throws IOException {
-        // Create a temporary file in the cache directory
+
         File tempFile = File.createTempFile("tempImage", ".png", context.getCacheDir());
 
-        // Write the bitmap data to the temporary file
         FileOutputStream fos = new FileOutputStream(tempFile);
         bitmap.compress(Bitmap.CompressFormat.PNG, 25, fos);
         fos.flush();
         fos.close();
 
-        // Return the Uri of the temporary file
         return Uri.fromFile(tempFile);
     }
 
@@ -478,12 +475,10 @@ public class AddDestination extends AppCompatActivity {
             String url = params[0];
             JSONObject json = null;
             try {
-                // Create the URL and open the connection
                 URL urlObj = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
                 conn.setRequestMethod("GET");
 
-                // Read the response from the connection
                 InputStream stream = conn.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
                 StringBuilder response = new StringBuilder();
@@ -491,7 +486,6 @@ public class AddDestination extends AppCompatActivity {
                 while ((line = reader.readLine()) != null) {
                     response.append(line);
                 }
-                // Parse the JSON response
                 json = new JSONObject(response.toString());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -512,7 +506,7 @@ public class AddDestination extends AppCompatActivity {
                         String authorName = review.getString("author_name");
                         int reviewRating = review.getInt("rating");
                         String text = review.getString("text");
-                        // Do something with the review data...
+
                         Log.d("Review #" + i, "Author Name: " + authorName);
                         Log.d("Review #" + i, "Rating: " + reviewRating);
                         Log.d("Review #" + i, "Text: " + text);
@@ -540,9 +534,7 @@ public class AddDestination extends AppCompatActivity {
         editor.apply();
     }
 
-    // Call this method whenever addedPlaces is updated
     private void updateAddedPlaces() {
-        // Do whatever updates you need to do to addedPlaces
         saveAddedPlaces();
     }
 

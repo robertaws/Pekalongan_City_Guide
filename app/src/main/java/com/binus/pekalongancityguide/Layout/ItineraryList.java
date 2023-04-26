@@ -95,7 +95,6 @@ public class ItineraryList extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle error
             }
         });
     }

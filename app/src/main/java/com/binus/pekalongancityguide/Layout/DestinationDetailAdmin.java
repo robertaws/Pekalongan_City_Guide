@@ -3,10 +3,6 @@ package com.binus.pekalongancityguide.Layout;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -48,7 +44,6 @@ public class DestinationDetailAdmin extends AppCompatActivity {
     private ArrayList<Comments> commentsArrayList;
     private CommentAdapter commentAdapter;
 
-    boolean inFavorite = false;
     private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

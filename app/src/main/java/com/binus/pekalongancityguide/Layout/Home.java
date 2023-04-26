@@ -1,22 +1,13 @@
 package com.binus.pekalongancityguide.Layout;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.binus.pekalongancityguide.R;
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
-import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.Locale;
 
 public class Home extends AppCompatActivity {
     private static final int home = 1;
@@ -29,7 +20,6 @@ public class Home extends AppCompatActivity {
     private static final int bm = 3;
     private static final int convo = 4;
     private static final int pr = 5;
-    private FirebaseAuth firebaseAuth;
     MeowBottomNavigation bottomNavigationView;
     private boolean doubleTap = false;
     @Override

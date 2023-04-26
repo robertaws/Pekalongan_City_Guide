@@ -86,7 +86,6 @@ public class ShowDestinationFragment extends Fragment {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                // Do something with the new location
                 Log.d("Location", "Latitude: " + location.getLatitude() + ", Longitude: " + location.getLongitude());
             }
 

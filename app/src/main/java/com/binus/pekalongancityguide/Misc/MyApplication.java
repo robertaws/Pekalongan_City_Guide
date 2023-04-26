@@ -3,11 +3,8 @@ package com.binus.pekalongancityguide.Misc;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.text.format.DateFormat;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.binus.pekalongancityguide.R;

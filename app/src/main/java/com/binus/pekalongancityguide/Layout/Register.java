@@ -133,36 +133,36 @@ public class Register extends AppCompatActivity {
         }
 
         if (TextUtils.isEmpty(Password)) {
-            til.setPasswordVisibilityToggleEnabled(false); // remove toggle
+            til.setPasswordVisibilityToggleEnabled(false);
             pass.setError(PASSWORD_EMPTY_ERROR);
             allFieldsValid = false;
         } else if (Password.length() < 8) {
-            til.setPasswordVisibilityToggleEnabled(false); // remove toggle
+            til.setPasswordVisibilityToggleEnabled(false);
             pass.setError(PASSWORD_LENGTH_ERROR);
             allFieldsValid = false;
         } else if (!containsNumber(Password)) {
-            til.setPasswordVisibilityToggleEnabled(false); // remove toggle
+            til.setPasswordVisibilityToggleEnabled(false);
             pass.setError(PASSWORD_NUMBER_ERROR);
             allFieldsValid = false;
         } else if (!containsSymbol(Password)) {
-            til.setPasswordVisibilityToggleEnabled(false); // remove toggle
+            til.setPasswordVisibilityToggleEnabled(false);
             pass.setError(PASSWORD_SYMBOL_ERROR);
             allFieldsValid = false;
         } else {
-            til.setPasswordVisibilityToggleEnabled(true); // show toggle
+            til.setPasswordVisibilityToggleEnabled(true);
             pass.setError(null);
         }
 
         if (TextUtils.isEmpty(Cfmpass)) {
-            ctil.setPasswordVisibilityToggleEnabled(false); // remove toggle
+            ctil.setPasswordVisibilityToggleEnabled(false);
             cpass.setError(PASSWORD_EMPTY_ERROR);
             allFieldsValid = false;
         } else if (!Cfmpass.equals(Password)) {
-            ctil.setPasswordVisibilityToggleEnabled(false); // remove toggle
+            ctil.setPasswordVisibilityToggleEnabled(false);
             cpass.setError(PASSWORD_MATCH_ERROR);
             allFieldsValid = false;
         } else {
-            ctil.setPasswordVisibilityToggleEnabled(true); // show toggle
+            ctil.setPasswordVisibilityToggleEnabled(true);
             cpass.setError(null);
         }
 

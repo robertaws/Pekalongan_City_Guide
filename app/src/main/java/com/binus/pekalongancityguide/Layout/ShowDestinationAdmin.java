@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +25,6 @@ public class ShowDestinationAdmin extends AppCompatActivity {
     private ArrayList<Destination> destinationArrayList;
     private AdminDestinationAdapter adapter;
     private String categoryId, categoryTitle;
-    private TextView rating;
     private static final String TAG = "DESTI_LIST_TAG";
 
     @Override

@@ -1,7 +1,6 @@
 package com.binus.pekalongancityguide.Layout;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -50,13 +48,12 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         firebaseAuth = FirebaseAuth.getInstance();
         getInfo();
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String selectedLanguage = prefs.getString("language", "en"); // retrieve the stored language preference, defaulting to "en"
+        String selectedLanguage = prefs.getString("language", "en");
         if (selectedLanguage.equals("in")) {
             Locale newLocale = new Locale("in");
             Configuration config = new Configuration(getResources().getConfiguration());
@@ -89,10 +86,10 @@ public class ProfileFragment extends Fragment {
                         Locale newLocale;
                         if (which == 0) {
                             newLocale = new Locale("en", "US");
-                            prefs.edit().putString("language", "en").apply(); // store "en" as language preference
+                            prefs.edit().putString("language", "en").apply();
                         } else {
                             newLocale = new Locale("in");
-                            prefs.edit().putString("language", "in").apply(); // store "id" as language preference
+                            prefs.edit().putString("language", "in").apply();
                         }
                         Locale currentLocale = getResources().getConfiguration().locale;
                         if (!currentLocale.equals(newLocale)) {

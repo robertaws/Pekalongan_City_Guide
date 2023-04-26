@@ -17,12 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.binus.pekalongancityguide.ItemTemplate.Comments;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.R;
-import com.binus.pekalongancityguide.databinding.DialogAddCommentBinding;
 import com.binus.pekalongancityguide.databinding.DialogEditCommentBinding;
 import com.binus.pekalongancityguide.databinding.ListCommentBinding;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -54,8 +51,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.HolderCo
     @Override
     public void onBindViewHolder(@NonNull HolderComment holder, int position){
         Comments comments = commentsArrayList.get(position);
-        String id = comments.getId();
-        String destiId = comments.getDestiId();
         String comment = comments.getComment();
         String uid = comments.getUid();
         String timestamp = comments.getTimestamp();
