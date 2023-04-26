@@ -213,7 +213,7 @@ public class Register extends AppCompatActivity {
                                 .addOnSuccessListener(authResult -> {
                                     progressDialog.dismiss();
                                     addUser();
-                                    Toast.makeText(this, "Registered successfully!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(this,R.string.suces_register, Toast.LENGTH_SHORT).show();
                                 })
                                 .addOnFailureListener(e -> {
                                     progressDialog.dismiss();
@@ -246,7 +246,7 @@ public class Register extends AppCompatActivity {
                 .setValue(hashMap)
                 .addOnSuccessListener(unused -> {
                     progressDialog.dismiss();
-                    Toast.makeText(Register.this, "Account created!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Register.this, R.string.acount_created, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(Register.this,MainActivity.class));
                     finish();
                 })

@@ -18,9 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.binus.pekalongancityguide.ItemTemplate.Categories;
 import com.binus.pekalongancityguide.Layout.ShowDestinationAdmin;
 import com.binus.pekalongancityguide.Misc.FilterCategory;
+import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ListCategoryBinding;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -50,13 +54,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Holder
         holder.title.setText(category);
         holder.delete.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle("Delete")
-                    .setMessage("Are you sure want to delete this item?")
-                    .setPositiveButton("Confirm", (dialog, which) -> {
+            builder.setTitle(R.string.delete_opt)
+                    .setMessage(R.string.remove_confirm)
+                    .setPositiveButton(R.string.yes_txt, (dialog, which) -> {
                         deleteCat(model);
-                        Toast.makeText(context, "Deleting item...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,R.string.deleting_item, Toast.LENGTH_SHORT).show();
                     })
-                    .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                    .setNegativeButton(R.string.no_txt, (dialog, which) -> dialog.dismiss())
                     .show();
 
         });
@@ -69,13 +73,36 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Holder
     }
 
     private void deleteCat(Categories model) {
-        String id = model.getId();
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Categories");
-        reference.child(id)
+        String categoryId = model.getId();
+        DatabaseReference categoryRef = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Categories");
+        categoryRef.child(categoryId)
                 .removeValue()
-                .addOnSuccessListener(unused -> Toast.makeText(context, "Item deleted succesfully!", Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(context,R.string.deleted_category, Toast.LENGTH_SHORT).show();
+                    deleteDestinations(categoryId);
+                })
                 .addOnFailureListener(e -> Toast.makeText(context, "" + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
+
+    private void deleteDestinations(String categoryId) {
+        DatabaseReference destinationRef = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        destinationRef.orderByChild("categoryId").equalTo(categoryId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                            dataSnapshot.getRef().removeValue();
+                        }
+                        Toast.makeText(context,R.string.cat_destination_deleted, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(context, "Failed to delete destinations: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
 
     @Override
     public int getItemCount() {
