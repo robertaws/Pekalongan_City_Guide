@@ -3,6 +3,7 @@ package com.binus.pekalongancityguide.Layout;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -57,16 +58,19 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
 
 public class AddDestination extends AppCompatActivity {
     public static final String TAG = "ADD_IMAGE_TAG";
     private static final int PICK_IMAGE_REQUEST = 1;
-    private static final String SEARCH_ENGINE_ID = "b0bfb36873e2d440d";
     PlacesClient placesClient;
     ArrayList<String> categoriesTitleArrayList, categoryIdArrayList;
+    private List<String> addedPlaces = new ArrayList<>();
+
     private ActivityAddDestinationBinding binding;
     private FirebaseAuth firebaseAuth;
     private Uri imageUri;
@@ -75,9 +79,18 @@ public class AddDestination extends AppCompatActivity {
     private String desc = "";
     private String selectedCategoryId, selectedCategoryTitle;
 
+    private void loadAddedPlaces() {
+        SharedPreferences prefs = getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
+        Set<String> set = prefs.getStringSet("added_places", null);
+        if (set != null) {
+            addedPlaces = new ArrayList<>(set);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadAddedPlaces();
         Places.initialize(getApplicationContext(), MAPS_API_KEY);
         binding = ActivityAddDestinationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -129,61 +142,68 @@ public class AddDestination extends AppCompatActivity {
             task.addOnSuccessListener(response -> {
                 if (!response.getAutocompletePredictions().isEmpty()) {
                     String placeId = response.getAutocompletePredictions().get(0).getPlaceId();
-                    Log.d(TAG, "Place ID: " + placeId);
-                    String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" + MAPS_API_KEY;
-                    FetchPlaceRequest placeRequest = FetchPlaceRequest.builder(placeId, placeFields).build();
-                    placesClient.fetchPlace(placeRequest).addOnCompleteListener(task1 -> {
-                        if (task1.isSuccessful()) {
-                            Place place = task1.getResult().getPlace();
-                            String address = place.getAddress();
-                            String phoneNumber = place.getPhoneNumber();
-                            OpeningHours openingHours = place.getOpeningHours();
-                            double latitude = place.getLatLng().latitude;
-                            double longitude = place.getLatLng().longitude;
-                            double rating = place.getRating() != null ? place.getRating() : 0;
-                            Log.d(TAG, "Address: " + address);
-                            Log.d(TAG, "Latitude: " + latitude);
-                            Log.d(TAG, "Longitude: " + longitude);
-                            Log.d(TAG, "Rating: " + rating);
-                            Log.d(TAG, "Phone number: " + phoneNumber);
-                            if (TextUtils.isEmpty(desc)) {
-                                StringBuilder sb = new StringBuilder();
-                                for (Place.Type type : place.getTypes()) {
-                                    String typeName = type.name().replace("_", " ");
-                                    if (!typeName.equals("POINT OF INTEREST")) {
-                                        sb.append(typeName.toLowerCase().substring(0, 1).toUpperCase() + typeName.toLowerCase().substring(1));
-                                        sb.append(", ");
-                                    }
-                                }
-                                desc = sb.toString().trim();
-                                if (desc.endsWith(",")) {
-                                    desc = desc.substring(0, desc.length() - 1);
-                                }
-                                Log.d(TAG, "Description: " + desc);
-                            }
-                            new GetReviewsTask() {
-                                @Override
-                                protected void onPostExecute(JSONArray reviews) {
-                                    if (reviews != null) {
-                                        Log.d(TAG, "Reviews: " + reviews);
-                                        if (openingHours != null) {
-                                            uploadtoStorage(placeId, address, latitude, longitude, rating, reviews, phoneNumber, openingHours.getWeekdayText(), place);
-                                        } else {
-                                            uploadtoStorage(placeId, address, latitude, longitude, rating, reviews, phoneNumber, null, place);
+                    if (addedPlaces.contains(placeId)) {
+                        Toast.makeText(this, "This place has already been added", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else {
+                        addedPlaces.add(placeId);
+                        updateAddedPlaces();
+                        String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" + MAPS_API_KEY;
+                        FetchPlaceRequest placeRequest = FetchPlaceRequest.builder(placeId, placeFields).build();
+                        placesClient.fetchPlace(placeRequest).addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                Place place = task1.getResult().getPlace();
+                                String address = place.getAddress();
+                                String phoneNumber = place.getPhoneNumber();
+                                OpeningHours openingHours = place.getOpeningHours();
+                                double latitude = place.getLatLng().latitude;
+                                double longitude = place.getLatLng().longitude;
+                                double rating = place.getRating() != null ? place.getRating() : 0;
+                                Log.d(TAG, "Address: " + address);
+                                Log.d(TAG, "Latitude: " + latitude);
+                                Log.d(TAG, "Longitude: " + longitude);
+                                Log.d(TAG, "Rating: " + rating);
+                                Log.d(TAG, "Phone number: " + phoneNumber);
+                                if (TextUtils.isEmpty(desc)) {
+                                    StringBuilder sb = new StringBuilder();
+                                    for (Place.Type type : place.getTypes()) {
+                                        String typeName = type.name().replace("_", " ");
+                                        if (!typeName.equals("POINT OF INTEREST")) {
+                                            sb.append(typeName.toLowerCase().substring(0, 1).toUpperCase() + typeName.toLowerCase().substring(1));
+                                            sb.append(", ");
                                         }
-                                    } else {
-                                        Toast.makeText(AddDestination.this, "Error getting reviews", Toast.LENGTH_SHORT).show();
                                     }
+                                    desc = sb.toString().trim();
+                                    if (desc.endsWith(",")) {
+                                        desc = desc.substring(0, desc.length() - 1);
+                                    }
+                                    Log.d(TAG, "Description: " + desc);
                                 }
-                            }.execute(url);
-                        } else {
-                            Toast.makeText(AddDestination.this, "Error getting location details: " + task1.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                                new GetReviewsTask() {
+                                    @Override
+                                    protected void onPostExecute(JSONArray reviews) {
+                                        if (reviews != null) {
+                                            Log.d(TAG, "Reviews: " + reviews);
+                                            if (openingHours != null) {
+                                                uploadtoStorage(placeId, address, latitude, longitude, rating, reviews, phoneNumber, openingHours.getWeekdayText(), place);
+                                            } else {
+                                                uploadtoStorage(placeId, address, latitude, longitude, rating, reviews, phoneNumber, null, place);
+                                            }
+                                        } else {
+                                            Toast.makeText(AddDestination.this, "Error getting reviews", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }.execute(url);
+                            } else {
+                                Toast.makeText(AddDestination.this, "Error getting location details: " + task1.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
                 } else {
                     Toast.makeText(this, "No location found for the given title", Toast.LENGTH_SHORT).show();
                 }
             });
+
             task.addOnFailureListener(e -> {
                 Log.e(TAG, "Error getting place ID: " + e.getMessage());
                 Toast.makeText(this, "Error getting location from title: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -508,7 +528,22 @@ public class AddDestination extends AppCompatActivity {
                 onPostExecute(emptyReviews);
             }
         }
+
         protected abstract void onPostExecute(JSONArray reviews);
+    }
+
+    private void saveAddedPlaces() {
+        SharedPreferences prefs = getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        Set<String> set = new HashSet<>(addedPlaces);
+        editor.putStringSet("added_places", set);
+        editor.apply();
+    }
+
+    // Call this method whenever addedPlaces is updated
+    private void updateAddedPlaces() {
+        // Do whatever updates you need to do to addedPlaces
+        saveAddedPlaces();
     }
 
 }
