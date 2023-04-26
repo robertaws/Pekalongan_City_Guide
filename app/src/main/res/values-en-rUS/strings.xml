@@ -166,4 +166,9 @@
     <string name="carakan_letters_n_ngelgena">CARAKAN LETTERS\n(Ngelgena)</string>
     <string name="couple_letters_n_mati">COUPLE LETTERS\n(Mati)</string>
     <string name="used_email">Email is already used !</string>
+    <string name="deleted_category">Category deleted successfully!</string>
+    <string name="cat_destination_deleted">Destinations deleted successfully!</string>
+    <string name="deleting_item">Deleting item...</string>
+    <string name="acount_created">Account created!</string>
+    <string name="suces_register">Registered successfully!</string>
 </resources>
