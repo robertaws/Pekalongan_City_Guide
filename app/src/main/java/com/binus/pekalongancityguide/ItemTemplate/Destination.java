@@ -2,17 +2,18 @@ package com.binus.pekalongancityguide.ItemTemplate;
 
 import java.io.Serializable;
 
-public class Destination implements Serializable{
-    String uid,id,title,description,categoryId,url,rating,address;
-    double desLat,desLong;
+public class Destination implements Serializable {
+    String uid, id, title, description, categoryId, url, rating, address, placeId;
+    double desLat, desLong;
     boolean favorite;
     private boolean isLoaded;
     private float distance;
-    public Destination(){
+
+    public Destination() {
 
     }
 
-    public Destination(String uid, String id, String title, String description, String categoryId, String url, String rating, String address, double desLat, double desLong, boolean favorite, boolean isLoaded, float distance) {
+    public Destination(String uid, String id, String title, String description, String categoryId, String url, String rating, String address, String placeId, double desLat, double desLong, boolean favorite, boolean isLoaded, float distance) {
         this.uid = uid;
         this.id = id;
         this.title = title;
@@ -21,6 +22,7 @@ public class Destination implements Serializable{
         this.url = url;
         this.rating = rating;
         this.address = address;
+        this.placeId = placeId;
         this.desLat = desLat;
         this.desLong = desLong;
         this.favorite = favorite;
@@ -90,6 +92,14 @@ public class Destination implements Serializable{
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(String placeId) {
+        this.placeId = placeId;
     }
 
     public double getDesLat() {

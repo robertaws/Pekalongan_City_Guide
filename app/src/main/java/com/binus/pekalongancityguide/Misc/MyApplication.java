@@ -7,6 +7,7 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.binus.pekalongancityguide.Layout.AddDestination;
 import com.binus.pekalongancityguide.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -31,20 +32,23 @@ public class MyApplication extends Application {
         String date = DateFormat.format("dd/MM/yyyy",calendar).toString();
         return date;
     }
-    public static final String formatProfileDate(long timestamp){
+
+    public static final String formatProfileDate(long timestamp) {
         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
         calendar.setTimeInMillis(timestamp);
-        String date = DateFormat.format("dd/MMMM/yyyy",calendar).toString();
+        String date = DateFormat.format("dd/MMMM/yyyy", calendar).toString();
         return date;
     }
-    public static void deleteDesti(Context context, String destiId, String destiUrl, String destiTitle){
+
+    public static void deleteDesti(Context context, String destiId, String destiUrl, String destiTitle, String placeId) {
         String TAG = "DELETE_DESTI_TAG";
-        Log.d(TAG,"delete desti : Deleting..");
+        Log.d(TAG, "delete desti : Deleting..");
         ProgressDialog dialog = new ProgressDialog(context);
         dialog.setTitle("Please Wait");
-        dialog.setMessage("Deleting "+destiTitle+". . .");
+        dialog.setMessage("Deleting " + destiTitle + ". . .");
         dialog.show();
-        Log.d(TAG,"delete desti : Deleting from storage");
+        AddDestination.addedPlaces.remove(placeId);
+        Log.d(TAG, "delete desti : Deleting from storage");
         StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(destiUrl);
         reference.delete()
                 .addOnSuccessListener(unused -> {

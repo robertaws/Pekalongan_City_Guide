@@ -69,7 +69,7 @@ public class AddDestination extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     PlacesClient placesClient;
     ArrayList<String> categoriesTitleArrayList, categoryIdArrayList;
-    private List<String> addedPlaces = new ArrayList<>();
+    public static List<String> addedPlaces = new ArrayList<>();
     private ActivityAddDestinationBinding binding;
     private FirebaseAuth firebaseAuth;
     private Uri imageUri;
