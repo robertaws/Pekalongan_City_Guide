@@ -70,7 +70,6 @@ public class AddDestination extends AppCompatActivity {
     PlacesClient placesClient;
     ArrayList<String> categoriesTitleArrayList, categoryIdArrayList;
     private List<String> addedPlaces = new ArrayList<>();
-
     private ActivityAddDestinationBinding binding;
     private FirebaseAuth firebaseAuth;
     private Uri imageUri;
@@ -84,6 +83,7 @@ public class AddDestination extends AppCompatActivity {
         Set<String> set = prefs.getStringSet("added_places", null);
         if (set != null) {
             addedPlaces = new ArrayList<>(set);
+            Log.d(TAG, "loadAddedPlaces: " + addedPlaces);
         }
     }
 
@@ -143,11 +143,12 @@ public class AddDestination extends AppCompatActivity {
                 if (!response.getAutocompletePredictions().isEmpty()) {
                     String placeId = response.getAutocompletePredictions().get(0).getPlaceId();
                     if (addedPlaces.contains(placeId)) {
+                        Log.d(TAG, "place id: " + placeId);
+                        Log.d(TAG, "validateData: " + addedPlaces);
                         Toast.makeText(this, "This place has already been added", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else {
-                        addedPlaces.add(placeId);
+//                        addedPlaces.remove(placeId);
                         updateAddedPlaces();
+                    } else {
                         String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" + MAPS_API_KEY;
                         FetchPlaceRequest placeRequest = FetchPlaceRequest.builder(placeId, placeFields).build();
                         placesClient.fetchPlace(placeRequest).addOnCompleteListener(task1 -> {
@@ -246,6 +247,8 @@ public class AddDestination extends AppCompatActivity {
                                     Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                                     while (!uriTask.isSuccessful()) ;
                                     String uploadedImageUrl = "" + uriTask.getResult();
+                                    addedPlaces.add(placeId);
+                                    updateAddedPlaces();
                                     uploadtoDB(uploadedImageUrl, timestamp, placeId, address, lat, lng, rating, reviews, phoneNumber, weekday);
                                 })
                                 .addOnFailureListener(e -> {
@@ -268,6 +271,7 @@ public class AddDestination extends AppCompatActivity {
                                         .load(this.imageUri)
                                         .centerCrop()
                                         .into(binding.addPicture);
+                                uploadtoStorage(placeId, address, lat, lng, rating, reviews, phoneNumber, weekday, place);
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
@@ -292,6 +296,7 @@ public class AddDestination extends AppCompatActivity {
                                     .load(this.imageUri)
                                     .centerCrop()
                                     .into(binding.addPicture);
+                            uploadtoStorage(placeId, address, lat, lng, rating, reviews, phoneNumber, weekday, place);
                         })
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
@@ -307,6 +312,8 @@ public class AddDestination extends AppCompatActivity {
                         while (!uriTask.isSuccessful()) ;
                         String uploadedImageUrl = "" + uriTask.getResult();
                         progressDialog.dismiss();
+                        addedPlaces.add(placeId);
+                        updateAddedPlaces();
                         uploadtoDB(uploadedImageUrl, timestamp, placeId, address, lat, lng, rating, reviews, phoneNumber, weekday);
                     })
                     .addOnFailureListener(e -> {
