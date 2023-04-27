@@ -55,7 +55,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Holder
         holder.delete.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle(R.string.delete_opt)
-                    .setMessage(R.string.remove_confirm)
+                    .setMessage(context.getString(R.string.remove_confirm) + " " + category + "?")
                     .setPositiveButton(R.string.yes_txt, (dialog, which) -> {
                         deleteCat(model);
                         Toast.makeText(context,R.string.deleting_item, Toast.LENGTH_SHORT).show();

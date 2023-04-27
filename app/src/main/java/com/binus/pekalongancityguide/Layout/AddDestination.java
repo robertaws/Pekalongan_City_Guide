@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
@@ -106,7 +107,9 @@ public class AddDestination extends AppCompatActivity {
         binding.addBtn.setOnClickListener(v -> {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
+            binding.addBtn.setEnabled(false);
             validateData();
+            new Handler().postDelayed(() -> binding.addBtn.setEnabled(true), 2000);
         });
 
     }
@@ -146,7 +149,7 @@ public class AddDestination extends AppCompatActivity {
                         Log.d(TAG, "place id: " + placeId);
                         Log.d(TAG, "validateData: " + addedPlaces);
                         Toast.makeText(this, "This place has already been added", Toast.LENGTH_SHORT).show();
-//                        addedPlaces.remove(placeId);
+                        addedPlaces.remove(placeId);
                         updateAddedPlaces();
                     } else {
                         String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" + MAPS_API_KEY;

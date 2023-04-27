@@ -249,11 +249,11 @@ public class DestinationDetails extends AppCompatActivity {
                 endHour = dialog.getHour();
                 endMinute = dialog.getMinute();
                 if (endHour < 12) {
-                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d am", endHour, endMinute));
+                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d am", endHour, endMinute));
                 } else if (endHour == 12) {
-                    startEt.setText(String.format(Locale.getDefault(), "12:%02d pm", endMinute));
+                    endEt.setText(String.format(Locale.getDefault(), "12:%02d pm", endMinute));
                 } else {
-                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", endHour - 12, endMinute));
+                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", endHour - 12, endMinute));
                 }
             });
             dialog.show(getSupportFragmentManager(), "startTimePicker");
@@ -273,11 +273,11 @@ public class DestinationDetails extends AppCompatActivity {
                 endHour1 = dialog.getHour();
                 endMinute1 = dialog.getMinute();
                 if (endHour1 < 12) {
-                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d am", endHour1, endMinute1));
+                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d am", endHour1, endMinute1));
                 } else if (endHour1 == 12) {
-                    startEt.setText(String.format(Locale.getDefault(), "12:%02d pm", endMinute1));
+                    endEt.setText(String.format(Locale.getDefault(), "12:%02d pm", endMinute1));
                 } else {
-                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", endHour1 - 12, endMinute1));
+                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", endHour1 - 12, endMinute1));
                 }
             });
             dialog.show(getSupportFragmentManager(), "startTimePicker");
