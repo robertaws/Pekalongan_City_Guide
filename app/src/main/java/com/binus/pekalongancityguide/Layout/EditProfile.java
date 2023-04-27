@@ -127,7 +127,7 @@ public class EditProfile extends AppCompatActivity {
                     Log.d(TAG, "on Success: Profile updated");
                     progressDialog.dismiss();
                     Toast.makeText(this, "Profile updated", Toast.LENGTH_SHORT).show();
-
+                    onBackPressed();
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "on Success: Failed to update db due to"+e.getMessage());
