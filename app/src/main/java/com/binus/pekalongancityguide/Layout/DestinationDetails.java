@@ -356,6 +356,7 @@ public class DestinationDetails extends AppCompatActivity {
         if (allFieldsFilled) {
             uploadToDB(date, startTime, endTime);
             Toast.makeText(this, R.string.added_to_iter, Toast.LENGTH_SHORT).show();
+            onBackPressed();
         }
 
     }
