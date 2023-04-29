@@ -106,7 +106,11 @@ public class DestinationDetails extends AppCompatActivity {
             }
         });
         binding.addItenary.setOnClickListener(v ->{
-            showAddItineraryDialog();
+            if (firebaseAuth.getCurrentUser() == null) {
+                Toast.makeText(DestinationDetails.this,R.string.notLogin, Toast.LENGTH_SHORT).show();
+            }else{
+                showAddItineraryDialog();
+            }
         });
     }
 
@@ -385,11 +389,10 @@ public class DestinationDetails extends AppCompatActivity {
                             if (progressDialog != null) {
                                 progressDialog.dismiss();
                             }
+                            Toast.makeText(DestinationDetails.this, "Data upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "on Failure : " + e.getMessage());
-                    Toast.makeText(DestinationDetails.this, "Data upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+                        });
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

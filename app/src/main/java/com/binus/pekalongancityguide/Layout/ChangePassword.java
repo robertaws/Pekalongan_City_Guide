@@ -38,7 +38,6 @@ public class ChangePassword extends AppCompatActivity {
         editPass = binding.editPass.getText().toString().trim();
         cfmeditPass = binding.cfmeditPass.getText().toString().trim();
         boolean allFieldsValid = true;
-
         if (TextUtils.isEmpty(currPass)) {
             binding.currentpassTil.setPasswordVisibilityToggleEnabled(false);
             binding.currPass.setError(getString(R.string.enter_cur_pass));
@@ -59,7 +58,6 @@ public class ChangePassword extends AppCompatActivity {
             binding.currentpassTil.setPasswordVisibilityToggleEnabled(true);
             binding.currPass.setError(null);
         }
-
         if (TextUtils.isEmpty(editPass)) {
             binding.editpassTil.setPasswordVisibilityToggleEnabled(false);
             binding.editPass.setError(getString(R.string.enternewPass));
@@ -97,7 +95,6 @@ public class ChangePassword extends AppCompatActivity {
             binding.editcfmpassTil.setPasswordVisibilityToggleEnabled(true);
             binding.cfmeditPass.setError(null);
         }
-
         if (allFieldsValid) {
             updatePass();
         }
@@ -119,7 +116,6 @@ public class ChangePassword extends AppCompatActivity {
             binding.editcfmpassTil.setPasswordVisibilityToggleEnabled(hasFocus);
         });
     }
-
     private void updatePass() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();

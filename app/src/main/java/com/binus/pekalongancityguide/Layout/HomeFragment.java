@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -85,7 +86,7 @@ public class HomeFragment extends Fragment {
         String dateString = dateFormat.format(dateBefore30Days);
 
         EverythingRequest everythingRequest = new EverythingRequest.Builder()
-                .q("jawa")
+                .q("jawa tengah")
                 .language("id")
                 .from(dateString)
                 .to(String.valueOf(new Date()))
@@ -99,7 +100,8 @@ public class HomeFragment extends Fragment {
                 newsRV.setAdapter(newsAdapter);
             }
             @Override
-            public void onFailure(Throwable throwable) {
+            public void onFailure(Throwable throwable){
+                Toast.makeText(getContext(),getString(R.string.error_news)+throwable.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e("NewsAPI", "Error fetching news articles: " + throwable.getMessage());
             }
         });

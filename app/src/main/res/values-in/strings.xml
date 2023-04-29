@@ -172,4 +172,5 @@
     <string name="suces_register">Registrasi berhasil!</string>
     <string name="delete_desti_confirm">Apakah anda yakin ingin menghapus</string>
     <string name="delete_confirmation">Konfirmasi</string>
+    <string name="error_news">Gagal mengambil berita karena</string>
 </resources>

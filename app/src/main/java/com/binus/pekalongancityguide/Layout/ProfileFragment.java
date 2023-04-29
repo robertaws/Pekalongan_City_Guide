@@ -70,10 +70,18 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
         binding.changePass.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), ChangePassword.class));
+            if (firebaseAuth.getCurrentUser() == null) {
+                Toast.makeText(getContext(),R.string.notLogin, Toast.LENGTH_SHORT).show();
+            }else{
+                startActivity(new Intent(getActivity(), ChangePassword.class));
+            }
         });
         binding.editName.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), EditProfile.class));
+            if (firebaseAuth.getCurrentUser() == null) {
+                Toast.makeText(getContext(),R.string.notLogin, Toast.LENGTH_SHORT).show();
+            }else{
+                startActivity(new Intent(getActivity(), EditProfile.class));
+            }
         });
         binding.logoutBtn.setOnClickListener(v -> {
             logoutConfirm();
