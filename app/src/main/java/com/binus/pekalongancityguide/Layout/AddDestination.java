@@ -79,15 +79,6 @@ public class AddDestination extends AppCompatActivity {
     private String desc = "";
     private String selectedCategoryId, selectedCategoryTitle;
 
-    private void loadAddedPlaces() {
-        SharedPreferences prefs = getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
-        Set<String> set = prefs.getStringSet("added_places", null);
-        if (set != null) {
-            addedPlaces = new ArrayList<>(set);
-            Log.d(TAG, "loadAddedPlaces: " + addedPlaces);
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,7 +104,6 @@ public class AddDestination extends AppCompatActivity {
         });
 
     }
-
     private void validateData() {
         Log.d(TAG, "validate data : validating data ");
         title = binding.titleEt.getText().toString().trim();
@@ -223,7 +213,6 @@ public class AddDestination extends AppCompatActivity {
         if (imageUri == null){
             List<PhotoMetadata> photoMetadataList = place.getPhotoMetadatas();
             if (photoMetadataList != null && !photoMetadataList.isEmpty()) {
-                // If photo metadata is available, fetch the photo and set it as the image
                 PhotoMetadata photoMetadata = photoMetadataList.get(0);
                 FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
                         .setMaxWidth(800)
@@ -534,6 +523,14 @@ public class AddDestination extends AppCompatActivity {
         }
 
         protected abstract void onPostExecute(JSONArray reviews);
+    }
+    private void loadAddedPlaces() {
+        SharedPreferences prefs = getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
+        Set<String> set = prefs.getStringSet("added_places", null);
+        if (set != null) {
+            addedPlaces = new ArrayList<>(set);
+            Log.d(TAG, "loadAddedPlaces: " + addedPlaces);
+        }
     }
 
     private void saveAddedPlaces() {

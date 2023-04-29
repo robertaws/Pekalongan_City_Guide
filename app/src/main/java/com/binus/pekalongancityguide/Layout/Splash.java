@@ -78,6 +78,10 @@ public class Splash extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 String userType = "" + snapshot.child("userType").getValue();
+                                SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putString("userType", userType);
+                                editor.apply();
                                 if (userType.equals("user")) {
                                     startActivity(new Intent(Splash.this, Home.class));
                                     finish();
@@ -89,15 +93,31 @@ public class Splash extends AppCompatActivity {
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
                                 Toast.makeText(Splash.this,R.string.error_connect_database,Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(Splash.this, MainActivity.class));
+                                SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                                String userType = preferences.getString("userType", "");
+                                if (userType.equals("user")) {
+                                    startActivity(new Intent(Splash.this, Home.class));
+                                } else if (userType.equals("admin")) {
+                                    startActivity(new Intent(Splash.this, AdminHome.class));
+                                } else {
+                                    startActivity(new Intent(Splash.this, MainActivity.class));
+                                }
                                 finish();
                             }
                         });
             } else {
-                Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(Splash.this, Home.class));
+                SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                String userType = preferences.getString("userType", "");
+                if (userType.equals("user")) {
+                    startActivity(new Intent(Splash.this, Home.class));
+                } else if (userType.equals("admin")) {
+                    startActivity(new Intent(Splash.this, AdminHome.class));
+                } else {
+                    startActivity(new Intent(Splash.this, MainActivity.class));
+                }
                 finish();
             }
+
         }
     }
 }

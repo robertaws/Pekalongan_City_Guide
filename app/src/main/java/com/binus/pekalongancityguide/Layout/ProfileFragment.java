@@ -134,7 +134,7 @@ public class ProfileFragment extends Fragment {
     private void getInfo(){
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
         Log.e(TAG,"Loading User Info..."+firebaseAuth.getUid());
-        if (firebaseAuth.getUid() != null) { // add null check here
+        if (firebaseAuth.getUid() != null) {
             DatabaseReference r = database.getReference("Users");
             r.keepSynced(true);
             r.child(Objects.requireNonNull(firebaseAuth.getUid()))

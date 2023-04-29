@@ -168,6 +168,8 @@
     <string name="deleted_category">Kategori berhasil dihapus!</string>
     <string name="cat_destination_deleted">Destinasi berhasil dihapus!</string>
     <string name="deleting_item">Menghapus item...</string>
-    <string name="acount_created">Account created!</string>
-    <string name="suces_register">Registered successfully!</string>
+    <string name="acount_created">Akun berhasil dibuat!</string>
+    <string name="suces_register">Registrasi berhasil!</string>
+    <string name="delete_desti_confirm">Apakah anda yakin ingin menghapus</string>
+    <string name="delete_confirmation">Konfirmasi</string>
 </resources>

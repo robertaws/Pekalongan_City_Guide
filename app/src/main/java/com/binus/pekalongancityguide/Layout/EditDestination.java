@@ -110,11 +110,15 @@ public class EditDestination extends AppCompatActivity {
                 .addOnSuccessListener(unused -> {
                     Log.d(TAG, "onSuccess: Destination updated");
                     dialog.dismiss();
+                    onBackPressed();
                     Toast.makeText(EditDestination.this, "Destination info updated . . .", Toast.LENGTH_SHORT).show();
                 })
-                .addOnFailureListener(e -> Log.d(TAG, "onFailure: error update due to" + e.getMessage()));
+                .addOnFailureListener(e -> {
+                    Toast.makeText(EditDestination.this, "Destination failed to update because"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                    Log.d(TAG, "onFailure: error update due to" + e.getMessage());
+                });
     }
-
 
     private String selectedCategoryId="",selectedCategoryTitle="";
 
