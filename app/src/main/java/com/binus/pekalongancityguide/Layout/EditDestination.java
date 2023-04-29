@@ -1,30 +1,45 @@
 package com.binus.pekalongancityguide.Layout;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityEditDestinationBinding;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class EditDestination extends AppCompatActivity {
     private ActivityEditDestinationBinding binding;
+    FirebaseDatabase refDes;
+    FirebaseStorage fiStoRef;
+    DatabaseReference ref, catRef;
     private String destiId;
+    private Uri imguri = null;
     private ProgressDialog dialog;
-    private ArrayList<String> categoryTitleArrayList,categoryIdArrayList;
+    private ArrayList<String> categoryTitleArrayList, categoryIdArrayList;
     private static final String TAG = "DESTI_EDIT_TAG";
 
     @Override
@@ -37,29 +52,77 @@ public class EditDestination extends AppCompatActivity {
         dialog.setTitle("Please Wait");
         dialog.setCanceledOnTouchOutside(false);
 
+        refDes = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        fiStoRef = FirebaseStorage.getInstance("gs://pekalongan-city-guide-5bf2e.appspot.com");
+        ref = refDes.getReference("Destination");
+        catRef = refDes.getReference("Categories");
+
         loadCategory();
         loadDestiInfo();
         binding.categoryTV.setOnClickListener(v -> categoryDialog());
         binding.backDestiAdmin.setOnClickListener(v -> onBackPressed());
         binding.updateDesti.setOnClickListener(v -> validateData());
+        binding.editPicture.setOnClickListener(v -> pickImage());
     }
 
+    private void pickImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        resultActivityLauncher.launch(intent);
+    }
 
-    private void loadDestiInfo(){
-        Log.d(TAG,"loadDEstiInfo: loading destination info");
-        DatabaseReference refDes = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
-        refDes.child(destiId)
+    private final ActivityResultLauncher<Intent> resultActivityLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Log.d(TAG, "onActivityResult: " + imguri);
+                        Intent data = result.getData();
+                        imguri = data.getData();
+                        Log.d(TAG, "onActivityResult: Picked from Gallery" + imguri);
+                        binding.editPicture.setImageURI(imguri);
+                        Glide.with(EditDestination.this)
+                                .load(imguri)
+                                .placeholder(R.drawable.person)
+                                .centerCrop()
+                                .into(binding.editPicture);
+                        uploadToStorage(imguri);
+                    } else {
+                        Toast.makeText(EditDestination.this, "Cancelled", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+    );
+
+    private void uploadToStorage(Uri uri) {
+        long timestamp = System.currentTimeMillis();
+        String filePathandName = "Destination/" + timestamp;
+        fiStoRef.getReference(filePathandName).putFile(uri).addOnSuccessListener(taskSnapshot -> {
+            Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+            while (!uriTask.isSuccessful()) ;
+            String uploadedImageUrl = "" + uriTask.getResult();
+            uploadToDB(uploadedImageUrl);
+        });
+    }
+
+    private void uploadToDB(String url) {
+        ref.child(destiId).child("url").setValue(url);
+    }
+
+    private void loadDestiInfo() {
+        Log.d(TAG, "loadDEstiInfo: loading destination info");
+        ref.child(destiId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        selectedCategoryId= ""+snapshot.child("categoryId").getValue();
-                        String title = ""+snapshot.child("title").getValue();
-                        String description = ""+snapshot.child("description").getValue();
+                        selectedCategoryId = "" + snapshot.child("categoryId").getValue();
+                        String title = "" + snapshot.child("title").getValue();
+                        String description = "" + snapshot.child("description").getValue();
                         binding.editDestiname.setText(title);
                         binding.editDestidesc.setText(description);
                         Log.d(TAG,"onDataChanged: Loading Desti Category Info");
-                        DatabaseReference refDesCat =  FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Categories");
-                        refDesCat.child(selectedCategoryId)
+                        catRef.child(selectedCategoryId)
                                 .addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -104,7 +167,6 @@ public class EditDestination extends AppCompatActivity {
         hashMap.put("title",""+title);
         hashMap.put("description",""+description);
         hashMap.put("categoryId",""+selectedCategoryId);
-        DatabaseReference ref = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
         ref.child(destiId)
                 .updateChildren(hashMap)
                 .addOnSuccessListener(unused -> {
@@ -141,19 +203,17 @@ public class EditDestination extends AppCompatActivity {
         Log.d(TAG,"load category: loading categories");
         categoryIdArrayList = new ArrayList<>();
         categoryTitleArrayList = new ArrayList<>();
-
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Categories");
-        reference.addValueEventListener(new ValueEventListener() {
+        catRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 categoryTitleArrayList.clear();
                 categoryIdArrayList.clear();
-                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
-                    String id = ""+dataSnapshot.child("id").getValue();
-                    String category = ""+dataSnapshot.child("category").getValue();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String id = "" + dataSnapshot.child("id").getValue();
+                    String category = "" + dataSnapshot.child("category").getValue();
                     categoryIdArrayList.add(id);
                     categoryTitleArrayList.add(category);
-                    Log.d(TAG,"onDataChanged: ID :"+id);
+                    Log.d(TAG, "onDataChanged: ID :" + id);
                     Log.d(TAG,"onDataChanged: Category :"+category);
 
                 }
