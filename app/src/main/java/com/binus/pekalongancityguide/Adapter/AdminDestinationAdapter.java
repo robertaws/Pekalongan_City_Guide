@@ -140,10 +140,9 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
                     }else{
                         MyApplication.deleteDesti(
                                 context,
-                                "" + destiId,
-                                "" + destiUrl,
-                                "" + destiTitle,
-                                "" + placeId
+                                ""+destiId,
+                                ""+destiUrl,
+                                ""+destiTitle
                         );
                     }
                 })

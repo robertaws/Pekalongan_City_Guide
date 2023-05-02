@@ -3,12 +3,10 @@ package com.binus.pekalongancityguide.Layout;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
@@ -40,6 +38,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -59,18 +58,16 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
 
 public class AddDestination extends AppCompatActivity {
     public static final String TAG = "ADD_IMAGE_TAG";
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final String SEARCH_ENGINE_ID = "b0bfb36873e2d440d";
     PlacesClient placesClient;
     ArrayList<String> categoriesTitleArrayList, categoryIdArrayList;
-    public static List<String> addedPlaces = new ArrayList<>();
     private ActivityAddDestinationBinding binding;
     private FirebaseAuth firebaseAuth;
     private Uri imageUri;
@@ -82,7 +79,6 @@ public class AddDestination extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loadAddedPlaces();
         Places.initialize(getApplicationContext(), MAPS_API_KEY);
         binding = ActivityAddDestinationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -98,13 +94,12 @@ public class AddDestination extends AppCompatActivity {
         binding.addBtn.setOnClickListener(v -> {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
-            binding.addBtn.setEnabled(false);
             validateData();
-            new Handler().postDelayed(() -> binding.addBtn.setEnabled(true), 2000);
         });
 
     }
-    private void validateData() {
+
+    private void validateData(){
         Log.d(TAG, "validate data : validating data ");
         title = binding.titleEt.getText().toString().trim();
         desc = binding.descEt.getText().toString().trim();
@@ -113,7 +108,7 @@ public class AddDestination extends AppCompatActivity {
             binding.titleEt.setError("Enter destination title!");
         } else if (TextUtils.isEmpty(selectedCategoryTitle)) {
             binding.categoryPick.setError("Pick a category!");
-        } else {
+        } else{
             placesClient = Places.createClient(this);
             List<Place.Field> placeFields = Arrays.asList(
                     Place.Field.ID,
@@ -135,69 +130,77 @@ public class AddDestination extends AppCompatActivity {
             task.addOnSuccessListener(response -> {
                 if (!response.getAutocompletePredictions().isEmpty()) {
                     String placeId = response.getAutocompletePredictions().get(0).getPlaceId();
-                    if (addedPlaces.contains(placeId)) {
-                        Log.d(TAG, "place id: " + placeId);
-                        Log.d(TAG, "validateData: " + addedPlaces);
-                        Toast.makeText(this, "This place has already been added", Toast.LENGTH_SHORT).show();
-                        addedPlaces.remove(placeId);
-                        updateAddedPlaces();
-                    } else {
-                        String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" + MAPS_API_KEY;
-                        FetchPlaceRequest placeRequest = FetchPlaceRequest.builder(placeId, placeFields).build();
-                        placesClient.fetchPlace(placeRequest).addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful()) {
-                                Place place = task1.getResult().getPlace();
-                                String address = place.getAddress();
-                                String phoneNumber = place.getPhoneNumber();
-                                OpeningHours openingHours = place.getOpeningHours();
-                                double latitude = place.getLatLng().latitude;
-                                double longitude = place.getLatLng().longitude;
-                                double rating = place.getRating() != null ? place.getRating() : 0;
-                                Log.d(TAG, "Address: " + address);
-                                Log.d(TAG, "Latitude: " + latitude);
-                                Log.d(TAG, "Longitude: " + longitude);
-                                Log.d(TAG, "Rating: " + rating);
-                                Log.d(TAG, "Phone number: " + phoneNumber);
-                                if (TextUtils.isEmpty(desc)) {
-                                    StringBuilder sb = new StringBuilder();
-                                    for (Place.Type type : place.getTypes()) {
-                                        String typeName = type.name().replace("_", " ");
-                                        if (!typeName.equals("POINT OF INTEREST")) {
-                                            sb.append(typeName.toLowerCase().substring(0, 1).toUpperCase()).append(typeName.toLowerCase().substring(1));
-                                            sb.append(", ");
-                                        }
-                                    }
-                                    desc = sb.toString().trim();
-                                    if (desc.endsWith(",")) {
-                                        desc = desc.substring(0, desc.length() - 1);
-                                    }
-                                    Log.d(TAG, "Description: " + desc);
-                                }
-                                new GetReviewsTask() {
-                                    @Override
-                                    protected void onPostExecute(JSONArray reviews) {
-                                        if (reviews != null) {
-                                            Log.d(TAG, "Reviews: " + reviews);
-                                            if (openingHours != null) {
-                                                uploadtoStorage(placeId, address, latitude, longitude, rating, reviews, phoneNumber, openingHours.getWeekdayText(), place);
-                                            } else {
-                                                uploadtoStorage(placeId, address, latitude, longitude, rating, reviews, phoneNumber, null, place);
-                                            }
-                                        } else {
-                                            Toast.makeText(AddDestination.this, "Error getting reviews", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                }.execute(url);
+                    Log.d(TAG, "Place ID: " + placeId);
+                    DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+                    Query query = reference.orderByChild("placeId").equalTo(placeId);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                progressDialog.dismiss();
+                                Toast.makeText(AddDestination.this, "This place has already been added.", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(AddDestination.this, "Error getting location details: " + task1.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" + MAPS_API_KEY;
+                                FetchPlaceRequest placeRequest = FetchPlaceRequest.builder(placeId, placeFields).build();
+                                placesClient.fetchPlace(placeRequest).addOnCompleteListener(task1 -> {
+                                    if (task1.isSuccessful()) {
+                                        Place place = task1.getResult().getPlace();
+                                        String address = place.getAddress();
+                                        String phoneNumber = place.getPhoneNumber();
+                                        OpeningHours openingHours = place.getOpeningHours();
+                                        double latitude = place.getLatLng().latitude;
+                                        double longitude = place.getLatLng().longitude;
+                                        double rating = place.getRating() != null ? place.getRating() : 0;
+                                        Log.d(TAG, "Address: " + address);
+                                        Log.d(TAG, "Latitude: " + latitude);
+                                        Log.d(TAG, "Longitude: " + longitude);
+                                        Log.d(TAG, "Rating: " + rating);
+                                        Log.d(TAG, "Phone number: " + phoneNumber);
+                                        if (TextUtils.isEmpty(desc)) {
+                                            StringBuilder sb = new StringBuilder();
+                                            for (Place.Type type : place.getTypes()) {
+                                                String typeName = type.name().replace("_", " ");
+                                                if (!typeName.equals("POINT OF INTEREST")) {
+                                                    sb.append(typeName.toLowerCase().substring(0, 1).toUpperCase() + typeName.toLowerCase().substring(1));
+                                                    sb.append(", ");
+                                                }
+                                            }
+                                            desc = sb.toString().trim();
+                                            if (desc.endsWith(",")) {
+                                                desc = desc.substring(0, desc.length() - 1);
+                                            }
+                                            Log.d(TAG, "Description: " + desc);
+                                        }
+                                        new GetReviewsTask(){
+                                            @Override
+                                            protected void onPostExecute(JSONArray reviews) {
+                                                if (reviews != null) {
+                                                    Log.d(TAG, "Reviews: " + reviews);
+                                                    if (openingHours != null) {
+                                                        uploadtoStorage(placeId, address, latitude, longitude, rating, reviews, phoneNumber, openingHours.getWeekdayText(), place);
+                                                    } else {
+                                                        uploadtoStorage(placeId, address, latitude, longitude, rating, reviews, phoneNumber, null, place);
+                                                    }
+                                                } else {
+                                                    Toast.makeText(AddDestination.this, "Error getting reviews", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        }.execute(url);
+                                    }else {
+                                        Toast.makeText(AddDestination.this, "Error getting location details: " + task1.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             }
-                        });
-                    }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 } else {
                     Toast.makeText(this, "No location found for the given title", Toast.LENGTH_SHORT).show();
                 }
             });
-
             task.addOnFailureListener(e -> {
                 Log.e(TAG, "Error getting place ID: " + e.getMessage());
                 Toast.makeText(this, "Error getting location from title: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -239,8 +242,6 @@ public class AddDestination extends AppCompatActivity {
                                     Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                                     while (!uriTask.isSuccessful()) ;
                                     String uploadedImageUrl = "" + uriTask.getResult();
-                                    addedPlaces.add(placeId);
-                                    updateAddedPlaces();
                                     uploadtoDB(uploadedImageUrl, timestamp, placeId, address, lat, lng, rating, reviews, phoneNumber, weekday);
                                 })
                                 .addOnFailureListener(e -> {
@@ -248,6 +249,7 @@ public class AddDestination extends AppCompatActivity {
                                     Log.d(TAG, "on Failure : Image upload failed due to " + e.getMessage());
                                     Toast.makeText(AddDestination.this, "Image upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
+                    } else {
                     }
                 }).addOnFailureListener(exception -> {
                     Log.e(TAG, "Failed to fetch image, asking user to add an image from the gallery");
@@ -263,7 +265,6 @@ public class AddDestination extends AppCompatActivity {
                                         .load(this.imageUri)
                                         .centerCrop()
                                         .into(binding.addPicture);
-                                uploadtoStorage(placeId, address, lat, lng, rating, reviews, phoneNumber, weekday, place);
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
@@ -288,7 +289,6 @@ public class AddDestination extends AppCompatActivity {
                                     .load(this.imageUri)
                                     .centerCrop()
                                     .into(binding.addPicture);
-                            uploadtoStorage(placeId, address, lat, lng, rating, reviews, phoneNumber, weekday, place);
                         })
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
@@ -304,8 +304,6 @@ public class AddDestination extends AppCompatActivity {
                         while (!uriTask.isSuccessful()) ;
                         String uploadedImageUrl = "" + uriTask.getResult();
                         progressDialog.dismiss();
-                        addedPlaces.add(placeId);
-                        updateAddedPlaces();
                         uploadtoDB(uploadedImageUrl, timestamp, placeId, address, lat, lng, rating, reviews, phoneNumber, weekday);
                     })
                     .addOnFailureListener(e -> {
@@ -457,14 +455,11 @@ public class AddDestination extends AppCompatActivity {
     }
 
     public Uri bitmapToUri(Context context, Bitmap bitmap) throws IOException {
-
         File tempFile = File.createTempFile("tempImage", ".png", context.getCacheDir());
-
         FileOutputStream fos = new FileOutputStream(tempFile);
         bitmap.compress(Bitmap.CompressFormat.PNG, 25, fos);
         fos.flush();
         fos.close();
-
         return Uri.fromFile(tempFile);
     }
 
@@ -477,7 +472,6 @@ public class AddDestination extends AppCompatActivity {
                 URL urlObj = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
                 conn.setRequestMethod("GET");
-
                 InputStream stream = conn.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
                 StringBuilder response = new StringBuilder();
@@ -505,7 +499,6 @@ public class AddDestination extends AppCompatActivity {
                         String authorName = review.getString("author_name");
                         int reviewRating = review.getInt("rating");
                         String text = review.getString("text");
-
                         Log.d("Review #" + i, "Author Name: " + authorName);
                         Log.d("Review #" + i, "Rating: " + reviewRating);
                         Log.d("Review #" + i, "Text: " + text);
@@ -521,28 +514,7 @@ public class AddDestination extends AppCompatActivity {
                 onPostExecute(emptyReviews);
             }
         }
-
         protected abstract void onPostExecute(JSONArray reviews);
-    }
-    private void loadAddedPlaces() {
-        SharedPreferences prefs = getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
-        Set<String> set = prefs.getStringSet("added_places", null);
-        if (set != null) {
-            addedPlaces = new ArrayList<>(set);
-            Log.d(TAG, "loadAddedPlaces: " + addedPlaces);
-        }
-    }
-
-    private void saveAddedPlaces() {
-        SharedPreferences prefs = getSharedPreferences("my_prefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        Set<String> set = new HashSet<>(addedPlaces);
-        editor.putStringSet("added_places", set);
-        editor.apply();
-    }
-
-    private void updateAddedPlaces() {
-        saveAddedPlaces();
     }
 
 }
