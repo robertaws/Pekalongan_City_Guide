@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -67,45 +68,37 @@ public class Splash extends AppCompatActivity {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null) {
             startActivity(new Intent(Splash.this, MainActivity.class));
-        }else {
-            SharedPreferences preferences = getSharedPreferences("USER_TYPE", MODE_PRIVATE);
-            String userType = preferences.getString("userType", "");
-                if (userType.equals("user")) {
-                    startActivity(new Intent(Splash.this, Home.class));
-                } else if (userType.equals("admin")) {
-                    startActivity(new Intent(Splash.this, AdminHome.class));
+            finish();
+        } else {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            if (networkInfo != null && networkInfo.isConnected()) {
+                databaseReference.child(firebaseUser.getUid())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String userType = "" + snapshot.child("userType").getValue();
+                                if (userType.equals("user")) {
+                                    startActivity(new Intent(Splash.this, Home.class));
+                                    finish();
+                                } else if (userType.equals("admin")) {
+                                    startActivity(new Intent(Splash.this, AdminHome.class));
+                                    finish();
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Toast.makeText(Splash.this,R.string.error_connect_database,Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(Splash.this, MainActivity.class));
+                                finish();
+                            }
+                        });
             } else {
-                DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
-                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-                if (networkInfo != null && networkInfo.isConnected()) {
-                    databaseReference.child(firebaseUser.getUid())
-                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    String userType = "" + snapshot.child("userType").getValue();
-                                    preferences.edit().putString("userType", userType).apply();
-                                    if (userType.equals("user")) {
-                                        startActivity(new Intent(Splash.this, Home.class));
-                                    } else if (userType.equals("admin")) {
-                                        startActivity(new Intent(Splash.this, AdminHome.class));
-                                    }else{
-                                        startActivity(new Intent(Splash.this, MainActivity.class));
-                                    }
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    Toast.makeText(Splash.this,R.string.error_connect_database,Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(Splash.this, MainActivity.class));
-                                }
-                            });
-                } else {
-                    Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(Splash.this, userType.equals("admin") ? AdminHome.class : Home.class));
-                }
+                Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Splash.this, Home.class));
+                finish();
             }
         }
     }
-
-
 }

@@ -112,11 +112,6 @@ public class ProfileFragment extends Fragment {
             AlertDialog dialog = builder.create();
             dialog.show();
         });
-
-        binding.showItineraryBtn.setOnClickListener(v -> {
-            Intent showIniterary = new Intent(getActivity(), ItineraryList.class);
-            startActivity(showIniterary);
-        });
         return view;
     }
     private void logoutConfirm() {

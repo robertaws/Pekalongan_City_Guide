@@ -303,9 +303,7 @@ public class ItineraryFragment extends Fragment {
 
     @SuppressLint("MissingPermission")
     private void startLocationUpdates() {
-        // Check if GPS is enabled
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            // GPS is not enabled, show a dialog to ask the user to enable it
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle(R.string.gpsnotEnabled);
             builder.setMessage(R.string.enable_gps_confirm);
@@ -316,7 +314,6 @@ public class ItineraryFragment extends Fragment {
             builder.setNegativeButton(R.string.no_txt, null);
             builder.show();
         } else {
-            // GPS is enabled, start requesting location updates
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);
         }
     }
