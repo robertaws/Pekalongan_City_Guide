@@ -6,7 +6,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.binus.pekalongancityguide.AddItinerary;
 import com.binus.pekalongancityguide.R;
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 
