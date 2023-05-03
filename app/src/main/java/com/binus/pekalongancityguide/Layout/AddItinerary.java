@@ -18,7 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
-import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.R;
 import com.google.firebase.database.DataSnapshot;
@@ -38,7 +37,6 @@ public class AddItinerary extends Fragment {
     private String categoryId;
     private String category;
     private ArrayList<Destination> destinationArrayList;
-    private DestinationAdapter destinationAdapter;
     public AddItinerary() {
     }
 
@@ -67,23 +65,24 @@ public class AddItinerary extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_itinerary, container, false);
         GridLayout gridLayout = view.findViewById(R.id.grid_layout);
         EditText iterSearch = view.findViewById(R.id.search_iter);
-        iterSearch.addTextChangedListener(new TextWatcher(){
+        iterSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                try {
-                    destinationAdapter.getFilter().filter(s);
-                }catch (Exception e){
-                    Log.d(TAG,"onTextChanged :"+e.getMessage());
+                ArrayList<Destination> filteredList = new ArrayList<>();
+                for (Destination destination : destinationArrayList) {
+                    if (destination.getTitle().toLowerCase().contains(s.toString().toLowerCase())) {
+                        filteredList.add(destination);
+                    }
                 }
+                addCardViewsToGridLayout(filteredList, gridLayout);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
         gridLayout.setColumnCount(3);
@@ -95,10 +94,12 @@ public class AddItinerary extends Fragment {
 
         return view;
     }
-
     private void addCardViewsToGridLayout(List<Destination> destinationList, GridLayout gridLayout) {
-        for (Destination destination : destinationArrayList) {
+        gridLayout.removeAllViews(); // Clear the GridLayout
+        for (Destination destination : destinationList) {
             CardView cardView = new CardView(getActivity());
+            cardView.setTag(destination); // Set the tag of the CardView to the corresponding destination object
+
             GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
             int margin = (int) getResources().getDimension(R.dimen.card_margin);
             layoutParams.width = 0;
@@ -133,11 +134,20 @@ public class AddItinerary extends Fragment {
             // Add the linear layout to the card view
             cardView.addView(linearLayout);
 
+            // Set an OnClickListener on the CardView
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Handle the CardView click event
+                    Destination clickedDestination = (Destination) v.getTag(); // Get the destination object from the tag
+                    // Do something with the clicked destination
+                }
+            });
+
             // Add the card view to the grid layout
             gridLayout.addView(cardView);
         }
     }
-
     private void loadCategoriedDestination(GridLayout gridLayout){
         destinationArrayList = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
@@ -190,7 +200,5 @@ public class AddItinerary extends Fragment {
             return title1.compareTo(title2);
         });
     }
-
-
 
 }
