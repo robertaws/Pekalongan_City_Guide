@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_margin="10dp">
 
@@ -32,11 +34,14 @@
                 android:textSize="17dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/search_hint"/>
-            <GridLayout
-                android:id="@+id/grid_layout"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </GridLayout>
+                android:layout_height="match_parent"
+                tools:listitem="@layout/list_iter"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="3"/>
         </LinearLayout>
     </ScrollView>
 

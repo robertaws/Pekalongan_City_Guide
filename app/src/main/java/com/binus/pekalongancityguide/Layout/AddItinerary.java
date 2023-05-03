@@ -17,13 +17,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -36,9 +40,12 @@ import static android.content.ContentValues.TAG;
 public class AddItinerary extends Fragment {
     private String categoryId;
     private String category;
+    private DestinationAdapter destinationAdapter;
+    private boolean isLoading = false;
+    private RecyclerView iterRV;
+    private int limit = 30;
     private ArrayList<Destination> destinationArrayList;
-    public AddItinerary() {
-    }
+    public AddItinerary() {}
 
     public static AddItinerary newInstance(String categoryId, String category, String uid){
         AddItinerary fragment = new AddItinerary();
@@ -63,115 +70,37 @@ public class AddItinerary extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_itinerary, container, false);
-        GridLayout gridLayout = view.findViewById(R.id.grid_layout);
+        iterRV = view.findViewById(R.id.recycler_view);
         EditText iterSearch = view.findViewById(R.id.search_iter);
+        iterRV.addOnScrollListener(new EndlessScrollListener());
         iterSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
 
+            }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                ArrayList<Destination> filteredList = new ArrayList<>();
-                for (Destination destination : destinationArrayList) {
-                    if (destination.getTitle().toLowerCase().contains(s.toString().toLowerCase())) {
-                        filteredList.add(destination);
-                    }
+                try {
+                    destinationAdapter.getFilter().filter(s);
+                }catch (Exception e){
+                    Log.d(TAG,"onTextChanged :"+e.getMessage());
                 }
-                addCardViewsToGridLayout(filteredList, gridLayout);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+
             }
         });
-        gridLayout.setColumnCount(3);
         if (category.equals("All")) {
-            loadDestinations(gridLayout);
+            loadDestinations();
         } else {
-            loadCategoriedDestination(gridLayout);
+            loadCategoriedDestination();
         }
 
         return view;
     }
-    private void addCardViewsToGridLayout(List<Destination> destinationList, GridLayout gridLayout) {
-        gridLayout.removeAllViews(); // Clear the GridLayout
-        for (Destination destination : destinationList) {
-            CardView cardView = new CardView(getActivity());
-            cardView.setTag(destination); // Set the tag of the CardView to the corresponding destination object
-
-            GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
-            int margin = (int) getResources().getDimension(R.dimen.card_margin);
-            layoutParams.width = 0;
-            layoutParams.height = GridLayout.LayoutParams.WRAP_CONTENT;
-            layoutParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-            layoutParams.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-            layoutParams.setMargins(margin, margin, margin, margin);
-            cardView.setLayoutParams(layoutParams);
-
-            // Create a linear layout to hold the image and text view
-            LinearLayout linearLayout = new LinearLayout(getActivity());
-            linearLayout.setOrientation(LinearLayout.VERTICAL);
-            linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-            ImageView imageView = new ImageView(getActivity());
-            LinearLayout.LayoutParams imageLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300); // Set a fixed height for the ImageView
-            imageView.setLayoutParams(imageLayoutParams);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            Picasso.get().load(destination.getUrl()).into(imageView);
-
-            // Create a text view to hold the destination name
-            TextView textView = new TextView(getActivity());
-            textView.setText(destination.getTitle()); // Use the destination name to set the text of the TextView
-            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            textView.setGravity(Gravity.CENTER);
-            textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-            // Add the image view and text view to the linear layout
-            linearLayout.addView(imageView);
-            linearLayout.addView(textView);
-
-            // Add the linear layout to the card view
-            cardView.addView(linearLayout);
-
-            // Set an OnClickListener on the CardView
-            cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Handle the CardView click event
-                    Destination clickedDestination = (Destination) v.getTag(); // Get the destination object from the tag
-                    // Do something with the clicked destination
-                }
-            });
-
-            // Add the card view to the grid layout
-            gridLayout.addView(cardView);
-        }
-    }
-    private void loadCategoriedDestination(GridLayout gridLayout){
-        destinationArrayList = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
-        reference.keepSynced(true);
-        reference.orderByChild("categoryId").equalTo(categoryId).
-                addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                destinationArrayList.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Destination destination = dataSnapshot.getValue(Destination.class);
-                    destinationArrayList.add(destination);
-                    sortDestination(destinationArrayList);
-                }
-                addCardViewsToGridLayout(destinationArrayList, gridLayout);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e(TAG, "Error: " + error.getMessage());
-            }
-        });
-    }
-    private void loadDestinations(GridLayout gridLayout) {
+    private void loadDestinations() {
         destinationArrayList = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
         reference.keepSynced(true);
@@ -182,17 +111,49 @@ public class AddItinerary extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Destination destination = dataSnapshot.getValue(Destination.class);
                     destinationArrayList.add(destination);
-                    sortDestination(destinationArrayList);
                 }
-                addCardViewsToGridLayout(destinationArrayList, gridLayout);
+                if (destinationAdapter == null) {
+                    destinationAdapter = new DestinationAdapter(getContext(), destinationArrayList);
+                    iterRV.setAdapter(destinationAdapter);
+                } else {
+                    destinationAdapter.notifyDataSetChanged();
+                }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e(TAG, "Error: " + error.getMessage());
             }
         });
     }
+
+    private void loadCategoriedDestination(){
+        destinationArrayList = new ArrayList<>();
+        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        reference.keepSynced(true);
+        reference.orderByChild("categoryId").equalTo(categoryId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        destinationArrayList.clear();
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            Destination destination = dataSnapshot.getValue(Destination.class);
+                            destinationArrayList.add(destination);
+                        }
+                        if (destinationAdapter == null) {
+                            destinationAdapter = new DestinationAdapter(getContext(), destinationArrayList);
+                            iterRV.setAdapter(destinationAdapter);
+                        } else {
+                            destinationAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
+
     private void sortDestination(ArrayList<Destination> destinationArrayList){
         Collections.sort(destinationArrayList, (destination1, destination2) -> {
             String title1 = destination1.getTitle().toLowerCase();
@@ -201,4 +162,41 @@ public class AddItinerary extends Fragment {
         });
     }
 
+    private class EndlessScrollListener extends RecyclerView.OnScrollListener {
+        @Override
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            GridLayoutManager layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
+            int visibleItemCount = layoutManager.getChildCount();
+            int totalItemCount = layoutManager.getItemCount();
+            int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+            if (!isLoading && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                    && firstVisibleItemPosition >= 0 && totalItemCount >= 30) {
+                loadMoreItems();
+            }
+        }
+    }
+
+    private void loadMoreItems() {
+        isLoading = true;
+        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        reference.orderByKey().startAt(String.valueOf(limit)).limitToFirst(30).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Destination destination = dataSnapshot.getValue(Destination.class);
+                    destinationArrayList.add(destination);
+                }
+                destinationAdapter.notifyDataSetChanged();
+                limit += 30;
+                isLoading = false;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "Error: " + error.getMessage());
+            }
+        });
+    }
 }

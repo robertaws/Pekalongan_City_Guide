@@ -29,7 +29,6 @@ public class ItineraryPager extends Fragment {
     public ArrayList<Categories> categoriesArrayList;
     public ViewPagerAdapter viewPagerAdapter;
     private FragmentItineraryPagerBinding binding;
-    private static final String TAG = "ITER_PAGER_TAG";
     public ItineraryPager() {}
 
     @Override
@@ -51,6 +50,7 @@ public class ItineraryPager extends Fragment {
         viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getContext());
         categoriesArrayList = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Categories");
+        reference.keepSynced(true);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
