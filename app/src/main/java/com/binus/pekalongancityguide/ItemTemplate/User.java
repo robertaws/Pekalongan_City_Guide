@@ -9,9 +9,7 @@ public class User {
     private String uid;
     private String userType;
 
-    public User() {
-        // Required empty public constructor
-    }
+    public User(){}
 
     public String getEmail() {
         return Email;

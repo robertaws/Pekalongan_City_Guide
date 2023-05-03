@@ -108,7 +108,7 @@ public class ShowDestinationFragment extends Fragment {
             startLocationUpdates();
         }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
-        binding.searchDesti.addTextChangedListener(new TextWatcher() {
+        binding.searchDesti.addTextChangedListener(new TextWatcher(){
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -294,7 +294,7 @@ public class ShowDestinationFragment extends Fragment {
         return results[0] / 1000;
     }
 
-    private void sortDestination(ArrayList<Destination> destinationArrayList) {
+    private void sortDestination(ArrayList<Destination> destinationArrayList){
         Collections.sort(destinationArrayList, (destination1, destination2) -> {
             String title1 = destination1.getTitle().toLowerCase();
             String title2 = destination2.getTitle().toLowerCase();

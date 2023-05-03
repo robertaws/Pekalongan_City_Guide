@@ -1,11 +1,14 @@
 package com.binus.pekalongancityguide.Layout;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.R;
 import com.google.firebase.database.DataSnapshot;
@@ -25,20 +29,36 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
 public class AddItinerary extends Fragment {
+    private String categoryId;
+    private String category;
     private ArrayList<Destination> destinationArrayList;
-
+    private DestinationAdapter destinationAdapter;
     public AddItinerary() {
+    }
+
+    public static AddItinerary newInstance(String categoryId, String category, String uid){
+        AddItinerary fragment = new AddItinerary();
+        Bundle args = new Bundle();
+        args.putString("categoryId", categoryId);
+        args.putString("category", category);
+        args.putString("uid", uid);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if(getArguments()!=null){
+            categoryId = getArguments().getString("categoryId");
+            category = getArguments().getString("category");
+        }
     }
 
     @Override
@@ -46,37 +66,38 @@ public class AddItinerary extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_itinerary, container, false);
         GridLayout gridLayout = view.findViewById(R.id.grid_layout);
-        gridLayout.setColumnCount(3);
-        loadDestinations(gridLayout);
-        return view;
-    }
-
-    private void loadDestinations(GridLayout gridLayout) {
-        destinationArrayList = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
-        reference.keepSynced(true);
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        EditText iterSearch = view.findViewById(R.id.search_iter);
+        iterSearch.addTextChangedListener(new TextWatcher(){
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                destinationArrayList.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Destination destination = dataSnapshot.getValue(Destination.class);
-                    destinationArrayList.add(destination);
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                try {
+                    destinationAdapter.getFilter().filter(s);
+                }catch (Exception e){
+                    Log.d(TAG,"onTextChanged :"+e.getMessage());
                 }
-                // Call the method to create and add CardViews to the GridLayout dynamically
-                addCardViewsToGridLayout(destinationArrayList, gridLayout);
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e(TAG, "Error: " + error.getMessage());
+            public void afterTextChanged(Editable s) {
+
             }
         });
+        gridLayout.setColumnCount(3);
+        if (category.equals("All")) {
+            loadDestinations(gridLayout);
+        } else {
+            loadCategoriedDestination(gridLayout);
+        }
+
+        return view;
     }
 
     private void addCardViewsToGridLayout(List<Destination> destinationList, GridLayout gridLayout) {
         for (Destination destination : destinationArrayList) {
-
             CardView cardView = new CardView(getActivity());
             GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
             int margin = (int) getResources().getDimension(R.dimen.card_margin);
@@ -116,5 +137,60 @@ public class AddItinerary extends Fragment {
             gridLayout.addView(cardView);
         }
     }
+
+    private void loadCategoriedDestination(GridLayout gridLayout){
+        destinationArrayList = new ArrayList<>();
+        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        reference.keepSynced(true);
+        reference.orderByChild("categoryId").equalTo(categoryId).
+                addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                destinationArrayList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Destination destination = dataSnapshot.getValue(Destination.class);
+                    destinationArrayList.add(destination);
+                    sortDestination(destinationArrayList);
+                }
+                addCardViewsToGridLayout(destinationArrayList, gridLayout);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "Error: " + error.getMessage());
+            }
+        });
+    }
+    private void loadDestinations(GridLayout gridLayout) {
+        destinationArrayList = new ArrayList<>();
+        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        reference.keepSynced(true);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                destinationArrayList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Destination destination = dataSnapshot.getValue(Destination.class);
+                    destinationArrayList.add(destination);
+                    sortDestination(destinationArrayList);
+                }
+                addCardViewsToGridLayout(destinationArrayList, gridLayout);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "Error: " + error.getMessage());
+            }
+        });
+    }
+    private void sortDestination(ArrayList<Destination> destinationArrayList){
+        Collections.sort(destinationArrayList, (destination1, destination2) -> {
+            String title1 = destination1.getTitle().toLowerCase();
+            String title2 = destination2.getTitle().toLowerCase();
+            return title1.compareTo(title2);
+        });
+    }
+
+
 
 }

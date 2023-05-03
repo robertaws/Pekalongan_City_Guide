@@ -4,9 +4,7 @@ public class Favorites {
     private String Username;
     private String itinerary;
 
-    public Favorites() {
-        // Required empty public constructor
-    }
+    public Favorites() {}
 
     public String getUsername() {
         return Username;

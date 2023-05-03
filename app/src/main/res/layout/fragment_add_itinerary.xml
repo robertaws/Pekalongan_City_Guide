@@ -8,15 +8,34 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-        <GridLayout
-            android:id="@+id/grid_layout"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="4">
-
-        </GridLayout>
-
+            android:orientation="vertical"
+            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content">
+            <EditText
+                android:includeFontPadding="false"
+                android:layout_marginTop="10dp"
+                android:id="@+id/search_iter"
+                android:drawableStart="@drawable/search_icon"
+                android:drawablePadding="5dp"
+                android:padding="5dp"
+                android:layout_weight="2"
+                android:fontFamily="@font/poppins_regular"
+                android:textColor="@color/palette_1"
+                android:textColorHint="@color/palette_3"
+                android:background="@drawable/et_style"
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="match_parent"
+                android:textSize="17dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/search_hint"/>
+            <GridLayout
+                android:id="@+id/grid_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </GridLayout>
+        </LinearLayout>
     </ScrollView>
 
 </LinearLayout>
