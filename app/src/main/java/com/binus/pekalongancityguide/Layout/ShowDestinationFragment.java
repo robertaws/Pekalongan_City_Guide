@@ -29,6 +29,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
+import com.binus.pekalongancityguide.ChooseLocation;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.DialogSortDestiBinding;
@@ -140,6 +141,24 @@ public class ShowDestinationFragment extends Fragment {
         binding.sortButton.setOnClickListener(v ->{
             showSortDialog();
         });
+        binding.changeLoc.setOnClickListener(v -> {
+            if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
+            } else {
+                fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                    if (location != null) {
+                        double currentLat = location.getLatitude();
+                        double currentLng = location.getLongitude();
+                        Intent intent = new Intent(getActivity(), ChooseLocation.class);
+                        intent.putExtra("current_lat", currentLat);
+                        intent.putExtra("current_lng", currentLng);
+                        startActivity(intent);
+                    }
+                });
+            }
+        });
+
         return binding.getRoot();
     }
     public void showSortDialog(){
