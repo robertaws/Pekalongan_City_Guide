@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
+import com.binus.pekalongancityguide.Adapter.IterAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.R;
 import com.google.firebase.database.DataSnapshot;
@@ -31,7 +32,7 @@ import static android.content.ContentValues.TAG;
 public class AddItinerary extends Fragment {
     private String categoryId;
     private String category;
-    private DestinationAdapter destinationAdapter;
+    private IterAdapter iterAdapter;
     private boolean isLoading = false;
     private RecyclerView iterRV;
     private int limit = 30;
@@ -72,7 +73,7 @@ public class AddItinerary extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
-                    destinationAdapter.getFilter().filter(s);
+                    iterAdapter.getFilter().filter(s);
                 }catch (Exception e){
                     Log.d(TAG,"onTextChanged :"+e.getMessage());
                 }
@@ -104,11 +105,11 @@ public class AddItinerary extends Fragment {
                     destinationArrayList.add(destination);
                     sortDestination(destinationArrayList);
                 }
-                if (destinationAdapter == null) {
-                    destinationAdapter = new DestinationAdapter(getContext(), destinationArrayList);
-                    iterRV.setAdapter(destinationAdapter);
+                if (iterAdapter == null) {
+                    iterAdapter = new IterAdapter(getContext(), destinationArrayList);
+                    iterRV.setAdapter(iterAdapter);
                 } else {
-                    destinationAdapter.notifyDataSetChanged();
+                    iterAdapter.notifyDataSetChanged();
                 }
             }
             @Override
@@ -132,11 +133,11 @@ public class AddItinerary extends Fragment {
                             destinationArrayList.add(destination);
                             sortDestination(destinationArrayList);
                         }
-                        if (destinationAdapter == null) {
-                            destinationAdapter = new DestinationAdapter(getContext(), destinationArrayList);
-                            iterRV.setAdapter(destinationAdapter);
+                        if (iterAdapter == null) {
+                            iterAdapter = new IterAdapter(getContext(), destinationArrayList);
+                            iterRV.setAdapter(iterAdapter);
                         } else {
-                            destinationAdapter.notifyDataSetChanged();
+                            iterAdapter.notifyDataSetChanged();
                         }
                     }
 
@@ -181,7 +182,7 @@ public class AddItinerary extends Fragment {
                     Destination destination = dataSnapshot.getValue(Destination.class);
                     destinationArrayList.add(destination);
                 }
-                destinationAdapter.notifyDataSetChanged();
+                iterAdapter.notifyDataSetChanged();
                 limit += 30;
                 isLoading = false;
             }

@@ -8,15 +8,14 @@ import com.binus.pekalongancityguide.ItemTemplate.Destination;
 
 import java.util.ArrayList;
 
-public class FilterDestiUser extends Filter {
+public class FilterIterUser extends Filter {
     ArrayList<Destination> filter;
-    private final DestinationAdapter destinationAdapter;
+    private final IterAdapter iterAdapter;
 
-    public FilterDestiUser(ArrayList<Destination> filter, DestinationAdapter destinationAdapter) {
+    public FilterIterUser(ArrayList<Destination> filter, IterAdapter iterAdapter){
         this.filter = filter;
-        this.destinationAdapter = destinationAdapter;
+        this.iterAdapter = iterAdapter;
     }
-
     @Override
     protected FilterResults performFiltering(CharSequence constraint) {
         FilterResults results = new FilterResults();
@@ -39,7 +38,7 @@ public class FilterDestiUser extends Filter {
 
     @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
-        destinationAdapter.destinations = (ArrayList<Destination>)results.values;
-        destinationAdapter.notifyDataSetChanged();
+        iterAdapter.destinations = (ArrayList<Destination>)results.values;
+        iterAdapter.notifyDataSetChanged();
     }
 }
