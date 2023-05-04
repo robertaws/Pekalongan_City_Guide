@@ -8,12 +8,13 @@ public class Destination implements Serializable {
     boolean favorite;
     private boolean isLoaded;
     private float distance;
+    private boolean isSelected;
 
     public Destination() {
 
     }
 
-    public Destination(String uid, String id, String title, String description, String categoryId, String url, String rating, String address, String placeId, double desLat, double desLong, boolean favorite, boolean isLoaded, float distance) {
+    public Destination(String uid, String id, String title, String description, String categoryId, String url, String rating, String address, String placeId, double desLat, double desLong, boolean favorite, boolean isLoaded, float distance, boolean isSelected) {
         this.uid = uid;
         this.id = id;
         this.title = title;
@@ -28,6 +29,7 @@ public class Destination implements Serializable {
         this.favorite = favorite;
         this.isLoaded = isLoaded;
         this.distance = distance;
+        this.isSelected = isSelected;
     }
 
     public String getUid() {
@@ -140,5 +142,13 @@ public class Destination implements Serializable {
 
     public void setDistance(float distance) {
         this.distance = distance;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }
