@@ -19,7 +19,7 @@
         android:theme="@style/Theme.PekalonganCityGuide"
         tools:targetApi="31">
         <activity
-            android:name=".ChooseLocation"
+            android:name=".Layout.ChooseLocation"
             android:exported="false" />
         <activity
             android:name=".Layout.ChangePassword"

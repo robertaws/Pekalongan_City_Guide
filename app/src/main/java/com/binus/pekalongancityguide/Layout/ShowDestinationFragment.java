@@ -29,7 +29,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
-import com.binus.pekalongancityguide.ChooseLocation;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.DialogSortDestiBinding;
@@ -333,7 +332,7 @@ public class ShowDestinationFragment extends Fragment {
             }
         });
     };
-            private float calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    private float calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         float[] results = new float[1];
         Location location1 = new Location("");
         location1.setLatitude(lat1);

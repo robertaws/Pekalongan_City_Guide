@@ -5,11 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ChooseLocation">
+    tools:context=".Layout.ChooseLocation">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <ImageButton
             android:id="@+id/backtoHome"
             android:layout_gravity="center_vertical"
@@ -26,17 +28,18 @@
             android:fontFamily="@font/poppins_semibold"
             android:text="Choose Location"
             android:textSize="24dp"
-            android:textColor="@color/palette_1"/>
+            android:textColor="@color/palette_1" />
     </LinearLayout>
+
     <fragment
         android:layout_marginBottom="20dp"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:id="@+id/user_map"
-        android:name="com.google.android.gms.maps.SupportMapFragment">
-    </fragment>
-    <TextView
-        android:id="@+id/change_loc"
+        android:name="com.google.android.gms.maps.SupportMapFragment"></fragment>
+
+    <EditText
+        android:id="@+id/loc_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:includeFontPadding="false"
@@ -50,5 +53,11 @@
         app:drawableTint="@color/palette_1"
         app:drawableStartCompat="@drawable/location_pin"
         android:maxLines="1"
-        android:ellipsize="end"/>
+        android:ellipsize="end" />
+
+    <fragment
+        android:id="@+id/autocomplete_fragment"
+        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>
