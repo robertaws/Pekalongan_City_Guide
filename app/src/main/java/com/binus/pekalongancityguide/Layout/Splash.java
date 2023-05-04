@@ -64,8 +64,9 @@ public class Splash extends AppCompatActivity {
         }
         if (!permissionsToRequest.isEmpty()) {
             ActivityCompat.requestPermissions(this, permissionsToRequest.toArray(new String[0]), 1);
+        } else {
+            checkUser();
         }
-
     }
 
     @Override
@@ -82,12 +83,11 @@ public class Splash extends AppCompatActivity {
             if (allPermissionsGranted) {
                 checkUser();
             } else {
-                Toast.makeText(this, "Please allow the permissions to use the application", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Some permissions are not granted", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
     }
-
     @Override
     public void onBackPressed() {
         if (doubleTap) {
