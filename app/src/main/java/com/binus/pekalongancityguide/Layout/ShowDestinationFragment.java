@@ -6,9 +6,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Editable;
@@ -38,8 +41,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 
 public class ShowDestinationFragment extends Fragment {
     private final FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
@@ -53,6 +59,9 @@ public class ShowDestinationFragment extends Fragment {
     private FusedLocationProviderClient fusedLocationClient;
     private LocationManager locationManager;
     private LocationListener locationListener;
+    private Geocoder geocoder;
+    private List<Address> addresses;
+
     public ShowDestinationFragment() {}
 
     public static ShowDestinationFragment newInstance(String categoryId, String category, String uid) {
@@ -68,6 +77,7 @@ public class ShowDestinationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        geocoder = new Geocoder(getContext(), Locale.getDefault());
         if(getArguments()!=null){
             categoryId = getArguments().getString("categoryId");
             category = getArguments().getString("category");
@@ -270,18 +280,41 @@ public class ShowDestinationFragment extends Fragment {
                             destination.setDistance(distance);
                             sortDestination(destinationArrayList);
                             destinationAdapter.notifyDataSetChanged();
+
+                            new AsyncTask<Void, Void, String>() {
+                                @Override
+                                protected String doInBackground(Void... voids) {
+                                    try {
+                                        List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
+                                        if (addresses.size() > 0) {
+                                            return addresses.get(0).getAddressLine(0);
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    return null;
+                                }
+
+                                @Override
+                                protected void onPostExecute(String address) {
+                                    if (address != null) {
+                                        Log.d("ADDRESS", address);
+                                        binding.changeLoc.setText(address);
+                                    }
+                                }
+                            }.execute();
                         }
                     });
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e(TAG, "Error: " + error.getMessage());
+
             }
         });
-    }
-
-    private float calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    };
+            private float calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         float[] results = new float[1];
         Location location1 = new Location("");
         location1.setLatitude(lat1);
