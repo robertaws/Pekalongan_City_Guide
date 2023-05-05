@@ -35,6 +35,7 @@ import com.binus.pekalongancityguide.databinding.DialogSortDestiBinding;
 import com.binus.pekalongancityguide.databinding.FragmentShowDestinationBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -60,9 +61,13 @@ public class ShowDestinationFragment extends Fragment {
     private LocationManager locationManager;
     private LocationListener locationListener;
     private Geocoder geocoder;
-    private List<Address> addresses;
+    private String address;
+    private LatLng coordinate;
+    private float distance;
+    private double currentLat, currentLng;
 
-    public ShowDestinationFragment() {}
+    public ShowDestinationFragment() {
+    }
 
     public static ShowDestinationFragment newInstance(String categoryId, String category, String uid) {
         ShowDestinationFragment fragment = new ShowDestinationFragment();
@@ -87,6 +92,9 @@ public class ShowDestinationFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentShowDestinationBinding.inflate(LayoutInflater.from(getContext()), container, false);
+        Bundle bundle = getArguments();
+        address = bundle.getString("address");
+        coordinate = bundle.getParcelable("coordinates");
         if (category.equals("All")) {
             loadDestinations();
         } else {
@@ -218,7 +226,11 @@ public class ShowDestinationFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUEST_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startLocationUpdates();
+                if (address == null) {
+                    startLocationUpdates();
+                } else {
+                    binding.changeLoc.setText(address);
+                }
             } else {
                 Toast.makeText(getContext(), "Location permission denied", Toast.LENGTH_SHORT).show();
             }
@@ -289,38 +301,14 @@ public class ShowDestinationFragment extends Fragment {
                 if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                         ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
+                } else if (address != null) {
+                    setAddress(placeLat, placeLng, destination);
                 } else {
                     fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
                         if (location != null) {
-                            double currentLat = location.getLatitude();
-                            double currentLng = location.getLongitude();
-                            float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
-                            destination.setDistance(distance);
-                            sortDestination(destinationArrayList);
-                            destinationAdapter.notifyDataSetChanged();
-
-                            new AsyncTask<Void, Void, String>() {
-                                @Override
-                                protected String doInBackground(Void... voids) {
-                                    try {
-                                        List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
-                                        if (addresses.size() > 0) {
-                                            return addresses.get(0).getAddressLine(0);
-                                        }
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                    return null;
-                                }
-
-                                @Override
-                                protected void onPostExecute(String address) {
-                                    if (address != null) {
-                                        Log.d("ADDRESS", address);
-                                        binding.changeLoc.setText(address);
-                                    }
-                                }
-                            }.execute();
+                            currentLat = location.getLatitude();
+                            currentLng = location.getLongitude();
+                            setAddress(placeLat, placeLng, destination);
                         }
                     });
                 }
@@ -331,7 +319,40 @@ public class ShowDestinationFragment extends Fragment {
 
             }
         });
-    };
+    }
+
+    private void setAddress(Double lat, Double lng, Destination destination) {
+        distance = calculateDistance(currentLat, currentLng, lat, lng);
+        destination.setDistance(distance);
+        sortDestination(destinationArrayList);
+        destinationAdapter.notifyDataSetChanged();
+
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                try {
+                    List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
+                    if (addresses.size() > 0) {
+                        return addresses.get(0).getAddressLine(0);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(String address) {
+                if (address != null) {
+                    Log.d("ADDRESS", address);
+                    binding.changeLoc.setText(address);
+                }
+            }
+        }.execute();
+    }
+
+    ;
+
     private float calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         float[] results = new float[1];
         Location location1 = new Location("");
