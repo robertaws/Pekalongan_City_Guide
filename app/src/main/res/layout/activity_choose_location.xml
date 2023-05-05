@@ -30,34 +30,44 @@
             android:textSize="24dp"
             android:textColor="@color/palette_1" />
     </LinearLayout>
-
-    <fragment
-        android:layout_marginBottom="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:id="@+id/user_map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"></fragment>
-
-    <EditText
-        android:id="@+id/loc_field"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:includeFontPadding="false"
-        android:drawablePadding="7dp"
-        android:padding="5dp"
-        android:background="@color/palette_4"
-        android:fontFamily="@font/poppins_regular"
-        android:textColor="@color/palette_2"
-        android:textSize="15dp"
-        android:text="your location"
-        app:drawableTint="@color/palette_1"
-        app:drawableStartCompat="@drawable/location_pin"
-        android:maxLines="1"
-        android:ellipsize="end" />
-
     <fragment
         android:id="@+id/autocomplete_fragment"
         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:hint="Enter a location"/>
+    <fragment
+        android:id="@+id/user_map"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginBottom="20dp"
+        android:name="com.google.android.gms.maps.SupportMapFragment"></fragment>
+    <TextView
+        android:id="@+id/autocompleteTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Your Location"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="5dp"
+        android:fontFamily="@font/poppins_regular"
+        android:background="@color/palette_4"
+        android:textColor="@color/palette_2"/>
+    <TextView
+        android:id="@+id/use_cur_loc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:drawablePadding="10dp"
+        android:layout_marginTop="20dp"
+        android:drawableTint="@color/palette_1"
+        android:drawableLeft="@drawable/my_loc"
+        android:text="Use current location"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="5dp"
+        android:fontFamily="@font/poppins_regular"
+        android:background="@color/palette_4"
+        android:textColor="@color/palette_2"/>
+
 </LinearLayout>

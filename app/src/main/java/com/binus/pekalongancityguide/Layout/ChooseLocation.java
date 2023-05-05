@@ -1,6 +1,7 @@
 package com.binus.pekalongancityguide.Layout;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,9 +28,16 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.LocationRestriction;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -39,11 +48,14 @@ import static android.content.ContentValues.TAG;
 import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
 
 public class ChooseLocation extends AppCompatActivity {
-    ImageButton backButton;
-    EditText locField;
-    GoogleMap googleMap;
-    private static final LatLngBounds BOUNDS_PEKALONGAN = new LatLngBounds(
-            new LatLng(-6.9995, 109.6345), new LatLng(-6.8695, 109.7975));
+    private static final int AUTOCOMPLETE_REQUEST_CODE = 1;
+    private static final String TAG = "ChooseLocation";
+    private AutocompleteSupportFragment autocompleteFragment;
+    private PlacesClient placesClient;
+    private ImageButton backButton;
+    private TextView locEt,curLoc;
+    private LatLng coordinate;
+    private String addressString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +67,28 @@ public class ChooseLocation extends AppCompatActivity {
         init();
         double currentLat = getIntent().getDoubleExtra("current_lat", 0);
         double currentLng = getIntent().getDoubleExtra("current_lng", 0);
-
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses = null;
+        try {
+            addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (addresses != null && addresses.size() > 0) {
+            Address address = addresses.get(0);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+                sb.append(address.getAddressLine(i)).append(", ");
+            }
+            addressString = sb.toString();
+            locEt.setText(addressString);
+        } else {
+            locEt.setText("Address not found");
+        }
         SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.user_map);
         fragment.getMapAsync(googleMap -> {
-            LatLng coordinate = new LatLng(currentLat, currentLng);
+            coordinate = new LatLng(currentLat, currentLng);
             MarkerOptions marker = new MarkerOptions();
             marker.position(coordinate);
             marker.title("Current Location");
@@ -69,70 +98,54 @@ public class ChooseLocation extends AppCompatActivity {
             googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(ChooseLocation.this, R.raw.map_style));
         });
 
-        // Initialize the AutocompleteSupportFragment
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+        backButton.setOnClickListener(v ->{
+            onBackPressed();
+
+        });
+        placesClient = Places.createClient(this);
+        autocompleteFragment = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS,Place.Field.LAT_LNG));
+        curLoc.setOnClickListener(v -> {
+            locEt.setText(addressString);
+            autocompleteFragment.setText(addressString);
+            fragment.getMapAsync(googleMap -> {
+                LatLng coordinate = new LatLng(currentLat, currentLng);
+                MarkerOptions marker = new MarkerOptions();
+                marker.position(coordinate);
+                marker.title("Current Location");
+                googleMap.addMarker(marker);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 15);
+                googleMap.moveCamera(cameraUpdate);
+                googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(ChooseLocation.this, R.raw.map_style));
+            });
+        });
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener(){
             @Override
             public void onPlaceSelected(@NonNull Place place) {
-                // Handle the selected place
                 LatLng latLng = place.getLatLng();
-                MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(place.getName());
-                Marker marker = googleMap.addMarker(markerOptions);
-                marker.showInfoWindow();
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
-                googleMap.moveCamera(cameraUpdate);
-                locField.clearFocus();
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(locField.getWindowToken(), 0);
+                SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.user_map);
+                fragment.getMapAsync(googleMap -> {
+                    googleMap.clear();
+                    MarkerOptions marker = new MarkerOptions();
+                    marker.position(latLng);
+                    marker.title(place.getName());
+                    googleMap.addMarker(marker);
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+                    googleMap.moveCamera(cameraUpdate);
+                });
+                locEt.setText(place.getAddress());
             }
-
             @Override
             public void onError(@NonNull Status status) {
-                // Handle the error
-                Log.e(TAG, "Autocomplete error: " + status.getStatusMessage());
+                Log.e(TAG, "An error occurred: " + status);
             }
         });
 
-        backButton.setOnClickListener(v -> {
-            onBackPressed();
-        });
 
-        locField = findViewById(R.id.loc_field);
-        locField.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                String address = locField.getText().toString().trim();
-                if (!address.isEmpty()) {
-                    Geocoder geocoder = new Geocoder(ChooseLocation.this, Locale.getDefault());
-                    try {
-                        List<Address> addresses = geocoder.getFromLocationName(address, 1, BOUNDS_PEKALONGAN.southwest.latitude,
-                                BOUNDS_PEKALONGAN.southwest.longitude, BOUNDS_PEKALONGAN.northeast.latitude, BOUNDS_PEKALONGAN.northeast.longitude);
-                        if (addresses.size() > 0) {
-                            Address foundAddress = addresses.get(0);
-                            LatLng latLng = new LatLng(foundAddress.getLatitude(), foundAddress.getLongitude());
-                            MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(foundAddress.getAddressLine(0));
-                            Marker marker = googleMap.addMarker(markerOptions);
-                            marker.showInfoWindow();
-                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
-                            googleMap.moveCamera(cameraUpdate);
-                            locField.clearFocus();
-                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(locField.getWindowToken(), 0);
-                            return true;
-                        }
-                    } catch (IOException e) {
-                        Log.e(TAG, "Geocoding failed: " + e.getMessage());
-                    }
-                }
-                Toast.makeText(ChooseLocation.this, "Location not found", Toast.LENGTH_SHORT).show();
-            }
-            return false;
-        });
     }
-
-    public void init() {
+    private void init() {
         backButton = findViewById(R.id.backtoHome);
-        locField = findViewById(R.id.loc_field);
+        locEt = findViewById(R.id.autocompleteTv);
+        curLoc = findViewById(R.id.use_cur_loc);
     }
 }
