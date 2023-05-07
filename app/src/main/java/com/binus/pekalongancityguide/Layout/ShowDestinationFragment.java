@@ -256,7 +256,6 @@ public class ShowDestinationFragment extends Fragment {
             binding.changeLoc.setText(addressString);
             dialog.dismiss();
         });
-
     }
 
     public void showSortDialog(){
