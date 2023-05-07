@@ -1,11 +1,8 @@
 package com.binus.pekalongancityguide.Layout;
 
-import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,9 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,7 +31,6 @@ import androidx.fragment.app.Fragment;
 import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.R;
-import com.binus.pekalongancityguide.databinding.DialogAddToItineraryBinding;
 import com.binus.pekalongancityguide.databinding.DialogChangeLocBinding;
 import com.binus.pekalongancityguide.databinding.DialogSortDestiBinding;
 import com.binus.pekalongancityguide.databinding.FragmentShowDestinationBinding;
@@ -67,6 +61,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
+
 public class ShowDestinationFragment extends Fragment {
     private final FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
     private static final int PERMISSION_REQUEST_LOCATION = 500;
@@ -76,16 +72,22 @@ public class ShowDestinationFragment extends Fragment {
     private DestinationAdapter destinationAdapter;
     private static final String TAG = "DESTI_USER_TAG";
     private FragmentShowDestinationBinding binding;
+    private DialogChangeLocBinding locBinding;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private Geocoder geocoder;
-    double curLat,curLong;
+    double curLat, curLong;
+    float distance;
     private PlacesClient placesClient;
     private AutocompleteSupportFragment autocompleteFragment;
     private LatLng coordinate;
     private String addressString;
-    public ShowDestinationFragment() {}
+    private SupportMapFragment fragment;
+    private boolean isChangeLocDialogShowing = false;
+
+    public ShowDestinationFragment() {
+    }
 
     public static ShowDestinationFragment newInstance(String categoryId, String category, String uid) {
         ShowDestinationFragment fragment = new ShowDestinationFragment();
@@ -168,6 +170,15 @@ public class ShowDestinationFragment extends Fragment {
                     ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
             } else {
+                // Remove existing fragments before showing the dialog
+                fragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.user_map);
+                if (fragment != null) {
+                    getChildFragmentManager().beginTransaction().remove(fragment).commit();
+                }
+                autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+                if (autocompleteFragment != null) {
+                    getChildFragmentManager().beginTransaction().remove(autocompleteFragment).commit();
+                }
                 showChangeLocDialog();
             }
         });
@@ -175,12 +186,24 @@ public class ShowDestinationFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void showChangeLocDialog(){
+    private void showChangeLocDialog() {
+        if (isChangeLocDialogShowing) {
+            // Dialog is already showing, no need to show again
+            return;
+        }
+        isChangeLocDialogShowing = true;
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        DialogChangeLocBinding locBinding = DialogChangeLocBinding.inflate(getLayoutInflater());
+        locBinding = DialogChangeLocBinding.inflate(getLayoutInflater());
         builder.setView(locBinding.getRoot());
+        fragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.user_map);
         AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
+        dialog.setOnDismissListener(dialog1 -> {
+            getChildFragmentManager().beginTransaction().remove(fragment).commit();
+            getChildFragmentManager().beginTransaction().remove(autocompleteFragment).commit();
+            isChangeLocDialogShowing = false;
+        });
         dialog.show();
         if (!Places.isInitialized()) {
             Places.initialize(getActivity().getApplicationContext(), MAPS_API_KEY);
@@ -199,29 +222,13 @@ public class ShowDestinationFragment extends Fragment {
             }
             addressString = sb.toString();
             locBinding.locTv.setText(addressString);
+            Log.d(TAG, "ADDRESS 202: " + addressString);
         } else {
             locBinding.locTv.setText("Address not found");
         }
-        SupportMapFragment fragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.user_map);
-        fragment.getMapAsync(googleMap -> {
-            coordinate = new LatLng(curLat, curLong);
-            MarkerOptions marker = new MarkerOptions();
-            marker.position(coordinate);
-            marker.title("Current Location");
-            googleMap.addMarker(marker);
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 15);
-            googleMap.moveCamera(cameraUpdate);
-            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
-        });
-        placesClient = Places.createClient(getContext());
-        autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS,Place.Field.LAT_LNG));
-        locBinding.useCurLoc.setOnClickListener(v -> {
-            locBinding.locTv.setText(addressString);
-            autocompleteFragment.setText(addressString);
+        if (fragment != null) {
             fragment.getMapAsync(googleMap -> {
-                LatLng coordinate = new LatLng(curLat, curLong);
+                coordinate = new LatLng(curLat, curLong);
                 MarkerOptions marker = new MarkerOptions();
                 marker.position(coordinate);
                 marker.title("Current Location");
@@ -230,31 +237,64 @@ public class ShowDestinationFragment extends Fragment {
                 googleMap.moveCamera(cameraUpdate);
                 googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
             });
-        });
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener(){
-            @Override
-            public void onPlaceSelected(@NonNull Place place){
-                LatLng latLng = place.getLatLng();
-                SupportMapFragment fragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.user_map);
-                fragment.getMapAsync(googleMap -> {
-                    googleMap.clear();
-                    MarkerOptions marker = new MarkerOptions();
-                    marker.position(latLng);
-                    marker.title(place.getName());
-                    googleMap.addMarker(marker);
-                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
-                    googleMap.moveCamera(cameraUpdate);
-                });
-                locBinding.locTv.setText(place.getAddress());
-            }
-            @Override
-            public void onError(@NonNull Status status) {
-                Log.e(TAG, "An error occurred: " + status);
-            }
+        } else {
+            Log.e("MyApp", "SupportMapFragment is null");
+        }
+        Log.d(TAG, "ADDRESS 217: " + addressString);
+        placesClient = Places.createClient(getContext());
+        autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        if (autocompleteFragment != null) {
+            autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG));
+            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(@NonNull Place place) {
+                    coordinate = place.getLatLng();
+                    fragment.getMapAsync(googleMap -> {
+                        googleMap.clear();
+                        MarkerOptions marker = new MarkerOptions();
+                        marker.position(coordinate);
+                        marker.title(place.getName());
+                        googleMap.addMarker(marker);
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 15);
+                        googleMap.moveCamera(cameraUpdate);
+                    });
+                    locBinding.locTv.setText(place.getAddress());
+                    Log.d(TAG, "ADDRESS BEFORE ASSIGN: " + addressString);
+                    addressString = place.getAddress();
+                    Log.d(TAG, "ADDRESS AFTER ASSIGN: " + addressString);
+                }
+
+                @Override
+                public void onError(@NonNull Status status) {
+                    Log.e(TAG, "An error occurred: " + status);
+                }
+            });
+        } else {
+            Log.e(TAG, "AUTOCOMPLETE FRAGMENT NULL");
+        }
+        locBinding.useCurLoc.setOnClickListener(v -> {
+            locBinding.locTv.setText(addressString);
+            autocompleteFragment.setText(addressString);
+            fragment.getMapAsync(googleMap -> {
+                coordinate = new LatLng(curLat, curLong);
+                MarkerOptions marker = new MarkerOptions();
+                marker.position(coordinate);
+                marker.title("Current Location");
+                googleMap.addMarker(marker);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 15);
+                googleMap.moveCamera(cameraUpdate);
+                googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
+            });
+            Log.d(TAG, "CURRENT LOCATION: " + addressString);
         });
         locBinding.setLocBtn.setOnClickListener(v -> {
             binding.changeLoc.setText(addressString);
+            Log.d(TAG, "SAVE CLICKED ADDRESS: " + addressString);
             dialog.dismiss();
+            getChildFragmentManager().beginTransaction().remove(fragment).commit();
+            getChildFragmentManager().beginTransaction().remove(autocompleteFragment).commit();
+            isChangeLocDialogShowing = false;
+            updateDistances();
         });
     }
 
@@ -384,50 +424,50 @@ public class ShowDestinationFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 double placeLat = Double.parseDouble(snapshot.child("latitude").getValue().toString());
                 double placeLng = Double.parseDouble(snapshot.child("longitude").getValue().toString());
-                if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                        ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
+                if (coordinate != null) {
+                    curLat = coordinate.latitude;
+                    curLong = coordinate.longitude;
+                    distance = calculateDistance(curLat, curLong, placeLat, placeLng);
+                    destination.setDistance(distance);
                 } else {
-                    fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-                        if (location != null) {
-                            double currentLat = location.getLatitude();
-                            double currentLng = location.getLongitude();
-                            curLat = currentLat;
-                            curLong = currentLng;
-                            float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
-                            destination.setDistance(distance);
-                            sortDestination(destinationArrayList);
-                            destinationAdapter.notifyDataSetChanged();
+                    if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                            ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
+                    } else {
+                        fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                            if (location != null) {
+                                curLong = location.getLatitude();
+                                curLat = location.getLongitude();
+                                distance = calculateDistance(curLat, curLong, placeLat, placeLng);
+                                destination.setDistance(distance);
+                                sortDestination(destinationArrayList);
+                                destinationAdapter.notifyDataSetChanged();
 
-                            new AsyncTask<Void, Void, String>() {
-                                @Override
-                                protected String doInBackground(Void... voids) {
-                                    try {
-                                        List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
-                                        if (addresses.size() > 0) {
-                                            return addresses.get(0).getAddressLine(0);
+                                new AsyncTask<Void, Void, String>() {
+                                    @Override
+                                    protected String doInBackground(Void... voids) {
+                                        try {
+                                            List<Address> addresses = geocoder.getFromLocation(curLat, curLong, 1);
+                                            if (addresses.size() > 0) {
+                                                return addresses.get(0).getAddressLine(0);
+                                            }
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
                                         }
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
+                                        return null;
                                     }
-                                    return null;
-                                }
 
-                                @Override
-                                protected void onPostExecute(String address) {
-                                    if (address != null) {
-                                        Log.d("ADDRESS", address);
-                                        Bundle args = getArguments();
-                                        if (args != null) {
-                                            String newAddress = args.getString("address");
+                                    @Override
+                                    protected void onPostExecute(String address) {
+                                        if (address != null) {
+                                            Log.d("ADDRESS", address);
                                             binding.changeLoc.setText(address);
                                         }
-                                        binding.changeLoc.setText(address);
                                     }
-                                }
-                            }.execute();
-                        }
-                    });
+                                }.execute();
+                            }
+                        });
+                    }
                 }
             }
 
