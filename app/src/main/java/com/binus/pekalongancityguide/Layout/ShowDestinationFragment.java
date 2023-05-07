@@ -1,8 +1,11 @@
 package com.binus.pekalongancityguide.Layout;
 
+import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,7 +23,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,10 +36,24 @@ import androidx.fragment.app.Fragment;
 import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.R;
+import com.binus.pekalongancityguide.databinding.DialogAddToItineraryBinding;
+import com.binus.pekalongancityguide.databinding.DialogChangeLocBinding;
 import com.binus.pekalongancityguide.databinding.DialogSortDestiBinding;
 import com.binus.pekalongancityguide.databinding.FragmentShowDestinationBinding;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,6 +62,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -60,8 +80,11 @@ public class ShowDestinationFragment extends Fragment {
     private LocationManager locationManager;
     private LocationListener locationListener;
     private Geocoder geocoder;
-    private List<Address> addresses;
-
+    double curLat,curLong;
+    private PlacesClient placesClient;
+    private AutocompleteSupportFragment autocompleteFragment;
+    private LatLng coordinate;
+    private String addressString;
     public ShowDestinationFragment() {}
 
     public static ShowDestinationFragment newInstance(String categoryId, String category, String uid) {
@@ -140,26 +163,102 @@ public class ShowDestinationFragment extends Fragment {
         binding.sortButton.setOnClickListener(v ->{
             showSortDialog();
         });
-        binding.changeLoc.setOnClickListener(v -> {
+        binding.changeLoc.setOnClickListener(v ->{
             if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
             } else {
-                fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-                    if (location != null) {
-                        double currentLat = location.getLatitude();
-                        double currentLng = location.getLongitude();
-                        Intent intent = new Intent(getActivity(), ChooseLocation.class);
-                        intent.putExtra("current_lat", currentLat);
-                        intent.putExtra("current_lng", currentLng);
-                        startActivity(intent);
-                    }
-                });
+                showChangeLocDialog();
             }
         });
 
         return binding.getRoot();
     }
+
+    private void showChangeLocDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        DialogChangeLocBinding locBinding = DialogChangeLocBinding.inflate(getLayoutInflater());
+        builder.setView(locBinding.getRoot());
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
+        dialog.show();
+        if (!Places.isInitialized()) {
+            Places.initialize(getActivity().getApplicationContext(), MAPS_API_KEY);
+        }
+        List<Address> addresses = null;
+        try {
+            addresses = geocoder.getFromLocation(curLat, curLong, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (addresses != null && addresses.size() > 0) {
+            Address address = addresses.get(0);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+                sb.append(address.getAddressLine(i)).append(", ");
+            }
+            addressString = sb.toString();
+            locBinding.locTv.setText(addressString);
+        } else {
+            locBinding.locTv.setText("Address not found");
+        }
+        SupportMapFragment fragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.user_map);
+        fragment.getMapAsync(googleMap -> {
+            coordinate = new LatLng(curLat, curLong);
+            MarkerOptions marker = new MarkerOptions();
+            marker.position(coordinate);
+            marker.title("Current Location");
+            googleMap.addMarker(marker);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 15);
+            googleMap.moveCamera(cameraUpdate);
+            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
+        });
+        placesClient = Places.createClient(getContext());
+        autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS,Place.Field.LAT_LNG));
+        locBinding.useCurLoc.setOnClickListener(v -> {
+            locBinding.locTv.setText(addressString);
+            autocompleteFragment.setText(addressString);
+            fragment.getMapAsync(googleMap -> {
+                LatLng coordinate = new LatLng(curLat, curLong);
+                MarkerOptions marker = new MarkerOptions();
+                marker.position(coordinate);
+                marker.title("Current Location");
+                googleMap.addMarker(marker);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 15);
+                googleMap.moveCamera(cameraUpdate);
+                googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
+            });
+        });
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener(){
+            @Override
+            public void onPlaceSelected(@NonNull Place place){
+                LatLng latLng = place.getLatLng();
+                SupportMapFragment fragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.user_map);
+                fragment.getMapAsync(googleMap -> {
+                    googleMap.clear();
+                    MarkerOptions marker = new MarkerOptions();
+                    marker.position(latLng);
+                    marker.title(place.getName());
+                    googleMap.addMarker(marker);
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+                    googleMap.moveCamera(cameraUpdate);
+                });
+                locBinding.locTv.setText(place.getAddress());
+            }
+            @Override
+            public void onError(@NonNull Status status) {
+                Log.e(TAG, "An error occurred: " + status);
+            }
+        });
+        locBinding.setLocBtn.setOnClickListener(v -> {
+            binding.changeLoc.setText(addressString);
+            dialog.dismiss();
+        });
+
+    }
+
     public void showSortDialog(){
         DialogSortDestiBinding binding1 = DialogSortDestiBinding.inflate(LayoutInflater.from(getContext()));
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -294,6 +393,8 @@ public class ShowDestinationFragment extends Fragment {
                         if (location != null) {
                             double currentLat = location.getLatitude();
                             double currentLng = location.getLongitude();
+                            curLat = currentLat;
+                            curLong = currentLng;
                             float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
                             destination.setDistance(distance);
                             sortDestination(destinationArrayList);
@@ -317,6 +418,11 @@ public class ShowDestinationFragment extends Fragment {
                                 protected void onPostExecute(String address) {
                                     if (address != null) {
                                         Log.d("ADDRESS", address);
+                                        Bundle args = getArguments();
+                                        if (args != null) {
+                                            String newAddress = args.getString("address");
+                                            binding.changeLoc.setText(address);
+                                        }
                                         binding.changeLoc.setText(address);
                                     }
                                 }

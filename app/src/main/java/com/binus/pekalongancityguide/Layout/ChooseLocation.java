@@ -6,6 +6,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -60,6 +61,8 @@ public class ChooseLocation extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ShowDestinationFragment showDestinationFragment = new ShowDestinationFragment();
+
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), MAPS_API_KEY);
         }
@@ -121,8 +124,14 @@ public class ChooseLocation extends AppCompatActivity {
         });
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener(){
             @Override
-            public void onPlaceSelected(@NonNull Place place) {
+            public void onPlaceSelected(@NonNull Place place){
                 LatLng latLng = place.getLatLng();
+                Bundle bundle = new Bundle();
+                bundle.putString("address", place.getAddress());
+                showDestinationFragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container_showDesti, showDestinationFragment)
+                        .commit();
                 SupportMapFragment fragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.user_map);
                 fragment.getMapAsync(googleMap -> {
                     googleMap.clear();
