@@ -72,19 +72,16 @@ public class ShowDestinationFragment extends Fragment {
     private DestinationAdapter destinationAdapter;
     private static final String TAG = "DESTI_USER_TAG";
     private FragmentShowDestinationBinding binding;
-    private DialogChangeLocBinding locBinding;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private Geocoder geocoder;
-    double curLat, curLong;
-    float distance;
-    private PlacesClient placesClient;
     private AutocompleteSupportFragment autocompleteFragment;
+    private SupportMapFragment fragment;
     private LatLng coordinate;
     private String addressString;
-    private SupportMapFragment fragment;
-    private boolean isChangeLocDialogShowing = false;
+    private double currentLat, currentLng;
+    private float distance;
 
     public ShowDestinationFragment() {
     }
@@ -170,15 +167,6 @@ public class ShowDestinationFragment extends Fragment {
                     ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
             } else {
-                // Remove existing fragments before showing the dialog
-                fragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.user_map);
-                if (fragment != null) {
-                    getChildFragmentManager().beginTransaction().remove(fragment).commit();
-                }
-                autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-                if (autocompleteFragment != null) {
-                    getChildFragmentManager().beginTransaction().remove(autocompleteFragment).commit();
-                }
                 showChangeLocDialog();
             }
         });
@@ -187,30 +175,22 @@ public class ShowDestinationFragment extends Fragment {
     }
 
     private void showChangeLocDialog() {
-        if (isChangeLocDialogShowing) {
-            // Dialog is already showing, no need to show again
-            return;
-        }
-        isChangeLocDialogShowing = true;
-        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        locBinding = DialogChangeLocBinding.inflate(getLayoutInflater());
+        DialogChangeLocBinding locBinding = DialogChangeLocBinding.inflate(getLayoutInflater());
         builder.setView(locBinding.getRoot());
-        fragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.user_map);
         AlertDialog dialog = builder.create();
-        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
         dialog.setOnDismissListener(dialog1 -> {
             getChildFragmentManager().beginTransaction().remove(fragment).commit();
             getChildFragmentManager().beginTransaction().remove(autocompleteFragment).commit();
-            isChangeLocDialogShowing = false;
         });
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
         dialog.show();
         if (!Places.isInitialized()) {
             Places.initialize(getActivity().getApplicationContext(), MAPS_API_KEY);
         }
         List<Address> addresses = null;
         try {
-            addresses = geocoder.getFromLocation(curLat, curLong, 1);
+            addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -222,61 +202,29 @@ public class ShowDestinationFragment extends Fragment {
             }
             addressString = sb.toString();
             locBinding.locTv.setText(addressString);
-            Log.d(TAG, "ADDRESS 202: " + addressString);
         } else {
             locBinding.locTv.setText("Address not found");
         }
-        if (fragment != null) {
-            fragment.getMapAsync(googleMap -> {
-                coordinate = new LatLng(curLat, curLong);
-                MarkerOptions marker = new MarkerOptions();
-                marker.position(coordinate);
-                marker.title("Current Location");
-                googleMap.addMarker(marker);
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 15);
-                googleMap.moveCamera(cameraUpdate);
-                googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
-            });
-        } else {
-            Log.e("MyApp", "SupportMapFragment is null");
-        }
-        Log.d(TAG, "ADDRESS 217: " + addressString);
-        placesClient = Places.createClient(getContext());
+        fragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.user_map);
+        fragment.getMapAsync(googleMap -> {
+            coordinate = new LatLng(currentLat, currentLng);
+            MarkerOptions marker = new MarkerOptions();
+            marker.position(coordinate);
+            marker.title("Current Location");
+            googleMap.addMarker(marker);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 15);
+            googleMap.moveCamera(cameraUpdate);
+            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
+        });
+        PlacesClient placesClient = Places.createClient(getContext());
         autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-        if (autocompleteFragment != null) {
-            autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG));
-            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-                @Override
-                public void onPlaceSelected(@NonNull Place place) {
-                    coordinate = place.getLatLng();
-                    fragment.getMapAsync(googleMap -> {
-                        googleMap.clear();
-                        MarkerOptions marker = new MarkerOptions();
-                        marker.position(coordinate);
-                        marker.title(place.getName());
-                        googleMap.addMarker(marker);
-                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 15);
-                        googleMap.moveCamera(cameraUpdate);
-                    });
-                    locBinding.locTv.setText(place.getAddress());
-                    Log.d(TAG, "ADDRESS BEFORE ASSIGN: " + addressString);
-                    addressString = place.getAddress();
-                    Log.d(TAG, "ADDRESS AFTER ASSIGN: " + addressString);
-                }
-
-                @Override
-                public void onError(@NonNull Status status) {
-                    Log.e(TAG, "An error occurred: " + status);
-                }
-            });
-        } else {
-            Log.e(TAG, "AUTOCOMPLETE FRAGMENT NULL");
-        }
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS,Place.Field.LAT_LNG));
         locBinding.useCurLoc.setOnClickListener(v -> {
             locBinding.locTv.setText(addressString);
             autocompleteFragment.setText(addressString);
             fragment.getMapAsync(googleMap -> {
-                coordinate = new LatLng(curLat, curLong);
+                coordinate = new LatLng(currentLat, currentLng);
                 MarkerOptions marker = new MarkerOptions();
                 marker.position(coordinate);
                 marker.title("Current Location");
@@ -285,16 +233,34 @@ public class ShowDestinationFragment extends Fragment {
                 googleMap.moveCamera(cameraUpdate);
                 googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
             });
-            Log.d(TAG, "CURRENT LOCATION: " + addressString);
+        });
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener(){
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                coordinate = place.getLatLng();
+                fragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.user_map);
+                fragment.getMapAsync(googleMap -> {
+                    googleMap.clear();
+                    MarkerOptions marker = new MarkerOptions();
+                    marker.position(coordinate);
+                    marker.title(place.getName());
+                    googleMap.addMarker(marker);
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 15);
+                    googleMap.moveCamera(cameraUpdate);
+                });
+                locBinding.locTv.setText(place.getAddress());
+                addressString = place.getAddress();
+            }
+            @Override
+            public void onError(@NonNull Status status) {
+                Log.e(TAG, "An error occurred: " + status);
+            }
         });
         locBinding.setLocBtn.setOnClickListener(v -> {
             binding.changeLoc.setText(addressString);
-            Log.d(TAG, "SAVE CLICKED ADDRESS: " + addressString);
             dialog.dismiss();
-            getChildFragmentManager().beginTransaction().remove(fragment).commit();
-            getChildFragmentManager().beginTransaction().remove(autocompleteFragment).commit();
-            isChangeLocDialogShowing = false;
             updateDistances();
+            Log.d(TAG, "COORDINATES: " + coordinate);
         });
     }
 
@@ -425,10 +391,11 @@ public class ShowDestinationFragment extends Fragment {
                 double placeLat = Double.parseDouble(snapshot.child("latitude").getValue().toString());
                 double placeLng = Double.parseDouble(snapshot.child("longitude").getValue().toString());
                 if (coordinate != null) {
-                    curLat = coordinate.latitude;
-                    curLong = coordinate.longitude;
-                    distance = calculateDistance(curLat, curLong, placeLat, placeLng);
+                    currentLat = coordinate.latitude;
+                    currentLng = coordinate.longitude;
+                    distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
                     destination.setDistance(distance);
+                    destinationAdapter.notifyDataSetChanged();
                 } else {
                     if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                             ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -436,9 +403,9 @@ public class ShowDestinationFragment extends Fragment {
                     } else {
                         fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
                             if (location != null) {
-                                curLong = location.getLatitude();
-                                curLat = location.getLongitude();
-                                distance = calculateDistance(curLat, curLong, placeLat, placeLng);
+                                currentLat = location.getLatitude();
+                                currentLng = location.getLongitude();
+                                distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
                                 destination.setDistance(distance);
                                 sortDestination(destinationArrayList);
                                 destinationAdapter.notifyDataSetChanged();
@@ -447,7 +414,7 @@ public class ShowDestinationFragment extends Fragment {
                                     @Override
                                     protected String doInBackground(Void... voids) {
                                         try {
-                                            List<Address> addresses = geocoder.getFromLocation(curLat, curLong, 1);
+                                            List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
                                             if (addresses.size() > 0) {
                                                 return addresses.get(0).getAddressLine(0);
                                             }
@@ -469,6 +436,7 @@ public class ShowDestinationFragment extends Fragment {
                         });
                     }
                 }
+                Log.d(TAG, "distance: " + destination.getDistance());
             }
 
             @Override
