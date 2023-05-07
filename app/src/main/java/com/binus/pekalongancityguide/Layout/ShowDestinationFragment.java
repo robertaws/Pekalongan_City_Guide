@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -108,6 +109,15 @@ public class ShowDestinationFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        SharedPreferences prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String lastLatitude = prefs.getString("lastLatitude", "0");
+        String lastLongitude = prefs.getString("lastLongitude", "0");
+        if (!lastLatitude.equals("0") && !lastLongitude.equals("0")) {
+            double latitude = Double.parseDouble(lastLatitude);
+            double longitude = Double.parseDouble(lastLongitude);
+            coordinate = new LatLng(latitude, longitude);
+        }
+        Log.d(TAG, "ON START COORDINATES: " + coordinate);
         binding = FragmentShowDestinationBinding.inflate(LayoutInflater.from(getContext()), container, false);
         if (category.equals("All")) {
             loadDestinations();
@@ -260,6 +270,10 @@ public class ShowDestinationFragment extends Fragment {
             binding.changeLoc.setText(addressString);
             dialog.dismiss();
             updateDistances();
+            SharedPreferences.Editor editor = getActivity().getPreferences(Context.MODE_PRIVATE).edit();
+            editor.putString("lastLatitude", String.valueOf(coordinate.latitude));
+            editor.putString("lastLongitude", String.valueOf(coordinate.longitude));
+            editor.apply();
             Log.d(TAG, "COORDINATES: " + coordinate);
         });
     }
@@ -396,6 +410,29 @@ public class ShowDestinationFragment extends Fragment {
                     distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
                     destination.setDistance(distance);
                     destinationAdapter.notifyDataSetChanged();
+
+                    new AsyncTask<Void, Void, String>() {
+                        @Override
+                        protected String doInBackground(Void... voids) {
+                            try {
+                                List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
+                                if (addresses.size() > 0) {
+                                    return addresses.get(0).getAddressLine(0);
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(String address) {
+                            if (address != null) {
+                                Log.d("ADDRESS", address);
+                                binding.changeLoc.setText(address);
+                            }
+                        }
+                    }.execute();
                 } else {
                     if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                             ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
