@@ -43,8 +43,11 @@ public class Splash extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String language = preferences.getString("language", "");
+        SharedPreferences locPrefs = this.getApplicationContext().getSharedPreferences("coordinate", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = locPrefs.edit();
+        editor.clear().apply();
+        SharedPreferences langPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String language = langPrefs.getString("language", "");
         if (!TextUtils.isEmpty(language)) {
             Locale locale = new Locale(language);
             Configuration config = new Configuration(getResources().getConfiguration());
