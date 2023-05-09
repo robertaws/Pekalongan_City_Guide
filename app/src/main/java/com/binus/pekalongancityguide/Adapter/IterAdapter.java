@@ -80,58 +80,59 @@ public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestinat
             holder.selectButton.setVisibility(View.INVISIBLE);
             holder.layoutImage.setBackgroundTintList(null);
         }
-        if (selectMode) {
-            holder.itemView.setOnClickListener(v -> {
-                if (selectedItems.contains(destination)) {
-                    selectedItems.remove(destination);
-                } else {
-                    selectedItems.add(destination);
-                }
-                notifyItemChanged(position);
-            });
-        } else {
-            holder.itemView.setOnClickListener(v -> {
-                if (holder.isImageLoaded) {
-                    Drawable drawable = holder.layoutImage.getBackground();
-                    BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-                    Bitmap bitmap = bitmapDrawable.getBitmap();
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 25, stream);
-                    byte[] byteArray = stream.toByteArray();
+        holder.itemView.setOnClickListener(v -> {
+            if (holder.isImageLoaded) {
+                Drawable drawable = holder.layoutImage.getBackground();
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                Bitmap bitmap = bitmapDrawable.getBitmap();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 25, stream);
+                byte[] byteArray = stream.toByteArray();
 
-                    String filePath = context.getFilesDir().getPath() + "/image.png";
-                    FileOutputStream fos;
-                    try {
-                        fos = new FileOutputStream(filePath);
-                    } catch (FileNotFoundException e) {
-                        throw new RuntimeException(e);
-                    }
-                    try {
-                        fos.write(byteArray);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    try {
-                        fos.close();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    Intent intent = new Intent(context, DestinationDetails.class);
-                    intent.putExtra("destiId", destiId);
-                    intent.putExtra("imageFilePath", filePath);
-                    context.startActivity(intent);
+                String filePath = context.getFilesDir().getPath() + "/image.png";
+                FileOutputStream fos;
+                try {
+                    fos = new FileOutputStream(filePath);
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
                 }
-            });
-        }
-        holder.itemView.setOnLongClickListener(v -> {
-            if (!selectMode) {
-                selectMode = true;
-                selectedItems.add(destination);
-                notifyItemChanged(position);
-                return true;
+                try {
+                    fos.write(byteArray);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                Intent intent = new Intent(context, DestinationDetails.class);
+                intent.putExtra("destiId", destiId);
+                intent.putExtra("imageFilePath", filePath);
+                context.startActivity(intent);
             }
-            return false;
         });
+//        if (selectMode) {
+//            holder.itemView.setOnClickListener(v -> {
+//                if (selectedItems.contains(destination)) {
+//                    selectedItems.remove(destination);
+//                } else {
+//                    selectedItems.add(destination);
+//                }
+//                notifyItemChanged(position);
+//            });
+//        } else {
+//
+//        }
+//        holder.itemView.setOnLongClickListener(v -> {
+//            if (!selectMode) {
+//                selectMode = true;
+//                selectedItems.add(destination);
+//                notifyItemChanged(position);
+//                return true;
+//            }
+//            return false;
+//        });
     }
 
     private void loadImage(Destination destination, HolderDestination holder) {
@@ -203,22 +204,15 @@ public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestinat
         public boolean onLongClick(View v) {
             int adapterPosition = getAdapterPosition();
             Destination destination = destinations.get(adapterPosition);
-            if (!selectMode) {
-                selectMode = true;
-                selectedItems.add(destination);
-                notifyItemChanged(adapterPosition);
-                return true;
+            if (selectedItems.contains(destination)) {
+                selectedItems.remove(destination);
             } else {
-                if (selectedItems.contains(destination)) {
-                    selectedItems.remove(destination);
-                } else {
-                    selectedItems.add(destination);
-                }
-                notifyItemChanged(adapterPosition);
-                onItemLongClickListener.onItemLongClick(destination);
-                fragment.checkSelect();
-                return true;
+                selectedItems.add(destination);
             }
+            notifyItemChanged(adapterPosition);
+            onItemLongClickListener.onItemLongClick(destination);
+            fragment.checkSelect();
+            return true;
         }
     }
 }
