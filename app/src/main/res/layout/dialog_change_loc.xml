@@ -5,16 +5,7 @@
     <data>
 
     </data>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardElevation="4dp"
-        app:cardCornerRadius="16dp"
-        android:layout_marginHorizontal="5dp"
-        android:layout_marginVertical="5dp">
-
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/dialog_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -22,6 +13,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/header"
                 android:layout_marginLeft="10dp"
                 android:layout_marginVertical="10dp"
                 android:layout_width="match_parent"
@@ -31,24 +23,39 @@
                 android:text="Choose Location"
                 android:textSize="24dp"
                 android:textColor="@color/palette_1" />
-
-            <fragment
-                android:id="@+id/autocomplete_fragment"
-                android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/fragment_container"
+                android:layout_below="@id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="Enter a location" />
-
+                app:cardElevation="4dp"
+                app:cardCornerRadius="3dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/palette_3"
+                    android:orientation="vertical">
+                    <fragment
+                        android:id="@+id/autocomplete_fragment"
+                        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:theme="@style/CustomAutoCompleteTheme"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
             <fragment
                 android:id="@+id/user_map"
+                android:layout_below="@id/fragment_container"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:name="com.google.android.gms.maps.SupportMapFragment"></fragment>
 
             <TextView
                 android:id="@+id/locTv"
+                android:layout_below="@id/user_map"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Your Location"
@@ -59,6 +66,7 @@
 
             <TextView
                 android:id="@+id/use_cur_loc"
+                android:layout_below="@id/locTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
@@ -75,11 +83,12 @@
                 android:textColor="@color/palette_2" />
             <Button
                 android:id="@+id/set_loc_btn"
+                android:layout_below="@id/use_cur_loc"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="0dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/palette_4"
                 android:text="Set Location"/>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+        </RelativeLayout>
 </layout>

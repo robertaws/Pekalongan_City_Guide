@@ -2,7 +2,12 @@ package com.binus.pekalongancityguide.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -13,15 +18,21 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
+import com.binus.pekalongancityguide.Layout.AddItinerary;
 import com.binus.pekalongancityguide.Layout.DestinationDetails;
 import com.binus.pekalongancityguide.Misc.FilterDestiUser;
 import com.binus.pekalongancityguide.Misc.FilterIterUser;
@@ -45,8 +56,10 @@ import java.util.Locale;
 public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestination> implements Filterable{
     private final Context context;
     public ArrayList<Destination> destinations, filterList;
+    private ArrayList<Destination> selectedItems = new ArrayList<>();
     private ListIterBinding binding;
     private FilterIterUser filterIterUser;
+    private AddItinerary addItineraryFragment;
     private static final String TAG = "ADAPTER_USER_TAG";
 
     public IterAdapter(Context context, ArrayList<Destination> destinations) {
@@ -69,6 +82,15 @@ public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestinat
         String title = destination.getTitle();
         holder.title.setText(title);
         loadImage(destination, holder);
+        if (selectedItems.contains(destination)) {
+            holder.selectButton.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.checked));
+            holder.selectButton.setVisibility(View.VISIBLE);
+            holder.iterLayout.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.alfa));
+            holder.layoutImage.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.grayishTint));
+        } else {
+            holder.selectButton.setVisibility(View.INVISIBLE);
+            holder.layoutImage.setBackgroundTintList(null);
+        }
         holder.itemView.setOnClickListener(v -> {
             if (holder.isImageLoaded) {
                 Drawable drawable = holder.layoutImage.getBackground();
@@ -137,16 +159,36 @@ public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestinat
         }
         return filterIterUser;
     }
-
-    class HolderDestination extends RecyclerView.ViewHolder{
+    public ArrayList<Destination> getSelectedItems() {
+        return selectedItems;
+    }
+    class HolderDestination extends RecyclerView.ViewHolder implements View.OnLongClickListener{
         ImageView layoutImage;
         TextView title;
+        ImageButton selectButton;
         boolean isImageLoaded;
+        RelativeLayout iterLayout;
         public HolderDestination(@NonNull View itemView) {
             super(itemView);
             layoutImage = binding.iterImage;
             title = binding.iterTitle;
             isImageLoaded = false;
+            iterLayout = binding.iterLayout;
+            selectButton = binding.selectBtn;
+            itemView.setOnLongClickListener(this);
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            int adapterPosition = getAdapterPosition();
+            Destination destination = destinations.get(adapterPosition);
+            if (selectedItems.contains(destination)) {
+                selectedItems.remove(destination);
+            } else {
+                selectedItems.add(destination);
+            }
+            notifyItemChanged(adapterPosition);
+            return true;
         }
     }
 }

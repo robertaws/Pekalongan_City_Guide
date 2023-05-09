@@ -13,27 +13,43 @@
         app:cardCornerRadius="8dp"
         android:layout_marginHorizontal="5dp"
         android:layout_marginVertical="5dp">
-
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/iter_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/palette_4"
             android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/iter_image"
+            <RelativeLayout
+                android:id="@+id/layout_img"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:background="@color/palette_2"
-                android:layout_gravity="center"/>
-
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/iter_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:backgroundTint="#736868"
+                    android:backgroundTintMode="multiply"
+                    android:layout_gravity="center"/>
+                <ImageButton
+                    android:id="@+id/select_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@id/iter_image"
+                    android:layout_alignBottom="@id/iter_image"
+                    android:layout_margin="10dp"
+                    android:background="#0000"
+                    android:src="@drawable/unchecked"
+                    android:visibility="invisible" />
+            </RelativeLayout>
             <TextView
                 android:id="@+id/iter_title"
+                android:layout_below="@id/layout_img"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:textColor="@color/palette_1"
                 android:gravity="center"
                 android:fontFamily="@font/poppins_semibold"
                 android:text="Place Name"/>
-        </LinearLayout>
+        </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </layout>

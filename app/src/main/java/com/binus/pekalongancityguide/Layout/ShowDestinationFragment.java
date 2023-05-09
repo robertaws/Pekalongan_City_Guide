@@ -187,17 +187,17 @@ public class ShowDestinationFragment extends Fragment {
     }
 
     private void showChangeLocDialog() {
-        if (isChangeLocDialogShowing) {
-            return;
-        }
+        if (isChangeLocDialogShowing) return;
         isChangeLocDialogShowing = true;
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         DialogChangeLocBinding locBinding = DialogChangeLocBinding.inflate(getLayoutInflater());
         builder.setView(locBinding.getRoot());
         AlertDialog dialog = builder.create();
         dialog.setOnDismissListener(dialog1 -> {
-            getChildFragmentManager().beginTransaction().remove(fragment).commit();
-            getChildFragmentManager().beginTransaction().remove(autocompleteFragment).commit();
+            requireActivity().runOnUiThread(() -> {
+                getChildFragmentManager().beginTransaction().remove(fragment).commit();
+                getChildFragmentManager().beginTransaction().remove(autocompleteFragment).commit();
+            });
             isChangeLocDialogShowing = false;
         });
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
@@ -205,23 +205,32 @@ public class ShowDestinationFragment extends Fragment {
         if (!Places.isInitialized()) {
             Places.initialize(getActivity().getApplicationContext(), MAPS_API_KEY);
         }
-        List<Address> addresses = null;
-        try {
-            addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (addresses != null && addresses.size() > 0) {
-            Address address = addresses.get(0);
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-                sb.append(address.getAddressLine(i)).append(", ");
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                try {
+                    List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
+                    if (addresses.size() > 0) {
+                        return addresses.get(0).getAddressLine(0);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
             }
-            addressString = sb.toString();
-            locBinding.locTv.setText(addressString);
-        } else {
-            locBinding.locTv.setText("Address not found");
-        }
+
+            @Override
+            protected void onPostExecute(String address) {
+                // update the location text view in the UI thread
+                if (address != null) {
+                    addressString = address;
+                    locBinding.locTv.setText(addressString);
+                    autocompleteFragment.setText(addressString);
+                } else {
+                    locBinding.locTv.setText("Address not found");
+                }
+            }
+        }.execute();
         fragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.user_map);
         fragment.getMapAsync(googleMap -> {
@@ -237,6 +246,7 @@ public class ShowDestinationFragment extends Fragment {
         PlacesClient placesClient = Places.createClient(getContext());
         autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG));
+        autocompleteFragment.setCountries("ID");
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(@NonNull Place place) {
