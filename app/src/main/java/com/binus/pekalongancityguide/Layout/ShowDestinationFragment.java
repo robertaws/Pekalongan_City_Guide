@@ -119,7 +119,7 @@ public class ShowDestinationFragment extends Fragment {
             double longitude = Double.parseDouble(lastLongitude);
             coordinate = new LatLng(latitude, longitude);
         }
-        Log.d(TAG, "ON START COORDINATES: " + coordinate);
+//        Log.d(TAG, "ON START COORDINATES: " + coordinate);
         binding = FragmentShowDestinationBinding.inflate(LayoutInflater.from(getContext()), container, false);
         if (category.equals("All")) {
             loadDestinations();

@@ -12,10 +12,8 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
 import com.binus.pekalongancityguide.Adapter.IterAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.R;
@@ -23,7 +21,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -31,16 +28,20 @@ import java.util.Collections;
 
 import static android.content.ContentValues.TAG;
 
-public class AddItinerary extends Fragment {
+public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClickListener {
     private String categoryId;
     private String category;
+    private int counter;
     private IterAdapter iterAdapter;
     private RecyclerView iterRV;
     private Button addIter;
     private ArrayList<Destination> destinationArrayList;
-    public AddItinerary() {}
+    private ArrayList<Destination> selectedItems;
 
-    public static AddItinerary newInstance(String categoryId, String category, String uid){
+    public AddItinerary() {
+    }
+
+    public static AddItinerary newInstance(String categoryId, String category, String uid) {
         AddItinerary fragment = new AddItinerary();
         Bundle args = new Bundle();
         args.putString("categoryId", categoryId);
@@ -50,10 +51,14 @@ public class AddItinerary extends Fragment {
         return fragment;
     }
 
+    public static AddItinerary getInstance() {
+        return new AddItinerary();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments()!=null){
+        if (getArguments() != null) {
             categoryId = getArguments().getString("categoryId");
             category = getArguments().getString("category");
         }
@@ -65,6 +70,7 @@ public class AddItinerary extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_itinerary, container, false);
         iterRV = view.findViewById(R.id.recycler_view);
         addIter = view.findViewById(R.id.add_iter_btn);
+        checkSelect();
         EditText iterSearch = view.findViewById(R.id.search_iter);
         iterSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -90,6 +96,9 @@ public class AddItinerary extends Fragment {
         } else {
             loadCategoriedDestination();
         }
+        addIter.setOnClickListener(v -> {
+
+        });
 
         return view;
     }
@@ -107,8 +116,7 @@ public class AddItinerary extends Fragment {
                     sortDestination(destinationArrayList);
                 }
                 if (iterAdapter == null) {
-                    iterAdapter = new IterAdapter(getContext(), destinationArrayList);
-                    iterRV.setAdapter(iterAdapter);
+                    initIterAdapter();
                 } else {
                     iterAdapter.notifyDataSetChanged();
                 }
@@ -135,8 +143,7 @@ public class AddItinerary extends Fragment {
                             sortDestination(destinationArrayList);
                         }
                         if (iterAdapter == null) {
-                            iterAdapter = new IterAdapter(getContext(), destinationArrayList);
-                            iterRV.setAdapter(iterAdapter);
+                            initIterAdapter();
                         } else {
                             iterAdapter.notifyDataSetChanged();
                         }
@@ -149,11 +156,40 @@ public class AddItinerary extends Fragment {
                 });
     }
 
-    private void sortDestination(ArrayList<Destination> destinationArrayList){
+    private void sortDestination(ArrayList<Destination> destinationArrayList) {
         Collections.sort(destinationArrayList, (destination1, destination2) -> {
             String title1 = destination1.getTitle().toLowerCase();
             String title2 = destination2.getTitle().toLowerCase();
             return title1.compareTo(title2);
         });
+    }
+
+    public void checkSelect() {
+        if (iterAdapter != null) {
+            selectedItems = iterAdapter.getSelectedItems();
+            if (selectedItems.size() < 1) {
+                addIter.setVisibility(View.INVISIBLE);
+            } else if (selectedItems.size() == 1) {
+                counter = selectedItems.size();
+                addIter.setText("Add " + counter + " location to the itinerary");
+                addIter.setVisibility(View.VISIBLE);
+            } else {
+                counter = selectedItems.size();
+                addIter.setText("Add " + counter + " locations to the itinerary");
+                addIter.setVisibility(View.VISIBLE);
+            }
+        } else {
+            addIter.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void initIterAdapter() {
+        iterAdapter = new IterAdapter(getContext(), destinationArrayList, this, this); // Pass the reference to the fragment
+        iterRV.setAdapter(iterAdapter);
+    }
+
+    @Override
+    public void onItemLongClick(Destination destination) {
+        checkSelect();
     }
 }

@@ -2,12 +2,7 @@ package com.binus.pekalongancityguide.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -17,55 +12,49 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.Layout.AddItinerary;
 import com.binus.pekalongancityguide.Layout.DestinationDetails;
-import com.binus.pekalongancityguide.Misc.FilterDestiUser;
 import com.binus.pekalongancityguide.Misc.FilterIterUser;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ListIterBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Locale;
 
-public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestination> implements Filterable{
+public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestination> implements Filterable {
     private final Context context;
+    private boolean selectMode = false;
+    private AddItinerary fragment;
     public ArrayList<Destination> destinations, filterList;
     private ArrayList<Destination> selectedItems = new ArrayList<>();
+    private OnItemLongClickListener onItemLongClickListener;
     private ListIterBinding binding;
     private FilterIterUser filterIterUser;
-    private AddItinerary addItineraryFragment;
     private static final String TAG = "ADAPTER_USER_TAG";
 
-    public IterAdapter(Context context, ArrayList<Destination> destinations) {
+    public IterAdapter(Context context, ArrayList<Destination> destinations, OnItemLongClickListener onItemLongClickListener, AddItinerary fragment) {
         this.context = context;
         this.destinations = destinations;
         this.filterList = destinations;
+        this.onItemLongClickListener = onItemLongClickListener;
+        this.fragment = fragment;
     }
 
     @NonNull
@@ -91,37 +80,57 @@ public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestinat
             holder.selectButton.setVisibility(View.INVISIBLE);
             holder.layoutImage.setBackgroundTintList(null);
         }
-        holder.itemView.setOnClickListener(v -> {
-            if (holder.isImageLoaded) {
-                Drawable drawable = holder.layoutImage.getBackground();
-                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-                Bitmap bitmap = bitmapDrawable.getBitmap();
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 25, stream);
-                byte[] byteArray = stream.toByteArray();
+        if (selectMode) {
+            holder.itemView.setOnClickListener(v -> {
+                if (selectedItems.contains(destination)) {
+                    selectedItems.remove(destination);
+                } else {
+                    selectedItems.add(destination);
+                }
+                notifyItemChanged(position);
+            });
+        } else {
+            holder.itemView.setOnClickListener(v -> {
+                if (holder.isImageLoaded) {
+                    Drawable drawable = holder.layoutImage.getBackground();
+                    BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                    Bitmap bitmap = bitmapDrawable.getBitmap();
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 25, stream);
+                    byte[] byteArray = stream.toByteArray();
 
-                String filePath = context.getFilesDir().getPath() + "/image.png";
-                FileOutputStream fos;
-                try {
-                    fos = new FileOutputStream(filePath);
-                } catch (FileNotFoundException e) {
-                    throw new RuntimeException(e);
+                    String filePath = context.getFilesDir().getPath() + "/image.png";
+                    FileOutputStream fos;
+                    try {
+                        fos = new FileOutputStream(filePath);
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                    try {
+                        fos.write(byteArray);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    try {
+                        fos.close();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Intent intent = new Intent(context, DestinationDetails.class);
+                    intent.putExtra("destiId", destiId);
+                    intent.putExtra("imageFilePath", filePath);
+                    context.startActivity(intent);
                 }
-                try {
-                    fos.write(byteArray);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                Intent intent = new Intent(context, DestinationDetails.class);
-                intent.putExtra("destiId", destiId);
-                intent.putExtra("imageFilePath", filePath);
-                context.startActivity(intent);
+            });
+        }
+        holder.itemView.setOnLongClickListener(v -> {
+            if (!selectMode) {
+                selectMode = true;
+                selectedItems.add(destination);
+                notifyItemChanged(position);
+                return true;
             }
+            return false;
         });
     }
 
@@ -140,6 +149,7 @@ public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestinat
                         drawable.setGravity(Gravity.FILL);
                         holder.layoutImage.setBackground(drawable);
                     }
+
                     @Override
                     public void onLoadFailed(@Nullable Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
@@ -148,10 +158,22 @@ public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestinat
                 });
     }
 
+    public void exitSelectMode() {
+        selectMode = false;
+        selectedItems.clear();
+        notifyDataSetChanged();
+    }
+
+
     @Override
     public int getItemCount() {
         return destinations.size();
     }
+
+    public interface OnItemLongClickListener {
+        void onItemLongClick(Destination destination);
+    }
+
     @Override
     public Filter getFilter() {
         if (filterIterUser == null) {
@@ -159,6 +181,7 @@ public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestinat
         }
         return filterIterUser;
     }
+
     public ArrayList<Destination> getSelectedItems() {
         return selectedItems;
     }
@@ -182,13 +205,22 @@ public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestinat
         public boolean onLongClick(View v) {
             int adapterPosition = getAdapterPosition();
             Destination destination = destinations.get(adapterPosition);
-            if (selectedItems.contains(destination)) {
-                selectedItems.remove(destination);
-            } else {
+            if (!selectMode) {
+                selectMode = true;
                 selectedItems.add(destination);
+                notifyItemChanged(adapterPosition);
+                return true;
+            } else {
+                if (selectedItems.contains(destination)) {
+                    selectedItems.remove(destination);
+                } else {
+                    selectedItems.add(destination);
+                }
+                notifyItemChanged(adapterPosition);
+                onItemLongClickListener.onItemLongClick(destination);
+                fragment.checkSelect();
+                return true;
             }
-            notifyItemChanged(adapterPosition);
-            return true;
         }
     }
 }
