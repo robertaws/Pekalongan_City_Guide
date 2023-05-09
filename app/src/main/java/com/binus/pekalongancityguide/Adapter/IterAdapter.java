@@ -163,8 +163,6 @@ public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestinat
         selectedItems.clear();
         notifyDataSetChanged();
     }
-
-
     @Override
     public int getItemCount() {
         return destinations.size();

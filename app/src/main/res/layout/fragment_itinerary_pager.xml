@@ -18,7 +18,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/iter_tab_layout"
                 android:layout_width="match_parent"
@@ -31,7 +30,35 @@
                 app:tabTextColor="@color/palette_2"
                 app:tabSelectedTextColor="@color/palette_4"
                 app:tabIndicatorFullWidth="false" />
-
+            <LinearLayout
+                android:id="@+id/select_layout"
+                android:layout_width="match_parent"
+                android:background="@color/palette_4"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="#0000"
+                    android:src="@drawable/close_icon"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="n Item Selected"
+                    android:layout_weight="1"
+                    android:textColor="@color/palette_1"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:gravity="center"/>
+                <ImageButton
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="#0000"
+                    android:layout_gravity="end"
+                    app:tint="@color/palette_1"
+                    android:src="@drawable/select_all"/>
+            </LinearLayout>
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/iter_viewPager"
                 android:layout_width="match_parent"
