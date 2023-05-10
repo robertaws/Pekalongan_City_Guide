@@ -38,8 +38,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
     private ArrayList<Destination> destinationArrayList;
     private ArrayList<Destination> selectedItems;
 
-    public AddItinerary() {
-    }
+    public AddItinerary() {}
 
     public static AddItinerary newInstance(String categoryId, String category, String uid) {
         AddItinerary fragment = new AddItinerary();
