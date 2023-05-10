@@ -16,7 +16,7 @@ public class Home extends AppCompatActivity {
     ConversationFragment conversationFragment = new ConversationFragment();
     BookmarkFragment bookmarkFragment = new BookmarkFragment();
     ProfileFragment profileFragment = new ProfileFragment();
-    ItineraryPager itineraryPager = new ItineraryPager();
+    ItineraryList itineraryList = new ItineraryList();
     private static final int desti = 2;
     private static final int iter = 3;
     private static final int bm = 4;
@@ -49,7 +49,7 @@ public class Home extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.container, destinationFragment).commitAllowingStateLoss();
                     break;
                 case iter:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.container, itineraryPager).commitAllowingStateLoss();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container, itineraryList).commitAllowingStateLoss();
                     break;
                 case bm:
                     getSupportFragmentManager().beginTransaction().replace(R.id.container, bookmarkFragment).commitAllowingStateLoss();
