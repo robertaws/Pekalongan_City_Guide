@@ -42,6 +42,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
@@ -54,18 +55,20 @@ import java.util.Locale;
 import java.util.Map;
 
 public class DestinationDetails extends AppCompatActivity {
+    private static final String TAG = "REVIEW_TAG";
     String imageUrl;
-    private ActivityDestinationDetailsBinding binding;
     String destiId;
+    String itineraryName;
     boolean inFavorite = false;
     FirebaseAuth firebaseAuth;
+    int startHour, startMinute, startHour1, startMinute1, endHour, endMinute, endHour1, endMinute1, dayDate, monthDate, yearDate, dayDate1, monthDate1, yearDate1;
+    private ActivityDestinationDetailsBinding binding;
     private ArrayList<Comments> commentsArrayList;
     private CommentAdapter commentAdapter;
-    private static final String TAG = "REVIEW_TAG";
     private ProgressDialog progressDialog;
-    int startHour,startMinute,startHour1,startMinute1
-            ,endHour,endMinute,endHour1,endMinute1
-            ,dayDate,monthDate,yearDate,dayDate1,monthDate1,yearDate1;
+    private String comment = "";
+    private String date = "", startTime = "", endTime = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +83,7 @@ public class DestinationDetails extends AppCompatActivity {
         if (firebaseAuth.getCurrentUser() != null) {
             checkFavorite();
         }
-        if(firebaseAuth.getCurrentUser()==null) {
+        if (firebaseAuth.getCurrentUser() == null) {
             binding.addCommentBtn.setVisibility(View.INVISIBLE);
         }
         loadDetails();
@@ -91,12 +94,12 @@ public class DestinationDetails extends AppCompatActivity {
             intent1.putExtra("fullImg", imageUrl);
             startActivity(intent1);
         });
-            binding.addCommentBtn.setOnClickListener(v ->{
-                showAddCommentDialog();
+        binding.addCommentBtn.setOnClickListener(v -> {
+            showAddCommentDialog();
         });
         binding.saveItem.setOnClickListener(v -> {
             if (firebaseAuth.getCurrentUser() == null) {
-                Toast.makeText(DestinationDetails.this,R.string.notLogin, Toast.LENGTH_SHORT).show();
+                Toast.makeText(DestinationDetails.this, R.string.notLogin, Toast.LENGTH_SHORT).show();
             } else {
                 if (inFavorite) {
                     MyApplication.removeFavorite(DestinationDetails.this, destiId);
@@ -105,16 +108,16 @@ public class DestinationDetails extends AppCompatActivity {
                 }
             }
         });
-        binding.addItenary.setOnClickListener(v ->{
+        binding.addItenary.setOnClickListener(v -> {
             if (firebaseAuth.getCurrentUser() == null) {
-                Toast.makeText(DestinationDetails.this,R.string.notLogin, Toast.LENGTH_SHORT).show();
-            }else{
+                Toast.makeText(DestinationDetails.this, R.string.notLogin, Toast.LENGTH_SHORT).show();
+            } else {
                 showAddItineraryDialog();
             }
         });
     }
 
-    private void loadComments(){
+    private void loadComments() {
         commentsArrayList = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
         reference.child(destiId).child("Comments")
@@ -122,11 +125,11 @@ public class DestinationDetails extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         commentsArrayList.clear();
-                        for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             Comments comments = dataSnapshot.getValue(Comments.class);
                             commentsArrayList.add(comments);
                         }
-                        commentAdapter = new CommentAdapter(DestinationDetails.this,commentsArrayList);
+                        commentAdapter = new CommentAdapter(DestinationDetails.this, commentsArrayList);
                         binding.commentRv.setAdapter(commentAdapter);
                     }
 
@@ -137,8 +140,7 @@ public class DestinationDetails extends AppCompatActivity {
                 });
     }
 
-    private String comment = "";
-    private void showAddCommentDialog(){
+    private void showAddCommentDialog() {
         DialogAddCommentBinding commentBinding = DialogAddCommentBinding.inflate(getLayoutInflater());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(commentBinding.getRoot());
@@ -147,40 +149,41 @@ public class DestinationDetails extends AppCompatActivity {
         dialog.show();
         commentBinding.addcommentBtn.setOnClickListener(v -> {
             comment = commentBinding.commentEt.getText().toString().trim();
-            if(TextUtils.isEmpty(comment)){
+            if (TextUtils.isEmpty(comment)) {
                 commentBinding.commentTil.setError(getString(R.string.comment_empty));
-            }else{
+            } else {
                 progressDialog.setMessage(getString(R.string.adding_comment));
                 progressDialog.show();
-                String timestamp = ""+System.currentTimeMillis();
+                String timestamp = "" + System.currentTimeMillis();
                 HashMap<String, Object> hashMap = new HashMap<>();
-                hashMap.put("id",""+timestamp);
-                hashMap.put("destiId",""+destiId);
-                hashMap.put("timestamp",""+timestamp);
-                hashMap.put("comment",""+comment);
-                hashMap.put("uid",""+firebaseAuth.getUid());
+                hashMap.put("id", "" + timestamp);
+                hashMap.put("destiId", "" + destiId);
+                hashMap.put("timestamp", "" + timestamp);
+                hashMap.put("comment", "" + comment);
+                hashMap.put("uid", "" + firebaseAuth.getUid());
                 DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
                 reference.child(destiId).child("Comments").child(timestamp)
                         .setValue(hashMap)
                         .addOnSuccessListener(unused -> {
-                            Toast.makeText(DestinationDetails.this,R.string.success_add_comment, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DestinationDetails.this, R.string.success_add_comment, Toast.LENGTH_SHORT).show();
                             progressDialog.dismiss();
                             dialog.dismiss();
                         })
                         .addOnFailureListener(e -> {
-                            Toast.makeText(DestinationDetails.this, getString(R.string.failed_add_comment)+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DestinationDetails.this, getString(R.string.failed_add_comment) + e.getMessage(), Toast.LENGTH_SHORT).show();
                             progressDialog.dismiss();
                             dialog.dismiss();
                         });
             }
         });
     }
+
     private void showAddItineraryDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         DialogAddToItineraryBinding addToItineraryBinding = DialogAddToItineraryBinding.inflate(getLayoutInflater());
         builder.setView(addToItineraryBinding.getRoot());
-        EditText dateEt,startEt,endEt;
-        ImageButton dateBtn,startBtn,endBtn;
+        EditText dateEt, startEt, endEt;
+        ImageButton dateBtn, startBtn, endBtn;
         Button addItinerary;
         dateEt = addToItineraryBinding.dateEt;
         startEt = addToItineraryBinding.starttimeEt;
@@ -320,15 +323,13 @@ public class DestinationDetails extends AppCompatActivity {
             dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);
             dialog.show();
         });
-        addItinerary.setOnClickListener(v ->{
+        addItinerary.setOnClickListener(v -> {
             validateData(dateEt, startEt, endEt);
         });
         AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
         dialog.show();
     }
-
-    private String date = "", startTime = "", endTime = "";
 
     private void validateData(EditText dateEt, EditText startTimeEt, EditText endTimeEt) {
         date = dateEt.getText().toString().trim();
@@ -379,19 +380,53 @@ public class DestinationDetails extends AppCompatActivity {
                 hashMap.put("date", date);
                 hashMap.put("destiId", destiId);
                 DatabaseReference itineraryRef = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
-                itineraryRef.child(uid).child("itinerary").push().setValue(hashMap)
-                        .addOnSuccessListener(aVoid -> {
-                            if (progressDialog != null) {
-                                progressDialog.dismiss();
+                final String defaultItineraryName = "itinerary 1";
+                Query query = itineraryRef.child(uid).child("itineraries").orderByKey().equalTo(defaultItineraryName);
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (!dataSnapshot.exists()) {
+                            itineraryRef.child(uid).child("itineraries").child(defaultItineraryName).setValue(hashMap)
+                                    .addOnSuccessListener(aVoid -> {
+                                        if (progressDialog != null) {
+                                            progressDialog.dismiss();
+                                        }
+                                        Toast.makeText(getApplicationContext(), "Itinerary uploaded successfully", Toast.LENGTH_LONG).show();
+                                    }).addOnFailureListener(e -> {
+                                        if (progressDialog != null) {
+                                            progressDialog.dismiss();
+                                        }
+                                        Toast.makeText(DestinationDetails.this, "Data upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        Log.d(TAG, "on Failure : " + e.getMessage());
+                                    });
+                        } else {
+                            int count = 1;
+                            String itineraryName = "itinerary " + count;
+                            while (dataSnapshot.child(itineraryName).exists()) {
+                                count++;
+                                itineraryName = "itinerary " + count;
                             }
-                            Toast.makeText(getApplicationContext(), "Itinerary uploaded successfully", Toast.LENGTH_LONG).show();
-                        }).addOnFailureListener(e -> {
-                            if (progressDialog != null) {
-                                progressDialog.dismiss();
-                            }
-                            Toast.makeText(DestinationDetails.this, "Data upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, "on Failure : " + e.getMessage());
-                        });
+                            itineraryRef.child(uid).child("itineraries").child(itineraryName).setValue(hashMap)
+                                    .addOnSuccessListener(aVoid -> {
+                                        if (progressDialog != null) {
+                                            progressDialog.dismiss();
+                                        }
+                                        Toast.makeText(getApplicationContext(), "Itinerary uploaded successfully", Toast.LENGTH_LONG).show();
+                                    }).addOnFailureListener(e -> {
+                                        if (progressDialog != null) {
+                                            progressDialog.dismiss();
+                                        }
+                                        Toast.makeText(DestinationDetails.this, "Data upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        Log.d(TAG, "on Failure : " + e.getMessage());
+                                    });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Handle error
+                    }
+                });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -406,7 +441,7 @@ public class DestinationDetails extends AppCompatActivity {
         reference.child(destiId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot){
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String title = "" + snapshot.child("title").getValue();
                         String description = "" + snapshot.child("description").getValue();
                         String address = "" + snapshot.child("address").getValue();
@@ -472,6 +507,7 @@ public class DestinationDetails extends AppCompatActivity {
                             googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(DestinationDetails.this, R.raw.map_style));
                         });
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
@@ -479,18 +515,18 @@ public class DestinationDetails extends AppCompatActivity {
                 });
     }
 
-    private void checkFavorite(){
+    private void checkFavorite() {
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
         reference.child(firebaseAuth.getUid()).child("Favorites").child(destiId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         inFavorite = snapshot.exists();
-                        if(inFavorite){
-                            binding.saveItem.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.bookmark,0,0);
+                        if (inFavorite) {
+                            binding.saveItem.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.bookmark, 0, 0);
                             binding.saveItem.setText(R.string.unbookmark_text);
-                        }else{
-                            binding.saveItem.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.remove_bookmark,0,0);
+                        } else {
+                            binding.saveItem.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.remove_bookmark, 0, 0);
                             binding.saveItem.setText(R.string.bookmark_text);
                         }
                     }
