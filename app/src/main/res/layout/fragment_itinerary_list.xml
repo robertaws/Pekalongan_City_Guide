@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -24,6 +25,7 @@
             android:textColor="@color/palette_1" />
 
         <TextView
+            android:id="@+id/iter_empty_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="24dp"
@@ -36,7 +38,8 @@
             android:layout_below="@id/header_tv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="" />
+            tools:listitem=""
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <ImageButton
             android:id="@+id/add_iter_btn"
