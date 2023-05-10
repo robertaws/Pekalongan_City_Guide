@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -32,13 +35,19 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
     private String categoryId;
     private String category;
     private int counter;
-    private IterAdapter iterAdapter;
+    public IterAdapter iterAdapter;
     private RecyclerView iterRV;
     private Button addIter;
-    private ArrayList<Destination> destinationArrayList;
+    private RelativeLayout selectLayout;
+    private TextView selectTv;
+    private ImageButton selectCancel;
+    public ArrayList<Destination> destinationArrayList;
     private ArrayList<Destination> selectedItems;
+    private View view;
+    private ItineraryPager itineraryPager;
 
-    public AddItinerary() {}
+    public AddItinerary() {
+    }
 
     public static AddItinerary newInstance(String categoryId, String category, String uid) {
         AddItinerary fragment = new AddItinerary();
@@ -66,9 +75,8 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_add_itinerary, container, false);
-        iterRV = view.findViewById(R.id.recycler_view);
-        addIter = view.findViewById(R.id.add_iter_btn);
+        view = inflater.inflate(R.layout.fragment_add_itinerary, container, false);
+        init();
         checkSelect();
         EditText iterSearch = view.findViewById(R.id.search_iter);
         iterSearch.addTextChangedListener(new TextWatcher() {
@@ -76,6 +84,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
@@ -98,9 +107,18 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
         addIter.setOnClickListener(v -> {
 
         });
-
+        selectCancel.setOnClickListener(v -> iterAdapter.exitSelectMode());
         return view;
     }
+
+    private void init() {
+        iterRV = view.findViewById(R.id.recycler_view);
+        addIter = view.findViewById(R.id.add_iter_btn);
+        selectTv = view.findViewById(R.id.select_tv);
+        selectLayout = view.findViewById(R.id.select_layout);
+        selectCancel = view.findViewById(R.id.select_cancel);
+    }
+
     private void loadDestinations() {
         destinationArrayList = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
@@ -167,23 +185,29 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
         if (iterAdapter != null) {
             selectedItems = iterAdapter.getSelectedItems();
             if (selectedItems.size() < 1) {
+                selectLayout.setVisibility(View.GONE);
                 addIter.setVisibility(View.INVISIBLE);
             } else if (selectedItems.size() == 1) {
                 counter = selectedItems.size();
-                addIter.setText("Add " + counter + " location to the itinerary");
+                selectTv.setText(counter + " item selected");
+                addIter.setText("Add to itinerary");
                 addIter.setVisibility(View.VISIBLE);
+                selectLayout.setVisibility(View.VISIBLE);
             } else {
                 counter = selectedItems.size();
-                addIter.setText("Add " + counter + " locations to the itinerary");
+                selectTv.setText(counter + " items selected");
+                addIter.setText("Add to itinerary");
                 addIter.setVisibility(View.VISIBLE);
+                selectLayout.setVisibility(View.VISIBLE);
             }
         } else {
             addIter.setVisibility(View.INVISIBLE);
+            selectLayout.setVisibility(View.GONE);
         }
     }
 
-    private void initIterAdapter() {
-        iterAdapter = new IterAdapter(getContext(), destinationArrayList, this, this); // Pass the reference to the fragment
+    public void initIterAdapter() {
+        iterAdapter = new IterAdapter(getContext(), destinationArrayList, this, this, itineraryPager); // Pass the reference to the fragment
         iterRV.setAdapter(iterAdapter);
     }
 
@@ -191,4 +215,5 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
     public void onItemLongClick(Destination destination) {
         checkSelect();
     }
+
 }

@@ -12,33 +12,36 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:layout_marginVertical="8dp"
             android:layout_height="wrap_content"
             android:gravity="center">
-            <LinearLayout
+
+            <RelativeLayout
                 android:id="@+id/select_layout"
                 android:layout_width="match_parent"
                 android:background="@color/palette_4"
                 android:layout_height="wrap_content"
                 android:visibility="visible"
                 android:orientation="horizontal">
+
                 <ImageButton
                     android:id="@+id/select_cancel"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:background="#0000"
-                    android:src="@drawable/close_icon"/>
+                    android:src="@drawable/close_icon"
+                    android:layout_alignParentStart="true" />
+
                 <TextView
                     android:id="@+id/select_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="n Item Selected"
-                    android:layout_weight="1"
                     android:textColor="@color/palette_1"
                     android:textStyle="bold"
+                    android:textSize="18dp"
                     android:fontFamily="@font/poppins_semibold"
-                    android:gravity="center"/>
-            </LinearLayout>
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
 
             <EditText
                 android:includeFontPadding="false"

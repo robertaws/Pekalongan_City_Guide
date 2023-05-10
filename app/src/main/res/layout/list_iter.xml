@@ -49,7 +49,10 @@
                 android:textColor="@color/palette_1"
                 android:gravity="center"
                 android:fontFamily="@font/poppins_semibold"
-                android:text="Place Name"/>
+                android:text="Place Name"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:padding="5dp" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </layout>
