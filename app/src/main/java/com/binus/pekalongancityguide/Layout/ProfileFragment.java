@@ -94,8 +94,6 @@ public class ProfileFragment extends Fragment {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container, itineraryDetails);
             fragmentTransaction.addToBackStack(null);
-
-            // Commit the transaction
             fragmentTransaction.commit();
         });
 
