@@ -22,6 +22,8 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -85,7 +87,7 @@ public class ItineraryFragment extends Fragment {
         Places.initialize(getContext().getApplicationContext(), apiKey);
         placesClient = Places.createClient(getContext());
         firebaseAuth = FirebaseAuth.getInstance();
-        adapter = new ItineraryAdapter(getContext(), itineraryList);
+        adapter = new ItineraryAdapter(getContext(), itineraryList, getParentFragmentManager());
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
@@ -120,6 +122,14 @@ public class ItineraryFragment extends Fragment {
         }
         loadItinerary(selectedDate);
         binding.itineraryRv.setAdapter(adapter);
+        binding.addIterBtn.setOnClickListener(v -> {
+            ItineraryPager itineraryPager = new ItineraryPager();
+            FragmentManager fragmentManager = getParentFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container, itineraryPager);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        });
         return binding.getRoot();
     }
     @Override
@@ -212,7 +222,7 @@ public class ItineraryFragment extends Fragment {
                                                 }
                                             });
 
-                                            ItineraryAdapter adapter = new ItineraryAdapter(getContext(), itineraryList);
+                                            ItineraryAdapter adapter = new ItineraryAdapter(getContext(), itineraryList, getParentFragmentManager());
                                             binding.itineraryRv.setAdapter(adapter);
                                         });
                                     }
