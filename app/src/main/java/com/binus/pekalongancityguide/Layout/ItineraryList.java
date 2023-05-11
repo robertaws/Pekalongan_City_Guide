@@ -93,7 +93,7 @@ public class ItineraryList extends Fragment {
 
                 List<Fragment> fragments = createFragmentsList(dates);
 
-                ItineraryPagerAdapter vpAdapter = new ItineraryList.ItineraryPagerAdapter(getContext(), getActivity().getSupportFragmentManager(), fragments, dates);
+                ItineraryPagerAdapter vpAdapter = new ItineraryList.ItineraryPagerAdapter(getContext(), getChildFragmentManager(), fragments, dates);
                 binding.viewPager.setAdapter(vpAdapter);
                 binding.viewPager.setOffscreenPageLimit(10);
                 binding.itineraryTab.setupWithViewPager(binding.viewPager);

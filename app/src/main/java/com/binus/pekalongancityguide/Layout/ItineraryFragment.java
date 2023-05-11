@@ -124,7 +124,7 @@ public class ItineraryFragment extends Fragment {
         binding.itineraryRv.setAdapter(adapter);
         binding.addIterBtn.setOnClickListener(v -> {
             ItineraryPager itineraryPager = new ItineraryPager();
-            FragmentManager fragmentManager = getParentFragmentManager();
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container, itineraryPager);
             fragmentTransaction.addToBackStack(null);
