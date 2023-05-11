@@ -174,4 +174,5 @@
     <string name="delete_desti_confirm">\"Are you sure you want to delete \"</string>
     <string name="delete_confirmation">Confirmation</string>
     <string name="error_news">Error fetching news articles:</string>
+
 </resources>
