@@ -15,6 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.binus.pekalongancityguide.Misc.ImageFullscreen;
 import com.binus.pekalongancityguide.Misc.MyApplication;
@@ -78,15 +80,22 @@ public class ProfileFragment extends Fragment {
         });
         binding.editName.setOnClickListener(v -> {
             if (firebaseAuth.getCurrentUser() == null) {
-                Toast.makeText(getContext(),R.string.notLogin, Toast.LENGTH_SHORT).show();
-            }else{
+                Toast.makeText(getContext(), R.string.notLogin, Toast.LENGTH_SHORT).show();
+            } else {
                 startActivity(new Intent(getActivity(), EditProfile.class));
             }
         });
         binding.logoutBtn.setOnClickListener(v -> {
             logoutConfirm();
         });
-
+        binding.showItineraryBtn.setOnClickListener(v -> {
+            ItineraryList itineraryDetails = new ItineraryList();
+            FragmentManager fragmentManager = getParentFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container, itineraryDetails);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        });
         binding.editLang.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle(R.string.select_language)
