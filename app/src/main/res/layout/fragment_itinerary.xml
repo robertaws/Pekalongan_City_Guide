@@ -21,8 +21,8 @@
             android:backgroundTint="@color/palette_4"
             android:backgroundTintMode="screen"
             android:orientation="vertical"
-            android:layout_above="@+id/showRoutes"
-            >
+            android:layout_above="@+id/showRoutes">
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/itinerary_rv"
                 android:layout_width="match_parent"
@@ -30,6 +30,17 @@
                 tools:listitem="@layout/list_itinerary"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
         </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/add_iter_btn"
+            android:layout_marginEnd="15dp"
+            android:layout_alignParentEnd="true"
+            android:layout_above="@id/showRoutes"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/add_desti_icon"
+            android:background="#0000" />
+
         <Button
             android:id="@+id/showRoutes"
             android:layout_width="match_parent"
@@ -38,7 +49,7 @@
             android:layout_marginHorizontal="10dp"
             android:layout_alignParentBottom="true"
             android:text="@string/show_routes"
-            android:textColor="@color/palette_4"/>
+            android:textColor="@color/palette_4" />
     </RelativeLayout>
 
 </layout>

@@ -25,7 +25,7 @@
                 android:layout_marginBottom="50dp"
                 android:backgroundTint="@color/palette_1"
                 android:backgroundTintMode="screen"
-                android:background="@drawable/batik"/>
+                android:background="@drawable/pattern1"/>
 
             <FrameLayout
                 android:layout_width="150dp"

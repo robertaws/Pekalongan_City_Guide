@@ -128,7 +128,8 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
         String destiId = destination.getId();
         String destiUrl = destination.getUrl();
         String destiTitle = destination.getTitle();
-        String[] options = {"Edit","Delete"};
+        String placeId = destination.getPlaceId();
+        String[] options = {"Edit", "Delete"};
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Choose Options")
                 .setItems(options, (dialog, which) -> {

@@ -6,11 +6,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,11 +25,13 @@ import com.kwabenaberko.newsapilib.NewsApiClient;
 import com.kwabenaberko.newsapilib.models.Article;
 import com.kwabenaberko.newsapilib.models.request.EverythingRequest;
 import com.kwabenaberko.newsapilib.models.response.ArticleResponse;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 import static com.binus.pekalongancityguide.BuildConfig.NEWS_API_KEY;
 public class HomeFragment extends Fragment {
     RecyclerView foodRV, newsRV;
@@ -85,25 +85,26 @@ public class HomeFragment extends Fragment {
         Date dateBefore30Days = cal.getTime();
         String dateString = dateFormat.format(dateBefore30Days);
 
-        EverythingRequest everythingRequest = new EverythingRequest.Builder()
-                .q("jawa")
-                .language("id")
-                .from(dateString)
-                .to(String.valueOf(new Date()))
-                .sortBy("publishedAt")
-                .build();
-        newsApiClient.getEverything(everythingRequest, new NewsApiClient.ArticlesResponseCallback() {
-            @Override
-            public void onSuccess(ArticleResponse response) {
-                List<Article> articles = response.getArticles();
-                NewsAdapter newsAdapter = new NewsAdapter(articles);
-                newsRV.setAdapter(newsAdapter);
-            }
-            @Override
-            public void onFailure(Throwable throwable) {
-                Log.e("NewsAPI", "Error fetching news articles: " + throwable.getMessage());
-            }
-        });
+//        EverythingRequest everythingRequest = new EverythingRequest.Builder()
+//                .q("jawa tengah")
+//                .language("id")
+//                .from(dateString)
+//                .to(String.valueOf(new Date()))
+//                .sortBy("publishedAt")
+//                .build();
+//        newsApiClient.getEverything(everythingRequest, new NewsApiClient.ArticlesResponseCallback() {
+//            @Override
+//            public void onSuccess(ArticleResponse response) {
+//                List<Article> articles = response.getArticles();
+//                NewsAdapter newsAdapter = new NewsAdapter(articles);
+//                newsRV.setAdapter(newsAdapter);
+//            }
+//            @Override
+//            public void onFailure(Throwable throwable){
+//                Toast.makeText(getContext(),getString(R.string.error_news)+throwable.getMessage(), Toast.LENGTH_SHORT).show();
+//                Log.e("NewsAPI", "Error fetching news articles: " + throwable.getMessage());
+//            }
+//        });
         return view;
     }
 }

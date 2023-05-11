@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,8 +35,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
@@ -109,7 +106,11 @@ public class DestinationDetails extends AppCompatActivity {
             }
         });
         binding.addItenary.setOnClickListener(v ->{
-            showAddItineraryDialog();
+            if (firebaseAuth.getCurrentUser() == null) {
+                Toast.makeText(DestinationDetails.this,R.string.notLogin, Toast.LENGTH_SHORT).show();
+            }else{
+                showAddItineraryDialog();
+            }
         });
     }
 
@@ -252,11 +253,11 @@ public class DestinationDetails extends AppCompatActivity {
                 endHour = dialog.getHour();
                 endMinute = dialog.getMinute();
                 if (endHour < 12) {
-                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d am", endHour, endMinute));
+                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d am", endHour, endMinute));
                 } else if (endHour == 12) {
-                    startEt.setText(String.format(Locale.getDefault(), "12:%02d pm", endMinute));
+                    endEt.setText(String.format(Locale.getDefault(), "12:%02d pm", endMinute));
                 } else {
-                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", endHour - 12, endMinute));
+                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", endHour - 12, endMinute));
                 }
             });
             dialog.show(getSupportFragmentManager(), "startTimePicker");
@@ -276,11 +277,11 @@ public class DestinationDetails extends AppCompatActivity {
                 endHour1 = dialog.getHour();
                 endMinute1 = dialog.getMinute();
                 if (endHour1 < 12) {
-                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d am", endHour1, endMinute1));
+                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d am", endHour1, endMinute1));
                 } else if (endHour1 == 12) {
-                    startEt.setText(String.format(Locale.getDefault(), "12:%02d pm", endMinute1));
+                    endEt.setText(String.format(Locale.getDefault(), "12:%02d pm", endMinute1));
                 } else {
-                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", endHour1 - 12, endMinute1));
+                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", endHour1 - 12, endMinute1));
                 }
             });
             dialog.show(getSupportFragmentManager(), "startTimePicker");
@@ -359,6 +360,7 @@ public class DestinationDetails extends AppCompatActivity {
         if (allFieldsFilled) {
             uploadToDB(date, startTime, endTime);
             Toast.makeText(this, R.string.added_to_iter, Toast.LENGTH_SHORT).show();
+            onBackPressed();
         }
 
     }
@@ -387,11 +389,10 @@ public class DestinationDetails extends AppCompatActivity {
                             if (progressDialog != null) {
                                 progressDialog.dismiss();
                             }
+                            Toast.makeText(DestinationDetails.this, "Data upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "on Failure : " + e.getMessage());
-                    Toast.makeText(DestinationDetails.this, "Data upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+                        });
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

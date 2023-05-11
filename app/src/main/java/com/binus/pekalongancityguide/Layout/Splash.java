@@ -1,8 +1,10 @@
 package com.binus.pekalongancityguide.Layout;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -10,11 +12,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.binus.pekalongancityguide.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +28,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class Splash extends AppCompatActivity {
@@ -38,8 +43,11 @@ public class Splash extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String language = preferences.getString("language", "");
+        SharedPreferences locPrefs = this.getApplicationContext().getSharedPreferences("coordinate", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = locPrefs.edit();
+        editor.clear().apply();
+        SharedPreferences langPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String language = langPrefs.getString("language", "");
         if (!TextUtils.isEmpty(language)) {
             Locale locale = new Locale(language);
             Configuration config = new Configuration(getResources().getConfiguration());
@@ -47,7 +55,41 @@ public class Splash extends AppCompatActivity {
             getResources().updateConfiguration(config, getResources().getDisplayMetrics());
         }
         firebaseAuth = FirebaseAuth.getInstance();
-        new Handler().postDelayed(() -> checkUser(), 3000);
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA};
+        List<String> permissionsToRequest = new ArrayList<>();
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(permission);
+            }
+        }
+        if (!permissionsToRequest.isEmpty()) {
+            ActivityCompat.requestPermissions(this, permissionsToRequest.toArray(new String[0]), 1);
+        } else {
+            checkUser();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            boolean allPermissionsGranted = true;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    allPermissionsGranted = false;
+                    break;
+                }
+            }
+            if (allPermissionsGranted) {
+                new Handler().postDelayed(() -> checkUser(), 3000);
+            } else {
+                Toast.makeText(this, "Some permissions are not granted", Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(() -> checkUser(), 3000);
+            }
+        }
     }
     @Override
     public void onBackPressed() {
@@ -56,7 +98,7 @@ public class Splash extends AppCompatActivity {
             return;
         }
         this.doubleTap = true;
-        Toast.makeText(this,R.string.press_back, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.press_back, Toast.LENGTH_SHORT).show();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -1,7 +1,6 @@
 package com.binus.pekalongancityguide.Layout;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -11,12 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.binus.pekalongancityguide.Misc.ImageFullscreen;
 import com.binus.pekalongancityguide.Misc.MyApplication;
@@ -50,13 +50,12 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         firebaseAuth = FirebaseAuth.getInstance();
         getInfo();
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String selectedLanguage = prefs.getString("language", "en"); // retrieve the stored language preference, defaulting to "en"
+        String selectedLanguage = prefs.getString("language", "en");
         if (selectedLanguage.equals("in")) {
             Locale newLocale = new Locale("in");
             Configuration config = new Configuration(getResources().getConfiguration());
@@ -73,15 +72,30 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
         binding.changePass.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), ChangePassword.class));
+            if (firebaseAuth.getCurrentUser() == null) {
+                Toast.makeText(getContext(),R.string.notLogin, Toast.LENGTH_SHORT).show();
+            }else{
+                startActivity(new Intent(getActivity(), ChangePassword.class));
+            }
         });
         binding.editName.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), EditProfile.class));
+            if (firebaseAuth.getCurrentUser() == null) {
+                Toast.makeText(getContext(), R.string.notLogin, Toast.LENGTH_SHORT).show();
+            } else {
+                startActivity(new Intent(getActivity(), EditProfile.class));
+            }
         });
         binding.logoutBtn.setOnClickListener(v -> {
             logoutConfirm();
         });
-
+        binding.showItineraryBtn.setOnClickListener(v -> {
+            ItineraryList itineraryDetails = new ItineraryList();
+            FragmentManager fragmentManager = getParentFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container, itineraryDetails);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        });
         binding.editLang.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle(R.string.select_language)
@@ -89,10 +103,10 @@ public class ProfileFragment extends Fragment {
                         Locale newLocale;
                         if (which == 0) {
                             newLocale = new Locale("en", "US");
-                            prefs.edit().putString("language", "en").apply(); // store "en" as language preference
+                            prefs.edit().putString("language", "en").apply();
                         } else {
                             newLocale = new Locale("in");
-                            prefs.edit().putString("language", "in").apply(); // store "id" as language preference
+                            prefs.edit().putString("language", "in").apply();
                         }
                         Locale currentLocale = getResources().getConfiguration().locale;
                         if (!currentLocale.equals(newLocale)) {
@@ -106,11 +120,6 @@ public class ProfileFragment extends Fragment {
                     });
             AlertDialog dialog = builder.create();
             dialog.show();
-        });
-
-        binding.showItineraryBtn.setOnClickListener(v -> {
-            Intent showIniterary = new Intent(getActivity(), ItineraryList.class);
-            startActivity(showIniterary);
         });
         return view;
     }
@@ -137,7 +146,7 @@ public class ProfileFragment extends Fragment {
     private void getInfo(){
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
         Log.e(TAG,"Loading User Info..."+firebaseAuth.getUid());
-        if (firebaseAuth.getUid() != null) { // add null check here
+        if (firebaseAuth.getUid() != null) {
             DatabaseReference r = database.getReference("Users");
             r.keepSynced(true);
             r.child(Objects.requireNonNull(firebaseAuth.getUid()))

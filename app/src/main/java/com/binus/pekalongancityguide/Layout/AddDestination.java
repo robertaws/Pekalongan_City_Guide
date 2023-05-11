@@ -38,6 +38,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -98,7 +99,7 @@ public class AddDestination extends AppCompatActivity {
 
     }
 
-    private void validateData() {
+    private void validateData(){
         Log.d(TAG, "validate data : validating data ");
         title = binding.titleEt.getText().toString().trim();
         desc = binding.descEt.getText().toString().trim();
@@ -107,7 +108,7 @@ public class AddDestination extends AppCompatActivity {
             binding.titleEt.setError("Enter destination title!");
         } else if (TextUtils.isEmpty(selectedCategoryTitle)) {
             binding.categoryPick.setError("Pick a category!");
-        } else {
+        } else{
             placesClient = Places.createClient(this);
             List<Place.Field> placeFields = Arrays.asList(
                     Place.Field.ID,
@@ -130,54 +131,70 @@ public class AddDestination extends AppCompatActivity {
                 if (!response.getAutocompletePredictions().isEmpty()) {
                     String placeId = response.getAutocompletePredictions().get(0).getPlaceId();
                     Log.d(TAG, "Place ID: " + placeId);
-                    String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" + MAPS_API_KEY;
-                    FetchPlaceRequest placeRequest = FetchPlaceRequest.builder(placeId, placeFields).build();
-                    placesClient.fetchPlace(placeRequest).addOnCompleteListener(task1 -> {
-                        if (task1.isSuccessful()) {
-                            Place place = task1.getResult().getPlace();
-                            String address = place.getAddress();
-                            String phoneNumber = place.getPhoneNumber();
-                            OpeningHours openingHours = place.getOpeningHours();
-                            double latitude = place.getLatLng().latitude;
-                            double longitude = place.getLatLng().longitude;
-                            double rating = place.getRating() != null ? place.getRating() : 0;
-                            Log.d(TAG, "Address: " + address);
-                            Log.d(TAG, "Latitude: " + latitude);
-                            Log.d(TAG, "Longitude: " + longitude);
-                            Log.d(TAG, "Rating: " + rating);
-                            Log.d(TAG, "Phone number: " + phoneNumber);
-                            if (TextUtils.isEmpty(desc)) {
-                                StringBuilder sb = new StringBuilder();
-                                for (Place.Type type : place.getTypes()) {
-                                    String typeName = type.name().replace("_", " ");
-                                    if (!typeName.equals("POINT OF INTEREST")) {
-                                        sb.append(typeName.toLowerCase().substring(0, 1).toUpperCase() + typeName.toLowerCase().substring(1));
-                                        sb.append(", ");
-                                    }
-                                }
-                                desc = sb.toString().trim();
-                                if (desc.endsWith(",")) {
-                                    desc = desc.substring(0, desc.length() - 1);
-                                }
-                                Log.d(TAG, "Description: " + desc);
-                            }
-                            new GetReviewsTask() {
-                                @Override
-                                protected void onPostExecute(JSONArray reviews) {
-                                    if (reviews != null) {
-                                        Log.d(TAG, "Reviews: " + reviews);
-                                        if (openingHours != null) {
-                                            uploadtoStorage(placeId, address, latitude, longitude, rating, reviews, phoneNumber, openingHours.getWeekdayText(), place);
-                                        } else {
-                                            uploadtoStorage(placeId, address, latitude, longitude, rating, reviews, phoneNumber, null, place);
+                    DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+                    Query query = reference.orderByChild("placeId").equalTo(placeId);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                progressDialog.dismiss();
+                                Toast.makeText(AddDestination.this, "This place has already been added.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" + MAPS_API_KEY;
+                                FetchPlaceRequest placeRequest = FetchPlaceRequest.builder(placeId, placeFields).build();
+                                placesClient.fetchPlace(placeRequest).addOnCompleteListener(task1 -> {
+                                    if (task1.isSuccessful()) {
+                                        Place place = task1.getResult().getPlace();
+                                        String address = place.getAddress();
+                                        String phoneNumber = place.getPhoneNumber();
+                                        OpeningHours openingHours = place.getOpeningHours();
+                                        double latitude = place.getLatLng().latitude;
+                                        double longitude = place.getLatLng().longitude;
+                                        double rating = place.getRating() != null ? place.getRating() : 0;
+                                        Log.d(TAG, "Address: " + address);
+                                        Log.d(TAG, "Latitude: " + latitude);
+                                        Log.d(TAG, "Longitude: " + longitude);
+                                        Log.d(TAG, "Rating: " + rating);
+                                        Log.d(TAG, "Phone number: " + phoneNumber);
+                                        if (TextUtils.isEmpty(desc)) {
+                                            StringBuilder sb = new StringBuilder();
+                                            for (Place.Type type : place.getTypes()) {
+                                                String typeName = type.name().replace("_", " ");
+                                                if (!typeName.equals("POINT OF INTEREST")) {
+                                                    sb.append(typeName.toLowerCase().substring(0, 1).toUpperCase() + typeName.toLowerCase().substring(1));
+                                                    sb.append(", ");
+                                                }
+                                            }
+                                            desc = sb.toString().trim();
+                                            if (desc.endsWith(",")) {
+                                                desc = desc.substring(0, desc.length() - 1);
+                                            }
+                                            Log.d(TAG, "Description: " + desc);
                                         }
-                                    } else {
-                                        Toast.makeText(AddDestination.this, "Error getting reviews", Toast.LENGTH_SHORT).show();
+                                        new GetReviewsTask(){
+                                            @Override
+                                            protected void onPostExecute(JSONArray reviews) {
+                                                if (reviews != null) {
+                                                    Log.d(TAG, "Reviews: " + reviews);
+                                                    if (openingHours != null) {
+                                                        uploadtoStorage(placeId, address, latitude, longitude, rating, reviews, phoneNumber, openingHours.getWeekdayText(), place);
+                                                    } else {
+                                                        uploadtoStorage(placeId, address, latitude, longitude, rating, reviews, phoneNumber, null, place);
+                                                    }
+                                                } else {
+                                                    Toast.makeText(AddDestination.this, "Error getting reviews", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        }.execute(url);
+                                    }else {
+                                        Toast.makeText(AddDestination.this, "Error getting location details: " + task1.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                     }
-                                }
-                            }.execute(url);
-                        } else {
-                            Toast.makeText(AddDestination.this, "Error getting location details: " + task1.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                });
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
                         }
                     });
                 } else {
@@ -199,7 +216,6 @@ public class AddDestination extends AppCompatActivity {
         if (imageUri == null){
             List<PhotoMetadata> photoMetadataList = place.getPhotoMetadatas();
             if (photoMetadataList != null && !photoMetadataList.isEmpty()) {
-                // If photo metadata is available, fetch the photo and set it as the image
                 PhotoMetadata photoMetadata = photoMetadataList.get(0);
                 FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
                         .setMaxWidth(800)
@@ -439,16 +455,11 @@ public class AddDestination extends AppCompatActivity {
     }
 
     public Uri bitmapToUri(Context context, Bitmap bitmap) throws IOException {
-        // Create a temporary file in the cache directory
         File tempFile = File.createTempFile("tempImage", ".png", context.getCacheDir());
-
-        // Write the bitmap data to the temporary file
         FileOutputStream fos = new FileOutputStream(tempFile);
         bitmap.compress(Bitmap.CompressFormat.PNG, 25, fos);
         fos.flush();
         fos.close();
-
-        // Return the Uri of the temporary file
         return Uri.fromFile(tempFile);
     }
 
@@ -458,12 +469,9 @@ public class AddDestination extends AppCompatActivity {
             String url = params[0];
             JSONObject json = null;
             try {
-                // Create the URL and open the connection
                 URL urlObj = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
                 conn.setRequestMethod("GET");
-
-                // Read the response from the connection
                 InputStream stream = conn.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
                 StringBuilder response = new StringBuilder();
@@ -471,7 +479,6 @@ public class AddDestination extends AppCompatActivity {
                 while ((line = reader.readLine()) != null) {
                     response.append(line);
                 }
-                // Parse the JSON response
                 json = new JSONObject(response.toString());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -492,7 +499,6 @@ public class AddDestination extends AppCompatActivity {
                         String authorName = review.getString("author_name");
                         int reviewRating = review.getInt("rating");
                         String text = review.getString("text");
-                        // Do something with the review data...
                         Log.d("Review #" + i, "Author Name: " + authorName);
                         Log.d("Review #" + i, "Rating: " + reviewRating);
                         Log.d("Review #" + i, "Text: " + text);

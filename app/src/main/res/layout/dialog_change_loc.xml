@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+        <RelativeLayout
+            android:id="@+id/dialog_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/palette_4"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/header"
+                android:layout_marginLeft="10dp"
+                android:layout_marginVertical="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="Choose Location"
+                android:textSize="24dp"
+                android:textColor="@color/palette_1" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/fragment_container"
+                android:layout_below="@id/header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="3dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/palette_3"
+                    android:orientation="vertical">
+                    <fragment
+                        android:id="@+id/autocomplete_fragment"
+                        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:theme="@style/CustomAutoCompleteTheme"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <fragment
+                android:id="@+id/user_map"
+                android:layout_below="@id/fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:name="com.google.android.gms.maps.SupportMapFragment"></fragment>
+
+            <TextView
+                android:id="@+id/locTv"
+                android:layout_below="@id/user_map"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Your Location"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="5dp"
+                android:fontFamily="@font/poppins_regular"
+                android:textColor="@color/palette_2" />
+
+            <TextView
+                android:id="@+id/use_cur_loc"
+                android:layout_below="@id/locTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:drawablePadding="10dp"
+                android:layout_marginTop="20dp"
+                android:drawableTint="@color/palette_1"
+                android:drawableLeft="@drawable/my_loc"
+                android:text="Use current location"
+                android:background="@color/ic_launcher_background"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="5dp"
+                android:fontFamily="@font/poppins_regular"
+                android:textColor="@color/palette_2" />
+            <Button
+                android:id="@+id/set_loc_btn"
+                android:layout_below="@id/use_cur_loc"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/palette_4"
+                android:text="Set Location"/>
+        </RelativeLayout>
+</layout>

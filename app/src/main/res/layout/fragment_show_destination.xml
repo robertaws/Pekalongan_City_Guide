@@ -12,7 +12,43 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context=".Layout.ShowDestinationFragment">
+        <LinearLayout
+            android:id="@+id/loc_layout"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="5dp"
+            android:background="@color/palette_4">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:drawablePadding="6dp"
+                android:fontFamily="@font/poppins_regular"
+                android:textColor="@color/palette_2"
+                android:textSize="14dp"
+                android:text="your location"
+                app:drawableTint="@color/palette_1"
+                app:drawableStartCompat="@drawable/location_pin"
+                android:drawableEnd="@drawable/arrow_down" />
 
+            <TextView
+                android:id="@+id/change_loc"
+                android:layout_marginStart="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:drawablePadding="7dp"
+                android:layout_weight="2"
+                android:fontFamily="@font/poppins_regular"
+                android:textColor="@color/palette_2"
+                android:textSize="15dp"
+                android:text="your location"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="horizontal"
@@ -26,6 +62,8 @@
                 android:drawablePadding="5dp"
                 android:padding="5dp"
                 android:layout_weight="2"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:fontFamily="@font/poppins_regular"
                 android:textColor="@color/palette_1"
                 android:textColorHint="@color/palette_3"

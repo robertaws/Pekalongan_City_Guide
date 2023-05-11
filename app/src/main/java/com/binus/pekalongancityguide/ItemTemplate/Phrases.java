@@ -1,7 +1,6 @@
 package com.binus.pekalongancityguide.ItemTemplate;
 
 public class Phrases {
-
     String aksara, latin, english, indo;
 
     public Phrases(String aksara, String latin, String english, String indo) {

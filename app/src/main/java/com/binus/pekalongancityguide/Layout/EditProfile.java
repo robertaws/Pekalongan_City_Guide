@@ -127,7 +127,7 @@ public class EditProfile extends AppCompatActivity {
                     Log.d(TAG, "on Success: Profile updated");
                     progressDialog.dismiss();
                     Toast.makeText(this, "Profile updated", Toast.LENGTH_SHORT).show();
-
+                    onBackPressed();
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "on Success: Failed to update db due to"+e.getMessage());
@@ -246,7 +246,6 @@ public class EditProfile extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String email = ""+snapshot.child("Email").getValue();
                         String name = ""+snapshot.child("Username").getValue();
                         String profile_img = ""+snapshot.child("profileImage").getValue();
                         String timestamp = ""+snapshot.child("timestamp").getValue();

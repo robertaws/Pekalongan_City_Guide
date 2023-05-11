@@ -1,0 +1,253 @@
+Index: app/src/main/res/layout/fragment_show_destination.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<layout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\">\r\n\r\n    <data>\r\n\r\n    </data>\r\n\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\"\r\n        android:orientation=\"vertical\"\r\n        tools:context=\".Layout.ShowDestinationFragment\">\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:orientation=\"horizontal\"\r\n            android:layout_height=\"wrap_content\">\r\n            <TextView\r\n                android:id=\"@+id/change_loc\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:includeFontPadding=\"false\"\r\n                android:drawablePadding=\"7dp\"\r\n                android:padding=\"5dp\"\r\n                android:layout_weight=\"2\"\r\n                android:background=\"@color/palette_4\"\r\n                android:fontFamily=\"@font/poppins_regular\"\r\n                android:textColor=\"@color/palette_2\"\r\n                android:textSize=\"15dp\"\r\n                android:text=\"your location\"\r\n                app:drawableTint=\"@color/palette_1\"\r\n                app:drawableStartCompat=\"@drawable/location_pin\"\r\n                android:maxLines=\"1\"\r\n                android:ellipsize=\"end\"/>\r\n        </LinearLayout>\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:orientation=\"horizontal\"\r\n            android:layout_marginTop=\"8dp\"\r\n            android:layout_height=\"wrap_content\">\r\n            <EditText\r\n                android:includeFontPadding=\"false\"\r\n                android:layout_marginTop=\"10dp\"\r\n                android:id=\"@+id/search_desti\"\r\n                android:drawableStart=\"@drawable/search_icon\"\r\n                android:drawablePadding=\"5dp\"\r\n                android:padding=\"5dp\"\r\n                android:layout_weight=\"2\"\r\n                android:maxLines=\"1\"\r\n                android:ellipsize=\"end\"\r\n                android:fontFamily=\"@font/poppins_regular\"\r\n                android:textColor=\"@color/palette_1\"\r\n                android:textColorHint=\"@color/palette_3\"\r\n                android:background=\"@drawable/et_style\"\r\n                android:layout_marginHorizontal=\"10dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:textSize=\"17dp\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:hint=\"@string/search_hint\"/>\r\n            <ImageButton\r\n                android:id=\"@+id/sort_button\"\r\n                app:tint=\"@color/palette_2\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:background=\"@drawable/rounded_back\"\r\n                android:layout_marginEnd=\"10dp\"\r\n                android:layout_marginTop=\"8dp\"\r\n                android:layout_marginBottom=\"10dp\"\r\n                android:padding=\"8dp\"\r\n                android:src=\"@drawable/sort_icon\"\r\n                app:layout_constraintBottom_toBottomOf=\"parent\"\r\n                app:layout_constraintEnd_toEndOf=\"parent\"\r\n                app:layout_constraintStart_toStartOf=\"parent\" />\r\n        </LinearLayout>\r\n        <androidx.recyclerview.widget.RecyclerView\r\n            android:id=\"@+id/desti_rv\"\r\n            app:layoutManager=\"androidx.recyclerview.widget.LinearLayoutManager\"\r\n            android:layout_below=\"@id/search_desti\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"match_parent\"\r\n            tools:listitem=\"@layout/list_destination\" />\r\n    </LinearLayout>\r\n</layout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_show_destination.xml b/app/src/main/res/layout/fragment_show_destination.xml
+--- a/app/src/main/res/layout/fragment_show_destination.xml	(revision 9cc8027f1a4981654e9ae1f700eaa177ef22e778)
++++ b/app/src/main/res/layout/fragment_show_destination.xml	(date 1683191521194)
+@@ -16,8 +16,8 @@
+             android:layout_width="match_parent"
+             android:orientation="horizontal"
+             android:layout_height="wrap_content">
+-            <TextView
+-                android:id="@+id/change_loc"
++            <Button
++                android:id="@+id/change_loc_button"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:includeFontPadding="false"
+@@ -28,11 +28,12 @@
+                 android:fontFamily="@font/poppins_regular"
+                 android:textColor="@color/palette_2"
+                 android:textSize="15dp"
+-                android:text="your location"
++                android:text="Change location"
+                 app:drawableTint="@color/palette_1"
+                 app:drawableStartCompat="@drawable/location_pin"
+                 android:maxLines="1"
+-                android:ellipsize="end"/>
++                android:ellipsize="end"
++                android:clickable="true" />
+         </LinearLayout>
+         <LinearLayout
+             android:layout_width="match_parent"
+Index: app/src/main/java/com/binus/pekalongancityguide/Misc/CustomViewHolder.java
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/Misc/CustomViewHolder.java b/app/src/main/java/com/binus/pekalongancityguide/Misc/CustomViewHolder.java
+deleted file mode 100644
+--- a/app/src/main/java/com/binus/pekalongancityguide/Misc/CustomViewHolder.java	(revision 9cc8027f1a4981654e9ae1f700eaa177ef22e778)
++++ /dev/null	(revision 9cc8027f1a4981654e9ae1f700eaa177ef22e778)
+@@ -1,43 +0,0 @@
+-//package com.binus.pekalongancityguide.Misc;
+-//
+-//import android.content.ClipData;
+-//import android.graphics.Color;
+-//import android.view.View;
+-//import android.widget.AdapterView;
+-//import android.widget.ImageView;
+-//import android.widget.TextView;
+-//
+-//import androidx.annotation.NonNull;
+-//import androidx.recyclerview.widget.RecyclerView;
+-//
+-//import com.binus.pekalongancityguide.R;
+-//
+-//public class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+-//    private ImageView imageView;
+-//    private TextView textView;
+-//    private AdapterView.OnItemLongClickListener onItemLongClickListener;
+-//
+-//    public CustomViewHolder(@NonNull View itemView, AdapterView.OnItemLongClickListener onItemLongClickListener) {
+-//        super(itemView);
+-//        this.imageView = itemView.findViewById(R.id.image_view);
+-//        this.textView = itemView.findViewById(R.id.text_view);
+-//        this.onItemLongClickListener = onItemLongClickListener;
+-//        itemView.setOnLongClickListener(this);
+-//    }
+-//
+-//    public void bind(ClipData.Item item) {
+-//        imageView.setImageResource(());
+-//        textView.setText(item.getItemName());
+-//        if (item.isSelected()) {
+-//            itemView.setBackgroundColor(Color.LTGRAY);
+-//        } else {
+-//            itemView.setBackgroundColor(Color.WHITE);
+-//        }
+-//    }
+-//
+-//    @Override
+-//    public boolean onLongClick(View v) {
+-//        onItemLongClickListener.onItemLongClick(getAdapterPosition());
+-//        return true;
+-//    }
+-//}
+Index: app/src/main/java/com/binus/pekalongancityguide/Layout/Splash.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.Layout;\r\n\r\nimport android.Manifest;\r\nimport android.content.Context;\r\nimport android.content.Intent;\r\nimport android.content.SharedPreferences;\r\nimport android.content.pm.PackageManager;\r\nimport android.content.res.Configuration;\r\nimport android.net.ConnectivityManager;\r\nimport android.net.NetworkInfo;\r\nimport android.os.Bundle;\r\nimport android.os.Handler;\r\nimport android.preference.PreferenceManager;\r\nimport android.text.TextUtils;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.core.app.ActivityCompat;\r\nimport androidx.core.content.ContextCompat;\r\n\r\nimport com.binus.pekalongancityguide.R;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.auth.FirebaseUser;\r\nimport com.google.firebase.database.DataSnapshot;\r\nimport com.google.firebase.database.DatabaseError;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\nimport com.google.firebase.database.ValueEventListener;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\nimport java.util.Locale;\r\n\r\npublic class Splash extends AppCompatActivity {\r\n    private FirebaseAuth firebaseAuth;\r\n    private boolean doubleTap = false;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_splash);\r\n        if (getSupportActionBar() != null) {\r\n            getSupportActionBar().hide();\r\n        }\r\n        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);\r\n        String language = preferences.getString(\"language\", \"\");\r\n        if (!TextUtils.isEmpty(language)) {\r\n            Locale locale = new Locale(language);\r\n            Configuration config = new Configuration(getResources().getConfiguration());\r\n            config.setLocale(locale);\r\n            getResources().updateConfiguration(config, getResources().getDisplayMetrics());\r\n        }\r\n        firebaseAuth = FirebaseAuth.getInstance();\r\n        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,\r\n                Manifest.permission.WRITE_EXTERNAL_STORAGE,\r\n                Manifest.permission.READ_EXTERNAL_STORAGE,\r\n                Manifest.permission.CAMERA};\r\n        List<String> permissionsToRequest = new ArrayList<>();\r\n        for (String permission : permissions) {\r\n            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {\r\n                permissionsToRequest.add(permission);\r\n            }\r\n        }\r\n        if (!permissionsToRequest.isEmpty()) {\r\n            ActivityCompat.requestPermissions(this, permissionsToRequest.toArray(new String[0]), 1);\r\n        } else {\r\n            checkUser();\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {\r\n        super.onRequestPermissionsResult(requestCode, permissions, grantResults);\r\n        if (requestCode == 1) {\r\n            boolean allPermissionsGranted = true;\r\n            for (int grantResult : grantResults) {\r\n                if (grantResult != PackageManager.PERMISSION_GRANTED) {\r\n                    allPermissionsGranted = false;\r\n                    break;\r\n                }\r\n            }\r\n            if (allPermissionsGranted) {\r\n                new Handler().postDelayed(() -> checkUser(), 3000);\r\n            } else {\r\n                Toast.makeText(this, \"Some permissions are not granted\", Toast.LENGTH_SHORT).show();\r\n                finish();\r\n            }\r\n        }\r\n    }\r\n    @Override\r\n    public void onBackPressed() {\r\n        if (doubleTap) {\r\n            super.onBackPressed();\r\n            return;\r\n        }\r\n        this.doubleTap = true;\r\n        Toast.makeText(this, R.string.press_back, Toast.LENGTH_SHORT).show();\r\n        new Handler().postDelayed(new Runnable() {\r\n            @Override\r\n            public void run() {\r\n                doubleTap = false;\r\n            }\r\n        }, 2000);\r\n    }\r\n    private void checkUser() {\r\n        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();\r\n        if (firebaseUser == null) {\r\n            startActivity(new Intent(Splash.this, MainActivity.class));\r\n            finish();\r\n        } else {\r\n            DatabaseReference databaseReference = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Users\");\r\n            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);\r\n            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();\r\n            if (networkInfo != null && networkInfo.isConnected()) {\r\n                databaseReference.child(firebaseUser.getUid())\r\n                        .addListenerForSingleValueEvent(new ValueEventListener() {\r\n                            @Override\r\n                            public void onDataChange(@NonNull DataSnapshot snapshot) {\r\n                                String userType = \"\" + snapshot.child(\"userType\").getValue();\r\n                                if (userType.equals(\"user\")) {\r\n                                    startActivity(new Intent(Splash.this, Home.class));\r\n                                    finish();\r\n                                } else if (userType.equals(\"admin\")) {\r\n                                    startActivity(new Intent(Splash.this, AdminHome.class));\r\n                                    finish();\r\n                                }\r\n                            }\r\n                            @Override\r\n                            public void onCancelled(@NonNull DatabaseError error) {\r\n                                Toast.makeText(Splash.this,R.string.error_connect_database,Toast.LENGTH_SHORT).show();\r\n                                startActivity(new Intent(Splash.this, MainActivity.class));\r\n                                finish();\r\n                            }\r\n                        });\r\n            } else {\r\n                Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show();\r\n                startActivity(new Intent(Splash.this, Home.class));\r\n                finish();\r\n            }\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/Layout/Splash.java b/app/src/main/java/com/binus/pekalongancityguide/Layout/Splash.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/Layout/Splash.java	(revision 9cc8027f1a4981654e9ae1f700eaa177ef22e778)
++++ b/app/src/main/java/com/binus/pekalongancityguide/Layout/Splash.java	(date 1683185067774)
+@@ -68,7 +68,6 @@
+             checkUser();
+         }
+     }
+-
+     @Override
+     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+@@ -81,10 +80,10 @@
+                 }
+             }
+             if (allPermissionsGranted) {
+-                new Handler().postDelayed(() -> checkUser(), 3000);
++                checkUser();
+             } else {
+                 Toast.makeText(this, "Some permissions are not granted", Toast.LENGTH_SHORT).show();
+-                finish();
++                new Handler().postDelayed(this::checkUser, 3000);
+             }
+         }
+     }
+Index: app/src/main/java/com/binus/pekalongancityguide/Layout/ShowDestinationFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.binus.pekalongancityguide.Layout;\r\n\r\nimport android.Manifest;\r\nimport android.annotation.SuppressLint;\r\nimport android.app.AlertDialog;\r\nimport android.content.Context;\r\nimport android.content.Intent;\r\nimport android.content.pm.PackageManager;\r\nimport android.location.Address;\r\nimport android.location.Geocoder;\r\nimport android.location.Location;\r\nimport android.location.LocationListener;\r\nimport android.location.LocationManager;\r\nimport android.os.AsyncTask;\r\nimport android.os.Bundle;\r\nimport android.provider.Settings;\r\nimport android.text.Editable;\r\nimport android.text.TextWatcher;\r\nimport android.util.Log;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.CheckBox;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.core.app.ActivityCompat;\r\nimport androidx.core.content.ContextCompat;\r\nimport androidx.fragment.app.Fragment;\r\n\r\nimport com.binus.pekalongancityguide.Adapter.DestinationAdapter;\r\nimport com.binus.pekalongancityguide.ItemTemplate.Destination;\r\nimport com.binus.pekalongancityguide.R;\r\nimport com.binus.pekalongancityguide.databinding.DialogSortDestiBinding;\r\nimport com.binus.pekalongancityguide.databinding.FragmentShowDestinationBinding;\r\nimport com.google.android.gms.location.FusedLocationProviderClient;\r\nimport com.google.android.gms.location.LocationServices;\r\nimport com.google.firebase.database.DataSnapshot;\r\nimport com.google.firebase.database.DatabaseError;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\nimport com.google.firebase.database.ValueEventListener;\r\n\r\nimport java.io.IOException;\r\nimport java.util.ArrayList;\r\nimport java.util.Collections;\r\nimport java.util.List;\r\nimport java.util.Locale;\r\n\r\npublic class ShowDestinationFragment extends Fragment {\r\n    private final FirebaseDatabase database = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\");\r\n    private static final int PERMISSION_REQUEST_LOCATION = 500;\r\n    private String categoryId;\r\n    private String category;\r\n    private ArrayList<Destination> destinationArrayList;\r\n    private DestinationAdapter destinationAdapter;\r\n    private static final String TAG = \"DESTI_USER_TAG\";\r\n    private FragmentShowDestinationBinding binding;\r\n    private FusedLocationProviderClient fusedLocationClient;\r\n    private LocationManager locationManager;\r\n    private LocationListener locationListener;\r\n    private Geocoder geocoder;\r\n    private List<Address> addresses;\r\n\r\n    public ShowDestinationFragment() {}\r\n\r\n    public static ShowDestinationFragment newInstance(String categoryId, String category, String uid) {\r\n        ShowDestinationFragment fragment = new ShowDestinationFragment();\r\n        Bundle args = new Bundle();\r\n        args.putString(\"categoryId\", categoryId);\r\n        args.putString(\"category\", category);\r\n        args.putString(\"uid\", uid);\r\n        fragment.setArguments(args);\r\n        return fragment;\r\n    }\r\n\r\n    @Override\r\n    public void onCreate(Bundle savedInstanceState){\r\n        super.onCreate(savedInstanceState);\r\n        geocoder = new Geocoder(getContext(), Locale.getDefault());\r\n        if(getArguments()!=null){\r\n            categoryId = getArguments().getString(\"categoryId\");\r\n            category = getArguments().getString(\"category\");\r\n        }\r\n    }\r\n    @Override\r\n    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,\r\n                             Bundle savedInstanceState) {\r\n        binding = FragmentShowDestinationBinding.inflate(LayoutInflater.from(getContext()), container, false);\r\n        if (category.equals(\"All\")) {\r\n            loadDestinations();\r\n        } else {\r\n            loadCategoriedDestination();\r\n        }\r\n        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);\r\n        locationListener = new LocationListener() {\r\n            @Override\r\n            public void onLocationChanged(Location location) {\r\n                Log.d(\"Location\", \"Latitude: \" + location.getLatitude() + \", Longitude: \" + location.getLongitude());\r\n            }\r\n\r\n            @Override\r\n            public void onStatusChanged(String provider, int status, Bundle extras) {\r\n            }\r\n\r\n            @Override\r\n            public void onProviderEnabled(String provider) {\r\n            }\r\n\r\n            @Override\r\n            public void onProviderDisabled(String provider) {\r\n            }\r\n        };\r\n\r\n        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {\r\n            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_LOCATION);\r\n        } else {\r\n            startLocationUpdates();\r\n        }\r\n        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());\r\n        binding.searchDesti.addTextChangedListener(new TextWatcher(){\r\n            @Override\r\n            public void beforeTextChanged(CharSequence s, int start, int count, int after) {\r\n\r\n            }\r\n            @Override\r\n            public void onTextChanged(CharSequence s, int start, int before, int count) {\r\n                try {\r\n                    destinationAdapter.getFilter().filter(s);\r\n                }catch (Exception e){\r\n                    Log.d(TAG,\"onTextChanged :\"+e.getMessage());\r\n                }\r\n            }\r\n\r\n            @Override\r\n            public void afterTextChanged(Editable s) {\r\n\r\n            }\r\n        });\r\n        binding.sortButton.setOnClickListener(v ->{\r\n            showSortDialog();\r\n        });\r\n        return binding.getRoot();\r\n    }\r\n    public void showSortDialog(){\r\n        DialogSortDestiBinding binding1 = DialogSortDestiBinding.inflate(LayoutInflater.from(getContext()));\r\n        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());\r\n        CheckBox ratingCheck = binding1.ratingSort;\r\n        CheckBox distanceCheck = binding1.distanceSort;\r\n        builder.setView(binding1.getRoot());\r\n        builder.setPositiveButton(R.string.sort_txt, (dialog, which) -> {\r\n            int start = 0;\r\n            if (ratingCheck.isChecked() && distanceCheck.isChecked()) {\r\n                Collections.sort(destinationArrayList, (destination1, destination2) -> {\r\n                    Double rating1 = Double.parseDouble(destination1.getRating());\r\n                    Double rating2 = Double.parseDouble(destination2.getRating());\r\n                    Float distance1 = destination1.getDistance();\r\n                    Float distance2 = destination2.getDistance();\r\n                    int distanceCompare = distance1.compareTo(distance2);\r\n                    if (distanceCompare != 0) {\r\n                        return distanceCompare;\r\n                    }\r\n                    return Double.compare(rating1, rating2);\r\n                });\r\n            } else if (ratingCheck.isChecked()) {\r\n                Collections.sort(destinationArrayList, (destination1, destination2) -> {\r\n                    Double rating1 = Double.parseDouble(destination1.getRating());\r\n                    Double rating2 = Double.parseDouble(destination2.getRating());\r\n                    return Double.compare(rating2, rating1);\r\n                });\r\n            } else if (distanceCheck.isChecked()) {\r\n                Collections.sort(destinationArrayList, (destination1, destination2) -> {\r\n                    Float distance1 = destination1.getDistance();\r\n                    Float distance2 = destination2.getDistance();\r\n                    return distance1.compareTo(distance2);\r\n                });\r\n            }\r\n            String searchText = binding.searchDesti.getText().toString().trim();\r\n            destinationAdapter.getFilter().filter(searchText);\r\n            int itemCount = destinationArrayList.size() - start;\r\n            destinationAdapter.notifyItemRangeChanged(start, itemCount);\r\n        });\r\n\r\n        builder.setNegativeButton(R.string.cancel_txt, (dialog, which) -> {\r\n            dialog.dismiss();\r\n        });\r\n\r\n        AlertDialog dialog = builder.create();\r\n        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);\r\n        dialog.show();\r\n    }\r\n    @Override\r\n    public void onDestroy() {\r\n        super.onDestroy();\r\n        locationManager.removeUpdates(locationListener);\r\n    }\r\n\r\n    @Override\r\n    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {\r\n        super.onRequestPermissionsResult(requestCode, permissions, grantResults);\r\n        if (requestCode == PERMISSION_REQUEST_LOCATION) {\r\n            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {\r\n                startLocationUpdates();\r\n            } else {\r\n                Toast.makeText(getContext(), \"Location permission denied\", Toast.LENGTH_SHORT).show();\r\n            }\r\n        }\r\n    }\r\n\r\n    private void loadDestinations() {\r\n        destinationArrayList = new ArrayList<>();\r\n        DatabaseReference reference = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Destination\");\r\n        reference.keepSynced(true);\r\n        reference.addListenerForSingleValueEvent(new ValueEventListener() {\r\n            @Override\r\n            public void onDataChange(@NonNull DataSnapshot snapshot) {\r\n                destinationArrayList.clear();\r\n                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {\r\n                    Destination destination = dataSnapshot.getValue(Destination.class);\r\n                    destinationArrayList.add(destination);\r\n                }\r\n                updateDistances();\r\n            }\r\n            @Override\r\n            public void onCancelled(@NonNull DatabaseError error) {\r\n                Log.e(TAG, \"Error: \" + error.getMessage());\r\n            }\r\n        });\r\n    }\r\n\r\n    private void loadCategoriedDestination(){\r\n        destinationArrayList = new ArrayList<>();\r\n        DatabaseReference reference = FirebaseDatabase.getInstance(\"https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/\").getReference(\"Destination\");\r\n        reference.keepSynced(true);\r\n        reference.orderByChild(\"categoryId\").equalTo(categoryId)\r\n                .addListenerForSingleValueEvent(new ValueEventListener() {\r\n                    @Override\r\n                    public void onDataChange(@NonNull DataSnapshot snapshot) {\r\n                        destinationArrayList.clear();\r\n                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {\r\n                            Destination destination = dataSnapshot.getValue(Destination.class);\r\n                            destinationArrayList.add(destination);\r\n                        }\r\n                        updateDistances();\r\n                    }\r\n\r\n                    @Override\r\n                    public void onCancelled(@NonNull DatabaseError error) {\r\n\r\n                    }\r\n                });\r\n    }\r\n\r\n    private void updateDistances() {\r\n        for (Destination destination : destinationArrayList) {\r\n            getDestinationDistance(destination);\r\n        }\r\n        if (destinationAdapter == null) {\r\n            destinationAdapter = new DestinationAdapter(getContext(), destinationArrayList);\r\n            binding.destiRv.setAdapter(destinationAdapter);\r\n        } else {\r\n            destinationAdapter.notifyDataSetChanged();\r\n        }\r\n    }\r\n    private void getDestinationDistance(Destination destination) {\r\n        database.getReference(\"Destination\").child(destination.getId()).addListenerForSingleValueEvent(new ValueEventListener() {\r\n            @Override\r\n            public void onDataChange(@NonNull DataSnapshot snapshot) {\r\n                double placeLat = Double.parseDouble(snapshot.child(\"latitude\").getValue().toString());\r\n                double placeLng = Double.parseDouble(snapshot.child(\"longitude\").getValue().toString());\r\n                if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&\r\n                        ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {\r\n                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);\r\n                } else {\r\n                    fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {\r\n                        if (location != null) {\r\n                            double currentLat = location.getLatitude();\r\n                            double currentLng = location.getLongitude();\r\n                            float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);\r\n                            destination.setDistance(distance);\r\n                            sortDestination(destinationArrayList);\r\n                            destinationAdapter.notifyDataSetChanged();\r\n\r\n                            new AsyncTask<Void, Void, String>() {\r\n                                @Override\r\n                                protected String doInBackground(Void... voids) {\r\n                                    try {\r\n                                        List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);\r\n                                        if (addresses.size() > 0) {\r\n                                            return addresses.get(0).getAddressLine(0);\r\n                                        }\r\n                                    } catch (IOException e) {\r\n                                        e.printStackTrace();\r\n                                    }\r\n                                    return null;\r\n                                }\r\n\r\n                                @Override\r\n                                protected void onPostExecute(String address) {\r\n                                    if (address != null) {\r\n                                        Log.d(\"ADDRESS\", address);\r\n                                        binding.changeLoc.setText(address);\r\n                                    }\r\n                                }\r\n                            }.execute();\r\n                        }\r\n                    });\r\n                }\r\n            }\r\n\r\n            @Override\r\n            public void onCancelled(@NonNull DatabaseError error) {\r\n\r\n            }\r\n        });\r\n    };\r\n            private float calculateDistance(double lat1, double lon1, double lat2, double lon2) {\r\n        float[] results = new float[1];\r\n        Location location1 = new Location(\"\");\r\n        location1.setLatitude(lat1);\r\n        location1.setLongitude(lon1);\r\n        Location location2 = new Location(\"\");\r\n        location2.setLatitude(lat2);\r\n        location2.setLongitude(lon2);\r\n        Location.distanceBetween(location1.getLatitude(), location1.getLongitude(),\r\n                location2.getLatitude(), location2.getLongitude(), results);\r\n        return results[0] / 1000;\r\n    }\r\n\r\n    private void sortDestination(ArrayList<Destination> destinationArrayList){\r\n        Collections.sort(destinationArrayList, (destination1, destination2) -> {\r\n            String title1 = destination1.getTitle().toLowerCase();\r\n            String title2 = destination2.getTitle().toLowerCase();\r\n            return title1.compareTo(title2);\r\n        });\r\n    }\r\n\r\n    @SuppressLint(\"MissingPermission\")\r\n    private void startLocationUpdates() {\r\n        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {\r\n            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());\r\n            builder.setTitle(R.string.gpsnotEnabled);\r\n            builder.setMessage(R.string.enable_gps_confirm);\r\n            builder.setPositiveButton(R.string.yes_txt, (dialog, which) -> {\r\n                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);\r\n                startActivity(intent);\r\n            });\r\n            builder.setNegativeButton(R.string.no_txt, null);\r\n            builder.show();\r\n        } else {\r\n            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/binus/pekalongancityguide/Layout/ShowDestinationFragment.java b/app/src/main/java/com/binus/pekalongancityguide/Layout/ShowDestinationFragment.java
+--- a/app/src/main/java/com/binus/pekalongancityguide/Layout/ShowDestinationFragment.java	(revision 9cc8027f1a4981654e9ae1f700eaa177ef22e778)
++++ b/app/src/main/java/com/binus/pekalongancityguide/Layout/ShowDestinationFragment.java	(date 1683190860502)
+@@ -2,6 +2,7 @@
+ 
+ import android.Manifest;
+ import android.annotation.SuppressLint;
++import android.app.Activity;
+ import android.app.AlertDialog;
+ import android.content.Context;
+ import android.content.Intent;
+@@ -24,6 +25,7 @@
+ import android.widget.Toast;
+ 
+ import androidx.annotation.NonNull;
++import androidx.annotation.Nullable;
+ import androidx.core.app.ActivityCompat;
+ import androidx.core.content.ContextCompat;
+ import androidx.fragment.app.Fragment;
+@@ -313,8 +315,107 @@
+ 
+             }
+         });
+-    };
+-            private float calculateDistance(double lat1, double lon1, double lat2, double lon2) {
++    }
++
++// Step 1: Add an onClickListener to the "changeLoc" button
++binding.changeLoc.setOnClickListener(new View.OnClickListener() {
++        @Override
++        public void onClick(View v) {
++            // Step 2: Create an intent to open the location selection activity
++            Intent intent = new Intent(getActivity(), LocationSelectionActivity.class);
++            startActivityForResult(intent, REQUEST_CODE_LOCATION_SELECTION);
++        }
++    });
++
++    // Step 3: Handle the selected location in onActivityResult()
++    @Override
++    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
++        super.onActivityResult(requestCode, resultCode, data);
++        if (requestCode == REQUEST_CODE_LOCATION_SELECTION && resultCode == Activity.RESULT_OK && data != null) {
++            double newLat = data.getDoubleExtra("latitude", 0);
++            double newLng = data.getDoubleExtra("longitude", 0);
++            Destination destination = destinationArrayList.get(selectedDestinationIndex);
++            destination.setLatitude(newLat);
++            destination.setLongitude(newLng);
++            getDestinationDistance(destination);
++        }
++    }
++    private void getDestinationDistance(Destination destination) {
++        database.getReference("Destination").child(destination.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
++            @Override
++            public void onDataChange(@NonNull DataSnapshot snapshot) {
++                double placeLat = Double.parseDouble(snapshot.child("latitude").getValue().toString());
++                double placeLng = Double.parseDouble(snapshot.child("longitude").getValue().toString());
++                if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
++                        ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
++                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
++                } else {
++                    fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
++                        if (location != null) {
++                            double currentLat = location.getLatitude();
++                            double currentLng = location.getLongitude();
++                            float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
++                            destination.setDistance(distance);
++                            sortDestination(destinationArrayList);
++                            destinationAdapter.notifyDataSetChanged();
++
++                            new AsyncTask<Void, Void, String>() {
++                                @Override
++                                protected String doInBackground(Void... voids) {
++                                    try {
++                                        List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
++                                        if (addresses.size() > 0) {
++                                            return addresses.get(0).getAddressLine(0);
++                                        }
++                                    } catch (IOException e) {
++                                        e.printStackTrace();
++                                    }
++                                    return null;
++                                }
++
++                                @Override
++                                protected void onPostExecute(String address) {
++                                    if (address != null) {
++                                        Log.d("ADDRESS", address);
++                                        binding.changeLoc.setText(address);
++                                    }
++                                }
++                            }.execute();
++                        }
++                    });
++                }
++            }
++
++            @Override
++            public void onCancelled(@NonNull DatabaseError error) {
++
++            }
++        });
++    }
++    // Step 1: Add an onClickListener to the "changeLoc" button
++binding.changeLoc.setOnClickListener(new View.OnClickListener() {
++        @Override
++        public void onClick(View v) {
++            // Step 2: Create an intent to open the location selection activity
++            Intent intent = new Intent(getActivity(), LocationSelectionActivity.class);
++            startActivityForResult(intent, REQUEST_CODE_LOCATION_SELECTION);
++        }
++    });
++
++    // Step 3: Handle the selected location in onActivityResult()
++    @Override
++    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
++        super.onActivityResult(requestCode, resultCode, data);
++        if (requestCode == REQUEST_CODE_LOCATION_SELECTION && resultCode == Activity.RESULT_OK && data != null) {
++            double newLat = data.getDoubleExtra("latitude", 0);
++            double newLng = data.getDoubleExtra("longitude", 0);
++            Destination destination = destinationArrayList.get(selectedDestinationIndex);
++            destination.setLatitude(newLat);
++            destination.setLongitude(newLng);
++            getDestinationDistance(destination);
++        }
++    }
++    private float calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+         float[] results = new float[1];
+         Location location1 = new Location("");
+         location1.setLatitude(lat1);

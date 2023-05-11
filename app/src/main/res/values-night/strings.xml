@@ -98,7 +98,7 @@
     <string name="basic_javanese_characters">Basic Javanese Characters</string>
     <string name="city_logo">City Logo\n(2014-2017)</string>
     <string name="remove_bookmark">Remove Bookmark</string>
-    <string name="remove_confirm">Are you sure to remove this item ?</string>
+    <string name="remove_confirm">Are you sure to remove category</string>
     <string name="carakan_letters_n_ngelgena">CARAKAN LETTERS\n(Ngelgena)</string>
     <string name="couple_letters_n_mati">COUPLE LETTERS\n(Mati)</string>
     <string name="used_email">Email is already used !</string>
@@ -107,4 +107,7 @@
     <string name="deleting_item">Deleting item...</string>
     <string name="acount_created">Account created!</string>
     <string name="suces_register">Registered successfully!</string>
+    <string name="delete_desti_confirm">\"Are you sure you want to delete \"</string>
+    <string name="delete_confirmation">Confirmation</string>
+    <string name="error_news">Error fetching news articles:</string>
 </resources>

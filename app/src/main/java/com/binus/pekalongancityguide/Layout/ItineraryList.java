@@ -1,18 +1,24 @@
 package com.binus.pekalongancityguide.Layout;
+
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
 import com.binus.pekalongancityguide.R;
-import com.binus.pekalongancityguide.databinding.ActivityItineraryListBinding;
+import com.binus.pekalongancityguide.databinding.FragmentItineraryListBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,23 +40,24 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import static android.content.ContentValues.TAG;
-
-public class ItineraryList extends AppCompatActivity {
-    public ActivityItineraryListBinding binding;
+public class ItineraryList extends Fragment {
+    private FragmentItineraryListBinding binding;
     private FirebaseAuth firebaseAuth;
+    public ItineraryList() {
 
+    }
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        binding = ActivityItineraryListBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+    }
 
-        binding.backtoprofile.setOnClickListener(v -> {
-            onBackPressed();
-        });
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentItineraryListBinding.inflate(inflater, container, false);
+
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
         DatabaseReference userRef = database.getReference("Users").child(Objects.requireNonNull(firebaseAuth.getUid()));
         userRef.keepSynced(true);
@@ -86,18 +93,18 @@ public class ItineraryList extends AppCompatActivity {
 
                 List<Fragment> fragments = createFragmentsList(dates);
 
-                ItineraryPagerAdapter vpAdapter = new ItineraryPagerAdapter(ItineraryList.this, getSupportFragmentManager(), fragments, dates);
+                ItineraryPagerAdapter vpAdapter = new ItineraryList.ItineraryPagerAdapter(getContext(), getChildFragmentManager(), fragments, dates);
                 binding.viewPager.setAdapter(vpAdapter);
                 binding.viewPager.setOffscreenPageLimit(10);
                 binding.itineraryTab.setupWithViewPager(binding.viewPager);
-                binding.itineraryTab.setSelectedTabIndicatorColor(ContextCompat.getColor(ItineraryList.this, R.color.white));
+                binding.itineraryTab.setSelectedTabIndicatorColor(ContextCompat.getColor(getContext(), R.color.white));
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle error
             }
         });
+        return binding.getRoot();
     }
     public class ItineraryPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> fragments;
@@ -171,7 +178,7 @@ public class ItineraryList extends AppCompatActivity {
             return targetDateFormat.format(dateWithYear);
         } catch (ParseException e) {
             Log.e("ItineraryList", "Error parsing date: " + dateStr, e);
-            Toast.makeText(ItineraryList.this, "Error parsing date: " + dateStr, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Error parsing date: " + dateStr, Toast.LENGTH_SHORT).show();
             return "";
         }
     }
@@ -184,7 +191,7 @@ public class ItineraryList extends AppCompatActivity {
             return targetDateFormat.format(date);
         } catch (ParseException e) {
             Log.e("ItineraryList", "Error parsing date: " + dateStr, e);
-            Toast.makeText(ItineraryList.this, "Error parsing date: " + dateStr, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Error parsing date: " + dateStr, Toast.LENGTH_SHORT).show();
             return "";
         }
     }

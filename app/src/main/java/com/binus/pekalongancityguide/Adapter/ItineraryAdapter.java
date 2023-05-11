@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
@@ -37,10 +38,12 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
     private static final int MAPS_PERMIT= 1;
     private final Context context;
     private final List<Itinerary> itineraryList;
+    private final FragmentManager fragmentManager;
 
-    public ItineraryAdapter(Context context, List<Itinerary> itineraryList) {
+    public ItineraryAdapter(Context context, List<Itinerary> itineraryList, FragmentManager fragmentManager) {
         this.context = context;
         this.itineraryList = itineraryList;
+        this.fragmentManager = fragmentManager;
     }
 
     @Override

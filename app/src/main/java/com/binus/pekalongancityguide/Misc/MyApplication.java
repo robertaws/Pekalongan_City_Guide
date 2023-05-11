@@ -1,13 +1,12 @@
 package com.binus.pekalongancityguide.Misc;
 
+import android.app.AlertDialog;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Typeface;
+import android.content.DialogInterface;
 import android.text.format.DateFormat;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.binus.pekalongancityguide.R;
@@ -40,39 +39,48 @@ public class MyApplication extends Application {
         String date = DateFormat.format("dd/MMMM/yyyy",calendar).toString();
         return date;
     }
-    public static void deleteDesti(Context context, String destiId, String destiUrl, String destiTitle){
+    public static void deleteDesti(Context context, String destiId, String destiUrl, String destiTitle) {
         String TAG = "DELETE_DESTI_TAG";
-        Log.d(TAG,"delete desti : Deleting..");
-        ProgressDialog dialog = new ProgressDialog(context);
-        dialog.setTitle("Please Wait");
-        dialog.setMessage("Deleting "+destiTitle+". . .");
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Confirm Delete");
+        builder.setMessage("Are you sure you want to delete " + destiTitle + "?");
+        builder.setPositiveButton("Yes", (dialogInterface, i) -> {
+            ProgressDialog dialog = new ProgressDialog(context);
+            dialog.setTitle("Please Wait");
+            dialog.setMessage("Deleting " + destiTitle + ". . .");
+            dialog.show();
+            Log.d(TAG,"delete desti : Deleting from storage");
+            StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(destiUrl);
+            reference.delete()
+                    .addOnSuccessListener(unused -> {
+                        Log.d(TAG, "onSuccess : Succesfully deleted data");
+                        DatabaseReference reference1 = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+                        reference1.child(destiId)
+                                .removeValue()
+                                .addOnSuccessListener(unused1 -> {
+                                    Log.d(TAG, "onSuccess: data deleted from db");
+                                    dialog.dismiss();
+                                    Toast.makeText(context, "Destination Deleted Succesfully !", Toast.LENGTH_SHORT).show();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.d(TAG, "onFAilure: error deleting data because of" + e.getMessage());
+                                    dialog.dismiss();
+                                    Toast.makeText(context, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.d(TAG, "onFailure: fail detele data due to" + e.getMessage());
+                        dialog.dismiss();
+                    });
+        });
+        builder.setNegativeButton("No", (dialogInterface, i) -> {
+            dialogInterface.dismiss();
+            Toast.makeText(context, "Destination Not Deleted", Toast.LENGTH_SHORT).show();
+        });
+        AlertDialog dialog = builder.create();
         dialog.show();
-        Log.d(TAG,"delete desti : Deleting from storage");
-        StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(destiUrl);
-        reference.delete()
-                .addOnSuccessListener(unused -> {
-
-                    Log.d(TAG, "onSuccess : Succesfully deleted data");
-                    DatabaseReference reference1 = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
-                    reference1.child(destiId)
-                            .removeValue()
-                            .addOnSuccessListener(unused1 -> {
-                                Log.d(TAG, "onSuccess: data deleted from db");
-                                dialog.dismiss();
-                                Toast.makeText(context, "Destination Deleted Succesfully !", Toast.LENGTH_SHORT).show();
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.d(TAG, "onFAilure: error deleting data because of" + e.getMessage());
-                                dialog.dismiss();
-                                Toast.makeText(context, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            });
-                })
-                .addOnFailureListener(e -> {
-                    Log.d(TAG, "onFailure: fail detele data due to" + e.getMessage());
-                    dialog.dismiss();
-                });
-
     }
+
     public static void addtoFavorite(Context context, String destiId){
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         if(firebaseAuth.getCurrentUser() == null){

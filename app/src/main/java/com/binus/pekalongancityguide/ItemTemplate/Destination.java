@@ -2,17 +2,19 @@ package com.binus.pekalongancityguide.ItemTemplate;
 
 import java.io.Serializable;
 
-public class Destination implements Serializable{
-    String uid,id,title,description,categoryId,url,rating,address;
-    double desLat,desLong;
+public class Destination implements Serializable {
+    String uid, id, title, description, categoryId, url, rating, address, placeId;
+    double desLat, desLong;
     boolean favorite;
     private boolean isLoaded;
     private float distance;
-    public Destination(){
+    private boolean isSelected;
+
+    public Destination() {
 
     }
 
-    public Destination(String uid, String id, String title, String description, String categoryId, String url, String rating, String address, double desLat, double desLong, boolean favorite, boolean isLoaded, float distance) {
+    public Destination(String uid, String id, String title, String description, String categoryId, String url, String rating, String address, String placeId, double desLat, double desLong, boolean favorite, boolean isLoaded, float distance, boolean isSelected) {
         this.uid = uid;
         this.id = id;
         this.title = title;
@@ -21,11 +23,13 @@ public class Destination implements Serializable{
         this.url = url;
         this.rating = rating;
         this.address = address;
+        this.placeId = placeId;
         this.desLat = desLat;
         this.desLong = desLong;
         this.favorite = favorite;
         this.isLoaded = isLoaded;
         this.distance = distance;
+        this.isSelected = isSelected;
     }
 
     public String getUid() {
@@ -92,6 +96,14 @@ public class Destination implements Serializable{
         this.address = address;
     }
 
+    public String getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(String placeId) {
+        this.placeId = placeId;
+    }
+
     public double getDesLat() {
         return desLat;
     }
@@ -130,5 +142,13 @@ public class Destination implements Serializable{
 
     public void setDistance(float distance) {
         this.distance = distance;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }

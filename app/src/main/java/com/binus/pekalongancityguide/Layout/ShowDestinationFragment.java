@@ -5,10 +5,14 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Editable;
@@ -28,18 +32,37 @@ import androidx.fragment.app.Fragment;
 import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.R;
+import com.binus.pekalongancityguide.databinding.DialogChangeLocBinding;
 import com.binus.pekalongancityguide.databinding.DialogSortDestiBinding;
 import com.binus.pekalongancityguide.databinding.FragmentShowDestinationBinding;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+
+import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
 
 public class ShowDestinationFragment extends Fragment {
     private final FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
@@ -53,7 +76,18 @@ public class ShowDestinationFragment extends Fragment {
     private FusedLocationProviderClient fusedLocationClient;
     private LocationManager locationManager;
     private LocationListener locationListener;
-    public ShowDestinationFragment() {}
+    private Geocoder geocoder;
+    private AutocompleteSupportFragment autocompleteFragment;
+    private SupportMapFragment fragment;
+    private LatLng coordinate;
+    private String addressString;
+    private double currentLat, currentLng;
+    private float distance;
+    private boolean isChangeLocDialogShowing = false;
+    private static SharedPreferences prefs;
+
+    public ShowDestinationFragment() {
+    }
 
     public static ShowDestinationFragment newInstance(String categoryId, String category, String uid) {
         ShowDestinationFragment fragment = new ShowDestinationFragment();
@@ -68,6 +102,7 @@ public class ShowDestinationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        geocoder = new Geocoder(getContext(), Locale.getDefault());
         if(getArguments()!=null){
             categoryId = getArguments().getString("categoryId");
             category = getArguments().getString("category");
@@ -76,6 +111,15 @@ public class ShowDestinationFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        prefs = getActivity().getSharedPreferences("coordinate", Context.MODE_PRIVATE);
+        String lastLatitude = prefs.getString("lastLatitude", "0");
+        String lastLongitude = prefs.getString("lastLongitude", "0");
+        if (!lastLatitude.equals("0") && !lastLongitude.equals("0")) {
+            double latitude = Double.parseDouble(lastLatitude);
+            double longitude = Double.parseDouble(lastLongitude);
+            coordinate = new LatLng(latitude, longitude);
+        }
+//        Log.d(TAG, "ON START COORDINATES: " + coordinate);
         binding = FragmentShowDestinationBinding.inflate(LayoutInflater.from(getContext()), container, false);
         if (category.equals("All")) {
             loadDestinations();
@@ -86,7 +130,6 @@ public class ShowDestinationFragment extends Fragment {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                // Do something with the new location
                 Log.d("Location", "Latitude: " + location.getLatitude() + ", Longitude: " + location.getLongitude());
             }
 
@@ -109,7 +152,7 @@ public class ShowDestinationFragment extends Fragment {
             startLocationUpdates();
         }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
-        binding.searchDesti.addTextChangedListener(new TextWatcher() {
+        binding.searchDesti.addTextChangedListener(new TextWatcher(){
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -131,8 +174,165 @@ public class ShowDestinationFragment extends Fragment {
         binding.sortButton.setOnClickListener(v ->{
             showSortDialog();
         });
+        binding.locLayout.setOnClickListener(v -> {
+            if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
+            } else {
+                showChangeLocDialog();
+            }
+        });
+
         return binding.getRoot();
     }
+
+    private void showChangeLocDialog() {
+        if (isChangeLocDialogShowing) return;
+        isChangeLocDialogShowing = true;
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        DialogChangeLocBinding locBinding = DialogChangeLocBinding.inflate(getLayoutInflater());
+        builder.setView(locBinding.getRoot());
+        AlertDialog dialog = builder.create();
+        dialog.setOnDismissListener(dialog1 -> {
+            requireActivity().runOnUiThread(() -> {
+                getChildFragmentManager().beginTransaction().remove(fragment).commit();
+                getChildFragmentManager().beginTransaction().remove(autocompleteFragment).commit();
+            });
+            isChangeLocDialogShowing = false;
+        });
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
+        dialog.show();
+        if (!Places.isInitialized()) {
+            Places.initialize(getActivity().getApplicationContext(), MAPS_API_KEY);
+        }
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                try {
+                    List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
+                    if (addresses.size() > 0) {
+                        return addresses.get(0).getAddressLine(0);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(String address) {
+                // update the location text view in the UI thread
+                if (address != null) {
+                    addressString = address;
+                    locBinding.locTv.setText(addressString);
+                    autocompleteFragment.setText(addressString);
+                } else {
+                    locBinding.locTv.setText("Address not found");
+                }
+            }
+        }.execute();
+        fragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.user_map);
+        fragment.getMapAsync(googleMap -> {
+            coordinate = new LatLng(currentLat, currentLng);
+            MarkerOptions marker = new MarkerOptions();
+            marker.position(coordinate);
+            marker.title("Current Location");
+            googleMap.addMarker(marker);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 15);
+            googleMap.moveCamera(cameraUpdate);
+            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
+        });
+        PlacesClient placesClient = Places.createClient(getContext());
+        autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG));
+        autocompleteFragment.setCountries("ID");
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                coordinate = place.getLatLng();
+                fragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.user_map);
+                fragment.getMapAsync(googleMap -> {
+                    googleMap.clear();
+                    MarkerOptions marker = new MarkerOptions();
+                    marker.position(coordinate);
+                    marker.title(place.getName());
+                    googleMap.addMarker(marker);
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 15);
+                    googleMap.moveCamera(cameraUpdate);
+                });
+                locBinding.locTv.setText(place.getAddress());
+                addressString = place.getAddress();
+            }
+
+            @Override
+            public void onError(@NonNull Status status) {
+                Log.e(TAG, "An error occurred: " + status);
+            }
+        });
+        locBinding.useCurLoc.setOnClickListener(v -> {
+            if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
+            } else {
+                fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                    if (location != null) {
+                        currentLat = location.getLatitude();
+                        currentLng = location.getLongitude();
+                        coordinate = new LatLng(currentLat, currentLng);
+
+                        new AsyncTask<Void, Void, String>() {
+                            @Override
+                            protected String doInBackground(Void... voids) {
+                                try {
+                                    List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
+                                    if (addresses.size() > 0) {
+                                        return addresses.get(0).getAddressLine(0);
+                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                return null;
+                            }
+
+                            @Override
+                            protected void onPostExecute(String address) {
+                                if (address != null) {
+                                    Log.d("ADDRESS IN DIALOG", address);
+                                    addressString = address;
+                                    locBinding.locTv.setText(addressString);
+                                    autocompleteFragment.setText(addressString);
+                                    fragment.getMapAsync(googleMap -> {
+                                        coordinate = new LatLng(currentLat, currentLng);
+                                        MarkerOptions marker = new MarkerOptions();
+                                        marker.position(coordinate);
+                                        marker.title("Current Location");
+                                        googleMap.addMarker(marker);
+                                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(coordinate, 15);
+                                        googleMap.moveCamera(cameraUpdate);
+                                        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
+                                    });
+                                }
+                            }
+                        }.execute();
+                    }
+                });
+            }
+        });
+        locBinding.setLocBtn.setOnClickListener(v -> {
+            binding.changeLoc.setText(addressString);
+            dialog.dismiss();
+            updateDistances();
+            if (coordinate != null) {
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("lastLatitude", String.valueOf(coordinate.latitude));
+                editor.putString("lastLongitude", String.valueOf(coordinate.longitude));
+                editor.apply();
+            }
+            Log.d(TAG, "COORDINATES: " + coordinate);
+        });
+    }
+
     public void showSortDialog(){
         DialogSortDestiBinding binding1 = DialogSortDestiBinding.inflate(LayoutInflater.from(getContext()));
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -180,6 +380,7 @@ public class ShowDestinationFragment extends Fragment {
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
         dialog.show();
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -259,29 +460,84 @@ public class ShowDestinationFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 double placeLat = Double.parseDouble(snapshot.child("latitude").getValue().toString());
                 double placeLng = Double.parseDouble(snapshot.child("longitude").getValue().toString());
-                if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                        ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
-                } else {
-                    fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-                        if (location != null) {
-                            double currentLat = location.getLatitude();
-                            double currentLng = location.getLongitude();
-                            float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
-                            destination.setDistance(distance);
-                            sortDestination(destinationArrayList);
-                            destinationAdapter.notifyDataSetChanged();
+                if (coordinate != null) {
+                    currentLat = coordinate.latitude;
+                    currentLng = coordinate.longitude;
+                    distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
+                    destination.setDistance(distance);
+                    destinationAdapter.notifyDataSetChanged();
+
+                    new AsyncTask<Void, Void, String>() {
+                        @Override
+                        protected String doInBackground(Void... voids) {
+                            try {
+                                List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
+                                if (addresses.size() > 0) {
+                                    return addresses.get(0).getAddressLine(0);
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return null;
                         }
-                    });
+
+                        @Override
+                        protected void onPostExecute(String address) {
+                            if (address != null) {
+                                Log.d("ADDRESS", address);
+                                binding.changeLoc.setText(address);
+                            }
+                        }
+                    }.execute();
+                } else {
+                    if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                            ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
+                    } else {
+                        fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                            if (location != null) {
+                                currentLat = location.getLatitude();
+                                currentLng = location.getLongitude();
+                                distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
+                                destination.setDistance(distance);
+                                sortDestination(destinationArrayList);
+                                destinationAdapter.notifyDataSetChanged();
+
+                                new AsyncTask<Void, Void, String>() {
+                                    @Override
+                                    protected String doInBackground(Void... voids) {
+                                        try {
+                                            List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
+                                            if (addresses.size() > 0) {
+                                                return addresses.get(0).getAddressLine(0);
+                                            }
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        return null;
+                                    }
+
+                                    @Override
+                                    protected void onPostExecute(String address) {
+                                        if (address != null) {
+                                            Log.d("ADDRESS", address);
+                                            binding.changeLoc.setText(address);
+                                        }
+                                    }
+                                }.execute();
+                            }
+                        });
+                    }
                 }
+                Log.d(TAG, "distance: " + destination.getDistance());
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e(TAG, "Error: " + error.getMessage());
+
             }
         });
-    }
-
+    };
     private float calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         float[] results = new float[1];
         Location location1 = new Location("");
@@ -295,7 +551,7 @@ public class ShowDestinationFragment extends Fragment {
         return results[0] / 1000;
     }
 
-    private void sortDestination(ArrayList<Destination> destinationArrayList) {
+    private void sortDestination(ArrayList<Destination> destinationArrayList){
         Collections.sort(destinationArrayList, (destination1, destination2) -> {
             String title1 = destination1.getTitle().toLowerCase();
             String title2 = destination2.getTitle().toLowerCase();
@@ -319,4 +575,5 @@ public class ShowDestinationFragment extends Fragment {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);
         }
     }
+
 }
