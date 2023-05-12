@@ -120,7 +120,6 @@ public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestinat
                 }
                 notifyItemChanged(position);
                 addItinerary.checkSelect();
-//                itineraryPager.checkSelect();
             }
         });
     }
@@ -213,9 +212,6 @@ public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestinat
             if (addItinerary != null) {
                 addItinerary.checkSelect();
             }
-//                if (itineraryPager != null) {
-//                    itineraryPager.checkSelect();
-//                }
             return true;
         }
     }

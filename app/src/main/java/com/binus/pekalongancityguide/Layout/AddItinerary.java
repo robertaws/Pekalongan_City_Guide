@@ -1,5 +1,7 @@
 package com.binus.pekalongancityguide.Layout;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,31 +22,39 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.binus.pekalongancityguide.Adapter.IterAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.R;
+import com.binus.pekalongancityguide.databinding.DialogChooseDateBinding;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
 
 public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClickListener {
-    private String categoryId;
-    private String category;
-    private int counter;
+    private String categoryId, category, startDate, endDate;
     public IterAdapter iterAdapter;
     private RecyclerView iterRV;
-    private Button addIter;
+    private Button addIter, addDate;
     private RelativeLayout selectLayout;
     private TextView selectTv;
-    private ImageButton selectCancel;
-    public ArrayList<Destination> destinationArrayList;
-    private ArrayList<Destination> selectedItems;
+    private ImageButton selectCancel, startBtn, endBtn;
+    ;
+    private EditText startEt, endEt;
+    private Calendar calendar;
+    private int startDay, startMonth, startYear, endDay, endMonth, endYear, counter;
+    public ArrayList<Destination> destinationArrayList, selectedItems;
     private View view;
     private ItineraryPager itineraryPager;
+
 
     public AddItinerary() {
     }
@@ -77,6 +87,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_add_itinerary, container, false);
         init();
+        showPickDateDialog();
         checkSelect();
         EditText iterSearch = view.findViewById(R.id.search_iter);
         iterSearch.addTextChangedListener(new TextWatcher() {
@@ -105,7 +116,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
             loadCategoriedDestination();
         }
         addIter.setOnClickListener(v -> {
-
+            Log.d(TAG, "start: " + startDate + " end : " + endDate);
         });
         selectCancel.setOnClickListener(v -> iterAdapter.exitSelectMode());
         return view;
@@ -117,6 +128,97 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
         selectTv = view.findViewById(R.id.select_tv);
         selectLayout = view.findViewById(R.id.select_layout);
         selectCancel = view.findViewById(R.id.select_cancel);
+    }
+
+    private void showPickDateDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        DialogChooseDateBinding chooseDateBinding = DialogChooseDateBinding.inflate(getLayoutInflater());
+        builder.setView(chooseDateBinding.getRoot());
+        startEt = chooseDateBinding.startDateEt;
+        endEt = chooseDateBinding.endDateEt;
+        startBtn = chooseDateBinding.startPickerBtn;
+        endBtn = chooseDateBinding.endPickerBtn;
+        addDate = chooseDateBinding.addDateBtn;
+
+        calendar = Calendar.getInstance();
+
+        startBtn.setOnClickListener(v -> showStartCalendar());
+
+        startEt.setOnClickListener(v -> showStartCalendar());
+
+        endBtn.setOnClickListener(v -> showEndCalendar());
+
+        endEt.setOnClickListener(v -> showEndCalendar());
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
+        dialog.show();
+        addDate.setOnClickListener(v -> dialog.dismiss());
+    }
+
+    private void showStartCalendar() {
+        startYear = calendar.get(Calendar.YEAR);
+        startMonth = calendar.get(Calendar.MONTH);
+        startDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dialog = new DatePickerDialog(getContext(), (dateView, year, month, dayOfMonth) -> {
+            startYear = year;
+            startMonth = month;
+            startDay = dayOfMonth;
+            SimpleDateFormat format = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
+            startDate = format.format(new Date(startYear - 1900, startMonth, startDay));
+            startEt.setText(startDate);
+        }, startYear, startMonth, startDay);
+
+        dialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+
+        if (endDate != null) {
+            SimpleDateFormat format = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
+            try {
+                Date endDateObj = format.parse(endDate);
+                dialog.getDatePicker().setMaxDate(endDateObj.getTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);
+        dialog.show();
+    }
+
+    private void showEndCalendar() {
+        endYear = calendar.get(Calendar.YEAR);
+        endMonth = calendar.get(Calendar.MONTH);
+        endDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dialog = new DatePickerDialog(getContext(), (dateView, year, month, dayOfMonth) -> {
+            endYear = year;
+            endMonth = month;
+            endDay = dayOfMonth;
+            SimpleDateFormat format = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
+            endDate = format.format(new Date(endYear - 1900, endMonth, endDay));
+            endEt.setText(endDate);
+        }, endYear, endMonth, endDay);
+
+        Calendar minDateCalendar = Calendar.getInstance();
+        if (startDate != null) {
+            SimpleDateFormat format = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
+            try {
+                Date startDateObj = format.parse(startDate);
+                minDateCalendar.setTime(startDateObj);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } else {
+            minDateCalendar.setTime(calendar.getTime());
+        }
+        if (minDateCalendar.after(calendar)) {
+            dialog.getDatePicker().setMinDate(minDateCalendar.getTimeInMillis());
+        } else {
+            dialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+        }
+
+        dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);
+        dialog.show();
     }
 
     private void loadDestinations() {
