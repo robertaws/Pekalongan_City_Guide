@@ -280,7 +280,6 @@ public class ShowDestinationFragment extends Fragment {
                         currentLat = location.getLatitude();
                         currentLng = location.getLongitude();
                         coordinate = new LatLng(currentLat, currentLng);
-
                         new AsyncTask<Void, Void, String>() {
                             @Override
                             protected String doInBackground(Void... voids) {

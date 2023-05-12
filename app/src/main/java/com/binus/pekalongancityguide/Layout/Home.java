@@ -44,7 +44,7 @@ public class Home extends AppCompatActivity {
                 case home:
                     getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commitAllowingStateLoss();
                     break;
-
+                    
                 case desti:
                     getSupportFragmentManager().beginTransaction().replace(R.id.container, destinationPager).commitAllowingStateLoss();
                     break;

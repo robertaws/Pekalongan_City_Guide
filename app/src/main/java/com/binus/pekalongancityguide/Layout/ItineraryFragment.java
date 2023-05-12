@@ -1,5 +1,7 @@
 package com.binus.pekalongancityguide.Layout;
 
+import static android.view.View.GONE;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -18,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -99,6 +102,15 @@ public class ItineraryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        binding = FragmentItineraryBinding.inflate(LayoutInflater.from(getContext()), container, false);
+        binding.showRoutes.setVisibility(GONE);
+        RelativeLayout.LayoutParams layoutGoneParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.
+                WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutGoneParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        layoutGoneParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+        layoutGoneParams.setMargins(15,15,15,15);
+        binding.addIterBtn.setLayoutParams(layoutGoneParams);
+
         prefs = getActivity().getSharedPreferences("coordinate", Context.MODE_PRIVATE);
         String lastLatitude = prefs.getString("lastLatitude", "0");
         String lastLongitude = prefs.getString("lastLongitude", "0");
@@ -107,7 +119,6 @@ public class ItineraryFragment extends Fragment {
             double longitude = Double.parseDouble(lastLongitude);
             coordinate = new LatLng(latitude, longitude);
         }
-        binding = FragmentItineraryBinding.inflate(LayoutInflater.from(getContext()), container, false);
         Places.initialize(getContext().getApplicationContext(), apiKey);
         placesClient = Places.createClient(getContext());
         firebaseAuth = FirebaseAuth.getInstance();
@@ -226,34 +237,50 @@ public class ItineraryFragment extends Fragment {
                                         calculateDuration(currentLat, currentLng, placeLat, placeLng, durationText -> {
                                             itineraryList.add(new Itinerary(date, startTime, endTime, placeName, destiId, url, durationText, placeLat, placeLng, distance));
                                             sortItineraryList(itineraryList);
-                                            binding.showRoutes.setOnClickListener(v -> {
-                                                if (itineraryList.size() > 0) {
-                                                    String origin = "current location";
-                                                    Itinerary firstItinerary = itineraryList.get(0);
-                                                    double latitude = firstItinerary.getLatitude();
-                                                    double longitude = firstItinerary.getLongitude();
-                                                    StringBuilder waypoints = new StringBuilder();
-                                                    for (int i = 1; i < itineraryList.size(); i++) {
-                                                        Itinerary itinerary = itineraryList.get(i);
-                                                        waypoints.append(itinerary.getLatitude()).append(",").append(itinerary.getLongitude()).append("|");
-                                                    }
-                                                    waypoints.setLength(waypoints.length() - 1); // Remove the last "|"
-                                                    String routeUrl = "https://www.google.com/maps/dir/?api=1&origin=" + origin + "&destination=" + latitude + "," + longitude + "&waypoints=" + waypoints + "&travelmode=driving";
-                                                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(routeUrl));
-                                                    mapIntent.setPackage("com.google.android.apps.maps");
-                                                    if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                                                        startActivity(mapIntent);
+                                            if(itineraryList.size()<2){
+                                                binding.showRoutes.setVisibility(GONE);
+                                                RelativeLayout.LayoutParams layoutGoneParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.
+                                                        WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+                                                layoutGoneParams.setMargins(15,15,15,15);
+                                                layoutGoneParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                                                layoutGoneParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+                                                binding.addIterBtn.setLayoutParams(layoutGoneParams);
+                                            }else{
+                                                binding.showRoutes.setVisibility(View.VISIBLE);
+                                                RelativeLayout.LayoutParams layoutVisibleParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.
+                                                        WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+                                                layoutVisibleParams.addRule(RelativeLayout.ABOVE,binding.showRoutes.getId());
+                                                layoutVisibleParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+                                                layoutVisibleParams.setMarginEnd(15);
+                                                binding.addIterBtn.setLayoutParams(layoutVisibleParams);
+                                                binding.showRoutes.setOnClickListener(v -> {
+                                                    if (itineraryList.size() > 0) {
+                                                        String origin = "current location";
+                                                        Itinerary firstItinerary = itineraryList.get(0);
+                                                        double latitude = firstItinerary.getLatitude();
+                                                        double longitude = firstItinerary.getLongitude();
+                                                        StringBuilder waypoints = new StringBuilder();
+                                                        for (int i = 1; i < itineraryList.size(); i++) {
+                                                            Itinerary itinerary = itineraryList.get(i);
+                                                            waypoints.append(itinerary.getLatitude()).append(",").append(itinerary.getLongitude()).append("|");
+                                                        }
+                                                        waypoints.setLength(waypoints.length() - 1); // Remove the last "|"
+                                                        String routeUrl = "https://www.google.com/maps/dir/?api=1&origin=" + origin + "&destination=" + latitude + "," + longitude + "&waypoints=" + waypoints + "&travelmode=driving";
+                                                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(routeUrl));
+                                                        mapIntent.setPackage("com.google.android.apps.maps");
+                                                        if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                                                            startActivity(mapIntent);
+                                                        } else {
+                                                            Toast.makeText(getContext(),R.string.no_map_app, Toast.LENGTH_SHORT).show();
+                                                            String websiteUrl = "https://www.google.com/maps/dir/?api=1&origin=" + origin + "&destination=" + latitude + "," + longitude + "&waypoints=" + waypoints + "&travelmode=driving";
+                                                            Intent websiteIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl));
+                                                            startActivity(websiteIntent);
+                                                        }
                                                     } else {
-                                                        Toast.makeText(getContext(),R.string.no_map_app, Toast.LENGTH_SHORT).show();
-                                                        String websiteUrl = "https://www.google.com/maps/dir/?api=1&origin=" + origin + "&destination=" + latitude + "," + longitude + "&waypoints=" + waypoints + "&travelmode=driving";
-                                                        Intent websiteIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl));
-                                                        startActivity(websiteIntent);
+                                                        Toast.makeText(getContext(),R.string.no_desttination_iter, Toast.LENGTH_SHORT).show();
                                                     }
-                                                } else {
-                                                    Toast.makeText(getContext(),R.string.no_desttination_iter, Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-
+                                                });
+                                            }
                                             ItineraryAdapter adapter = new ItineraryAdapter(getContext(), itineraryList, getParentFragmentManager());
                                             binding.itineraryRv.setAdapter(adapter);
                                         });
