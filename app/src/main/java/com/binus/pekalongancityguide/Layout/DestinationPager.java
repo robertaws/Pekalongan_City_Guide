@@ -23,13 +23,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class DestinationFragment extends Fragment {
+public class DestinationPager extends Fragment {
     public ArrayList<Categories> categoriesArrayList;
     public ViewPagerAdapter viewPagerAdapter;
     private FragmentDestinationBinding binding;
     private static final String TAG = "DESTI_USER_TAG";
 
-    public DestinationFragment() {
+    public DestinationPager() {
 
     }
 

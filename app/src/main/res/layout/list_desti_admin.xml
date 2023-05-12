@@ -37,12 +37,15 @@
 
             <ImageButton
                 android:id="@+id/option_btn"
-                android:layout_margin="10dp"
-                android:layout_alignParentRight="true"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/more_button"
-                android:background="#0000" />
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="#0000"
+                android:src="@drawable/more_button" />
 
             <TextView
                 android:id="@+id/adminloc_desc"

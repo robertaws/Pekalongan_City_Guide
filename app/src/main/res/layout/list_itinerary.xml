@@ -65,7 +65,7 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -76,6 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
+                android:layout_margin="10dp"
                 android:textSize="18dp"
                 android:maxLines="3"
                 android:fontFamily="@font/poppins_semibold"
@@ -83,20 +84,34 @@
                 android:textAppearance="?attr/textAppearanceListItem"
                 android:textColor="@color/palette_2"
                 android:textStyle="bold"
-                android:layout_weight="1" />
+                android:layout_alignParentStart="true" />
+
+            <ImageButton
+                android:id="@+id/option_btn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentEnd="true"
+                android:padding="8dp"
+                android:layout_margin="10dp"
+                android:background="#0000"
+                android:src="@drawable/more_button" />
+
             <com.google.android.material.divider.MaterialDivider
                 app:dividerColor="@color/palette_4"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginHorizontal="8dp"
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_above="@id/disdur_layout" />
+
             <LinearLayout
+                android:id="@+id/disdur_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_weight="1">
+                android:layout_alignParentBottom="true"
+                android:padding="8dp">
 
                 <TextView
                     android:drawablePadding="5dp"
@@ -129,7 +144,7 @@
                     android:layout_weight="1" />
 
             </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
 

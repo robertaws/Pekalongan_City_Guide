@@ -71,7 +71,6 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         holder.durationTextView.setText(itinerary.getDurationText());
         holder.itemView.setOnClickListener(v -> {
             if (holder.isImageLoaded) {
-                String destinationName = itinerary.getPlaceName();
                 double latitude = itinerary.getLatitude();
                 double longitude = itinerary.getLongitude();
                 String origin = getMyLocation();

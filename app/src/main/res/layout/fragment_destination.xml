@@ -11,7 +11,7 @@
         android:id="@+id/desti_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Layout.DestinationFragment"
+        tools:context=".Layout.DestinationPager"
         android:background="@drawable/background_batik"
         android:backgroundTint="@color/palette_4"
         android:backgroundTintMode="screen">

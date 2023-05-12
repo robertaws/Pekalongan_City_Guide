@@ -12,9 +12,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.binus.pekalongancityguide.Adapter.IterAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Categories;
-import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.databinding.FragmentItineraryPagerBinding;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -27,12 +25,9 @@ import java.util.ArrayList;
 
 public class ItineraryPager extends Fragment {
     public ArrayList<Categories> categoriesArrayList;
-    private ArrayList<Destination> selectedItems;
     public ViewPagerAdapter viewPagerAdapter;
-    private IterAdapter iterAdapter;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private AddItinerary addItinerary;
     private FragmentItineraryPagerBinding binding;
 
     public ItineraryPager() {
@@ -57,7 +52,6 @@ public class ItineraryPager extends Fragment {
     private void init() {
         tabLayout = binding.iterTabLayout;
         viewPager = binding.iterViewPager;
-//        iterAdapter = new IterAdapter(getContext(), AddItinerary.getInstance().destinationArrayList, this, addItinerary, this);
     }
 
     private void setupViewPagerAdapter(ViewPager viewPager) {
@@ -96,11 +90,6 @@ public class ItineraryPager extends Fragment {
         viewPager.setOffscreenPageLimit(10);
     }
 
-//    @Override
-//    public void onItemLongClick(Destination destination) {
-//        checkSelect();
-//    }
-
     public class ViewPagerAdapter extends FragmentPagerAdapter {
         private final ArrayList<AddItinerary> fragmentList = new ArrayList<>();
         private final ArrayList<String> fragmentTitleList = new ArrayList<>();
@@ -131,18 +120,5 @@ public class ItineraryPager extends Fragment {
             return fragmentTitleList.get(position);
         }
     }
-
-//    public void checkSelect(){
-//        if (iterAdapter != null) {
-//            selectedItems = iterAdapter.getSelectedItems();
-//            if (selectedItems.size() < 1) {
-//                tabLayout.setVisibility(View.VISIBLE);
-//            }else{
-//                tabLayout.setVisibility(View.GONE);
-//            }
-//        }else{
-//            tabLayout.setVisibility(View.VISIBLE);
-//        }
-//    }
 
 }

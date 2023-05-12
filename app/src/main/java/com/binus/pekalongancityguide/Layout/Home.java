@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.binus.pekalongancityguide.R;
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
@@ -12,7 +13,7 @@ import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 public class Home extends AppCompatActivity {
     private static final int home = 1;
     HomeFragment homeFragment = new HomeFragment();
-    DestinationFragment destinationFragment = new DestinationFragment();
+    DestinationPager destinationPager = new DestinationPager();
     ConversationFragment conversationFragment = new ConversationFragment();
     BookmarkFragment bookmarkFragment = new BookmarkFragment();
     ProfileFragment profileFragment = new ProfileFragment();
@@ -39,14 +40,13 @@ public class Home extends AppCompatActivity {
         bottomNavigationView.add(new MeowBottomNavigation.Model(pr, R.drawable.profile));
 
         bottomNavigationView.setOnShowListener(item -> {
-            String name;
             switch (item.getId()) {
                 case home:
                     getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commitAllowingStateLoss();
                     break;
 
                 case desti:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.container, destinationFragment).commitAllowingStateLoss();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container, destinationPager).commitAllowingStateLoss();
                     break;
                 case iter:
                     getSupportFragmentManager().beginTransaction().replace(R.id.container, itineraryList).commitAllowingStateLoss();
@@ -69,22 +69,28 @@ public class Home extends AppCompatActivity {
         });
 
         bottomNavigationView.setOnReselectListener(item -> {
+            switch (item.getId()) {
+                case iter:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container, itineraryList).commitAllowingStateLoss();
+                    break;
+            }
         });
         bottomNavigationView.show(home, true);
     }
     @Override
     public void onBackPressed() {
-        if (doubleTap) {
-            super.onBackPressed();
-            return;
-        }
-        this.doubleTap = true;
-        Toast.makeText(this,R.string.press_back, Toast.LENGTH_SHORT).show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                doubleTap = false;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        int backStackEntryCount = fragmentManager.getBackStackEntryCount();
+        if (backStackEntryCount > 0) {
+            fragmentManager.popBackStack();
+        } else {
+            if (doubleTap) {
+                super.onBackPressed();
+                return;
             }
-        }, 2000);
+            this.doubleTap = true;
+            Toast.makeText(this, R.string.press_back, Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(() -> doubleTap = false, 2000);
+        }
     }
 }
