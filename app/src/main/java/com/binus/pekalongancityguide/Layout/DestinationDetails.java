@@ -63,7 +63,7 @@ public class DestinationDetails extends AppCompatActivity {
     private CommentAdapter commentAdapter;
     private static final String TAG = "REVIEW_TAG";
     private ProgressDialog progressDialog;
-    int startHour,startMinute,startHour1,startMinute1
+    private int startHour,startMinute,startHour1,startMinute1
             ,endHour,endMinute,endHour1,endMinute1
             ,dayDate,monthDate,yearDate,dayDate1,monthDate1,yearDate1;
     @Override
@@ -367,7 +367,8 @@ public class DestinationDetails extends AppCompatActivity {
 
     private void uploadToDB(String date, String startTime, String endTime) {
         String uid = firebaseAuth.getUid();
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                .getReference("Destination");
         reference.child(destiId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -378,27 +379,37 @@ public class DestinationDetails extends AppCompatActivity {
                 hashMap.put("endTime", endTime);
                 hashMap.put("date", date);
                 hashMap.put("destiId", destiId);
-                DatabaseReference itineraryRef = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
-                itineraryRef.child(uid).child("itinerary").push().setValue(hashMap)
+                DatabaseReference itineraryRef = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                        .getReference("Users")
+                        .child(uid)
+                        .child("itinerary");
+
+                String itineraryId = itineraryRef.push().getKey();
+
+                hashMap.put("itineraryId", itineraryId);
+
+                itineraryRef.child(itineraryId).setValue(hashMap)
                         .addOnSuccessListener(aVoid -> {
                             if (progressDialog != null) {
                                 progressDialog.dismiss();
                             }
                             Toast.makeText(getApplicationContext(), "Itinerary uploaded successfully", Toast.LENGTH_LONG).show();
-                        }).addOnFailureListener(e -> {
+                        })
+                        .addOnFailureListener(e -> {
                             if (progressDialog != null) {
                                 progressDialog.dismiss();
                             }
                             Toast.makeText(DestinationDetails.this, "Data upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, "on Failure : " + e.getMessage());
+                            Log.d(TAG, "on Failure: " + e.getMessage());
                         });
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
+
 
     private void loadDetails() {
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");

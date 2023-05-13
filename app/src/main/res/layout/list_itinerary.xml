@@ -90,7 +90,7 @@
                 android:textStyle="bold" />
 
             <ImageButton
-                android:id="@+id/option_btn"
+                android:id="@+id/iter_option"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_alignParentEnd="true"

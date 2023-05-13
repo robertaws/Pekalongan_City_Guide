@@ -127,7 +127,6 @@ public class ItineraryFragment extends Fragment {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                // Do something with the new location
                 Log.d("Location", "Latitude: " + location.getLatitude() + ", Longitude: " + location.getLongitude());
             }
 
@@ -211,7 +210,8 @@ public class ItineraryFragment extends Fragment {
                     Log.d(TAG, "End Time: " + endTime);
                     String destiId = itinerarySnapshot.child("destiId").getValue(String.class);
                     Log.d(TAG, "Desti ID: " + destiId);
-
+                    String iterId = itinerarySnapshot.child("iterId").getValue(String.class);
+                    Log.d(TAG, "iter ID: " + iterId);
                     database.getReference("Destination").child(destiId).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -231,11 +231,10 @@ public class ItineraryFragment extends Fragment {
                                     if (location != null) {
                                         double currentLat = location.getLatitude();
                                         double currentLng = location.getLongitude();
-                                        // Calculate distance  current location and itinerary location
                                         float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
                                         Log.d(TAG, "Distance: " + distance);
                                         calculateDuration(currentLat, currentLng, placeLat, placeLng, durationText -> {
-                                            itineraryList.add(new Itinerary(date, startTime, endTime, placeName, destiId, url, durationText, placeLat, placeLng, distance));
+                                            itineraryList.add(new Itinerary(date, startTime, endTime, placeName, destiId, url, durationText,iterId,placeLat, placeLng, distance));
                                             sortItineraryList(itineraryList);
                                             if(itineraryList.size()<2){
                                                 binding.showRoutes.setVisibility(GONE);

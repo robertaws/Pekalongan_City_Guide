@@ -2,6 +2,7 @@ package com.binus.pekalongancityguide.Layout;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,6 +18,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.binus.pekalongancityguide.Adapter.IterAdapter;
+import com.binus.pekalongancityguide.Adapter.ItineraryAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Categories;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.DialogChooseDateBinding;
@@ -164,7 +167,6 @@ public class ItineraryPager extends Fragment {
         tabLayout = binding.iterTabLayout;
         viewPager = binding.iterViewPager;
     }
-
     private void setupViewPagerAdapter(ViewPager viewPager) {
         viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getContext());
         categoriesArrayList = new ArrayList<>();

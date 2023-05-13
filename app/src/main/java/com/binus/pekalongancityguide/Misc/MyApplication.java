@@ -9,10 +9,16 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.binus.pekalongancityguide.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -38,6 +44,49 @@ public class MyApplication extends Application {
         calendar.setTimeInMillis(timestamp);
         String date = DateFormat.format("dd/MMMM/yyyy",calendar).toString();
         return date;
+    }
+    public static void deleteIter(Context context, String destiId){
+        String uid = FirebaseAuth.getInstance().getUid();
+        String TAG = "DELETE_ITER_TAG";
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Confirm Delete");
+        builder.setMessage("Are you sure you want to delete this item ?");
+        builder.setPositiveButton("Yes", (dialogInterface, i) -> {
+            ProgressDialog dialog = new ProgressDialog(context);
+            dialog.setTitle("Please Wait");
+            dialog.setMessage("Deleting . . .");
+            dialog.show();
+            DatabaseReference itineraryRef = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                    .getReference("Users")
+                    .child(uid)
+                    .child("itinerary");
+
+            Query query = itineraryRef.orderByChild("destiId").equalTo(destiId);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        snapshot.getRef().removeValue();
+                    }
+
+                    dialog.dismiss();
+                    Toast.makeText(context, "Itinerary deleted successfully", Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    dialog.dismiss();
+                    Toast.makeText(context, "Failed to delete itinerary: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onCancelled: " + databaseError.getMessage());
+                }
+            });
+        });
+        builder.setNegativeButton("No", (dialogInterface, i) -> {
+            dialogInterface.dismiss();
+            Toast.makeText(context, "Itinerary Not Deleted", Toast.LENGTH_SHORT).show();
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
     public static void deleteDesti(Context context, String destiId, String destiUrl, String destiTitle) {
         String TAG = "DELETE_DESTI_TAG";

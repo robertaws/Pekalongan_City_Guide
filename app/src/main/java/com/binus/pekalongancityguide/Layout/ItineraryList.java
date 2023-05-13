@@ -43,6 +43,7 @@ import java.util.Objects;
 public class ItineraryList extends Fragment {
     private FragmentItineraryListBinding binding;
     private FirebaseAuth firebaseAuth;
+    ItineraryPagerAdapter vpAdapter;
     public ItineraryList() {
 
     }
@@ -52,7 +53,6 @@ public class ItineraryList extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -93,7 +93,7 @@ public class ItineraryList extends Fragment {
 
                 List<Fragment> fragments = createFragmentsList(dates);
 
-                ItineraryPagerAdapter vpAdapter = new ItineraryList.ItineraryPagerAdapter(getContext(), getChildFragmentManager(), fragments, dates);
+                vpAdapter = new ItineraryList.ItineraryPagerAdapter(getContext(), getChildFragmentManager(), fragments, dates);
                 binding.viewPager.setAdapter(vpAdapter);
                 binding.viewPager.setOffscreenPageLimit(10);
                 binding.itineraryTab.setupWithViewPager(binding.viewPager);
@@ -106,6 +106,57 @@ public class ItineraryList extends Fragment {
         });
         return binding.getRoot();
     }
+
+    public void updateItineraryView() {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(firebaseAuth.getUid());
+        Query itineraryQuery = userRef.child("itinerary");
+        itineraryQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                HashSet<String> uniqueDates = new HashSet<>();
+                for (DataSnapshot itinerarySnapshot : snapshot.getChildren()) {
+                    String date = itinerarySnapshot.child("date").getValue(String.class);
+                    if (date != null && !date.isEmpty()) {
+                        Log.d(TAG, "date: " + date);
+                        date = convertWithoutDay(date);
+                        uniqueDates.add(date);
+                    }
+                }
+
+                List<String> dates = new ArrayList<>(uniqueDates);
+                Collections.sort(dates, new Comparator<String>() {
+                    DateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
+
+                    @Override
+                    public int compare(String date1, String date2) {
+                        try {
+                            Date dateObj1 = dateFormat.parse(date1);
+                            Date dateObj2 = dateFormat.parse(date2);
+                            return dateObj1.compareTo(dateObj2);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            return 0;
+                        }
+                    }
+                });
+
+                List<Fragment> fragments = createFragmentsList(dates);
+
+                vpAdapter = new ItineraryPagerAdapter(getContext(), getChildFragmentManager(), fragments, dates);
+                binding.viewPager.setAdapter(vpAdapter);
+                binding.viewPager.setOffscreenPageLimit(10);
+                binding.itineraryTab.setupWithViewPager(binding.viewPager);
+                binding.itineraryTab.setSelectedTabIndicatorColor(ContextCompat.getColor(getContext(), R.color.white));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+
+
     public class ItineraryPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> fragments;
         private final List<String> dates;
@@ -115,6 +166,7 @@ public class ItineraryList extends Fragment {
             this.fragments = fragments;
             this.dates = dates;
         }
+
         @Override
         public Fragment getItem(int position) {
             Fragment fragment = fragments.get(position);
