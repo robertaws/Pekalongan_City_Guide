@@ -85,6 +85,7 @@ public class ShowDestinationFragment extends Fragment {
     private float distance;
     private boolean isChangeLocDialogShowing = false;
     private static SharedPreferences prefs;
+    DestinationPager destinationPager;
 
     public ShowDestinationFragment() {
     }
@@ -112,6 +113,7 @@ public class ShowDestinationFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         prefs = getActivity().getSharedPreferences("coordinate", Context.MODE_PRIVATE);
+        destinationPager = new DestinationPager();
         String lastLatitude = prefs.getString("lastLatitude", "0");
         String lastLongitude = prefs.getString("lastLongitude", "0");
         if (!lastLatitude.equals("0") && !lastLongitude.equals("0")) {
@@ -119,7 +121,7 @@ public class ShowDestinationFragment extends Fragment {
             double longitude = Double.parseDouble(lastLongitude);
             coordinate = new LatLng(latitude, longitude);
         }
-//        Log.d(TAG, "ON START COORDINATES: " + coordinate);
+        Log.d(TAG, "ON START COORDINATES: " + coordinate);
         binding = FragmentShowDestinationBinding.inflate(LayoutInflater.from(getContext()), container, false);
         if (category.equals("All")) {
             loadDestinations();
@@ -182,6 +184,13 @@ public class ShowDestinationFragment extends Fragment {
                 showChangeLocDialog();
             }
         });
+        DestinationAdapter adapter = new DestinationAdapter(getContext(), destinationArrayList, getParentFragmentManager());
+        adapter.setOnDataChangedListener(() -> {
+            // Notify the parent fragment that the data has changed
+            if (getParentFragment() instanceof DestinationPager) {
+                ((DestinationPager) getParentFragment()).onDataChanged();
+            }
+        });
 
         return binding.getRoot();
     }
@@ -215,6 +224,7 @@ public class ShowDestinationFragment extends Fragment {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return "Error: Geocoder service not available";
                 }
                 return null;
             }
@@ -290,6 +300,7 @@ public class ShowDestinationFragment extends Fragment {
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();
+                                    return "Error: Geocoder service not available";
                                 }
                                 return null;
                             }
@@ -447,7 +458,7 @@ public class ShowDestinationFragment extends Fragment {
             getDestinationDistance(destination);
         }
         if (destinationAdapter == null) {
-            destinationAdapter = new DestinationAdapter(getContext(), destinationArrayList);
+            destinationAdapter = new DestinationAdapter(getContext(), destinationArrayList, getParentFragmentManager());
             binding.destiRv.setAdapter(destinationAdapter);
         } else {
             destinationAdapter.notifyDataSetChanged();
@@ -476,6 +487,7 @@ public class ShowDestinationFragment extends Fragment {
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
+                                return "Error: Geocoder service not available";
                             }
                             return null;
                         }
@@ -512,6 +524,7 @@ public class ShowDestinationFragment extends Fragment {
                                             }
                                         } catch (IOException e) {
                                             e.printStackTrace();
+                                            return "Error: Geocoder service not available";
                                         }
                                         return null;
                                     }

@@ -1,7 +1,5 @@
 package com.binus.pekalongancityguide.Layout;
 
-import static android.view.View.GONE;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -65,6 +63,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static android.view.View.GONE;
 import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
 
 public class ItineraryFragment extends Fragment {
@@ -112,6 +111,7 @@ public class ItineraryFragment extends Fragment {
         binding.addIterBtn.setLayoutParams(layoutGoneParams);
 
         prefs = getActivity().getSharedPreferences("coordinate", Context.MODE_PRIVATE);
+        Log.d(TAG, "onCreateView: " + prefs);
         String lastLatitude = prefs.getString("lastLatitude", "0");
         String lastLongitude = prefs.getString("lastLongitude", "0");
         if (!lastLatitude.equals("0") && !lastLongitude.equals("0")) {
@@ -155,6 +155,12 @@ public class ItineraryFragment extends Fragment {
             Log.d(TAG, "selected date: " + selectedDate);
         }
         loadItinerary(selectedDate);
+        adapter.setOnDataChangedListener(() -> {
+            // Notify the parent fragment that the data has changed
+            if (getParentFragment() instanceof ItineraryList) {
+                ((ItineraryList) getParentFragment()).onDataChanged();
+            }
+        });
         binding.itineraryRv.setAdapter(adapter);
         binding.addIterBtn.setOnClickListener(v -> {
             ItineraryPager itineraryPager = new ItineraryPager();

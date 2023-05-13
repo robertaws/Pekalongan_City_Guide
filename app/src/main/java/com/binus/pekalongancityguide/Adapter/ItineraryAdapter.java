@@ -1,9 +1,5 @@
 package com.binus.pekalongancityguide.Adapter;
 
-import static androidx.core.content.res.TypedArrayUtils.getString;
-
-import static com.firebase.ui.auth.AuthUI.getApplicationContext;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,7 +12,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,10 +30,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
-import com.binus.pekalongancityguide.Layout.DestinationDetails;
-import com.binus.pekalongancityguide.Layout.EditDestination;
 import com.binus.pekalongancityguide.Layout.ItineraryList;
-import com.binus.pekalongancityguide.Layout.ItineraryPager;
 import com.binus.pekalongancityguide.Misc.AlphaTransformation;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.R;
@@ -48,8 +40,6 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
@@ -291,12 +281,13 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);
             dialog.show();
         });
-        addItinerary.setOnClickListener(v ->{
-            validateData(dateEt, startEt, endEt);
-        });
         AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
         dialog.show();
+        addItinerary.setOnClickListener(v -> {
+            validateData(dateEt, startEt, endEt);
+            dialog.dismiss();
+        });
     }
 
     private String date = "", startTime = "", endTime = "";
@@ -390,7 +381,17 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             return null;
         }
     }
-}
+    }
+
+    public interface OnDataChangedListener {
+        void onDataChanged();
+    }
+
+    private OnDataChangedListener mListener;
+
+    public void setOnDataChangedListener(OnDataChangedListener listener) {
+        mListener = listener;
+    }
 
     @Override
     public int getItemCount() {

@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
@@ -46,12 +47,14 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
     public ArrayList<Destination> destinations, filterList;
     private ListDestinationBinding binding;
     private FilterDestiUser filterDestiUser;
+    private final FragmentManager fragmentManager;
     private static final String TAG = "ADAPTER_USER_TAG";
 
-    public DestinationAdapter(Context context, ArrayList<Destination> destinations) {
+    public DestinationAdapter(Context context, ArrayList<Destination> destinations, FragmentManager fragmentManager) {
         this.context = context;
         this.destinations = destinations;
         this.filterList = destinations;
+        this.fragmentManager = fragmentManager;
     }
 
     @NonNull
@@ -114,7 +117,6 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
             }
         });
         float distance = destination.getDistance();
-//        Log.d(TAG, "DISTANCE: " + distance);
         String distanceString;
         if (distance < 1) {
             int distanceInMeters = (int) (distance * 1000);
@@ -141,12 +143,23 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
                         holder.layoutImage.setBackground(drawable);
                         holder.progressBar.setVisibility(View.GONE);
                     }
+
                     @Override
                     public void onLoadFailed(@Nullable Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
                         Log.d(TAG, "on Failure: failed to getting file from url due to");
                     }
                 });
+    }
+
+    public interface OnDataChangedListener {
+        void onDataChanged();
+    }
+
+    private ItineraryAdapter.OnDataChangedListener mListener;
+
+    public void setOnDataChangedListener(ItineraryAdapter.OnDataChangedListener listener) {
+        mListener = listener;
     }
 
     @Override
