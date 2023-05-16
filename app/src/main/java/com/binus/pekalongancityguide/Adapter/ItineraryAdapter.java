@@ -67,7 +67,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
     private EditText startEt, endEt, dateEt;
     private ImageButton dateBtn, startBtn, endBtn;
     private Calendar calendar;
-    private String startDate, startTime, endTime, date;
+    private String startDate, startTime, endTime, date, openingHours;
     String destiID;
     private int startHour, startMinute, endHour, endMinute, startDay, startMonth, startYear;
 
@@ -201,7 +201,8 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             getOpeningHours(dayOfWeek);
         }, startYear, startMonth, startDay);
 
-        dialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+        // Set the minimum date to today's date
+        dialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
 
         dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);
         dialog.show();
@@ -213,7 +214,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    String openingHours = dataSnapshot.child(String.valueOf(dayOfWeek - 2)).getValue(String.class);
+                    openingHours = dataSnapshot.child(String.valueOf(dayOfWeek - 2)).getValue(String.class);
                     Log.d(TAG, "OPENING HOURS: " + openingHours);
 
                     if (openingHours != null) {
@@ -277,7 +278,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         ViewGroup timePickerContainer = customView.findViewById(R.id.time_picker_container);
         dialogRealTitle.setText("Select start time");
 
-        String dialogTitleText = String.format(Locale.getDefault(), "Opening Hour: %s, Closing Hour: %s", startTime, endTime);
+        String dialogTitleText = String.format(Locale.getDefault(), "Opening Hour: %s", openingHours);
         dialogTitle.setText(dialogTitleText);
 
         TimePicker timePicker = new TimePicker(new ContextThemeWrapper(context, R.style.TimePickerStyle));
@@ -330,7 +331,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         ViewGroup timePickerContainer = customView.findViewById(R.id.time_picker_container);
         dialogRealTitle.setText("Select end time");
 
-        String dialogTitleText = String.format(Locale.getDefault(), "Opening Hour: %s, Closing Hour: %s", startTime, endTime);
+        String dialogTitleText = String.format(Locale.getDefault(), "Opening Hour: %s", openingHours);
         dialogTitle.setText(dialogTitleText);
 
         TimePicker timePicker = new TimePicker(new ContextThemeWrapper(context, R.style.TimePickerStyle));
