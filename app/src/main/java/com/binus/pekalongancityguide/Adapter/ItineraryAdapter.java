@@ -225,21 +225,26 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                             String day = parts[0];
                             String timeRange = parts[1];
 
-                            // Remove whitespace and split the time range into start and end time
-                            String[] times = timeRange.trim().split(" – ");
-
-                            if (times.length == 2) {
-                                startTime = times[0];
-                                Log.d(TAG, "Start Time: " + startTime);
-                                endTime = times[1];
-                                Log.d(TAG, "End Time: " + endTime);
-
-                                // Now you have the valid start and end time values
-                                // Perform any further processing as needed
+                            if (timeRange.equals("Open 24 hours")) {
+                                startTime = "12:00 AM";
+                                endTime = "11:59 PM";
                             } else {
-                                // Handle the case when the time range is invalid or not in the expected format
-                                Toast.makeText(context, "Invalid time range", Toast.LENGTH_SHORT).show();
+                                String[] times = timeRange.trim().split(" – ");
+
+                                if (times.length == 2) {
+                                    startTime = times[0];
+                                    Log.d(TAG, "Start Time: " + startTime);
+                                    endTime = times[1];
+                                    Log.d(TAG, "End Time: " + endTime);
+
+                                    // Now you have the valid start and end time values
+                                    // Perform any further processing as needed
+                                } else {
+                                    // Handle the case when the time range is invalid or not in the expected format
+                                    Toast.makeText(context, "Invalid time range", Toast.LENGTH_SHORT).show();
+                                }
                             }
+                            // Remove whitespace and split the time range into start and end time
                         } else {
                             // Handle the case when the opening hours data is not in the expected format
                             Toast.makeText(context, "Invalid opening hours format", Toast.LENGTH_SHORT).show();
