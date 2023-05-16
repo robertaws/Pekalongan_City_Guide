@@ -90,10 +90,10 @@ public class ShowDestinationFragment extends Fragment {
     public ShowDestinationFragment() {
     }
 
-    public static ShowDestinationFragment newInstance(String categoryId, String category, String uid) {
+    public static ShowDestinationFragment newInstance(String id, String category, String uid) {
         ShowDestinationFragment fragment = new ShowDestinationFragment();
         Bundle args = new Bundle();
-        args.putString("categoryId", categoryId);
+        args.putString("id", id);
         args.putString("category", category);
         args.putString("uid", uid);
         fragment.setArguments(args);
@@ -121,7 +121,7 @@ public class ShowDestinationFragment extends Fragment {
             double longitude = Double.parseDouble(lastLongitude);
             coordinate = new LatLng(latitude, longitude);
         }
-        Log.d(TAG, "ON START COORDINATES: " + coordinate);
+//        Log.d(TAG, "ON START COORDINATES: " + coordinate);
         binding = FragmentShowDestinationBinding.inflate(LayoutInflater.from(getContext()), container, false);
         if (category.equals("All")) {
             loadDestinations();
@@ -308,7 +308,7 @@ public class ShowDestinationFragment extends Fragment {
                             @Override
                             protected void onPostExecute(String address) {
                                 if (address != null) {
-                                    Log.d("ADDRESS IN DIALOG", address);
+//                                    Log.d("ADDRESS IN DIALOG", address);
                                     addressString = address;
                                     locBinding.locTv.setText(addressString);
                                     autocompleteFragment.setText(addressString);
@@ -339,7 +339,7 @@ public class ShowDestinationFragment extends Fragment {
                 editor.putString("lastLongitude", String.valueOf(coordinate.longitude));
                 editor.apply();
             }
-            Log.d(TAG, "COORDINATES: " + coordinate);
+//            Log.d(TAG, "COORDINATES: " + coordinate);
         });
     }
 
@@ -495,7 +495,7 @@ public class ShowDestinationFragment extends Fragment {
                         @Override
                         protected void onPostExecute(String address) {
                             if (address != null) {
-                                Log.d("ADDRESS", address);
+//                                Log.d("ADDRESS", address);
                                 binding.changeLoc.setText(address);
                             }
                         }
@@ -532,7 +532,7 @@ public class ShowDestinationFragment extends Fragment {
                                     @Override
                                     protected void onPostExecute(String address) {
                                         if (address != null) {
-                                            Log.d("ADDRESS", address);
+//                                            Log.d("ADDRESS", address);
                                             binding.changeLoc.setText(address);
                                         }
                                     }
@@ -541,7 +541,7 @@ public class ShowDestinationFragment extends Fragment {
                         });
                     }
                 }
-                Log.d(TAG, "distance: " + destination.getDistance());
+//                Log.d(TAG, "distance: " + destination.getDistance());
             }
 
             @Override

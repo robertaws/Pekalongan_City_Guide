@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
-import com.binus.pekalongancityguide.Layout.ItineraryList;
+import com.binus.pekalongancityguide.Layout.Home;
 import com.binus.pekalongancityguide.Misc.AlphaTransformation;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.R;
@@ -51,21 +52,24 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.ItineraryViewHolder>{
-    private static final int MAPS_PERMIT= 1;
+import static android.content.ContentValues.TAG;
+
+public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.ItineraryViewHolder> {
+    private static final int MAPS_PERMIT = 1;
     private final Context context;
     private final List<Itinerary> itineraryList;
     private final FragmentManager fragmentManager;
+    private FirebaseDatabase database;
+    private EditText startEt, endEt, dateEt;
+    private ImageButton dateBtn, startBtn, endBtn;
+    private Calendar calendar;
+    private String startDate, startTime, endTime, date;
     String destiID;
-
-    private int startHour,startMinute,startHour1,startMinute1
-            ,endHour,endMinute,endHour1,endMinute1
-            ,dayDate,monthDate,yearDate,dayDate1,monthDate1,yearDate1;
+    private int startHour, startMinute, endHour, endMinute, startDay, startMonth, startYear;
 
     public ItineraryAdapter(Context context, List<Itinerary> itineraryList, FragmentManager fragmentManager) {
         this.context = context;
@@ -76,6 +80,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
     @Override
     public ItineraryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_itinerary, parent, false);
+        database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
         return new ItineraryViewHolder(view);
     }
 
@@ -91,6 +96,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         if (distance < 1) {
             int distanceInMeters = (int) (distance * 1000);
             distanceString = distanceInMeters + " m";
+
         } else {
             distanceString = String.format(Locale.getDefault(), "%.2f km", distance);
         }
@@ -138,10 +144,9 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
     private void showEditDialog(FragmentManager fragmentManager){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
+        calendar = Calendar.getInstance();
         DialogAddToItineraryBinding addToItineraryBinding = DialogAddToItineraryBinding.inflate(inflater);
         builder.setView(addToItineraryBinding.getRoot());
-        EditText dateEt,startEt,endEt;
-        ImageButton dateBtn,startBtn,endBtn;
         Button addItinerary;
         dateEt = addToItineraryBinding.dateEt;
         startEt = addToItineraryBinding.starttimeEt;
@@ -151,136 +156,17 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         endBtn = addToItineraryBinding.endpickerBtn;
         addItinerary = addToItineraryBinding.additineraryBtn;
 
-        startBtn.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            startHour = calendar.get(Calendar.HOUR_OF_DAY);
-            startMinute = calendar.get(Calendar.MINUTE);
-            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()
-                    .setTimeFormat(TimeFormat.CLOCK_12H)
-                    .setHour(startHour)
-                    .setMinute(startMinute)
-                    .setTitleText("Select start time")
-                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);
-            MaterialTimePicker dialog = mybuilder.build();
-            dialog.addOnPositiveButtonClickListener(timeview -> {
-                startHour = dialog.getHour();
-                startMinute = dialog.getMinute();
-                if (startHour < 12) {
-                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d am", startHour, startMinute));
-                } else if (startHour == 12) {
-                    startEt.setText(String.format(Locale.getDefault(), "12:%02d pm", startMinute));
-                } else {
-                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", startHour - 12, startMinute));
-                }
-            });
-            dialog.show(fragmentManager, "startTimePicker");
-        });
-        startEt.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            startHour1 = calendar.get(Calendar.HOUR_OF_DAY);
-            startMinute1 = calendar.get(Calendar.MINUTE);
-            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()
-                    .setTimeFormat(TimeFormat.CLOCK_12H)
-                    .setHour(startHour1)
-                    .setMinute(startMinute1)
-                    .setTitleText("Select start time")
-                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);
-            MaterialTimePicker dialog = mybuilder.build();
-            dialog.addOnPositiveButtonClickListener(timeview -> {
-                startHour1 = dialog.getHour();
-                startMinute1 = dialog.getMinute();
-                if (startHour1 < 12) {
-                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d am", startHour1, startMinute1));
-                } else if (startHour1 == 12) {
-                    startEt.setText(String.format(Locale.getDefault(), "12:%02d pm", startMinute1));
-                } else {
-                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", startHour1 - 12, startMinute1));
-                }
-            });
-            dialog.show(fragmentManager, "startTimePicker");
-        });
-        endBtn.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            endHour = calendar.get(Calendar.HOUR_OF_DAY);
-            endMinute = calendar.get(Calendar.MINUTE);
-            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()
-                    .setTimeFormat(TimeFormat.CLOCK_12H)
-                    .setHour(endHour)
-                    .setMinute(endMinute)
-                    .setTitleText("Select start time")
-                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);
-            MaterialTimePicker dialog = mybuilder.build();
-            dialog.addOnPositiveButtonClickListener(timeview -> {
-                endHour = dialog.getHour();
-                endMinute = dialog.getMinute();
-                if (endHour < 12) {
-                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d am", endHour, endMinute));
-                } else if (endHour == 12) {
-                    endEt.setText(String.format(Locale.getDefault(), "12:%02d pm", endMinute));
-                } else {
-                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", endHour - 12, endMinute));
-                }
-            });
-            dialog.show(fragmentManager, "startTimePicker");
-        });
-        endEt.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            endHour1 = calendar.get(Calendar.HOUR_OF_DAY);
-            endMinute1 = calendar.get(Calendar.MINUTE);
-            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()
-                    .setTimeFormat(TimeFormat.CLOCK_12H)
-                    .setHour(endHour1)
-                    .setMinute(endMinute1)
-                    .setTitleText("Select start time")
-                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);
-            MaterialTimePicker dialog = mybuilder.build();
-            dialog.addOnPositiveButtonClickListener(timeview -> {
-                endHour1 = dialog.getHour();
-                endMinute1 = dialog.getMinute();
-                if (endHour1 < 12) {
-                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d am", endHour1, endMinute1));
-                } else if (endHour1 == 12) {
-                    endEt.setText(String.format(Locale.getDefault(), "12:%02d pm", endMinute1));
-                } else {
-                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", endHour1 - 12, endMinute1));
-                }
-            });
-            dialog.show(fragmentManager, "startTimePicker");
-        });
-        dateBtn.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            yearDate = calendar.get(Calendar.YEAR);
-            monthDate = calendar.get(Calendar.MONTH);
-            dayDate = calendar.get(Calendar.DAY_OF_MONTH);
-            DatePickerDialog dialog;
-            dialog = new DatePickerDialog(context, (dateView, year, month, dayOfMonth) -> {
-                yearDate = year;
-                monthDate = month;
-                dayDate = dayOfMonth;
-                SimpleDateFormat format = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
-                String dateString = format.format(new Date(yearDate - 1900, monthDate, dayDate));
-                dateEt.setText(dateString);
-            }, yearDate, monthDate, dayDate);
-            dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);
-            dialog.show();
-        });
-        dateEt.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            yearDate1 = calendar.get(Calendar.YEAR);
-            monthDate1 = calendar.get(Calendar.MONTH);
-            dayDate1 = calendar.get(Calendar.DAY_OF_MONTH);
-            DatePickerDialog dialog;
-            dialog = new DatePickerDialog(context, (dateView, year, month, dayOfMonth) -> {
-                yearDate1 = year;
-                monthDate1 = month;
-                dayDate1 = dayOfMonth;
-                SimpleDateFormat format = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
-                String dateString = format.format(new Date(yearDate1 - 1900, monthDate1, dayDate1));
-                dateEt.setText(dateString);
-            }, yearDate1, monthDate1, dayDate1);
-            dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);
-            dialog.show();
-        });
+        startBtn.setEnabled(false);
+        startEt.setEnabled(false);
+        endBtn.setEnabled(false);
+        endEt.setEnabled(false);
+
+        startBtn.setOnClickListener(v -> showStartTimer());
+        startEt.setOnClickListener(v -> showStartTimer());
+        endBtn.setOnClickListener(v -> showEndTimer());
+        endEt.setOnClickListener(v -> showEndTimer());
+        dateBtn.setOnClickListener(v -> showCalendar());
+        dateEt.setOnClickListener(v -> showCalendar());
         AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
         dialog.show();
@@ -290,7 +176,199 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         });
     }
 
-    private String date = "", startTime = "", endTime = "";
+    private void showCalendar() {
+        startYear = calendar.get(Calendar.YEAR);
+        startMonth = calendar.get(Calendar.MONTH);
+        startDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dialog = new DatePickerDialog(context, (dateView, year, month, dayOfMonth) -> {
+            startYear = year;
+            startMonth = month;
+            startDay = dayOfMonth;
+            calendar.set(startYear, startMonth, startDay); // Set the selected date to the Calendar object
+
+            SimpleDateFormat format = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
+            startDate = format.format(calendar.getTime());
+            Log.d(TAG, "showCalendar: " + startDate);
+            dateEt.setText(startDate);
+            startBtn.setEnabled(true);
+            startEt.setEnabled(true);
+
+            // Get the day of the week for the selected date
+            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+            // Retrieve the opening hours for the selected day
+            getOpeningHours(dayOfWeek);
+        }, startYear, startMonth, startDay);
+
+        dialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+
+        dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);
+        dialog.show();
+    }
+
+    private void getOpeningHours(int dayOfWeek) {
+        DatabaseReference openingHoursRef = database.getReference("Destination");
+        openingHoursRef.child(destiID).child("openingHours").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String openingHours = dataSnapshot.child(String.valueOf(dayOfWeek - 2)).getValue(String.class);
+                    Log.d(TAG, "OPENING HOURS: " + openingHours);
+
+                    if (openingHours != null) {
+                        // Split the opening hours data into day and time range
+                        String[] parts = openingHours.split(": ");
+
+                        if (parts.length == 2) {
+                            String day = parts[0];
+                            String timeRange = parts[1];
+
+                            // Remove whitespace and split the time range into start and end time
+                            String[] times = timeRange.trim().split(" – ");
+
+                            if (times.length == 2) {
+                                startTime = times[0];
+                                Log.d(TAG, "Start Time: " + startTime);
+                                endTime = times[1];
+                                Log.d(TAG, "End Time: " + endTime);
+
+                                // Now you have the valid start and end time values
+                                // Perform any further processing as needed
+                            } else {
+                                // Handle the case when the time range is invalid or not in the expected format
+                                Toast.makeText(context, "Invalid time range", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            // Handle the case when the opening hours data is not in the expected format
+                            Toast.makeText(context, "Invalid opening hours format", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        // Handle the case when the opening hours data is null or not available for the selected day
+                        startTime = "12:00 AM";
+                        endTime = "11:59 PM";
+                        Toast.makeText(context, "Opening hours not available", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    // Handle the case when the opening hours data doesn't exist in the database
+                    Toast.makeText(context, "Opening hours data not found", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle the onCancelled event if necessary
+            }
+        });
+    }
+
+    private void showStartTimer() {
+        Calendar currentTime = Calendar.getInstance();
+        int currentHour = currentTime.get(Calendar.HOUR_OF_DAY);
+        int currentMinute = currentTime.get(Calendar.MINUTE);
+
+        int openingHour = convertTo24HourFormat(startTime);
+        int openingMinute = Integer.parseInt(startTime.split(":")[1].split(" ")[0]);
+
+        int closingHour = convertTo24HourFormat(endTime);
+        int closingMinute = Integer.parseInt(endTime.split(":")[1].split(" ")[0]);
+
+        MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_12H)
+                .setHour(currentHour)
+                .setMinute(currentMinute)
+                .setTitleText("Select start time")
+                .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);
+
+        MaterialTimePicker dialog = mybuilder.build();
+
+        dialog.addOnPositiveButtonClickListener(timeview -> {
+            int selectedHour = dialog.getHour();
+            int selectedMinute = dialog.getMinute();
+
+            if (selectedHour > openingHour || (selectedHour == openingHour && selectedMinute >= openingMinute)) {
+                if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
+                    startHour = selectedHour;
+                    startMinute = selectedMinute;
+
+                    if (startHour < 12) {
+                        startEt.setText(String.format(Locale.getDefault(), "%d:%02d AM", startHour, startMinute));
+                    } else if (startHour == 12) {
+                        startEt.setText(String.format(Locale.getDefault(), "12:%02d PM", startMinute));
+                    } else {
+                        startEt.setText(String.format(Locale.getDefault(), "%d:%02d PM", startHour - 12, startMinute));
+                    }
+                    endEt.setEnabled(true);
+                    endBtn.setEnabled(true);
+                    return; // Exit the method after setting the start time
+                }
+            }
+
+            // If the selected time is outside the opening and closing hour/minute range, show an error message
+            Toast.makeText(context, "Selected time is outside business hours", Toast.LENGTH_SHORT).show();
+        });
+
+        dialog.show(fragmentManager, "startTimePicker");
+    }
+
+    private void showEndTimer() {
+        Calendar currentTime = Calendar.getInstance();
+        int currentHour = currentTime.get(Calendar.HOUR_OF_DAY);
+        int currentMinute = currentTime.get(Calendar.MINUTE);
+
+        int closingHour = convertTo24HourFormat(endTime);
+        int closingMinute = Integer.parseInt(endTime.split(":")[1].split(" ")[0]);
+
+        MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_12H)
+                .setHour(currentHour)
+                .setMinute(currentMinute)
+                .setTitleText("Select end time")
+                .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);
+
+        MaterialTimePicker dialog = mybuilder.build();
+
+        dialog.addOnPositiveButtonClickListener(timeview -> {
+            int selectedHour = dialog.getHour();
+            int selectedMinute = dialog.getMinute();
+
+            if (selectedHour > startHour || (selectedHour == startHour && selectedMinute >= startMinute)) {
+                if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
+                    endHour = selectedHour;
+                    endMinute = selectedMinute;
+
+                    if (endHour < 12) {
+                        endEt.setText(String.format(Locale.getDefault(), "%d:%02d AM", endHour, endMinute));
+                    } else if (endHour == 12) {
+                        endEt.setText(String.format(Locale.getDefault(), "12:%02d PM", endMinute));
+                    } else {
+                        endEt.setText(String.format(Locale.getDefault(), "%d:%02d PM", endHour - 12, endMinute));
+                    }
+                    return; // Exit the method after setting the end time
+                } else {
+                    Toast.makeText(context, "Selected time is outside business hours", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(context, "Selected time cannot be earlier than start time", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dialog.show(fragmentManager, "endTimePicker");
+    }
+
+    private int convertTo24HourFormat(String time) {
+        String[] parts = time.split(":");
+        int hour = Integer.parseInt(parts[0]);
+        String amPm = parts[1].split(" ")[1];
+
+        if (amPm.equalsIgnoreCase("PM") && hour != 12) {
+            hour += 12;
+        } else if (amPm.equalsIgnoreCase("AM") && hour == 12) {
+            hour = 0;
+        }
+
+        return hour;
+    }
 
     private void validateData(EditText dateEt, EditText startTimeEt, EditText endTimeEt) {
         date = dateEt.getText().toString().trim();
@@ -344,12 +422,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                         itineraryRef.child("endTime").setValue(endTime)
                                 .addOnSuccessListener(aVoid -> {
                                     Toast.makeText(context, "Itinerary updated successfully", Toast.LENGTH_LONG).show();
-                                    if (fragmentManager != null) {
-                                        ItineraryList itineraryList = (ItineraryList) fragmentManager.findFragmentByTag("itineraryList");
-                                        if (itineraryList != null) {
-                                            itineraryList.updateItineraryView();
-                                        }
-                                    }
+                                    context.startActivity(new Intent(context, Home.class));
 
                                 }).addOnFailureListener(e -> {
                                     Toast.makeText(context, "Failed to update itinerary: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -441,4 +514,5 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             isImageLoaded = false;
         }
     }
+
 }

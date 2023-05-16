@@ -77,7 +77,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/poppins_semibold"
@@ -86,7 +85,7 @@
                 android:text="Name"
                 android:textAppearance="?attr/textAppearanceListItem"
                 android:textColor="@color/palette_2"
-                android:textSize="18dp"
+                android:textSize="14dp"
                 android:textStyle="bold" />
 
             <ImageButton
@@ -94,8 +93,8 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_alignParentEnd="true"
-                android:padding="8dp"
-                android:layout_margin="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="10dp"
                 android:background="#0000"
                 android:src="@drawable/more_button" />
 
@@ -107,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@id/disdur_layout" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/disdur_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -128,7 +127,7 @@
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textColor="@color/palette_3"
                     android:text="distance"
-                    android:layout_alignParentStart="true" />
+                    android:layout_weight="1" />
 
                 <TextView
                     android:drawableLeft="@drawable/car_direction"
@@ -143,9 +142,9 @@
                     android:layout_marginStart="8dp"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textColor="@color/palette_3"
-                    android:layout_alignParentEnd="true" />
+                    android:layout_weight="1" />
 
-            </RelativeLayout>
+            </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

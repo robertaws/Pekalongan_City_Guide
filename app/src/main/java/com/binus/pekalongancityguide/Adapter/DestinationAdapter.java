@@ -136,7 +136,7 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        Log.d(TAG, "on Success: " + destination.getTitle() + "successfully got the file");
+//                        Log.d(TAG, "on Success: " + destination.getTitle() + "successfully got the file");
                         holder.isImageLoaded = true;
                         BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), resource);
                         drawable.setGravity(Gravity.FILL);
