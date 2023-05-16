@@ -13,6 +13,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -41,8 +43,6 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.google.android.material.timepicker.MaterialTimePicker;
-import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -263,97 +263,111 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
     }
 
     private void showStartTimer() {
-        Calendar currentTime = Calendar.getInstance();
-        int currentHour = currentTime.get(Calendar.HOUR_OF_DAY);
-        int currentMinute = currentTime.get(Calendar.MINUTE);
-
         int openingHour = convertTo24HourFormat(startTime);
         int openingMinute = Integer.parseInt(startTime.split(":")[1].split(" ")[0]);
 
         int closingHour = convertTo24HourFormat(endTime);
         int closingMinute = Integer.parseInt(endTime.split(":")[1].split(" ")[0]);
 
-        MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_12H)
-                .setHour(currentHour)
-                .setMinute(currentMinute)
-                .setTitleText("Select start time")
-                .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);
+        // Custom dialog layout
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View customView = inflater.inflate(R.layout.dialog_custom_title, null);
+        TextView dialogRealTitle = customView.findViewById(R.id.dialog_title);
+        TextView dialogTitle = customView.findViewById(R.id.dialog_subtitle);
+        ViewGroup timePickerContainer = customView.findViewById(R.id.time_picker_container);
+        dialogRealTitle.setText("Select start time");
 
-        MaterialTimePicker dialog = mybuilder.build();
+        String dialogTitleText = String.format(Locale.getDefault(), "Opening Hour: %s, Closing Hour: %s", startTime, endTime);
+        dialogTitle.setText(dialogTitleText);
 
-        dialog.addOnPositiveButtonClickListener(timeview -> {
-            int selectedHour = dialog.getHour();
-            int selectedMinute = dialog.getMinute();
+        TimePicker timePicker = new TimePicker(new ContextThemeWrapper(context, R.style.TimePickerStyle));
+        timePicker.setIs24HourView(false); // Set the desired time format
 
-            if (selectedHour > openingHour || (selectedHour == openingHour && selectedMinute >= openingMinute)) {
-                if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
-                    startHour = selectedHour;
-                    startMinute = selectedMinute;
+        timePickerContainer.addView(timePicker);
 
-                    if (startHour < 12) {
-                        startEt.setText(String.format(Locale.getDefault(), "%d:%02d AM", startHour, startMinute));
-                    } else if (startHour == 12) {
-                        startEt.setText(String.format(Locale.getDefault(), "12:%02d PM", startMinute));
-                    } else {
-                        startEt.setText(String.format(Locale.getDefault(), "%d:%02d PM", startHour - 12, startMinute));
+        AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                .setView(customView)
+                .setPositiveButton("OK", (dialogInterface, which) -> {
+                    int selectedHour = timePicker.getCurrentHour(); // Retrieve the selected hour
+                    int selectedMinute = timePicker.getCurrentMinute(); // Retrieve the selected minute
+
+                    if (selectedHour > openingHour || (selectedHour == openingHour && selectedMinute >= openingMinute)) {
+                        if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
+                            startHour = selectedHour;
+                            startMinute = selectedMinute;
+
+                            if (startHour < 12) {
+                                startEt.setText(String.format(Locale.getDefault(), "%d:%02d AM", startHour, startMinute));
+                            } else if (startHour == 12) {
+                                startEt.setText(String.format(Locale.getDefault(), "12:%02d PM", startMinute));
+                            } else {
+                                startEt.setText(String.format(Locale.getDefault(), "%d:%02d PM", startHour - 12, startMinute));
+                            }
+                            endEt.setEnabled(true);
+                            endBtn.setEnabled(true);
+                            return; // Exit the method after setting the start time
+                        }
                     }
-                    endEt.setEnabled(true);
-                    endBtn.setEnabled(true);
-                    return; // Exit the method after setting the start time
-                }
-            }
 
-            // If the selected time is outside the opening and closing hour/minute range, show an error message
-            Toast.makeText(context, "Selected time is outside business hours", Toast.LENGTH_SHORT).show();
-        });
+                    // If the selected time is outside the opening and closing hour/minute range, show an error message
+                    Toast.makeText(context, "Selected time is outside business hours", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Cancel", null);
 
-        dialog.show(fragmentManager, "startTimePicker");
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private void showEndTimer() {
-        Calendar currentTime = Calendar.getInstance();
-        int currentHour = currentTime.get(Calendar.HOUR_OF_DAY);
-        int currentMinute = currentTime.get(Calendar.MINUTE);
-
         int closingHour = convertTo24HourFormat(endTime);
         int closingMinute = Integer.parseInt(endTime.split(":")[1].split(" ")[0]);
 
-        MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_12H)
-                .setHour(currentHour)
-                .setMinute(currentMinute)
-                .setTitleText("Select end time")
-                .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);
+        // Custom dialog layout
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View customView = inflater.inflate(R.layout.dialog_custom_title, null);
+        TextView dialogRealTitle = customView.findViewById(R.id.dialog_title);
+        TextView dialogTitle = customView.findViewById(R.id.dialog_subtitle);
+        ViewGroup timePickerContainer = customView.findViewById(R.id.time_picker_container);
+        dialogRealTitle.setText("Select end time");
 
-        MaterialTimePicker dialog = mybuilder.build();
+        String dialogTitleText = String.format(Locale.getDefault(), "Opening Hour: %s, Closing Hour: %s", startTime, endTime);
+        dialogTitle.setText(dialogTitleText);
 
-        dialog.addOnPositiveButtonClickListener(timeview -> {
-            int selectedHour = dialog.getHour();
-            int selectedMinute = dialog.getMinute();
+        TimePicker timePicker = new TimePicker(new ContextThemeWrapper(context, R.style.TimePickerStyle));
+        timePicker.setIs24HourView(false); // Set the desired time format
 
-            if (selectedHour > startHour || (selectedHour == startHour && selectedMinute >= startMinute)) {
-                if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
-                    endHour = selectedHour;
-                    endMinute = selectedMinute;
+        timePickerContainer.addView(timePicker);
 
-                    if (endHour < 12) {
-                        endEt.setText(String.format(Locale.getDefault(), "%d:%02d AM", endHour, endMinute));
-                    } else if (endHour == 12) {
-                        endEt.setText(String.format(Locale.getDefault(), "12:%02d PM", endMinute));
+        AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                .setView(customView)
+                .setPositiveButton("OK", (dialogInterface, which) -> {
+                    int selectedHour = timePicker.getCurrentHour(); // Retrieve the selected hour
+                    int selectedMinute = timePicker.getCurrentMinute(); // Retrieve the selected minute
+
+                    if (selectedHour > startHour || (selectedHour == startHour && selectedMinute >= startMinute)) {
+                        if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
+                            endHour = selectedHour;
+                            endMinute = selectedMinute;
+
+                            if (endHour < 12) {
+                                endEt.setText(String.format(Locale.getDefault(), "%d:%02d AM", endHour, endMinute));
+                            } else if (endHour == 12) {
+                                endEt.setText(String.format(Locale.getDefault(), "12:%02d PM", endMinute));
+                            } else {
+                                endEt.setText(String.format(Locale.getDefault(), "%d:%02d PM", endHour - 12, endMinute));
+                            }
+                            return; // Exit the method after setting the start time
+                        } else {
+                            Toast.makeText(context, "Selected time is outside business hours", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        endEt.setText(String.format(Locale.getDefault(), "%d:%02d PM", endHour - 12, endMinute));
+                        Toast.makeText(context, "Selected time cannot be earlier than start time", Toast.LENGTH_SHORT).show();
                     }
-                    return; // Exit the method after setting the end time
-                } else {
-                    Toast.makeText(context, "Selected time is outside business hours", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(context, "Selected time cannot be earlier than start time", Toast.LENGTH_SHORT).show();
-            }
-        });
+                })
+                .setNegativeButton("Cancel", null);
 
-        dialog.show(fragmentManager, "endTimePicker");
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private int convertTo24HourFormat(String time) {
