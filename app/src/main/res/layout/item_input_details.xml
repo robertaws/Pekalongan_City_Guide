@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/itinerary_item_cardview"
+    android:id="@+id/add_item_cardview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
@@ -17,53 +17,12 @@
         android:layout_gravity="center_horizontal">
 
         <LinearLayout
-            android:id="@+id/itinerary_bg"
+            android:id="@+id/layout_bg"
             android:layout_width="130dp"
             android:layout_height="match_parent"
             android:gravity="center"
             android:background="@color/palette_4"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/startTimeTextView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@color/alfa"
-                android:fontFamily="@font/poppins_regular"
-                android:padding="8dp"
-                android:shadowColor="#000000"
-                android:shadowDx="2"
-                android:shadowDy="4"
-                android:shadowRadius="2"
-                android:text="start"
-                android:textAlignment="center"
-                android:textAppearance="?attr/textAppearanceListItem"
-                android:textColor="@color/white"
-                android:textStyle="bold" />
-            <com.binus.pekalongancityguide.Misc.DottedLineView
-                android:id="@+id/dot_line"
-                android:layout_width="3dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-            <TextView
-                android:id="@+id/endTimeTextView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@color/alfa"
-                android:fontFamily="@font/poppins_regular"
-                android:padding="8dp"
-                android:shadowColor="#000000"
-                android:shadowDx="2"
-                android:shadowDy="4"
-                android:shadowRadius="4"
-                android:text="end"
-                android:textAlignment="center"
-                android:textAppearance="?attr/textAppearanceListItem"
-                android:textColor="@color/white"
-                android:textStyle="bold" />
-        </LinearLayout>
+            android:orientation="vertical"></LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -85,18 +44,8 @@
                 android:text="Name"
                 android:textAppearance="?attr/textAppearanceListItem"
                 android:textColor="@color/palette_2"
-                android:textSize="18sp"
+                android:textSize="16dp"
                 android:textStyle="bold" />
-
-            <ImageButton
-                android:id="@+id/iter_option"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="#0000"
-                android:src="@drawable/more_button" />
 
             <com.google.android.material.divider.MaterialDivider
                 app:dividerColor="@color/palette_4"
