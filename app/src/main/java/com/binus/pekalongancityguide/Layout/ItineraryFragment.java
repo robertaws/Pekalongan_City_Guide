@@ -37,15 +37,12 @@ import com.android.volley.toolbox.Volley;
 import com.binus.pekalongancityguide.Adapter.ItineraryAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
 import com.binus.pekalongancityguide.R;
-import com.binus.pekalongancityguide.databinding.DialogChangeLocBinding;
 import com.binus.pekalongancityguide.databinding.FragmentItineraryBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -72,7 +69,6 @@ import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
 
 public class ItineraryFragment extends Fragment {
     private FragmentItineraryBinding binding;
-    private DialogChangeLocBinding locBinding;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private static final String TAG = "ITER_TAG";
@@ -81,13 +77,11 @@ public class ItineraryFragment extends Fragment {
     private final List<Itinerary> itineraryList = new ArrayList<>();
     ItineraryAdapter adapter;
     PlacesClient placesClient;
-    private String selectedDate, addressString;
+    private String selectedDate;
     private FirebaseAuth firebaseAuth;
     private Geocoder geocoder;
     private LatLng coordinate;
     private double currentLat, currentLng;
-    private AutocompleteSupportFragment autocompleteFragment;
-    private SupportMapFragment fragment;
     private FusedLocationProviderClient fusedLocationClient;
     private static SharedPreferences prefs;
 
@@ -169,6 +163,10 @@ public class ItineraryFragment extends Fragment {
         binding.itineraryRv.setAdapter(adapter);
         binding.addIterBtn.setOnClickListener(v -> {
             ItineraryPager itineraryPager = new ItineraryPager();
+            Bundle bundle = new Bundle();
+            bundle.putDouble("currentLatitude", currentLat);
+            bundle.putDouble("currentLongitude", currentLng);
+            itineraryPager.setArguments(bundle);
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container, itineraryPager);
@@ -268,7 +266,7 @@ public class ItineraryFragment extends Fragment {
                                 currentLng = location.getLongitude();
                                 float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
                                 Log.d(TAG, "Distance: " + distance);
-                                calculateDuration(currentLat, currentLng, placeLat, placeLng, durationText -> {
+                                calculateDuration(currentLat, currentLng, placeLat, placeLng, (durationText) -> {
                                     itineraryList.add(new Itinerary(date, startTime, endTime, placeName, destiId, url, durationText, iterId, placeLat, placeLng, distance));
                                     sortItineraryList(itineraryList);
                                     updateUI(itineraryList);

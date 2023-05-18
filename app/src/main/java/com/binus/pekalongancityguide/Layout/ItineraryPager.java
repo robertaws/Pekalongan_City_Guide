@@ -2,9 +2,9 @@ package com.binus.pekalongancityguide.Layout;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +18,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.binus.pekalongancityguide.Adapter.IterAdapter;
-import com.binus.pekalongancityguide.Adapter.ItineraryAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Categories;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.DialogChooseDateBinding;
@@ -38,6 +36,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import static android.content.ContentValues.TAG;
+
 public class ItineraryPager extends Fragment {
     public ArrayList<Categories> categoriesArrayList;
     public ViewPagerAdapter viewPagerAdapter;
@@ -50,6 +50,7 @@ public class ItineraryPager extends Fragment {
     private ImageButton startBtn, endBtn;
     private Button addDate;
     private String startDate, endDate;
+    private double currentLatitude, currentLongitude;
 
     public ItineraryPager() {
     }
@@ -65,6 +66,15 @@ public class ItineraryPager extends Fragment {
         binding = FragmentItineraryPagerBinding.inflate(LayoutInflater.from(getContext()), container, false);
         init();
         showPickDateDialog();
+        Bundle args = getArguments();
+        if (args != null) {
+            currentLatitude = args.getDouble("currentLatitude", 0);
+            currentLongitude = args.getDouble("currentLongitude", 0);
+
+            // Use the latitude and longitude values as needed
+            Log.d(TAG, "Current Latitude: " + currentLatitude);
+            Log.d(TAG, "Current Longitude: " + currentLongitude);
+        }
         return binding.getRoot();
     }
 
@@ -183,7 +193,9 @@ public class ItineraryPager extends Fragment {
                         "" + allCategories.getCategory(),
                         "" + allCategories.getUid(),
                         startDate,
-                        endDate
+                        endDate,
+                        currentLatitude,
+                        currentLongitude
                 ),allCategories.getCategory());
                 for(DataSnapshot dataSnapshot: snapshot.getChildren()){
                     Categories categories = dataSnapshot.getValue(Categories.class);
@@ -193,7 +205,10 @@ public class ItineraryPager extends Fragment {
                             "" + categories.getCategory(),
                             "" + categories.getUid(),
                             startDate,
-                            endDate), categories.getCategory());
+                            endDate,
+                            currentLatitude,
+                            currentLongitude
+                    ), categories.getCategory());
                 }
                 viewPagerAdapter.notifyDataSetChanged();
             }

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,6 +25,10 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.binus.pekalongancityguide.Adapter.IterAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.R;
@@ -36,18 +41,24 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 import static android.content.ContentValues.TAG;
+import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
 
 public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClickListener {
     private String categoryId, category, startDate, endDate, uid;
+    private double latitude, longitude;
     public IterAdapter iterAdapter;
     private RecyclerView iterRV;
     private Button addIter;
     private RelativeLayout selectLayout;
-    private TextView selectTv, dialogTitle, distanceTv, durationTv;
+    private TextView selectTv, dialogTitle;
     private ImageButton selectCancel;
     public ArrayList<Destination> destinationArrayList, selectedItems;
     private View view;
@@ -57,7 +68,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
     public AddItinerary() {
     }
 
-    public static AddItinerary newInstance(String categoryId, String categoryName, String categoryUid, String startDate, String endDate) {
+    public static AddItinerary newInstance(String categoryId, String categoryName, String categoryUid, String startDate, String endDate, Double latitude, Double longitude) {
         AddItinerary fragment = new AddItinerary();
         Bundle args = new Bundle();
         args.putString("categoryId", categoryId);
@@ -65,7 +76,8 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
         args.putString("uid", categoryUid);
         args.putString("startDate", startDate);
         args.putString("endDate", endDate);
-        Log.d(TAG, "newInstance: categoryId=" + categoryId + ", categoryName=" + categoryName + ", categoryUid=" + categoryUid + ", startDate=" + startDate + ", endDate=" + endDate);
+        args.putDouble("latitude", latitude);
+        args.putDouble("longitude", longitude);
         fragment.setArguments(args);
         return fragment;
     }
@@ -83,7 +95,10 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
             uid = getArguments().getString("uid");
             startDate = getArguments().getString("startDate");
             endDate = getArguments().getString("endDate");
-            Log.d(TAG, "onCreate: categoryId=" + categoryId + ", category=" + category + ", uid=" + uid + ", startDate=" + startDate + ", endDate=" + endDate);
+            latitude = getArguments().getDouble("latitude");
+            longitude = getArguments().getDouble("longitude");
+
+            Log.d(TAG, "newInstance: categoryId=" + categoryId + ", startDate=" + startDate + ", endDate=" + endDate + "\n latitude, longitude" + latitude + longitude);
         }
     }
 
@@ -145,10 +160,15 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
             CardView cardView = itemView.findViewById(R.id.add_item_cardview);
             LinearLayout layoutBG = itemView.findViewById(R.id.layout_bg);
             TextView placeText = itemView.findViewById(R.id.placeNameTextView);
-            durationTv = itemView.findViewById(R.id.durationTextView);
-            distanceTv = itemView.findViewById(R.id.distanceTextView);
+            TextView distanceTv = itemView.findViewById(R.id.distanceTextView);
+            TextView durationTv = itemView.findViewById(R.id.durationTextView);
             placeText.setText(selectedItem.getTitle());
-            distanceTv.setText(String.valueOf(selectedItem.getDistance()));
+            String distance = calculateDistance(latitude, longitude, selectedItem.getDesLat(), selectedItem.getDesLong());
+            calculateDuration(latitude, longitude, selectedItem.getDesLat(), selectedItem.getDesLong(), (durationText, durationTextView) -> {
+                durationTextView.setText(durationText);
+            }, durationTv);
+
+            distanceTv.setText(distance);
 
             CardView.LayoutParams layoutParams = new CardView.LayoutParams(
                     CardView.LayoutParams.MATCH_PARENT,
@@ -302,6 +322,57 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
     @Override
     public void onItemLongClick(Destination destination) {
         checkSelect();
+    }
+
+    private String calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        float[] results = new float[1];
+        Location location1 = new Location("");
+        location1.setLatitude(lat1);
+        location1.setLongitude(lon1);
+        Location location2 = new Location("");
+        location2.setLatitude(lat2);
+        location2.setLongitude(lon2);
+        Location.distanceBetween(location1.getLatitude(), location1.getLongitude(),
+                location2.getLatitude(), location2.getLongitude(), results);
+        return String.valueOf(results[0] / 1000);
+    }
+
+    private void calculateDuration(double lat1, double lon1, double lat2, double lon2, AddItinerary.DurationCallback callback, TextView durationTv) {
+        String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + lat1 + "," + lon1 + "&destination=" + lat2 + "," + lon2 + "&key=" + MAPS_API_KEY;
+
+        if (isAdded() && getContext() != null) {
+            RequestQueue queue = Volley.newRequestQueue(getContext().getApplicationContext());
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
+                try {
+                    JSONArray routes = response.getJSONArray("routes");
+                    if (routes.length() > 0) {
+                        JSONObject route = routes.getJSONObject(0);
+//                        Log.d(TAG, "route: " + route);
+                        JSONArray legs = route.getJSONArray("legs");
+//                        Log.d(TAG, "legs: " + legs);
+                        JSONObject leg = legs.getJSONObject(0);
+//                        Log.d(TAG, "leg: " + leg);
+                        JSONObject duration = leg.getJSONObject("duration");
+                        String durationText = duration.getString("text");
+                        Log.d(TAG, "Duration: " + durationText);
+                        callback.onDurationReceived(durationText, durationTv);
+                    } else {
+                        Log.e(TAG, "No routes found");
+                        callback.onDurationReceived("No routes found", durationTv);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }, error -> {
+                Log.e(TAG, "Error calculating travel duration: " + error.getMessage());
+                callback.onDurationReceived("Error calculating travel duration", durationTv);
+            });
+            queue.add(request);
+        }
+    }
+
+    public interface DurationCallback {
+        void onDurationReceived(String durationText, TextView durationTv);
     }
 
 }
