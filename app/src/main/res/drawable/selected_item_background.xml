@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#CFC2AB" /> <!-- Set the desired background color for the selected item -->
+    <corners android:radius="8dp" /> <!-- Set the desired corner radius -->
+    <stroke
+        android:width="2dp"
+        android:color="@color/palette_1" /> <!-- Set the desired stroke color for the selected item -->
+</shape>

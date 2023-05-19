@@ -127,16 +127,16 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
                             String categoryId = "" + snapshot.child("categoryId").getValue();
                             String url = "" + snapshot.child("url").getValue();
                             String desRating = "" + snapshot.child("rating").getValue();
-                            double latitude = Double.parseDouble(snapshot.child("latitude").getValue().toString());
-                            double longitude = Double.parseDouble(snapshot.child("longitude").getValue().toString());
+                            String latitude = snapshot.child("latitude").getValue().toString();
+                            String longitude = snapshot.child("longitude").getValue().toString();
                             destination.setFavorite(true);
                             destination.setTitle(title);
                             destination.setDescription(description);
                             destination.setAddress(address);
                             destination.setCategoryId(categoryId);
                             destination.setUrl(url);
-                            destination.setDesLat(latitude);
-                            destination.setDesLong(longitude);
+                            destination.setLatitude(latitude);
+                            destination.setLongitude(longitude);
                             destination.setRating(desRating);
                             StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(url);
                             reference.getBytes(MAX_BYTES_IMAGE)

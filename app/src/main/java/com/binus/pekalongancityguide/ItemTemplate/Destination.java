@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Destination implements Serializable {
     String uid, id, title, description, categoryId, url, rating, address, placeId;
-    double desLat, desLong;
+    String latitude, longitude;
     boolean favorite;
     private boolean isLoaded;
     private float distance;
@@ -14,7 +14,7 @@ public class Destination implements Serializable {
 
     }
 
-    public Destination(String uid, String id, String title, String description, String categoryId, String url, String rating, String address, String placeId, double desLat, double desLong, boolean favorite, boolean isLoaded, float distance, boolean isSelected) {
+    public Destination(String uid, String id, String title, String description, String categoryId, String url, String rating, String address, String placeId, String latitude, String longitude, boolean favorite, boolean isLoaded, float distance, boolean isSelected) {
         this.uid = uid;
         this.id = id;
         this.title = title;
@@ -24,8 +24,8 @@ public class Destination implements Serializable {
         this.rating = rating;
         this.address = address;
         this.placeId = placeId;
-        this.desLat = desLat;
-        this.desLong = desLong;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.favorite = favorite;
         this.isLoaded = isLoaded;
         this.distance = distance;
@@ -104,22 +104,6 @@ public class Destination implements Serializable {
         this.placeId = placeId;
     }
 
-    public double getDesLat() {
-        return desLat;
-    }
-
-    public void setDesLat(double desLat) {
-        this.desLat = desLat;
-    }
-
-    public double getDesLong() {
-        return desLong;
-    }
-
-    public void setDesLong(double desLong) {
-        this.desLong = desLong;
-    }
-
     public boolean isFavorite() {
         return favorite;
     }
@@ -150,5 +134,21 @@ public class Destination implements Serializable {
 
     public void setSelected(boolean selected) {
         isSelected = selected;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 }

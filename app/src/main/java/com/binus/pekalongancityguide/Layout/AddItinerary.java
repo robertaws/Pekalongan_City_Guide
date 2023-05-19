@@ -22,6 +22,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,6 +48,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
 import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
@@ -54,11 +56,13 @@ import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
 public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClickListener {
     private String categoryId, category, startDate, endDate, uid;
     private double latitude, longitude;
+    private Destination destination;
     public IterAdapter iterAdapter;
     private RecyclerView iterRV;
     private Button addIter;
     private RelativeLayout selectLayout;
-    private TextView selectTv, dialogTitle;
+    private LinearLayout containerLayout;
+    private TextView selectTv;
     private ImageButton selectCancel;
     public ArrayList<Destination> destinationArrayList, selectedItems;
     private View view;
@@ -145,55 +149,130 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
         // Set the custom layout for the dialog
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_input_details, null);
         builder.setView(view);
-        // Get a reference to the container layout where the EditText fields will be added
-        LinearLayout containerLayout = view.findViewById(R.id.container_layout);
+
+        // Get references to the views in the layout
+        containerLayout = view.findViewById(R.id.container_layout);
         Button addBtn = view.findViewById(R.id.add_iter_button);
-        dialogTitle = view.findViewById(R.id.dialog_title);
 
         // Get the selected items from the adapter
         ArrayList<Destination> selectedItems = iterAdapter.getSelectedItems();
-        // Iterate through the selected items and add EditText fields for each item
-        for (int i = 0; i < selectedItems.size(); i++) {
-            View itemView = LayoutInflater.from(getContext()).inflate(R.layout.item_input_details, null);
-            dialogTitle.setText("Pick your first destination");
-            Destination selectedItem = selectedItems.get(i);
-            CardView cardView = itemView.findViewById(R.id.add_item_cardview);
-            LinearLayout layoutBG = itemView.findViewById(R.id.layout_bg);
-            TextView placeText = itemView.findViewById(R.id.placeNameTextView);
-            TextView distanceTv = itemView.findViewById(R.id.distanceTextView);
-            TextView durationTv = itemView.findViewById(R.id.durationTextView);
-            placeText.setText(selectedItem.getTitle());
-            String distance = calculateDistance(latitude, longitude, selectedItem.getDesLat(), selectedItem.getDesLong());
-            calculateDuration(latitude, longitude, selectedItem.getDesLat(), selectedItem.getDesLong(), (durationText, durationTextView) -> {
-                durationTextView.setText(durationText);
-            }, durationTv);
 
-            distanceTv.setText(distance);
+        // Sort the selected items by distance
+        Collections.sort(selectedItems, (d1, d2) -> {
+            double distance1 = calculateDistance(latitude, longitude, Double.parseDouble(d1.getLatitude()), Double.parseDouble(d1.getLongitude()));
+            double distance2 = calculateDistance(latitude, longitude, Double.parseDouble(d2.getLatitude()), Double.parseDouble(d2.getLongitude()));
+            return Double.compare(distance1, distance2);
+        });
 
-            CardView.LayoutParams layoutParams = new CardView.LayoutParams(
-                    CardView.LayoutParams.MATCH_PARENT,
-                    CardView.LayoutParams.WRAP_CONTENT
-            );
-            layoutParams.setMargins(0, 10, 0, 10);
-            cardView.setLayoutParams(layoutParams);
-
+        int maxItems = Math.min(selectedItems.size(), 3);
+        for (int i = 0; i < maxItems; i++) {
+            destination = selectedItems.get(i);
+            View itemView = createItemView(destination);
             containerLayout.addView(itemView);
-
-            // Load the image using Glide and set it as the background of layoutBG
-            loadImage(selectedItem, layoutBG);
         }
+
         AlertDialog dialog = builder.create();
         addBtn.setOnClickListener(v -> {
             // Iterate through the container layout and retrieve the input data for each item
             for (int i = 0; i < containerLayout.getChildCount(); i++) {
-                View itemView = containerLayout.getChildAt(i);
-                // Handle the input data here, for example, save it or perform any necessary actions
-                // with the selected items and the entered details
+                // Check if the RadioButton is selected
+                if (selectedItems != null) {
+                    // Handle the selected item here
+                    // For example, you can access the other views and retrieve their data
+                    Destination destination = selectedItems.get(i);
+                    handleSelectedItem(destination);
+
+                    // Do something with the selected item's data
+                }
             }
             dialog.dismiss();
         });
 
         dialog.show();
+    }
+
+    private View createItemView(Destination destination) {
+        View itemView = LayoutInflater.from(getContext()).inflate(R.layout.item_input_details, null);
+
+        CardView cardView = itemView.findViewById(R.id.add_item_cardview);
+        LinearLayout layoutBG = itemView.findViewById(R.id.layout_bg);
+        TextView placeText = itemView.findViewById(R.id.placeNameTextView);
+        TextView distanceTv = itemView.findViewById(R.id.distanceTextView);
+        TextView durationTv = itemView.findViewById(R.id.durationTextView);
+
+        double destinationLatitude = Double.parseDouble(destination.getLatitude());
+        double destinationLongitude = Double.parseDouble(destination.getLongitude());
+        placeText.setText(destination.getTitle());
+        float distance = calculateDistance(latitude, longitude, destinationLatitude, destinationLongitude);
+        String distanceString = (distance < 1) ? ((int) (distance * 1000)) + " m" : String.format(Locale.getDefault(), "%.2f km", distance);
+        distanceTv.setText(distanceString);
+
+        calculateDuration(latitude, longitude, destinationLatitude, destinationLongitude, (durationText, durationTextView) -> durationTextView.setText(durationText), durationTv);
+
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.setMargins(0, 10, 0, 10);
+        cardView.setLayoutParams(layoutParams);
+
+        // Load the image for the destination
+        loadImage(destination, layoutBG);
+
+        cardView.setOnClickListener(v -> {
+            // Reset the tint and border for all items
+            for (int i = 0; i < containerLayout.getChildCount(); i++) {
+                View childView = containerLayout.getChildAt(i);
+                unselectItem(childView);
+            }
+
+            // Select the clicked item
+            selectItem(itemView);
+        });
+
+        return itemView;
+    }
+
+    private void selectItem(View itemView) {
+        // Apply the tint and border to the selected item
+        CardView cardView = itemView.findViewById(R.id.add_item_cardview);
+        LinearLayout layoutBG = itemView.findViewById(R.id.layout_bg);
+        cardView.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.selected_item_background));
+        layoutBG.setBackgroundTintList(ContextCompat.getColorStateList(itemView.getContext(), R.color.grayishTint));
+    }
+
+    private void unselectItem(View itemView) {
+        // Remove the tint and border from the unselected item
+        CardView cardView = itemView.findViewById(R.id.add_item_cardview);
+        LinearLayout layoutBG = itemView.findViewById(R.id.layout_bg);
+        cardView.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.unselected_item_background));
+        layoutBG.setBackgroundTintList(null);
+    }
+
+    private void handleSelectedItem(Destination destination) {
+        // Retrieve the data and perform necessary actions
+        String selectedPlace = destination.getTitle();
+        String distance = calculateDistanceString(destination);
+        String duration = calculateDurationString(destination);
+
+        // Do something with the selected item's data
+    }
+
+    private String calculateDistanceString(Destination destination) {
+        double destinationLatitude = Double.parseDouble(destination.getLatitude());
+        double destinationLongitude = Double.parseDouble(destination.getLongitude());
+        float distance = calculateDistance(latitude, longitude, destinationLatitude, destinationLongitude);
+        return (distance < 1) ? ((int) (distance * 1000)) + " m" : String.format(Locale.getDefault(), "%.2f km", distance);
+    }
+
+    private String calculateDurationString(Destination destination) {
+        double destinationLatitude = Double.parseDouble(destination.getLatitude());
+        double destinationLongitude = Double.parseDouble(destination.getLongitude());
+        String[] durationText = new String[1];
+        calculateDuration(latitude, longitude, destinationLatitude, destinationLongitude, (text, textView) -> {
+            durationText[0] = text;
+        }, null); // Pass null for the textView parameter
+        return durationText[0];
     }
 
     private void loadImage(Destination destination, LinearLayout layoutBG) {
@@ -324,7 +403,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
         checkSelect();
     }
 
-    private String calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    private float calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         float[] results = new float[1];
         Location location1 = new Location("");
         location1.setLatitude(lat1);
@@ -334,7 +413,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
         location2.setLongitude(lon2);
         Location.distanceBetween(location1.getLatitude(), location1.getLongitude(),
                 location2.getLatitude(), location2.getLongitude(), results);
-        return String.valueOf(results[0] / 1000);
+        return results[0] / 1000;
     }
 
     private void calculateDuration(double lat1, double lon1, double lat2, double lon2, AddItinerary.DurationCallback callback, TextView durationTv) {

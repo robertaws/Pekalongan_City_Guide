@@ -4,17 +4,17 @@
     android:id="@+id/add_item_cardview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
-    android:layout_marginVertical="8dp"
     app:cardBackgroundColor="@color/ic_launcher_background"
     app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    app:cardElevation="4dp"
+    android:layout_marginVertical="8dp"
+    android:layout_margin="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="130dp"
         android:orientation="horizontal"
-        android:layout_gravity="center_horizontal">
+        android:padding="8dp">
 
         <LinearLayout
             android:id="@+id/layout_bg"
@@ -22,6 +22,7 @@
             android:layout_height="130dp"
             android:gravity="center"
             android:background="@color/palette_4"
+            android:backgroundTintMode="multiply"
             android:orientation="vertical" />
 
         <LinearLayout
@@ -34,7 +35,6 @@
                 android:id="@+id/placeNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
                 android:textSize="16dp"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -42,13 +42,10 @@
                 android:text="Name"
                 android:textAppearance="?attr/textAppearanceListItem"
                 android:textColor="@color/palette_2"
-                android:textStyle="bold"
-                android:layout_weight="1" />
+                android:textStyle="bold" />
 
             <com.google.android.material.divider.MaterialDivider
                 app:dividerColor="@color/palette_4"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
                 android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -63,11 +60,9 @@
                 android:layout_height="wrap_content"
                 android:textSize="14dp"
                 android:fontFamily="@font/poppins_regular"
-                android:layout_marginStart="8dp"
                 android:textAppearance="?attr/textAppearanceListItem"
                 android:textColor="@color/palette_3"
-                android:text="distance"
-                android:layout_weight="1" />
+                android:text="distance" />
 
             <TextView
                 android:drawableLeft="@drawable/car_direction"
@@ -79,10 +74,9 @@
                 android:text="duration"
                 android:fontFamily="@font/poppins_regular"
                 android:textSize="14dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginTop="5dp"
                 android:textAppearance="?attr/textAppearanceListItem"
-                android:textColor="@color/palette_3"
-                android:layout_weight="1" />
+                android:textColor="@color/palette_3" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
