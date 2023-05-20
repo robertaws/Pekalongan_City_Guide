@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -47,6 +49,7 @@ public class ItineraryPager extends Fragment {
     private int startDay, startMonth, startYear, endDay, endMonth, endYear;
     private EditText startEt, endEt;
     private Calendar calendar;
+    private AlertDialog dialog;
     private ImageButton startBtn, endBtn;
     private Button addDate;
     private String startDate, endDate;
@@ -97,13 +100,11 @@ public class ItineraryPager extends Fragment {
         endBtn.setOnClickListener(v -> showEndCalendar());
 
         endEt.setOnClickListener(v -> showEndCalendar());
-        AlertDialog dialog = builder.create();
+        dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
         dialog.show();
         addDate.setOnClickListener(v -> {
-            dialog.dismiss();
-            setupViewPagerAdapter(viewPager);
-            tabLayout.setupWithViewPager(viewPager);
+            validateData(startEt, endEt);
         });
     }
 
@@ -173,10 +174,38 @@ public class ItineraryPager extends Fragment {
         dialog.show();
     }
 
+    private void validateData(EditText startDate, EditText endDate) {
+        String startTime = startDate.getText().toString().trim();
+        String endTime = endDate.getText().toString().trim();
+        boolean allFieldsFilled = true;
+
+        if (TextUtils.isEmpty(startTime)) {
+            startEt.setError(getContext().getString(R.string.choose_start));
+            allFieldsFilled = false;
+        } else {
+            startEt.setError(null);
+        }
+
+        if (TextUtils.isEmpty(endTime)) {
+            endEt.setError(getContext().getString(R.string.choose_end));
+            allFieldsFilled = false;
+        } else {
+            endEt.setError(null);
+        }
+
+        if (allFieldsFilled) {
+            dialog.dismiss();
+            setupViewPagerAdapter(viewPager);
+            tabLayout.setupWithViewPager(viewPager);
+            Toast.makeText(getContext(), "Date Saved", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void init() {
         tabLayout = binding.iterTabLayout;
         viewPager = binding.iterViewPager;
     }
+
     private void setupViewPagerAdapter(ViewPager viewPager) {
         viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getContext());
         categoriesArrayList = new ArrayList<>();

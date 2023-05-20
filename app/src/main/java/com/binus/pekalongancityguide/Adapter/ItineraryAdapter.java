@@ -70,6 +70,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
     private EditText startEt, endEt, dateEt;
     private ImageButton dateBtn, startBtn, endBtn;
     private Calendar calendar;
+    private AlertDialog dialog;
     private String startDate, startTime, endTime, date, openingHours;
     String destiID;
     private int startHour, startMinute, endHour, endMinute, startDay, startMonth, startYear;
@@ -170,7 +171,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         endEt.setOnClickListener(v -> showEndTimer());
         dateBtn.setOnClickListener(v -> showCalendar());
         dateEt.setOnClickListener(v -> showCalendar());
-        AlertDialog dialog = builder.create();
+        dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
         dialog.show();
         dialog.setOnDismissListener(dialog1 -> {
@@ -179,7 +180,6 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         });
         addItinerary.setOnClickListener(v -> {
             validateData(dateEt, startEt, endEt);
-            dialog.dismiss();
         });
     }
 
@@ -533,6 +533,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         }
 
         if (allFieldsFilled) {
+            dialog.dismiss();
             updateItinerary(date, startTime, endTime);
             Toast.makeText(context, "itinerary updated", Toast.LENGTH_SHORT).show();
         }
