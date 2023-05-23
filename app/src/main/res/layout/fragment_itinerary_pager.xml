@@ -18,8 +18,27 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <ImageButton
+                android:id="@+id/backToList"
+                android:layout_gravity="center_vertical"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="#0000"
+                android:src="@drawable/back_icon"/>
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:layout_marginVertical="10dp"
+                android:layout_width="match_parent"
+                android:layout_toRightOf="@id/backToList"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/add_itinerary"
+                android:textSize="20dp"
+                android:textColor="@color/palette_1" />
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/iter_tab_layout"
+                android:layout_below="@id/backToList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#D5BB91"

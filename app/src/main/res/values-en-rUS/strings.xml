@@ -174,5 +174,22 @@
     <string name="delete_desti_confirm">\"Are you sure you want to delete \"</string>
     <string name="delete_confirmation">Confirmation</string>
     <string name="error_news">Error fetching news articles:</string>
+    <string name="empty_bookmark">Empty Bookmark</string>
+    <string name="add_itinerary">Add Itinerary</string>
+    <string name="choose_location">Choose Location</string>
+    <string name="your_location">Your Location</string>
+    <string name="use_current_location">Use current location</string>
+    <string name="update_itinerary">Update Itinerary</string>
+    <string name="empty_itinerary">Empty Itinerary</string>
+    <string name="confirm_delete">Confirm Delete</string>
+    <string name="delete_item">Are you sure you want to delete this item ?</string>
+    <string name="yes_myapp">yes</string>
+    <string name="wait">Please Wait</string>
+    <string name="deleting">Deleting . . .</string>
+    <string name="delete_iter">Itinerary deleted successfully</string>
+    <string name="fail_deteltIter">Failed to delete itinerary because of</string>
+    <string name="noMyapp">No</string>
+    <string name="iter_notdeleted">Itinerary Not Deleted</string>
+    <string name="set_location">Set Location</string>
 
 </resources>

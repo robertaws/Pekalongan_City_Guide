@@ -69,12 +69,14 @@ public class ItineraryPager extends Fragment {
         binding = FragmentItineraryPagerBinding.inflate(LayoutInflater.from(getContext()), container, false);
         init();
         showPickDateDialog();
+        binding.backToList.setOnClickListener(v -> {
+            FragmentManager fragmentManager = getParentFragmentManager();
+            fragmentManager.popBackStack();
+        });
         Bundle args = getArguments();
         if (args != null) {
             currentLatitude = args.getDouble("currentLatitude", 0);
             currentLongitude = args.getDouble("currentLongitude", 0);
-
-            // Use the latitude and longitude values as needed
             Log.d(TAG, "Current Latitude: " + currentLatitude);
             Log.d(TAG, "Current Longitude: " + currentLongitude);
         }
@@ -90,9 +92,7 @@ public class ItineraryPager extends Fragment {
         startBtn = chooseDateBinding.startPickerBtn;
         endBtn = chooseDateBinding.endPickerBtn;
         addDate = chooseDateBinding.addDateBtn;
-
         calendar = Calendar.getInstance();
-
         startBtn.setOnClickListener(v -> showStartCalendar());
 
         startEt.setOnClickListener(v -> showStartCalendar());

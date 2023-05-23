@@ -85,15 +85,14 @@ public class ShowDestinationFragment extends Fragment {
     private float distance;
     private boolean isChangeLocDialogShowing = false;
     private static SharedPreferences prefs;
-    DestinationPager destinationPager;
 
     public ShowDestinationFragment() {
     }
 
-    public static ShowDestinationFragment newInstance(String id, String category, String uid) {
+    public static ShowDestinationFragment newInstance(String categoryId, String category, String uid) {
         ShowDestinationFragment fragment = new ShowDestinationFragment();
         Bundle args = new Bundle();
-        args.putString("id", id);
+        args.putString("categoryId", categoryId);
         args.putString("category", category);
         args.putString("uid", uid);
         fragment.setArguments(args);
@@ -113,7 +112,6 @@ public class ShowDestinationFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         prefs = getActivity().getSharedPreferences("coordinate", Context.MODE_PRIVATE);
-        destinationPager = new DestinationPager();
         String lastLatitude = prefs.getString("lastLatitude", "0");
         String lastLongitude = prefs.getString("lastLongitude", "0");
         if (!lastLatitude.equals("0") && !lastLongitude.equals("0")) {
@@ -184,13 +182,6 @@ public class ShowDestinationFragment extends Fragment {
                 showChangeLocDialog();
             }
         });
-        DestinationAdapter adapter = new DestinationAdapter(getContext(), destinationArrayList, getParentFragmentManager());
-        adapter.setOnDataChangedListener(() -> {
-            // Notify the parent fragment that the data has changed
-            if (getParentFragment() instanceof DestinationPager) {
-                ((DestinationPager) getParentFragment()).onDataChanged();
-            }
-        });
 
         return binding.getRoot();
     }
@@ -224,7 +215,6 @@ public class ShowDestinationFragment extends Fragment {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-                    return "Error: Geocoder service not available";
                 }
                 return null;
             }
@@ -300,7 +290,6 @@ public class ShowDestinationFragment extends Fragment {
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();
-                                    return "Error: Geocoder service not available";
                                 }
                                 return null;
                             }
@@ -308,7 +297,7 @@ public class ShowDestinationFragment extends Fragment {
                             @Override
                             protected void onPostExecute(String address) {
                                 if (address != null) {
-//                                    Log.d("ADDRESS IN DIALOG", address);
+                                    Log.d("ADDRESS IN DIALOG", address);
                                     addressString = address;
                                     locBinding.locTv.setText(addressString);
                                     autocompleteFragment.setText(addressString);
@@ -339,7 +328,7 @@ public class ShowDestinationFragment extends Fragment {
                 editor.putString("lastLongitude", String.valueOf(coordinate.longitude));
                 editor.apply();
             }
-//            Log.d(TAG, "COORDINATES: " + coordinate);
+            Log.d(TAG, "COORDINATES: " + coordinate);
         });
     }
 
@@ -458,7 +447,7 @@ public class ShowDestinationFragment extends Fragment {
             getDestinationDistance(destination);
         }
         if (destinationAdapter == null) {
-            destinationAdapter = new DestinationAdapter(getContext(), destinationArrayList, getParentFragmentManager());
+            destinationAdapter = new DestinationAdapter(getContext(), destinationArrayList);
             binding.destiRv.setAdapter(destinationAdapter);
         } else {
             destinationAdapter.notifyDataSetChanged();
@@ -487,7 +476,6 @@ public class ShowDestinationFragment extends Fragment {
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
-                                return "Error: Geocoder service not available";
                             }
                             return null;
                         }
@@ -495,7 +483,7 @@ public class ShowDestinationFragment extends Fragment {
                         @Override
                         protected void onPostExecute(String address) {
                             if (address != null) {
-//                                Log.d("ADDRESS", address);
+                                Log.d("ADDRESS", address);
                                 binding.changeLoc.setText(address);
                             }
                         }
@@ -524,7 +512,6 @@ public class ShowDestinationFragment extends Fragment {
                                             }
                                         } catch (IOException e) {
                                             e.printStackTrace();
-                                            return "Error: Geocoder service not available";
                                         }
                                         return null;
                                     }
@@ -532,7 +519,7 @@ public class ShowDestinationFragment extends Fragment {
                                     @Override
                                     protected void onPostExecute(String address) {
                                         if (address != null) {
-//                                            Log.d("ADDRESS", address);
+                                            Log.d("ADDRESS", address);
                                             binding.changeLoc.setText(address);
                                         }
                                     }
@@ -541,7 +528,7 @@ public class ShowDestinationFragment extends Fragment {
                         });
                     }
                 }
-//                Log.d(TAG, "distance: " + destination.getDistance());
+                Log.d(TAG, "distance: " + destination.getDistance());
             }
 
             @Override

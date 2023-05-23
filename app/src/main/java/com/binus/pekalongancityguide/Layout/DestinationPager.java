@@ -2,7 +2,6 @@ package com.binus.pekalongancityguide.Layout;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.binus.pekalongancityguide.ItemTemplate.Categories;
 import com.binus.pekalongancityguide.databinding.FragmentDestinationBinding;
-import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,12 +24,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class DestinationPager extends Fragment {
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
     public ArrayList<Categories> categoriesArrayList;
     public ViewPagerAdapter viewPagerAdapter;
     private FragmentDestinationBinding binding;
-    private int selectedTabPosition = 0;
     private static final String TAG = "DESTI_USER_TAG";
 
     public DestinationPager() {
@@ -47,42 +42,9 @@ public class DestinationPager extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentDestinationBinding.inflate(LayoutInflater.from(getContext()), container, false);
-        init();
-        setupViewPagerAdapter(viewPager);
-        updatePager();
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                // This method is called when the user starts scrolling the pager
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                updatePager();
-                Log.d("Destination Pager", "Selected tab: " + position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                // This method is called when the scroll state changes (idle, dragging, settling)
-            }
-        });
+        setupViewPagerAdapter(binding.viewPager);
+        binding.tabLayout.setupWithViewPager(binding.viewPager);
         return binding.getRoot();
-    }
-
-    private void init() {
-        viewPager = binding.viewPager;
-        tabLayout = binding.tabLayout;
-    }
-
-    public void updatePager() {
-        tabLayout.setupWithViewPager(viewPager);
-    }
-
-    public void onDataChanged() {
-        if (viewPager != null && viewPager.getAdapter() != null) {
-            viewPager.getAdapter().notifyDataSetChanged();
-        }
     }
 
     private void setupViewPagerAdapter(ViewPager viewPager) {
@@ -93,7 +55,7 @@ public class DestinationPager extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 categoriesArrayList.clear();
-                Categories allCategories = new Categories("01", "All", "", 1);
+                Categories allCategories = new Categories("01","All","",1);
                 categoriesArrayList.add(allCategories);
                 viewPagerAdapter.addFragment(ShowDestinationFragment.newInstance(
                         ""+allCategories.getId(),

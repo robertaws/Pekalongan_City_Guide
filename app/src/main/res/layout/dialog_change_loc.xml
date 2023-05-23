@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:fontFamily="@font/poppins_semibold"
-                android:text="Choose Location"
+                android:text="@string/choose_location"
                 android:textSize="24dp"
                 android:textColor="@color/palette_1" />
             <androidx.cardview.widget.CardView
@@ -58,7 +58,7 @@
                 android:layout_below="@id/user_map"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Your Location"
+                android:text="@string/your_location"
                 android:paddingHorizontal="15dp"
                 android:paddingVertical="5dp"
                 android:fontFamily="@font/poppins_regular"
@@ -74,7 +74,7 @@
                 android:layout_marginTop="20dp"
                 android:drawableTint="@color/palette_1"
                 android:drawableLeft="@drawable/my_loc"
-                android:text="Use current location"
+                android:text="@string/use_current_location"
                 android:background="@color/ic_launcher_background"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="15dp"
@@ -89,6 +89,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/palette_4"
-                android:text="Set Location"/>
+                android:text="@string/set_location"/>
         </RelativeLayout>
 </layout>

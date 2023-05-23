@@ -119,27 +119,25 @@ public class ItineraryList extends Fragment {
                     }
                 });
 
-                if (fragments != null) {
-                    fragments.clear();
-                    for (String date : dates) {
-                        ItineraryFragment fragment = new ItineraryFragment();
-                        Bundle args = new Bundle();
-                        args.putString("date", date);
-                        args.putString("selectedDate", convertToNormalDate(date));
-                        Log.d(TAG, "passed date: " + args);
-                        fragment.setArguments(args);
-                        fragments.add(fragment);
-                    }
-                } else {
-                    fragments = createFragmentsList(dates);
-                }
                 fragments = createFragmentsList(dates);
                 vpAdapter = new ItineraryPagerAdapter(getContext(), getChildFragmentManager(), fragments, dates);
                 viewPager.setAdapter(vpAdapter);
                 viewPager.setOffscreenPageLimit(10);
-                tabLayout.setupWithViewPager(viewPager);
-                tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(getContext(), R.color.white));
+
+                if (!fragments.isEmpty()) {
+                    tabLayout.setupWithViewPager(viewPager);
+                    tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(getContext(), R.color.white));
+                } else {
+                    tabLayout.setVisibility(View.GONE);
+                }
+
                 vpAdapter.notifyDataSetChanged();
+
+                if (fragments.isEmpty() && dates.isEmpty()) {
+                    EmptyItinerary emptyFragment = new EmptyItinerary();
+                    fragments.add(emptyFragment);
+                    vpAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -147,6 +145,8 @@ public class ItineraryList extends Fragment {
             }
         });
     }
+
+
 
     public class ItineraryPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> fragments;
@@ -170,8 +170,7 @@ public class ItineraryList extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = fragments.get(position);
-            return fragment;
+            return fragments.get(position);
         }
 
         @Override
@@ -181,7 +180,11 @@ public class ItineraryList extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return dates.get(position);
+            if (position >= 0 && position < dates.size()) {
+                return dates.get(position);
+            } else {
+                return "";
+            }
         }
 
         public void setSelectedDate(String date) {
@@ -197,7 +200,6 @@ public class ItineraryList extends Fragment {
                 updateItineraryView();
             }
         }
-
     }
 
     private List<Fragment> createFragmentsList(List<String> dates) {

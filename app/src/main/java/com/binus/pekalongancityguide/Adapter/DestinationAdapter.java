@@ -47,14 +47,12 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
     public ArrayList<Destination> destinations, filterList;
     private ListDestinationBinding binding;
     private FilterDestiUser filterDestiUser;
-    private final FragmentManager fragmentManager;
     private static final String TAG = "ADAPTER_USER_TAG";
 
-    public DestinationAdapter(Context context, ArrayList<Destination> destinations, FragmentManager fragmentManager) {
+    public DestinationAdapter(Context context, ArrayList<Destination> destinations) {
         this.context = context;
         this.destinations = destinations;
         this.filterList = destinations;
-        this.fragmentManager = fragmentManager;
     }
 
     @NonNull

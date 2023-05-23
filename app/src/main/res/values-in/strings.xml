@@ -173,5 +173,22 @@
     <string name="delete_desti_confirm">Apakah anda yakin ingin menghapus</string>
     <string name="delete_confirmation">Konfirmasi</string>
     <string name="error_news">Gagal mengambil berita karena</string>
+    <string name="empty_bookmark">Penanda Kosong</string>
+    <string name="add_itinerary">Add Itinerary</string>
+    <string name="choose_location">Pilih Lokasi</string>
+    <string name="your_location">Lokasi anda</string>
+    <string name="use_current_location">Gunakan lokasi sekarang</string>
+    <string name="update_itinerary">Perbarui Rencana Perjalanan</string>
+    <string name="empty_itinerary">Itinerari Kosong</string>
+    <string name="confirm_delete">Konfirmasi untuk hapus</string>
+    <string name="delete_item">Apakah anda yakin untuk menghapus item ini?</string>
+    <string name="yes_myapp">Ya</string>
+    <string name="wait">Mohon tunggu</string>
+    <string name="deleting">Menghapus...</string>
+    <string name="delete_iter">Itinerari berhasil dihapus</string>
+    <string name="fail_deteltIter">Gagal menghapus itinerari karena</string>
+    <string name="noMyapp">Tidak</string>
+    <string name="iter_notdeleted">Itinerari tidak dihapus</string>
+    <string name="set_location">Atur lokasi</string>
 
 </resources>

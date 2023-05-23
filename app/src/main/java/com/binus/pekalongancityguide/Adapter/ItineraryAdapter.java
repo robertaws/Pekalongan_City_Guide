@@ -134,16 +134,17 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Choose Options")
                 .setItems(options, (dialog, which) -> {
-                    if(which==0){
+                    if (which == 0) {
                         showEditDialog(fragmentManager);
-                    }else{
+                    } else {
                         MyApplication.deleteIter(
-                                context, ""+DESTIID
+                                context, "" + DESTIID, this, holder.getAdapterPosition()
                         );
                     }
                 })
                 .show();
     }
+
 
     private void showEditDialog(FragmentManager fragmentManager){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -546,7 +547,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         hashMap.put("startTime",""+startTime);
         hashMap.put("endTime",""+endTime);
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
-        reference.child(uid).child("itinerary").addValueEventListener(new ValueEventListener() {
+        reference.child(uid).child("itinerary").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot itinerarySnapshot : snapshot.getChildren()) {

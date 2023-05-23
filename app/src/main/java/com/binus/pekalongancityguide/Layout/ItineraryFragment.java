@@ -155,7 +155,6 @@ public class ItineraryFragment extends Fragment {
         }
         loadItinerary(selectedDate);
         adapter.setOnDataChangedListener(() -> {
-            // Notify the parent fragment that the data has changed
             if (getParentFragment() instanceof ItineraryList) {
                 ((ItineraryList) getParentFragment()).onDataChanged();
             }

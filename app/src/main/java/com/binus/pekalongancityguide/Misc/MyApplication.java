@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.binus.pekalongancityguide.Adapter.ItineraryAdapter;
 import com.binus.pekalongancityguide.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -45,16 +46,16 @@ public class MyApplication extends Application {
         String date = DateFormat.format("dd/MMMM/yyyy",calendar).toString();
         return date;
     }
-    public static void deleteIter(Context context, String destiId){
+    public static void deleteIter(Context context, String destiId, ItineraryAdapter adapter, int position){
         String uid = FirebaseAuth.getInstance().getUid();
         String TAG = "DELETE_ITER_TAG";
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Confirm Delete");
-        builder.setMessage("Are you sure you want to delete this item ?");
-        builder.setPositiveButton("Yes", (dialogInterface, i) -> {
+        builder.setTitle(R.string.confirm_delete);
+        builder.setMessage(R.string.delete_item);
+        builder.setPositiveButton(R.string.yes_myapp, (dialogInterface, i) -> {
             ProgressDialog dialog = new ProgressDialog(context);
-            dialog.setTitle("Please Wait");
-            dialog.setMessage("Deleting . . .");
+            dialog.setTitle(R.string.wait);
+            dialog.setMessage(context.getString(R.string.deleting));
             dialog.show();
             DatabaseReference itineraryRef = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/")
                     .getReference("Users")
@@ -68,22 +69,22 @@ public class MyApplication extends Application {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         snapshot.getRef().removeValue();
                     }
-
+                    adapter.notifyItemRemoved(position);
                     dialog.dismiss();
-                    Toast.makeText(context, "Itinerary deleted successfully", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context,R.string.delete_iter, Toast.LENGTH_LONG).show();
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     dialog.dismiss();
-                    Toast.makeText(context, "Failed to delete itinerary: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context,context.getString(R.string.fail_deteltIter) + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "onCancelled: " + databaseError.getMessage());
                 }
             });
         });
-        builder.setNegativeButton("No", (dialogInterface, i) -> {
+        builder.setNegativeButton(R.string.noMyapp, (dialogInterface, i) -> {
             dialogInterface.dismiss();
-            Toast.makeText(context, "Itinerary Not Deleted", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,R.string.iter_notdeleted, Toast.LENGTH_SHORT).show();
         });
         AlertDialog dialog = builder.create();
         dialog.show();

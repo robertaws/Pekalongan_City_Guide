@@ -31,7 +31,7 @@
                 android:fontFamily="@font/poppins_regular"
                 android:textColor="@color/palette_2"
                 android:textSize="14dp"
-                android:text="your location"
+                android:text="@string/your_location"
                 app:drawableTint="@color/palette_1"
                 app:drawableStartCompat="@drawable/location_pin"
                 android:drawableEnd="@drawable/arrow_down" />

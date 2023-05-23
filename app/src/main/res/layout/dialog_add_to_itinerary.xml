@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_height="wrap_content"
-                android:text="@string/add_to_itinerary"
+                android:text="@string/update_itinerary"
                 android:textStyle="bold"
                 android:fontFamily="@font/poppins_semibold"
                 android:layout_marginBottom="15dp"
@@ -113,8 +113,7 @@
                 android:fontFamily="@font/poppins_semibold"
                 android:layout_below="@id/endtime_et"
                 android:textColor="@color/palette_4"
-                android:text="@string/add_to_itinerary_btn" />
-<!--            #TODO change to Edit/Update Itinerary -->
+                android:text="@string/update_text" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </layout>
