@@ -66,6 +66,7 @@ import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
 import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 
 public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClickListener {
     private String categoryId, category, startDate, endDate, openingHours, startTime, endTime, selectedItemName, title, subtitle, placeDate, selectedItemId, placeCategory;
@@ -85,8 +86,8 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
     private TextView selectTv;
     private ImageButton selectCancel;
     public ArrayList<Destination> destinationArrayList, selectedItems;
-    private List<String> openHours = new ArrayList<>();
-    private List<String> closeHours = new ArrayList<>();
+    private final List<String> openHours = new ArrayList<>();
+    private final List<String> closeHours = new ArrayList<>();
     private View view;
     private Calendar calendar;
     private AlertDialog dialog;
@@ -119,7 +120,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        database = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         ToastUtils.setToastEnabled(true);
         if (getArguments() != null) {
             categoryId = getArguments().getString("categoryId");
@@ -188,11 +189,9 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-        // Set the custom layout for the dialog
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_input_details, null);
         builder.setView(view);
 
-        // Get references to the views in the layout
         containerLayout = view.findViewById(R.id.container_layout);
         RelativeLayout timePickerLayout = view.findViewById(R.id.time_picker_container);
 
@@ -217,7 +216,6 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
         titleText.setText(title);
         subtitleText.setText(subtitle);
 
-        // Sort the selected items by distance
         Collections.sort(selectedItems, (d1, d2) -> {
             double distance1 = calculateDistance(latitude, longitude, Double.parseDouble(d1.getLatitude()), Double.parseDouble(d1.getLongitude()));
             double distance2 = calculateDistance(latitude, longitude, Double.parseDouble(d2.getLatitude()), Double.parseDouble(d2.getLongitude()));
@@ -319,11 +317,9 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
     private void showTimePickerDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-        // Set the custom layout for the dialog
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_input_details, null);
         builder.setView(view);
 
-        // Get references to the views in the layout
         containerLayout = view.findViewById(R.id.container_layout);
         RelativeLayout timePickerLayout = view.findViewById(R.id.time_picker_container);
         Button addBtn = view.findViewById(R.id.add_iter_button);
@@ -434,7 +430,6 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                     Log.d(TAG, "OPENING HOURS: " + openingHours);
 
                     if (openingHours != null) {
-                        // Split the opening hours data into day and time slots
                         String[] parts = openingHours.split(": ");
                         if (parts.length == 2) {
                             String timeRange = parts[1];
@@ -452,11 +447,9 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                                 openHours.add(startTime);
                                 closeHours.add(endTime);
                             } else {
-                                // Split the time range by comma if there are breaks
                                 String[] timeSlots = timeRange.split(", ");
 
                                 for (String slot : timeSlots) {
-                                    // Split each slot into start and end time
                                     String[] times = slot.split(" – ");
 
                                     if (times.length == 2) {
@@ -466,17 +459,14 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                                         openHours.add(startTimeSlot);
                                         closeHours.add(endTimeSlot);
                                     } else {
-                                        // Handle the case when a time slot is invalid or not in the expected format
                                         ToastUtils.showToast(getContext(), "Invalid time slot: " + slot, Toast.LENGTH_SHORT);
                                     }
                                 }
                             }
                         } else {
-                            // Handle the case when the opening hours data is not in the expected format
                             ToastUtils.showToast(getContext(), "Invalid opening hours format", Toast.LENGTH_SHORT);
                         }
                     } else {
-                        // Handle the case when the opening hours data is null or not available for the selected day
                         startTime = "";
                         endTime = "";
                         openingHours = "Closed";
@@ -487,7 +477,6 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                     Log.d(TAG, "Open hour: " + openHours);
                     Log.d(TAG, "Close hour: " + closeHours);
                 } else {
-                    // Handle the case when the opening hours data doesn't exist in the database
                     startTime = "12:00 AM";
                     endTime = "11:59 PM";
                     ToastUtils.showToast(getContext(), "Opening hours data not found", Toast.LENGTH_SHORT);
@@ -498,17 +487,12 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                     }, 2000);
                 }
                 Log.d(TAG, destination.getTitle() + " OPENING HOURS: " + openingHours);
-                if (openingHours != null && openingHours.equals("Closed")) {
-                    destination.setOpen(false);
-                } else {
-                    destination.setOpen(true);
-                }
+                destination.setOpen(openingHours == null || !openingHours.equals("Closed"));
                 Log.d(TAG, "PLACE NAME: " + destination.getTitle() + " DESTI ID: " + destination.getId() + " IS OPEN: " + destination.isOpen() + " OPENING HOURS: " + openingHours);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle the onCancelled event if necessary
             }
         });
     }
@@ -523,7 +507,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
             startYear = year;
             startMonth = month;
             startDay = dayOfMonth;
-            calendar.set(startYear, startMonth, startDay); // Set the selected date to the Calendar object
+            calendar.set(startYear, startMonth, startDay);
 
             placeDate = format.format(calendar.getTime());
             Log.d(TAG, "showCalendar: " + placeDate);
@@ -556,12 +540,10 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
     private void showStartTimer() {
         startEt.setText("");
         if (openHours.isEmpty()) {
-            // Handle the case when opening hours data is not available
             ToastUtils.showToast(getContext(), "Opening hours data is not available", Toast.LENGTH_SHORT);
             return;
         }
 
-        // Custom dialog layout
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View customView = inflater.inflate(R.layout.dialog_custom_title, null);
         TextView dialogRealTitle = customView.findViewById(R.id.dialog_title);
@@ -576,25 +558,22 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                 .setView(customView)
                 .setNegativeButton("Cancel", null);
 
-        // Use a single TimePicker
         TimePicker timePicker = new TimePicker(new ContextThemeWrapper(getContext(), R.style.TimePickerStyle));
-        timePicker.setIs24HourView(false); // Set the desired time format
+        timePicker.setIs24HourView(false);
 
         timePickerContainer.addView(timePicker);
 
         builder.setPositiveButton("OK", (dialogInterface, which) -> {
-            int selectedHour = timePicker.getCurrentHour(); // Retrieve the selected hour
-            int selectedMinute = timePicker.getCurrentMinute(); // Retrieve the selected minute
+            int selectedHour = timePicker.getCurrentHour();
+            int selectedMinute = timePicker.getCurrentMinute();
 
             boolean withinOpeningHours = false;
 
-            // Check if the selected time is within any of the opening and closing hour/minute ranges
             for (int i = 0; i < openHours.size(); i++) {
                 String openingTime = openHours.get(i);
                 String closingTime = closeHours.get(i);
 
                 if (openingTime == null || closingTime == null) {
-                    // Handle the case when opening or closing time is null
                     ToastUtils.showToast(getContext(), "Opening hours data is not available", Toast.LENGTH_SHORT);
                     return;
                 }
@@ -606,19 +585,15 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                 int closingMinute = Integer.parseInt(closingTime.split(":")[1].split(" ")[0]);
 
                 if (closingHour < openingHour || (closingHour == openingHour && closingMinute < openingMinute)) {
-                    // The business operates into the next day
                     if (selectedHour > openingHour || (selectedHour == openingHour && selectedMinute >= openingMinute)) {
-                        // Selected time is after the opening time on the first day
                         withinOpeningHours = true;
                         break;
                     }
                     if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
-                        // Selected time is before the closing time on the second day
                         withinOpeningHours = true;
                         break;
                     }
                 } else {
-                    // The business operates within the same day
                     if (selectedHour > openingHour || (selectedHour == openingHour && selectedMinute >= openingMinute)) {
                         if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
                             withinOpeningHours = true;
@@ -643,7 +618,6 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                 endEt.setEnabled(true);
                 endBtn.setEnabled(true);
             } else {
-                // If the selected time is outside all opening and closing hour/minute ranges, show an error message
                 ToastUtils.showToast(getContext(), "Selected time is outside business hours", Toast.LENGTH_SHORT);
             }
         });
@@ -655,12 +629,10 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
     private void showEndTimer() {
         endEt.setText("");
         if (openHours.isEmpty()) {
-            // Handle the case when opening hours data is not available
             ToastUtils.showToast(getContext(), "Opening hours data is not available", Toast.LENGTH_SHORT);
             return;
         }
 
-        // Custom dialog layout
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View customView = inflater.inflate(R.layout.dialog_custom_title, null);
         TextView dialogRealTitle = customView.findViewById(R.id.dialog_title);
@@ -675,25 +647,22 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                 .setView(customView)
                 .setNegativeButton("Cancel", null);
 
-        // Use a single TimePicker
         TimePicker timePicker = new TimePicker(new ContextThemeWrapper(getContext(), R.style.TimePickerStyle));
-        timePicker.setIs24HourView(false); // Set the desired time format
+        timePicker.setIs24HourView(false);
 
         timePickerContainer.addView(timePicker);
 
         builder.setPositiveButton("OK", (dialogInterface, which) -> {
-            int selectedHour = timePicker.getCurrentHour(); // Retrieve the selected hour
-            int selectedMinute = timePicker.getCurrentMinute(); // Retrieve the selected minute
+            int selectedHour = timePicker.getCurrentHour();
+            int selectedMinute = timePicker.getCurrentMinute();
 
             boolean withinOpeningHours = false;
 
-            // Check if the selected time is within any of the opening and closing hour/minute ranges
             for (int i = 0; i < openHours.size(); i++) {
                 String openingTime = openHours.get(i);
                 String closingTime = closeHours.get(i);
 
                 if (openingTime == null || closingTime == null) {
-                    // Handle the case when opening or closing time is null
                     ToastUtils.showToast(getContext(), "Opening hours data is not available", Toast.LENGTH_SHORT);
                     return;
                 }
@@ -702,19 +671,15 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                 int closingMinute = Integer.parseInt(closingTime.split(":")[1].split(" ")[0]);
 
                 if (closingHour < startHour || (closingHour == startHour && closingMinute < startMinute)) {
-                    // The business operates into the next day
                     if (selectedHour > startHour || (selectedHour == startHour && selectedMinute >= startMinute)) {
-                        // Selected time is after the opening time on the first day
                         withinOpeningHours = true;
                         break;
                     }
                     if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
-                        // Selected time is before the closing time on the second day
                         withinOpeningHours = true;
                         break;
                     }
                 } else {
-                    // The business operates within the same day
                     if (selectedHour > startHour || (selectedHour == startHour && selectedMinute >= startMinute)) {
                         if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
                             withinOpeningHours = true;
@@ -736,7 +701,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                     endEt.setText(String.format(Locale.getDefault(), "%d:%02d PM", endHour - 12, endMinute));
                 }
             } else {
-                // If the selected time is outside all opening and closing hour/minute ranges, show an error message
+
                 ToastUtils.showToast(getContext(), "Selected time is outside business hours", Toast.LENGTH_SHORT);
             }
         });
@@ -747,18 +712,15 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
 
     private int convertTo24HourFormat(String time) {
         if (time == null) {
-            // Handle the case when the time is null
-            return 0; // Or any other default value that makes sense in your context
+            return 0;
         }
 
         String[] parts = time.split(":");
         if (parts.length < 2) {
-            // Handle the case when the time doesn't have the expected format
-            return 0; // Or any other default value that makes sense in your context
+            return 0;
         }
 
         int hour = Integer.parseInt(parts[0]);
-        int minute = Integer.parseInt(parts[1].split(" ")[0]);
 
         if (parts[1].contains(" ")) {
             String amPm = parts[1].split(" ")[1];
@@ -806,7 +768,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
 
     private void loadDestinations() {
         destinationArrayList = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
         reference.keepSynced(true);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -840,7 +802,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
 
     private void loadCategoriedDestination(){
         destinationArrayList = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
         reference.keepSynced(true);
         reference.orderByChild("categoryId").equalTo(categoryId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -944,7 +906,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
 
     private void uploadToDB(String date, String startTime, String endTime) {
         String uid = firebaseAuth.getUid();
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/")
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL)
                 .getReference("Destination");
         reference.child(selectedItemId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -956,7 +918,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                 hashMap.put("endTime", endTime);
                 hashMap.put("date", date);
                 hashMap.put("destiId", selectedItemId);
-                DatabaseReference itineraryRef = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                DatabaseReference itineraryRef = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL)
                         .getReference("Users")
                         .child(uid)
                         .child("itinerary");

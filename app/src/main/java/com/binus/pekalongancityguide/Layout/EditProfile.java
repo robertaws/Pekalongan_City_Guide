@@ -45,6 +45,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
+
 public class EditProfile extends AppCompatActivity {
     private static final int REQUEST_CAMERA_PERMISSION = 1001;
     private ActivityEditProfileBinding binding;
@@ -53,6 +55,7 @@ public class EditProfile extends AppCompatActivity {
     private Uri imguri = null;
     private String name = "";
     private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +82,6 @@ public class EditProfile extends AppCompatActivity {
             showImage();
         });
         binding.updateProfile.setOnClickListener(v -> {
-            // Hide keyboard
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
             validatedata();
@@ -120,7 +122,7 @@ public class EditProfile extends AppCompatActivity {
         if(imguri != null){
             hashMap.put("profileImage",""+imageUri);
         }
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Users");
         reference.child(firebaseAuth.getUid())
                 .updateChildren(hashMap)
                 .addOnSuccessListener(unused -> {
@@ -240,7 +242,7 @@ public class EditProfile extends AppCompatActivity {
     );
     private void getInfo(){
         Log.e(TAG,"Loading User Info..."+firebaseAuth.getUid());
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        FirebaseDatabase database = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         DatabaseReference r = database.getReference("Users");
         r.child(firebaseAuth.getUid())
                 .addValueEventListener(new ValueEventListener() {

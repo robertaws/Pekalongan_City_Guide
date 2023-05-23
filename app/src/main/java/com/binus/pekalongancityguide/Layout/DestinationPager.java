@@ -25,13 +25,15 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
+
 public class DestinationPager extends Fragment {
     private ViewPager viewPager;
     private TabLayout tabLayout;
     public ArrayList<Categories> categoriesArrayList;
     public ViewPagerAdapter viewPagerAdapter;
     private FragmentDestinationBinding binding;
-    private int selectedTabPosition = 0;
+    private final int selectedTabPosition = 0;
     private static final String TAG = "DESTI_USER_TAG";
 
     public DestinationPager() {
@@ -53,7 +55,6 @@ public class DestinationPager extends Fragment {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                // This method is called when the user starts scrolling the pager
             }
 
             @Override
@@ -64,7 +65,6 @@ public class DestinationPager extends Fragment {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                // This method is called when the scroll state changes (idle, dragging, settling)
             }
         });
         return binding.getRoot();
@@ -88,7 +88,7 @@ public class DestinationPager extends Fragment {
     private void setupViewPagerAdapter(ViewPager viewPager) {
         viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getContext());
         categoriesArrayList = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Categories");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Categories");
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

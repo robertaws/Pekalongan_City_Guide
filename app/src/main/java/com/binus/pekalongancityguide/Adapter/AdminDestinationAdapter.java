@@ -43,6 +43,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
+
 public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinationAdapter.HolderAdminDestination> implements Filterable {
     private final Context context;
     public ArrayList<Destination> destinationArrayList,filterList;
@@ -74,7 +76,7 @@ public class AdminDestinationAdapter extends RecyclerView.Adapter<AdminDestinati
         String destiId = destination.getId();
         String title = destination.getTitle();
         String description = destination.getDescription();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination")
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination")
                 .child(destiId);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override

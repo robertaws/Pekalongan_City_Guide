@@ -28,6 +28,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
+
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.HolderCategory> implements Filterable {
     private final Context context;
     public ArrayList<Categories> categoriesArrayList,filter;
@@ -76,7 +78,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Holder
 
     private void deleteCat(Categories model) {
         String categoryId = model.getId();
-        DatabaseReference categoryRef = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Categories");
+        DatabaseReference categoryRef = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Categories");
         categoryRef.child(categoryId)
                 .removeValue()
                 .addOnSuccessListener(unused -> {
@@ -87,7 +89,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Holder
     }
 
     private void deleteDestinations(String categoryId) {
-        DatabaseReference destinationRef = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        DatabaseReference destinationRef = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
         destinationRef.orderByChild("categoryId").equalTo(categoryId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

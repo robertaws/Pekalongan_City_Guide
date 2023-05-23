@@ -53,6 +53,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
+
 public class DestinationDetails extends AppCompatActivity {
     String imageUrl;
     private ActivityDestinationDetailsBinding binding;
@@ -116,7 +118,7 @@ public class DestinationDetails extends AppCompatActivity {
 
     private void loadComments(){
         commentsArrayList = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
         reference.child(destiId).child("Comments")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -159,7 +161,7 @@ public class DestinationDetails extends AppCompatActivity {
                 hashMap.put("timestamp",""+timestamp);
                 hashMap.put("comment",""+comment);
                 hashMap.put("uid",""+firebaseAuth.getUid());
-                DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+                DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
                 reference.child(destiId).child("Comments").child(timestamp)
                         .setValue(hashMap)
                         .addOnSuccessListener(unused -> {
@@ -367,7 +369,7 @@ public class DestinationDetails extends AppCompatActivity {
 
     private void uploadToDB(String date, String startTime, String endTime) {
         String uid = firebaseAuth.getUid();
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/")
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL)
                 .getReference("Destination");
         reference.child(destiId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -379,7 +381,7 @@ public class DestinationDetails extends AppCompatActivity {
                 hashMap.put("endTime", endTime);
                 hashMap.put("date", date);
                 hashMap.put("destiId", destiId);
-                DatabaseReference itineraryRef = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                DatabaseReference itineraryRef = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL)
                         .getReference("Users")
                         .child(uid)
                         .child("itinerary");
@@ -412,7 +414,7 @@ public class DestinationDetails extends AppCompatActivity {
 
 
     private void loadDetails() {
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
         reference.keepSynced(true);
         reference.child(destiId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -491,7 +493,7 @@ public class DestinationDetails extends AppCompatActivity {
     }
 
     private void checkFavorite(){
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Users");
         reference.child(firebaseAuth.getUid()).child("Favorites").child(destiId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override

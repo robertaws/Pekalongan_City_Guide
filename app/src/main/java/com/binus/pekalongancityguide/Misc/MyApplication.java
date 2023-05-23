@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.Toast;
@@ -25,6 +24,8 @@ import com.google.firebase.storage.StorageReference;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 
 public class MyApplication extends Application {
     @Override
@@ -56,7 +57,7 @@ public class MyApplication extends Application {
             dialog.setTitle("Please Wait");
             dialog.setMessage("Deleting . . .");
             dialog.show();
-            DatabaseReference itineraryRef = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/")
+            DatabaseReference itineraryRef = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL)
                     .getReference("Users")
                     .child(uid)
                     .child("itinerary");
@@ -103,7 +104,7 @@ public class MyApplication extends Application {
             reference.delete()
                     .addOnSuccessListener(unused -> {
                         Log.d(TAG, "onSuccess : Succesfully deleted data");
-                        DatabaseReference reference1 = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+                        DatabaseReference reference1 = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
                         reference1.child(destiId)
                                 .removeValue()
                                 .addOnSuccessListener(unused1 -> {
@@ -139,7 +140,7 @@ public class MyApplication extends Application {
             HashMap<String,Object> hashMap = new HashMap<>();
             hashMap.put("destiId",destiId);
             hashMap.put("timestamp",timestamp);
-            DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
+            DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Users");
             reference.child(firebaseAuth.getUid()).child("Favorites").child(destiId)
                     .setValue(hashMap)
                     .addOnSuccessListener(unused -> Toast.makeText(context,R.string.added_bookmark, Toast.LENGTH_SHORT).show())
@@ -151,7 +152,7 @@ public class MyApplication extends Application {
         if(firebaseAuth.getCurrentUser()==null){
             Toast.makeText(context,R.string.notLogin, Toast.LENGTH_SHORT).show();
         }else{
-            DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
+            DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Users");
             reference.child(firebaseAuth.getUid()).child("Favorites").child(destiId)
                     .removeValue()
                     .addOnSuccessListener(unused -> Toast.makeText(context,R.string.removed_bookmark, Toast.LENGTH_SHORT).show())

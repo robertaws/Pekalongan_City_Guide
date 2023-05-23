@@ -20,6 +20,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
+
 public class ShowDestinationAdmin extends AppCompatActivity {
     private ActivityShowDestinationAdminBinding binding;
     private ArrayList<Destination> destinationArrayList;
@@ -65,7 +67,7 @@ public class ShowDestinationAdmin extends AppCompatActivity {
 
     private void loadDestination(){
         destinationArrayList = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
         reference.orderByChild("categoryId").equalTo(categoryId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override

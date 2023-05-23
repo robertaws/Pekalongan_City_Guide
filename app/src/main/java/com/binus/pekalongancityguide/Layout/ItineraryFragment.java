@@ -66,6 +66,7 @@ import java.util.Locale;
 
 import static android.view.View.GONE;
 import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 
 public class ItineraryFragment extends Fragment {
     private FragmentItineraryBinding binding;
@@ -155,7 +156,6 @@ public class ItineraryFragment extends Fragment {
         }
         loadItinerary(selectedDate);
         adapter.setOnDataChangedListener(() -> {
-            // Notify the parent fragment that the data has changed
             if (getParentFragment() instanceof ItineraryList) {
                 ((ItineraryList) getParentFragment()).onDataChanged();
             }
@@ -231,7 +231,7 @@ public class ItineraryFragment extends Fragment {
     }
 
     private void loadItinerary(String date) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        FirebaseDatabase database = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         DatabaseReference userRef = database.getReference("Users").child(firebaseAuth.getUid());
         userRef.keepSynced(true);
         Query itineraryQuery = userRef.child("itinerary").orderByChild("date").equalTo(date);
@@ -315,7 +315,7 @@ public class ItineraryFragment extends Fragment {
                         Itinerary itinerary = itineraryList.get(i);
                         waypoints.append(itinerary.getLatitude()).append(",").append(itinerary.getLongitude()).append("|");
                     }
-                    waypoints.setLength(waypoints.length() - 1); // Remove the last "|"
+                    waypoints.setLength(waypoints.length() - 1);
                     String routeUrl = "https://www.google.com/maps/dir/?api=1&origin=" + origin + "&destination=" + latitude + "," + longitude + "&waypoints=" + waypoints + "&travelmode=driving";
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(routeUrl));
                     mapIntent.setPackage("com.google.android.apps.maps");
@@ -399,11 +399,8 @@ public class ItineraryFragment extends Fragment {
                     JSONArray routes = response.getJSONArray("routes");
                     if (routes.length() > 0) {
                         JSONObject route = routes.getJSONObject(0);
-//                        Log.d(TAG, "route: " + route);
                         JSONArray legs = route.getJSONArray("legs");
-//                        Log.d(TAG, "legs: " + legs);
                         JSONObject leg = legs.getJSONObject(0);
-//                        Log.d(TAG, "leg: " + leg);
                         JSONObject duration = leg.getJSONObject("duration");
                         String durationText = duration.getString("text");
                         Log.d(TAG, "Duration: " + durationText);

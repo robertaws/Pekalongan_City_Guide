@@ -63,9 +63,10 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 
 public class ShowDestinationFragment extends Fragment {
-    private final FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
+    private final FirebaseDatabase database = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
     private static final int PERMISSION_REQUEST_LOCATION = 500;
     private String categoryId;
     private String category;
@@ -121,7 +122,6 @@ public class ShowDestinationFragment extends Fragment {
             double longitude = Double.parseDouble(lastLongitude);
             coordinate = new LatLng(latitude, longitude);
         }
-//        Log.d(TAG, "ON START COORDINATES: " + coordinate);
         binding = FragmentShowDestinationBinding.inflate(LayoutInflater.from(getContext()), container, false);
         if (category.equals("All")) {
             loadDestinations();
@@ -186,7 +186,6 @@ public class ShowDestinationFragment extends Fragment {
         });
         DestinationAdapter adapter = new DestinationAdapter(getContext(), destinationArrayList, getParentFragmentManager());
         adapter.setOnDataChangedListener(() -> {
-            // Notify the parent fragment that the data has changed
             if (getParentFragment() instanceof DestinationPager) {
                 ((DestinationPager) getParentFragment()).onDataChanged();
             }
@@ -231,7 +230,6 @@ public class ShowDestinationFragment extends Fragment {
 
             @Override
             protected void onPostExecute(String address) {
-                // update the location text view in the UI thread
                 if (address != null) {
                     addressString = address;
                     locBinding.locTv.setText(addressString);
@@ -308,7 +306,6 @@ public class ShowDestinationFragment extends Fragment {
                             @Override
                             protected void onPostExecute(String address) {
                                 if (address != null) {
-//                                    Log.d("ADDRESS IN DIALOG", address);
                                     addressString = address;
                                     locBinding.locTv.setText(addressString);
                                     autocompleteFragment.setText(addressString);
@@ -339,7 +336,6 @@ public class ShowDestinationFragment extends Fragment {
                 editor.putString("lastLongitude", String.valueOf(coordinate.longitude));
                 editor.apply();
             }
-//            Log.d(TAG, "COORDINATES: " + coordinate);
         });
     }
 
@@ -411,7 +407,7 @@ public class ShowDestinationFragment extends Fragment {
 
     private void loadDestinations() {
         destinationArrayList = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
         reference.keepSynced(true);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -432,7 +428,7 @@ public class ShowDestinationFragment extends Fragment {
 
     private void loadCategoriedDestination(){
         destinationArrayList = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
         reference.keepSynced(true);
         reference.orderByChild("categoryId").equalTo(categoryId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -495,7 +491,6 @@ public class ShowDestinationFragment extends Fragment {
                         @Override
                         protected void onPostExecute(String address) {
                             if (address != null) {
-//                                Log.d("ADDRESS", address);
                                 binding.changeLoc.setText(address);
                             }
                         }
@@ -532,7 +527,6 @@ public class ShowDestinationFragment extends Fragment {
                                     @Override
                                     protected void onPostExecute(String address) {
                                         if (address != null) {
-//                                            Log.d("ADDRESS", address);
                                             binding.changeLoc.setText(address);
                                         }
                                     }
@@ -541,7 +535,6 @@ public class ShowDestinationFragment extends Fragment {
                         });
                     }
                 }
-//                Log.d(TAG, "distance: " + destination.getDistance());
             }
 
             @Override
@@ -549,7 +542,8 @@ public class ShowDestinationFragment extends Fragment {
 
             }
         });
-    };
+    }
+
     private float calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         float[] results = new float[1];
         Location location1 = new Location("");

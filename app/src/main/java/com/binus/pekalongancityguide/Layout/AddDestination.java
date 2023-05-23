@@ -61,6 +61,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 
 public class AddDestination extends AppCompatActivity {
     public static final String TAG = "ADD_IMAGE_TAG";
@@ -131,7 +132,7 @@ public class AddDestination extends AppCompatActivity {
                 if (!response.getAutocompletePredictions().isEmpty()) {
                     String placeId = response.getAutocompletePredictions().get(0).getPlaceId();
                     Log.d(TAG, "Place ID: " + placeId);
-                    DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+                    DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
                     Query query = reference.orderByChild("placeId").equalTo(placeId);
                     query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -349,7 +350,7 @@ public class AddDestination extends AppCompatActivity {
         hashMap.put("reviews", reviewsList);
         hashMap.put("openingHours", weekday);
 
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
         reference.child("" + timestamp)
                 .setValue(hashMap)
                 .addOnSuccessListener(aVoid -> {
@@ -374,7 +375,7 @@ public class AddDestination extends AppCompatActivity {
         Log.d(TAG, "load Category : load Category ");
         categoriesTitleArrayList = new ArrayList<>();
         categoryIdArrayList = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Categories");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Categories");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

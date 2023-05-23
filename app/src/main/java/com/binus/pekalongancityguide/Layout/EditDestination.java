@@ -31,6 +31,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
+
 public class EditDestination extends AppCompatActivity {
     private ActivityEditDestinationBinding binding;
     FirebaseDatabase refDes;
@@ -52,7 +54,7 @@ public class EditDestination extends AppCompatActivity {
         dialog.setTitle("Please Wait");
         dialog.setCanceledOnTouchOutside(false);
 
-        refDes = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        refDes = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         fiStoRef = FirebaseStorage.getInstance("gs://pekalongan-city-guide-5bf2e.appspot.com");
         ref = refDes.getReference("Destination");
         catRef = refDes.getReference("Categories");

@@ -58,13 +58,14 @@ import java.util.List;
 import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 
 public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.ItineraryViewHolder> {
     private static final int MAPS_PERMIT = 1;
     private final Context context;
     private final List<Itinerary> itineraryList;
-    private List<String> openHours = new ArrayList<>();
-    private List<String> closeHours = new ArrayList<>();
+    private final List<String> openHours = new ArrayList<>();
+    private final List<String> closeHours = new ArrayList<>();
     private final FragmentManager fragmentManager;
     private FirebaseDatabase database;
     private EditText startEt, endEt, dateEt;
@@ -84,7 +85,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
     @Override
     public ItineraryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_itinerary, parent, false);
-        database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        database = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         return new ItineraryViewHolder(view);
     }
 
@@ -193,7 +194,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             startYear = year;
             startMonth = month;
             startDay = dayOfMonth;
-            calendar.set(startYear, startMonth, startDay); // Set the selected date to the Calendar object
+            calendar.set(startYear, startMonth, startDay);
 
             SimpleDateFormat format = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
             startDate = format.format(calendar.getTime());
@@ -202,14 +203,11 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             startBtn.setEnabled(true);
             startEt.setEnabled(true);
 
-            // Get the day of the week for the selected date
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-            // Retrieve the opening hours for the selected day
             getOpeningHours(dayOfWeek);
         }, startYear, startMonth, startDay);
 
-        // Set the minimum date to today's date
         dialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
 
         dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);
@@ -226,7 +224,6 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                     Log.d(TAG, "OPENING HOURS: " + openingHours);
 
                     if (openingHours != null) {
-                        // Split the opening hours data into day and time slots
                         String[] parts = openingHours.split(": ");
                         if (parts.length == 2) {
                             String day = parts[0];
@@ -238,34 +235,28 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                                 openHours.add(startTime);
                                 closeHours.add(endTime);
                             } else {
-                                // Split the time range by comma if there are breaks
                                 String[] timeSlots = timeRange.split(", ");
 
                                 for (String slot : timeSlots) {
-                                    // Split each slot into start and end time
                                     String[] times = slot.split(" – ");
 
                                     if (times.length == 2) {
                                         String startTimeSlot = times[0];
                                         String endTimeSlot = times[1];
 
-                                        // Process each time slot as needed
                                         Log.d(TAG, "Start Time Slot: " + startTimeSlot);
                                         Log.d(TAG, "End Time Slot: " + endTimeSlot);
                                         openHours.add(startTimeSlot);
                                         closeHours.add(endTimeSlot);
                                     } else {
-                                        // Handle the case when a time slot is invalid or not in the expected format
                                         Toast.makeText(context, "Invalid time slot: " + slot, Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             }
                         } else {
-                            // Handle the case when the opening hours data is not in the expected format
                             Toast.makeText(context, "Invalid opening hours format", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        // Handle the case when the opening hours data is null or not available for the selected day
                         openingHours = "Closed";
                         Toast.makeText(context, "Opening hours not available", Toast.LENGTH_SHORT).show();
                         openHours.add(startTime);
@@ -274,14 +265,12 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                     Log.d(TAG, "Open hour: " + openHours);
                     Log.d(TAG, "Close hour: " + closeHours);
                 } else {
-                    // Handle the case when the opening hours data doesn't exist in the database
                     Toast.makeText(context, "Opening hours data not found", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle the onCancelled event if necessary
             }
         });
     }
@@ -289,12 +278,10 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
     private void showStartTimer() {
         startEt.setText("");
         if (openHours.isEmpty()) {
-            // Handle the case when opening hours data is not available
             Toast.makeText(context, "Opening hours data is not available", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Custom dialog layout
         LayoutInflater inflater = LayoutInflater.from(context);
         View customView = inflater.inflate(R.layout.dialog_custom_title, null);
         TextView dialogRealTitle = customView.findViewById(R.id.dialog_title);
@@ -309,25 +296,22 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                 .setView(customView)
                 .setNegativeButton("Cancel", null);
 
-        // Use a single TimePicker
         TimePicker timePicker = new TimePicker(new ContextThemeWrapper(context, R.style.TimePickerStyle));
-        timePicker.setIs24HourView(false); // Set the desired time format
+        timePicker.setIs24HourView(false);
 
         timePickerContainer.addView(timePicker);
 
         builder.setPositiveButton("OK", (dialogInterface, which) -> {
-            int selectedHour = timePicker.getCurrentHour(); // Retrieve the selected hour
-            int selectedMinute = timePicker.getCurrentMinute(); // Retrieve the selected minute
+            int selectedHour = timePicker.getCurrentHour();
+            int selectedMinute = timePicker.getCurrentMinute();
 
             boolean withinOpeningHours = false;
 
-            // Check if the selected time is within any of the opening and closing hour/minute ranges
             for (int i = 0; i < openHours.size(); i++) {
                 String openingTime = openHours.get(i);
                 String closingTime = closeHours.get(i);
 
                 if (openingTime == null || closingTime == null) {
-                    // Handle the case when opening or closing time is null
                     Toast.makeText(context, "Opening hours data is not available", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -339,19 +323,15 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                 int closingMinute = Integer.parseInt(closingTime.split(":")[1].split(" ")[0]);
 
                 if (closingHour < openingHour || (closingHour == openingHour && closingMinute < openingMinute)) {
-                    // The business operates into the next day
                     if (selectedHour > openingHour || (selectedHour == openingHour && selectedMinute >= openingMinute)) {
-                        // Selected time is after the opening time on the first day
                         withinOpeningHours = true;
                         break;
                     }
                     if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
-                        // Selected time is before the closing time on the second day
                         withinOpeningHours = true;
                         break;
                     }
                 } else {
-                    // The business operates within the same day
                     if (selectedHour > openingHour || (selectedHour == openingHour && selectedMinute >= openingMinute)) {
                         if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
                             withinOpeningHours = true;
@@ -376,7 +356,6 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                 endEt.setEnabled(true);
                 endBtn.setEnabled(true);
             } else {
-                // If the selected time is outside all opening and closing hour/minute ranges, show an error message
                 Toast.makeText(context, "Selected time is outside business hours", Toast.LENGTH_SHORT).show();
             }
         });
@@ -388,12 +367,10 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
     private void showEndTimer() {
         endEt.setText("");
         if (openHours.isEmpty()) {
-            // Handle the case when opening hours data is not available
             Toast.makeText(context, "Opening hours data is not available", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Custom dialog layout
         LayoutInflater inflater = LayoutInflater.from(context);
         View customView = inflater.inflate(R.layout.dialog_custom_title, null);
         TextView dialogRealTitle = customView.findViewById(R.id.dialog_title);
@@ -408,25 +385,22 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                 .setView(customView)
                 .setNegativeButton("Cancel", null);
 
-        // Use a single TimePicker
         TimePicker timePicker = new TimePicker(new ContextThemeWrapper(context, R.style.TimePickerStyle));
-        timePicker.setIs24HourView(false); // Set the desired time format
+        timePicker.setIs24HourView(false);
 
         timePickerContainer.addView(timePicker);
 
         builder.setPositiveButton("OK", (dialogInterface, which) -> {
-            int selectedHour = timePicker.getCurrentHour(); // Retrieve the selected hour
-            int selectedMinute = timePicker.getCurrentMinute(); // Retrieve the selected minute
+            int selectedHour = timePicker.getCurrentHour();
+            int selectedMinute = timePicker.getCurrentMinute();
 
             boolean withinOpeningHours = false;
 
-            // Check if the selected time is within any of the opening and closing hour/minute ranges
             for (int i = 0; i < openHours.size(); i++) {
                 String openingTime = openHours.get(i);
                 String closingTime = closeHours.get(i);
 
                 if (openingTime == null || closingTime == null) {
-                    // Handle the case when opening or closing time is null
                     Toast.makeText(context, "Opening hours data is not available", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -435,19 +409,15 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                 int closingMinute = Integer.parseInt(closingTime.split(":")[1].split(" ")[0]);
 
                 if (closingHour < startHour || (closingHour == startHour && closingMinute < startMinute)) {
-                    // The business operates into the next day
                     if (selectedHour > startHour || (selectedHour == startHour && selectedMinute >= startMinute)) {
-                        // Selected time is after the opening time on the first day
                         withinOpeningHours = true;
                         break;
                     }
                     if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
-                        // Selected time is before the closing time on the second day
                         withinOpeningHours = true;
                         break;
                     }
                 } else {
-                    // The business operates within the same day
                     if (selectedHour > startHour || (selectedHour == startHour && selectedMinute >= startMinute)) {
                         if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
                             withinOpeningHours = true;
@@ -469,7 +439,6 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                     endEt.setText(String.format(Locale.getDefault(), "%d:%02d PM", endHour - 12, endMinute));
                 }
             } else {
-                // If the selected time is outside all opening and closing hour/minute ranges, show an error message
                 Toast.makeText(context, "Selected time is outside business hours", Toast.LENGTH_SHORT).show();
             }
         });
@@ -480,14 +449,12 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
 
     private int convertTo24HourFormat(String time) {
         if (time == null) {
-            // Handle the case when the time is null
-            return 0; // Or any other default value that makes sense in your context
+            return 0;
         }
 
         String[] parts = time.split(":");
         if (parts.length < 2) {
-            // Handle the case when the time doesn't have the expected format
-            return 0; // Or any other default value that makes sense in your context
+            return 0;
         }
 
         int hour = Integer.parseInt(parts[0]);
@@ -545,7 +512,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         hashMap.put("date",""+date);
         hashMap.put("startTime",""+startTime);
         hashMap.put("endTime",""+endTime);
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Users");
         reference.child(uid).child("itinerary").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

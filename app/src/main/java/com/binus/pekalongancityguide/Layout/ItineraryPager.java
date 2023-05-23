@@ -39,6 +39,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 
 public class ItineraryPager extends Fragment {
     public ArrayList<Categories> categoriesArrayList;
@@ -209,7 +210,7 @@ public class ItineraryPager extends Fragment {
     private void setupViewPagerAdapter(ViewPager viewPager) {
         viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getContext());
         categoriesArrayList = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Categories");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Categories");
         reference.keepSynced(true);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

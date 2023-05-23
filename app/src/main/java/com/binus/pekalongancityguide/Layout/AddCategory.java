@@ -19,10 +19,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
+
 public class AddCategory extends AppCompatActivity {
     private ActivityAddCategoryBinding binding;
     private FirebaseAuth firebaseAuth;
     private ProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +47,7 @@ public class AddCategory extends AppCompatActivity {
         if(TextUtils.isEmpty(category)){
             Toast.makeText(this, "Please enter a category!", Toast.LENGTH_SHORT).show();
         }else{
-            DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Categories");
+            DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Categories");
             Query query = reference.orderByChild("category");
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -82,7 +85,7 @@ public class AddCategory extends AppCompatActivity {
         hashMap.put("timestamp",timestamp);
         hashMap.put("uid",""+firebaseAuth.getUid());
 
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Categories");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Categories");
         reference.child(""+timestamp)
                 .setValue(hashMap)
                 .addOnSuccessListener(unused -> {
