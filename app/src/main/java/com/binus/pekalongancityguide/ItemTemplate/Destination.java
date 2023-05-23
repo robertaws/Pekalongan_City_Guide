@@ -9,12 +9,13 @@ public class Destination implements Serializable {
     private boolean isLoaded;
     private float distance;
     private boolean isSelected;
+    private boolean isOpen;
 
     public Destination() {
 
     }
 
-    public Destination(String uid, String id, String title, String description, String categoryId, String url, String rating, String address, String placeId, String latitude, String longitude, boolean favorite, boolean isLoaded, float distance, boolean isSelected) {
+    public Destination(String uid, String id, String title, String description, String categoryId, String url, String rating, String address, String placeId, String latitude, String longitude, boolean favorite, boolean isLoaded, float distance, boolean isSelected, boolean isOpen) {
         this.uid = uid;
         this.id = id;
         this.title = title;
@@ -30,6 +31,7 @@ public class Destination implements Serializable {
         this.isLoaded = isLoaded;
         this.distance = distance;
         this.isSelected = isSelected;
+        this.isOpen = isOpen;
     }
 
     public String getUid() {
@@ -104,6 +106,22 @@ public class Destination implements Serializable {
         this.placeId = placeId;
     }
 
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
     public boolean isFavorite() {
         return favorite;
     }
@@ -136,19 +154,11 @@ public class Destination implements Serializable {
         isSelected = selected;
     }
 
-    public String getLatitude() {
-        return latitude;
+    public boolean isOpen() {
+        return isOpen;
     }
 
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-
-    public String getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
+    public void setOpen(boolean open) {
+        isOpen = open;
     }
 }

@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,7 @@ import com.binus.pekalongancityguide.Layout.AddItinerary;
 import com.binus.pekalongancityguide.Layout.DestinationDetails;
 import com.binus.pekalongancityguide.Layout.ItineraryPager;
 import com.binus.pekalongancityguide.Misc.FilterIterUser;
+import com.binus.pekalongancityguide.Misc.ToastUtils;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ListIterBinding;
 import com.bumptech.glide.Glide;
@@ -74,7 +76,7 @@ public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestinat
         String title = destination.getTitle();
         holder.title.setText(title);
         loadImage(destination, holder);
-        if (selectedItems.contains(destination)) {
+        if (selectedItems.contains(destination) && destination.isOpen()) {
             holder.selectButton.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.checked));
             holder.selectButton.setVisibility(View.VISIBLE);
             holder.layoutImage.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.grayishTint));
@@ -116,7 +118,11 @@ public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestinat
                 if (selectedItems.contains(destination)) {
                     selectedItems.remove(destination);
                 } else {
-                    selectedItems.add(destination);
+                    if (destination.isOpen()) {
+                        selectedItems.add(destination);
+                    } else {
+                        ToastUtils.showToast(context, "This place is closed", Toast.LENGTH_SHORT);
+                    }
                 }
                 notifyItemChanged(position);
                 addItinerary.checkSelect();
@@ -133,7 +139,7 @@ public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestinat
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        Log.d(TAG, "on Success: " + destination.getTitle() + "successfully got the file");
+//                        Log.d(TAG, "on Success: " + destination.getTitle() + "successfully got the file");
                         holder.isImageLoaded = true;
                         BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), resource);
                         drawable.setGravity(Gravity.FILL);
@@ -196,6 +202,7 @@ public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestinat
 
         @Override
         public boolean onLongClick(View v) {
+            ToastUtils.setToastEnabled(true);
             int adapterPosition = getAdapterPosition();
             Destination destination = destinations.get(adapterPosition);
             if (!destination.isSelected()) {
@@ -204,6 +211,10 @@ public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestinat
             if (selectedItems.contains(destination)) {
                 selectedItems.remove(destination);
                 destination.setSelected(false);
+            } else if (!destination.isOpen()) {
+                selectedItems.remove(destination);
+                destination.setSelected(false);
+                ToastUtils.showToast(context, "This place is closed", Toast.LENGTH_SHORT);
             } else {
                 selectedItems.add(destination);
             }
