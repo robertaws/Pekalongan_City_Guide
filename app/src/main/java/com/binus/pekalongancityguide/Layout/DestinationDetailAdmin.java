@@ -37,6 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
+
 public class DestinationDetailAdmin extends AppCompatActivity {
     private ActivityDestinationDetailAdminBinding binding;
     String destiId;
@@ -45,6 +47,7 @@ public class DestinationDetailAdmin extends AppCompatActivity {
     private CommentAdapter commentAdapter;
 
     private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +87,7 @@ public class DestinationDetailAdmin extends AppCompatActivity {
                 hashMap.put("timestamp",""+timestamp);
                 hashMap.put("comment",""+comment);
                 hashMap.put("uid",""+firebaseAuth.getUid());
-                DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+                DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
                 reference.child(destiId).child("Comments").child(timestamp)
                         .setValue(hashMap)
                         .addOnSuccessListener(unused -> {
@@ -102,7 +105,7 @@ public class DestinationDetailAdmin extends AppCompatActivity {
     }
     private void loadComments(){
         commentsArrayList = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
         reference.child(destiId).child("Comments")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -123,7 +126,7 @@ public class DestinationDetailAdmin extends AppCompatActivity {
                 });
     }
     private void loadDetails(){
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
         reference.child(destiId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

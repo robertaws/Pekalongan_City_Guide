@@ -21,6 +21,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
+
 public class Register extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     ImageButton back;
@@ -239,7 +241,7 @@ public class Register extends AppCompatActivity {
         hashMap.put("profileImage","");
         hashMap.put("userType","user");
         hashMap.put("timestamp", timestamp);
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        FirebaseDatabase database = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         DatabaseReference databaseReference = database.getReference("Users");
         databaseReference.child(uid)
                 .setValue(hashMap)

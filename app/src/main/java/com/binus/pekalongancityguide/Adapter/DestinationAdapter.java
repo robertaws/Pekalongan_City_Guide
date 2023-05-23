@@ -42,6 +42,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
+
 public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.HolderDestination> implements Filterable {
     private final Context context;
     public ArrayList<Destination> destinations, filterList;
@@ -69,7 +71,7 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
         String title = destination.getTitle();
         holder.title.setText(title);
         loadImage(destination, holder);
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination")
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination")
                 .child(destiId);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -134,7 +136,7 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-//                        Log.d(TAG, "on Success: " + destination.getTitle() + "successfully got the file");
+                        Log.d(TAG, "on Success: " + destination.getTitle() + "successfully got the file");
                         holder.isImageLoaded = true;
                         BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), resource);
                         drawable.setGravity(Gravity.FILL);

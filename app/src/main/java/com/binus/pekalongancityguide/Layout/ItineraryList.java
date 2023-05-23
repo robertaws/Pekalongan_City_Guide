@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 
 public class ItineraryList extends Fragment {
     private FragmentItineraryListBinding binding;
@@ -66,7 +67,7 @@ public class ItineraryList extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentItineraryListBinding.inflate(inflater, container, false);
         init();
-        database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        database = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         updateItineraryView();
         return binding.getRoot();
     }
@@ -104,7 +105,7 @@ public class ItineraryList extends Fragment {
 
                 List<String> dates = new ArrayList<>(uniqueDates);
                 Collections.sort(dates, new Comparator<String>() {
-                    DateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
+                    final DateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
 
                     @Override
                     public int compare(String date1, String date2) {
@@ -205,7 +206,7 @@ public class ItineraryList extends Fragment {
     private List<Fragment> createFragmentsList(List<String> dates) {
         List<Fragment> fragments = new ArrayList<>();
         Collections.sort(dates, new Comparator<String>() {
-            DateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
+            final DateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
             @Override
             public int compare(String date1, String date2) {
                 try {

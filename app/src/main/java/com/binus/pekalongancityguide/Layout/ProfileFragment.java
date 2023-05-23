@@ -32,13 +32,16 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Locale;
 import java.util.Objects;
 
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
+
 public class ProfileFragment extends Fragment {
     private FragmentProfileBinding binding;
-    private Locale currentLocale = Locale.getDefault();
+    private final Locale currentLocale = Locale.getDefault();
     private FirebaseAuth firebaseAuth;
     private static final String TAG = "PROFILE_TAG";
     private String mProfileImgUrl;
     private SharedPreferences prefs;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,7 +137,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getInfo(){
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        FirebaseDatabase database = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         Log.e(TAG,"Loading User Info..."+firebaseAuth.getUid());
         if (firebaseAuth.getUid() != null) {
             DatabaseReference r = database.getReference("Users");

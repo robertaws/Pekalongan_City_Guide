@@ -31,11 +31,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.HolderComment>{
-    private Context context;
-    private ArrayList<Comments> commentsArrayList;
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
+
+public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.HolderComment> {
+    private final Context context;
+    private final ArrayList<Comments> commentsArrayList;
     private ListCommentBinding binding;
-    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
     public CommentAdapter(Context context, ArrayList<Comments> commentsArrayList) {
         this.context = context;
         this.commentsArrayList = commentsArrayList;
@@ -43,7 +46,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.HolderCo
 
     @NonNull
     @Override
-    public HolderComment onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
+    public HolderComment onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         binding = ListCommentBinding.inflate(LayoutInflater.from(context),parent,false);
         return new HolderComment(binding.getRoot());
     }
@@ -86,8 +89,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.HolderCo
             if(TextUtils.isEmpty(editComment)){
                 commentBinding.editCommentTil.setError(commentBinding.getRoot().getContext().getString(R.string.comment_empty));
             }else{
-                DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
-                String timestamp = ""+System.currentTimeMillis();
+                DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
+                String timestamp = "" + System.currentTimeMillis();
                 HashMap<String, Object> hashMap = new HashMap<>();
                 hashMap.put("id",comments.getId());
                 hashMap.put("destiId",comments.getDestiId());
@@ -120,7 +123,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.HolderCo
                 .setPositiveButton(R.string.delete_opt, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+                        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
                         reference.child(comments.getDestiId())
                                 .child("Comments")
                                 .child(comments.getId())
@@ -135,7 +138,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.HolderCo
 
     private void loadCommentDetails(Comments comments, HolderComment holder) {
         String uid = comments.getUid();
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Users");
         reference.child(uid)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

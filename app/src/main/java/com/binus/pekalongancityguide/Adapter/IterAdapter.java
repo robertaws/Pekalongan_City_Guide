@@ -43,11 +43,11 @@ import java.util.ArrayList;
 
 public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestination> implements Filterable {
     private final Context context;
-    private AddItinerary addItinerary;
-    private ItineraryPager itineraryPager;
+    private final AddItinerary addItinerary;
+    private final ItineraryPager itineraryPager;
     public ArrayList<Destination> destinations, filterList;
-    private ArrayList<Destination> selectedItems = new ArrayList<>();
-    private OnItemLongClickListener onItemLongClickListener;
+    private final ArrayList<Destination> selectedItems = new ArrayList<>();
+    private final OnItemLongClickListener onItemLongClickListener;
     private ListIterBinding binding;
     private FilterIterUser filterIterUser;
     private static final String TAG = "ADAPTER_USER_TAG";
@@ -139,7 +139,7 @@ public class IterAdapter extends RecyclerView.Adapter<IterAdapter.HolderDestinat
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-//                        Log.d(TAG, "on Success: " + destination.getTitle() + "successfully got the file");
+                        Log.d(TAG, "on Success: " + destination.getTitle() + "successfully got the file");
                         holder.isImageLoaded = true;
                         BitmapDrawable drawable = new BitmapDrawable(holder.itemView.getResources(), resource);
                         drawable.setGravity(Gravity.FILL);

@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import static com.binus.pekalongancityguide.Layout.AddDestination.TAG;
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 
 public class BookmarkFragment extends Fragment {
     private ArrayList<Destination> destinationArrayList;
@@ -63,7 +64,7 @@ public class BookmarkFragment extends Fragment {
     }
     private void loadBookmark() {
         destinationArrayList = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Users");
         reference.child(firebaseAuth.getUid()).child("Favorites")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
