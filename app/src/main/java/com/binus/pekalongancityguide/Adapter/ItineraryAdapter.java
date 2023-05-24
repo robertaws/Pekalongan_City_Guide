@@ -284,6 +284,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                 } else {
                     startTime = "12:00 AM";
                     endTime = "11:59 PM";
+                    openingHours = "Not Found";
                     Toast.makeText(context, "Opening hours data not found", Toast.LENGTH_SHORT).show();
                     new Handler().postDelayed(() -> {
                         Toast.makeText(context, "Allowing any time to be selected", Toast.LENGTH_SHORT).show();
