@@ -778,14 +778,13 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                 closeHours.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Destination destination = dataSnapshot.getValue(Destination.class);
+                    destination.setOpen(true);
                     if (startDate.equals(endDate)) {
                         getDateOfWeek(destination);
                         ToastUtils.setToastEnabled(false);
                     }
                     destinationArrayList.add(destination);
                     sortDestination(destinationArrayList);
-                    openHours.clear();
-                    closeHours.clear();
                 }
                 if (iterAdapter == null) {
                     initIterAdapter();
