@@ -37,7 +37,6 @@ import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
 import com.binus.pekalongancityguide.Layout.Home;
 import com.binus.pekalongancityguide.Misc.AlphaTransformation;
 import com.binus.pekalongancityguide.Misc.MyApplication;
-import com.binus.pekalongancityguide.Misc.ToastUtils;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.DialogAddToItineraryBinding;
 import com.bumptech.glide.Glide;
@@ -249,7 +248,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                                 startTime = "";
                                 endTime = "";
                                 openingHours = "Closed";
-                                ToastUtils.showToast(context, "Opening hours not available", Toast.LENGTH_SHORT);
+                                Toast.makeText(context, "Opening hours not available", Toast.LENGTH_SHORT).show();
                                 openHours.add(startTime);
                                 closeHours.add(endTime);
                             } else {
@@ -265,18 +264,18 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                                         openHours.add(startTimeSlot);
                                         closeHours.add(endTimeSlot);
                                     } else {
-                                        ToastUtils.showToast(context, "Invalid time slot: " + slot, Toast.LENGTH_SHORT);
+                                        Toast.makeText(context, "Invalid time slot: " + slot, Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             }
                         } else {
-                            ToastUtils.showToast(context, "Invalid opening hours format", Toast.LENGTH_SHORT);
+                            Toast.makeText(context, "Invalid opening hours format", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         startTime = "";
                         endTime = "";
                         openingHours = "Closed";
-                        ToastUtils.showToast(context, "Opening hours not available", Toast.LENGTH_SHORT);
+                        Toast.makeText(context, "Opening hours not available", Toast.LENGTH_SHORT).show();
                         openHours.add(startTime);
                         closeHours.add(endTime);
                     }
@@ -285,9 +284,9 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                 } else {
                     startTime = "12:00 AM";
                     endTime = "11:59 PM";
-                    ToastUtils.showToast(context, "Opening hours data not found", Toast.LENGTH_SHORT);
+                    Toast.makeText(context, "Opening hours data not found", Toast.LENGTH_SHORT).show();
                     new Handler().postDelayed(() -> {
-                        ToastUtils.showToast(context, "Allowing any time to be selected", Toast.LENGTH_SHORT);
+                        Toast.makeText(context, "Allowing any time to be selected", Toast.LENGTH_SHORT).show();
                         openHours.add(startTime);
                         closeHours.add(endTime);
                     }, 2000);
