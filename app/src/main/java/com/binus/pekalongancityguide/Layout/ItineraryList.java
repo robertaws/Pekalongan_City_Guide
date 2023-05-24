@@ -147,8 +147,6 @@ public class ItineraryList extends Fragment {
         });
     }
 
-
-
     public class ItineraryPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> fragments;
         private final List<String> dates;

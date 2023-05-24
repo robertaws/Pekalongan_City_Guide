@@ -28,13 +28,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
-import com.binus.pekalongancityguide.Layout.Home;
+import com.binus.pekalongancityguide.Layout.ItineraryList;
 import com.binus.pekalongancityguide.Misc.AlphaTransformation;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.R;
@@ -522,6 +524,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         date = dateEt.getText().toString().trim();
         startTime = startTimeEt.getText().toString().trim();
         endTime = endTimeEt.getText().toString().trim();
+
         boolean allFieldsFilled = true;
 
         if (TextUtils.isEmpty(date)) {
@@ -571,28 +574,38 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                         itineraryRef.child("endTime").setValue(endTime)
                                 .addOnSuccessListener(aVoid -> {
                                     Toast.makeText(context, "Itinerary updated successfully", Toast.LENGTH_LONG).show();
-                                    context.startActivity(new Intent(context, Home.class));
-
                                 }).addOnFailureListener(e -> {
                                     Toast.makeText(context, "Failed to update itinerary: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
                     }
                 }
+                openItineraryListFragment();
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }
 
-    private String getMyLocation(){
-    LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-    if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
-        ActivityCompat.requestPermissions((Activity) context,
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                MAPS_PERMIT);
-        return null;
+    private void openItineraryListFragment() {
+        AppCompatActivity appCompatActivity = (AppCompatActivity) context;
+        FragmentManager fragmentManager = appCompatActivity.getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.container, new ItineraryList());
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+
+    private String getMyLocation() {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) context,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MAPS_PERMIT);
+            return null;
     } else {
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location != null) {
