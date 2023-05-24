@@ -479,6 +479,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                 } else {
                     startTime = "12:00 AM";
                     endTime = "11:59 PM";
+                    openingHours = "Not Found";
                     ToastUtils.showToast(getContext(), "Opening hours data not found", Toast.LENGTH_SHORT);
                     new Handler().postDelayed(() -> {
                         ToastUtils.showToast(getContext(), "Allowing any time to be selected", Toast.LENGTH_SHORT);
