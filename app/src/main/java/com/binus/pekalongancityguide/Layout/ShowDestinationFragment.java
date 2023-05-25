@@ -25,9 +25,12 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
@@ -329,10 +332,20 @@ public class ShowDestinationFragment extends Fragment {
                 editor.apply();
             }
             Log.d(TAG, "COORDINATES: " + coordinate);
+            openDestinationPager();
         });
     }
 
-    public void showSortDialog(){
+    private void openDestinationPager() {
+        AppCompatActivity appCompatActivity = (AppCompatActivity) getContext();
+        FragmentManager fragmentManager = appCompatActivity.getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.container, new DestinationPager());
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    public void showSortDialog() {
         DialogSortDestiBinding binding1 = DialogSortDestiBinding.inflate(LayoutInflater.from(getContext()));
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         CheckBox ratingCheck = binding1.ratingSort;
