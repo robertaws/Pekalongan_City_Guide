@@ -105,7 +105,7 @@ public class ItineraryFragment extends Fragment {
                 WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
         layoutGoneParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         layoutGoneParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-        layoutGoneParams.setMargins(15,15,15,15);
+        layoutGoneParams.setMargins(15, 15, 15, 15);
         binding.addIterBtn.setLayoutParams(layoutGoneParams);
 
         prefs = getActivity().getSharedPreferences("coordinate", Context.MODE_PRIVATE);
@@ -115,8 +115,8 @@ public class ItineraryFragment extends Fragment {
             double latitude = Double.parseDouble(lastLatitude);
             double longitude = Double.parseDouble(lastLongitude);
             coordinate = new LatLng(latitude, longitude);
-            Log.d(TAG, "ON START COORD: " + coordinate);
         }
+        Log.d(TAG, "ON START COORD: " + coordinate);
         Places.initialize(getContext().getApplicationContext(), apiKey);
         placesClient = Places.createClient(getContext());
         firebaseAuth = FirebaseAuth.getInstance();
@@ -177,38 +177,68 @@ public class ItineraryFragment extends Fragment {
     }
 
     private void initializeAddress() {
-        if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
-        } else {
-            fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-                if (location != null) {
-                    currentLat = location.getLatitude();
-                    currentLng = location.getLongitude();
-                    new AsyncTask<Void, Void, String>() {
-                        @Override
-                        protected String doInBackground(Void... voids) {
-                            try {
-                                List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
-                                if (addresses.size() > 0) {
-                                    return addresses.get(0).getAddressLine(0);
-                                }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                return "Error: Geocoder service not available";
+        if (coordinate != null) {
+            if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
+            } else {
+                currentLat = coordinate.latitude;
+                currentLng = coordinate.longitude;
+                new AsyncTask<Void, Void, String>() {
+                    @Override
+                    protected String doInBackground(Void... voids) {
+                        try {
+                            List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
+                            if (addresses.size() > 0) {
+                                return addresses.get(0).getAddressLine(0);
                             }
-                            return null;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            return "Error: Geocoder service not available";
                         }
+                        return null;
+                    }
 
-                        @Override
-                        protected void onPostExecute(String address) {
-                            if (address != null) {
-                                binding.changeLoc.setText(address);
-                            }
+                    @Override
+                    protected void onPostExecute(String address) {
+                        if (address != null) {
                         }
-                    }.execute();
-                }
-            });
+                    }
+                }.execute();
+            }
+        } else {
+            if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
+            } else {
+                fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                    if (location != null) {
+                        currentLat = location.getLatitude();
+                        currentLng = location.getLongitude();
+                        new AsyncTask<Void, Void, String>() {
+                            @Override
+                            protected String doInBackground(Void... voids) {
+                                try {
+                                    List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
+                                    if (addresses.size() > 0) {
+                                        return addresses.get(0).getAddressLine(0);
+                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    return "Error: Geocoder service not available";
+                                }
+                                return null;
+                            }
+
+                            @Override
+                            protected void onPostExecute(String address) {
+                                if (address != null) {
+                                }
+                            }
+                        }.execute();
+                    }
+                });
+            }
         }
     }
 
@@ -262,8 +292,13 @@ public class ItineraryFragment extends Fragment {
                             Log.d(TAG, "Place Name: " + placeName);
                             String url = "" + snapshot.child("url").getValue();
                             getLastKnownLocation(location -> {
-                                currentLat = location.getLatitude();
-                                currentLng = location.getLongitude();
+                                if (coordinate != null) {
+                                    currentLat = coordinate.latitude;
+                                    currentLng = coordinate.longitude;
+                                } else {
+                                    currentLat = location.getLatitude();
+                                    currentLng = location.getLongitude();
+                                }
                                 float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
                                 Log.d(TAG, "Distance: " + distance);
                                 calculateDuration(currentLat, currentLng, placeLat, placeLng, (durationText) -> {
