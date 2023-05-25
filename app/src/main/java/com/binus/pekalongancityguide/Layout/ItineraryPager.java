@@ -198,7 +198,7 @@ public class ItineraryPager extends Fragment {
             dialog.dismiss();
             setupViewPagerAdapter(viewPager);
             tabLayout.setupWithViewPager(viewPager);
-            Toast.makeText(getContext(), "Date Saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),R.string.data_saved, Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -36,9 +36,11 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
+import com.binus.pekalongancityguide.Layout.Home;
 import com.binus.pekalongancityguide.Layout.ItineraryList;
 import com.binus.pekalongancityguide.Misc.AlphaTransformation;
 import com.binus.pekalongancityguide.Misc.MyApplication;
+import com.binus.pekalongancityguide.Misc.ToastUtils;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.DialogAddToItineraryBinding;
 import com.bumptech.glide.Glide;
@@ -126,6 +128,43 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                     Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     context.startActivity(webIntent);
                 }
+            }
+        });
+    }
+    private void updateItinerary(String date, String startTime, String endTime) {
+        String uid = FirebaseAuth.getInstance().getUid();
+        HashMap<String,Object> hashMap =new HashMap<>();
+        hashMap.put("date",""+date);
+        hashMap.put("startTime",""+startTime);
+        hashMap.put("endTime",""+endTime);
+        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
+        reference.child(uid).child("itinerary").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot itinerarySnapshot : snapshot.getChildren()) {
+                    String destiId = itinerarySnapshot.child("destiId").getValue(String.class);
+                    if (destiId.equals(destiID)) {
+                        DatabaseReference itineraryRef = itinerarySnapshot.getRef();
+                        itineraryRef.child("date").setValue(date);
+                        itineraryRef.child("startTime").setValue(startTime);
+                        itineraryRef.child("endTime").setValue(endTime)
+                                .addOnSuccessListener(aVoid -> {
+                                    ItineraryList itineraryList1 = new ItineraryList();
+                                    Toast.makeText(context, R.string.iterUpdateSuccess, Toast.LENGTH_LONG).show();
+//                                    context.startActivity(new Intent(context, Home.class));
+                                    AppCompatActivity appCompatActivity = (AppCompatActivity) context;
+                                    FragmentManager fragmentManager = appCompatActivity.getSupportFragmentManager();
+                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                    fragmentTransaction.replace(R.id.container,itineraryList1);
+                                    fragmentTransaction.commit();
+                                }).addOnFailureListener(e -> {
+                                    Toast.makeText(context,context.getString(R.string.iterFailUpdate) + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }
@@ -250,7 +289,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                                 startTime = "";
                                 endTime = "";
                                 openingHours = "Closed";
-                                Toast.makeText(context, "Opening hours not available", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context,context.getString(R.string.justnotAvail), Toast.LENGTH_SHORT).show();
                                 openHours.add(startTime);
                                 closeHours.add(endTime);
                             } else {
@@ -266,18 +305,18 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                                         openHours.add(startTimeSlot);
                                         closeHours.add(endTimeSlot);
                                     } else {
-                                        Toast.makeText(context, "Invalid time slot: " + slot, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context,R.string.invalidTimeSlot + slot, Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             }
                         } else {
-                            Toast.makeText(context, "Invalid opening hours format", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, R.string.invalid_opening_format, Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         startTime = "";
                         endTime = "";
                         openingHours = "Closed";
-                        Toast.makeText(context, "Opening hours not available", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,context.getString(R.string.justnotAvail), Toast.LENGTH_SHORT).show();
                         openHours.add(startTime);
                         closeHours.add(endTime);
                     }
@@ -287,9 +326,9 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                     startTime = "12:00 AM";
                     endTime = "11:59 PM";
                     openingHours = "Not Found";
-                    Toast.makeText(context, "Opening hours data not found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context,context.getString(R.string.data_not_found), Toast.LENGTH_SHORT).show();
                     new Handler().postDelayed(() -> {
-                        Toast.makeText(context, "Allowing any time to be selected", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,context.getString(R.string.allowAnyTime), Toast.LENGTH_SHORT).show();
                         openHours.add(startTime);
                         closeHours.add(endTime);
                     }, 2000);
@@ -305,46 +344,41 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
     private void showStartTimer() {
         startEt.setText("");
         if (openHours.isEmpty()) {
-            // Handle the case when opening hours data is not available
-            Toast.makeText(context, "Opening hours data is not available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,context.getString(R.string.data_not_found), Toast.LENGTH_SHORT).show();
             return;
         }
-
-        // Custom dialog layout
         LayoutInflater inflater = LayoutInflater.from(context);
         View customView = inflater.inflate(R.layout.dialog_custom_title, null);
         TextView dialogRealTitle = customView.findViewById(R.id.dialog_title);
         TextView dialogTitle = customView.findViewById(R.id.dialog_subtitle);
         ViewGroup timePickerContainer = customView.findViewById(R.id.time_picker_container);
-        dialogRealTitle.setText("Select start time");
+        dialogRealTitle.setText(R.string.select_start_time_iter);
 
         String dialogTitleText = String.format(Locale.getDefault(), "Opening Hour: %s", openingHours);
         dialogTitle.setText(dialogTitleText);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setView(customView)
-                .setNegativeButton("Cancel", null);
+                .setNegativeButton(R.string.cancel_opt, null);
 
         // Use a single TimePicker
         TimePicker timePicker = new TimePicker(new ContextThemeWrapper(context, R.style.TimePickerStyle));
-        timePicker.setIs24HourView(false); // Set the desired time format
+        timePicker.setIs24HourView(false);
 
         timePickerContainer.addView(timePicker);
 
         builder.setPositiveButton("OK", (dialogInterface, which) -> {
-            int selectedHour = timePicker.getCurrentHour(); // Retrieve the selected hour
-            int selectedMinute = timePicker.getCurrentMinute(); // Retrieve the selected minute
+            int selectedHour = timePicker.getCurrentHour();
+            int selectedMinute = timePicker.getCurrentMinute();
 
             boolean withinOpeningHours = false;
-
             // Check if the selected time is within any of the opening and closing hour/minute ranges
             for (int i = 0; i < openHours.size(); i++) {
                 String openingTime = openHours.get(i);
                 String closingTime = closeHours.get(i);
 
                 if (openingTime == null || closingTime == null) {
-                    // Handle the case when opening or closing time is null
-                    Toast.makeText(context, "Opening hours data is not available", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context,context.getString(R.string.data_not_found), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -392,8 +426,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                 endEt.setEnabled(true);
                 endBtn.setEnabled(true);
             } else {
-                // If the selected time is outside all opening and closing hour/minute ranges, show an error message
-                Toast.makeText(context, "Selected time is outside business hours", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,context.getString(R.string.outside_business), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -404,35 +437,32 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
     private void showEndTimer() {
         endEt.setText("");
         if (openHours.isEmpty()) {
-            // Handle the case when opening hours data is not available
-            Toast.makeText(context, "Opening hours data is not available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,context.getString(R.string.data_not_found), Toast.LENGTH_SHORT).show();
             return;
         }
-
-        // Custom dialog layout
         LayoutInflater inflater = LayoutInflater.from(context);
         View customView = inflater.inflate(R.layout.dialog_custom_title, null);
         TextView dialogRealTitle = customView.findViewById(R.id.dialog_title);
         TextView dialogTitle = customView.findViewById(R.id.dialog_subtitle);
         ViewGroup timePickerContainer = customView.findViewById(R.id.time_picker_container);
-        dialogRealTitle.setText("Select end time");
+        dialogRealTitle.setText(R.string.select_end_time_iter);
 
         String dialogTitleText = String.format(Locale.getDefault(), "Opening Hour: %s", openingHours);
         dialogTitle.setText(dialogTitleText);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setView(customView)
-                .setNegativeButton("Cancel", null);
+                .setNegativeButton(R.string.cancel_opt, null);
 
         // Use a single TimePicker
         TimePicker timePicker = new TimePicker(new ContextThemeWrapper(context, R.style.TimePickerStyle));
-        timePicker.setIs24HourView(false); // Set the desired time format
+        timePicker.setIs24HourView(false);
 
         timePickerContainer.addView(timePicker);
 
         builder.setPositiveButton("OK", (dialogInterface, which) -> {
-            int selectedHour = timePicker.getCurrentHour(); // Retrieve the selected hour
-            int selectedMinute = timePicker.getCurrentMinute(); // Retrieve the selected minute
+            int selectedHour = timePicker.getCurrentHour();
+            int selectedMinute = timePicker.getCurrentMinute();
 
             boolean withinOpeningHours = false;
 
@@ -442,8 +472,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                 String closingTime = closeHours.get(i);
 
                 if (openingTime == null || closingTime == null) {
-                    // Handle the case when opening or closing time is null
-                    Toast.makeText(context, "Opening hours data is not available", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context,context.getString(R.string.data_not_found), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -486,7 +515,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                 }
             } else {
                 // If the selected time is outside all opening and closing hour/minute ranges, show an error message
-                Toast.makeText(context, "Selected time is outside business hours", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,context.getString(R.string.outside_business), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -496,18 +525,15 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
 
     private int convertTo24HourFormat(String time) {
         if (time == null) {
-            // Handle the case when the time is null
-            return 0; // Or any other default value that makes sense in your context
+            return 0;
         }
-
         String[] parts = time.split(":");
         if (parts.length < 2) {
             // Handle the case when the time doesn't have the expected format
-            return 0; // Or any other default value that makes sense in your context
+            return 0;
         }
 
         int hour = Integer.parseInt(parts[0]);
-
         if (parts[1].contains(" ")) {
             String amPm = parts[1].split(" ")[1];
             if (amPm.equalsIgnoreCase("PM") && hour != 12) {
@@ -516,7 +542,6 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                 hour = 0;
             }
         }
-
         return hour;
     }
 
@@ -524,7 +549,6 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         date = dateEt.getText().toString().trim();
         startTime = startTimeEt.getText().toString().trim();
         endTime = endTimeEt.getText().toString().trim();
-
         boolean allFieldsFilled = true;
 
         if (TextUtils.isEmpty(date)) {
@@ -551,61 +575,20 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         if (allFieldsFilled) {
             dialog.dismiss();
             updateItinerary(date, startTime, endTime);
-            Toast.makeText(context, "itinerary updated", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.itinerary_updated, Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void updateItinerary(String date, String startTime, String endTime) {
-        String uid = FirebaseAuth.getInstance().getUid();
-        HashMap<String,Object> hashMap =new HashMap<>();
-        hashMap.put("date",""+date);
-        hashMap.put("startTime",""+startTime);
-        hashMap.put("endTime",""+endTime);
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
-        reference.child(uid).child("itinerary").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot itinerarySnapshot : snapshot.getChildren()) {
-                    String destiId = itinerarySnapshot.child("destiId").getValue(String.class);
-                    if (destiId.equals(destiID)) {
-                        DatabaseReference itineraryRef = itinerarySnapshot.getRef();
-                        itineraryRef.child("date").setValue(date);
-                        itineraryRef.child("startTime").setValue(startTime);
-                        itineraryRef.child("endTime").setValue(endTime)
-                                .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(context, "Itinerary updated successfully", Toast.LENGTH_LONG).show();
-                                }).addOnFailureListener(e -> {
-                                    Toast.makeText(context, "Failed to update itinerary: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                });
-                    }
-                }
-                openItineraryListFragment();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-    }
-
-    private void openItineraryListFragment() {
-        AppCompatActivity appCompatActivity = (AppCompatActivity) context;
-        FragmentManager fragmentManager = appCompatActivity.getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.container, new ItineraryList());
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
 
 
-    private String getMyLocation() {
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((Activity) context,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MAPS_PERMIT);
-            return null;
+    private String getMyLocation(){
+    LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+    if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+        ActivityCompat.requestPermissions((Activity) context,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                MAPS_PERMIT);
+        return null;
     } else {
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location != null) {

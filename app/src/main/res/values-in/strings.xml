@@ -174,7 +174,7 @@
     <string name="delete_confirmation">Konfirmasi</string>
     <string name="error_news">Gagal mengambil berita karena</string>
     <string name="empty_bookmark">Penanda Kosong</string>
-    <string name="add_itinerary">Add Itinerary</string>
+    <string name="add_itinerary">Tambah Itinerari</string>
     <string name="choose_location">Pilih Lokasi</string>
     <string name="your_location">Lokasi anda</string>
     <string name="use_current_location">Gunakan lokasi sekarang</string>
@@ -190,5 +190,37 @@
     <string name="noMyapp">Tidak</string>
     <string name="iter_notdeleted">Itinerari tidak dihapus</string>
     <string name="set_location">Atur lokasi</string>
+    <string name="select_start_date">pilih tanggal mulai</string>
+    <string name="select_end_date">Pilih tanggal akhir</string>
+    <string name="add_date">Tambah tanggal</string>
+    <string name="data_saved">Tanggal disimpan</string>
+    <string name="item_selected">" "item dipilih</string>
+    <string name="items_selected">" "item dipilih</string>
+    <string name="pick_start">Pilih lokasi awal</string>
+    <string name="below_are">Di bawah ini tempat-tempat terdekat dari lokasi sekarang</string>
+    <string name="pick_next">Pilih lokasi selanjutnya</string>
+    <string name="place_near_to">Di bawah ini tempat-tempat terdekat dari </string>
+    <string name="next_txt">Berikutnya</string>
+    <string name="pick_aPlace">Tolong pilih tempat</string>
+    <string name="not_found">Tidak ditemukan</string>
+    <string name="forty5_minute">45 menit - 2 jam</string>
+    <string name="based_on">Subjektif dan menurut keinginan pribadi</string>
+    <string name="one_two_hour">1 - 2 jam</string>
+    <string name="depend_onNeeds">Sangat tergantung kebutuhan</string>
+    <string name="thirty_oneHour">30 menit - 1 jam</string>
+    <string name="thirty2Hour">30 menit - 2 jam</string>
+    <string name="pickTheTime">Pilih waktu</string>
+    <string name="rekomen_time">Rekomendasi waktu:" "</string>
+    <string name="data_not_found">Data jam buka tidak ditemukan</string>
+    <string name="allowAnyTime">Dapat memilih jam berapapun</string>
+    <string name="outside_business">Waktu yang dipilih diluar jam kerja</string>
+    <string name="justnotAvail">Jam buka tidak tersedia</string>
+    <string name="invalidTimeSlot">Slot waktu salah" "</string>
+    <string name="invalid_opening_format">Format jam buka salah</string>
+    <string name="itinerary_updated">Itinerari diubah</string>
+    <string name="iterUploadSuccess">Itinerari berhasil diunggah</string>
+    <string name="failIterUpload">Gagal mengunggah itinerari karena</string>
+    <string name="iterUpdateSuccess">Itinerari berhasil diubah</string>
+    <string name="iterFailUpdate">Gagal merubah itinerari karena</string>
 
 </resources>

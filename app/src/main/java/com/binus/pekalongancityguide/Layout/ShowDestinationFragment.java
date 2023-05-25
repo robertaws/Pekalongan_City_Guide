@@ -325,6 +325,12 @@ public class ShowDestinationFragment extends Fragment {
             binding.changeLoc.setText(addressString);
             dialog.dismiss();
             updateDistances();
+            DestinationPager pager = new DestinationPager();
+            AppCompatActivity appCompatActivity = (AppCompatActivity) getContext();
+            FragmentManager fragmentManager = appCompatActivity.getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container,pager);
+            fragmentTransaction.commit();
             if (coordinate != null) {
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString("lastLatitude", String.valueOf(coordinate.latitude));
