@@ -40,7 +40,7 @@
                 android:textColorHint="@color/palette_2"
                 android:layout_height="wrap_content"
                 android:textColor="@color/palette_1"
-                android:hint="Select start date"
+                android:hint="@string/select_start_date"
                 android:fontFamily="@font/poppins_regular"
                 android:focusable="false"
                 android:layout_toStartOf="@id/start_picker_btn"
@@ -63,7 +63,7 @@
                 android:textColorHint="@color/palette_2"
                 android:layout_height="wrap_content"
                 android:textColor="@color/palette_1"
-                android:hint="Select end date"
+                android:hint="@string/select_end_date"
                 android:fontFamily="@font/poppins_regular"
                 android:focusable="false"
                 android:layout_toStartOf="@id/end_picker_btn"
@@ -87,7 +87,7 @@
                 android:fontFamily="@font/poppins_semibold"
                 android:layout_below="@id/end_date_et"
                 android:textColor="@color/palette_4"
-                android:text="add date" />
+                android:text="@string/add_date" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </layout>

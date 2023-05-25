@@ -180,11 +180,11 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
         selectedItemsInitialSize = selectedItems.size();
         dialogCount++;
         if (dialogCount == 1) {
-            title = "Pick starting location";
-            subtitle = "Below are the places nearest to your current location";
+            title = getString(R.string.pick_start);
+            subtitle = getString(R.string.below_are);
         } else {
-            title = "Pick the next location";
-            subtitle = "Below are the places nearest to " + selectedItemName;
+            title = getString(R.string.pick_next);
+            subtitle = getString(R.string.place_near_to) + selectedItemName;
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -212,7 +212,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         addBtn.setLayoutParams(layoutParams);
 
-        addBtn.setText("Next");
+        addBtn.setText(R.string.next_txt);
         titleText.setText(title);
         subtitleText.setText(subtitle);
 
@@ -236,7 +236,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                 dialog.dismiss();
                 showTimePickerDialog();
             } else {
-                ToastUtils.showToast(getContext(), "Please pick a place", Toast.LENGTH_SHORT);
+                ToastUtils.showToast(getContext(), getString(R.string.pick_aPlace), Toast.LENGTH_SHORT);
             }
         });
 
@@ -368,24 +368,24 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
         endEt.setOnClickListener(v -> showEndTimer());
 
         if (placeCategory.equals("1680077442322")) {
-            subtitle = "30 Minutes - 2 Hour";
+            subtitle = getString(R.string.thirty2Hour);
         } else if (placeCategory.equals("1680077753090") || placeCategory.equals("1681812366209")) {
-            subtitle = "30 Minutes - 1 Hour";
+            subtitle = getString(R.string.thirty_oneHour);
         } else if (placeCategory.equals("1680166171816") || placeCategory.equals("1681807033132")) {
-            subtitle = "Vary depend on needs";
+            subtitle = getString(R.string.depend_onNeeds);
         } else if (placeCategory.equals("1680167384847") || placeCategory.equals("1681811119599")) {
-            subtitle = "1 Hour - 2 Hour";
+            subtitle = getString(R.string.one_two_hour);
         } else if (placeCategory.equals("1682060935295") || placeCategory.equals("1680077486439")) {
-            subtitle = "Subjective and can vary based on personal preferences";
+            subtitle = getString(R.string.based_on);
         } else if (placeCategory.equals("1682061580514")) {
-            subtitle = "45 Minutes - 2 Hour";
+            subtitle = getString(R.string.forty5_minute);
         } else {
-            subtitle = "Not Found";
+            subtitle = getString(R.string.not_found);
         }
 
-        addBtn.setText("Add to Itinerary");
-        titleText.setText("Pick the time");
-        subtitleText.setText("Recommended time: " + subtitle);
+        addBtn.setText(getString(R.string.add_to_itinerary_btn));
+        titleText.setText(R.string.pickTheTime);
+        subtitleText.setText(getString(R.string.rekomen_time) + subtitle);
 
         dialog = builder.create();
         dialog.setOnDismissListener(dialog1 -> {
@@ -443,7 +443,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                                 startTime = "";
                                 endTime = "";
                                 openingHours = "Closed";
-                                ToastUtils.showToast(getContext(), "Opening hours not available", Toast.LENGTH_SHORT);
+                                ToastUtils.showToast(getContext(), getString(R.string.justnotAvail), Toast.LENGTH_SHORT);
                                 openHours.add(startTime);
                                 closeHours.add(endTime);
                             } else {
@@ -459,18 +459,18 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                                         openHours.add(startTimeSlot);
                                         closeHours.add(endTimeSlot);
                                     } else {
-                                        ToastUtils.showToast(getContext(), "Invalid time slot: " + slot, Toast.LENGTH_SHORT);
+                                        ToastUtils.showToast(getContext(), getString(R.string.invalidTimeSlot) + slot, Toast.LENGTH_SHORT);
                                     }
                                 }
                             }
                         } else {
-                            ToastUtils.showToast(getContext(), "Invalid opening hours format", Toast.LENGTH_SHORT);
+                            ToastUtils.showToast(getContext(), getString(R.string.invalid_opening_format), Toast.LENGTH_SHORT);
                         }
                     } else {
                         startTime = "";
                         endTime = "";
                         openingHours = "Closed";
-                        ToastUtils.showToast(getContext(), "Opening hours not available", Toast.LENGTH_SHORT);
+                        ToastUtils.showToast(getContext(),getString(R.string.justnotAvail), Toast.LENGTH_SHORT);
                         openHours.add(startTime);
                         closeHours.add(endTime);
                     }
@@ -480,9 +480,9 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                     startTime = "12:00 AM";
                     endTime = "11:59 PM";
                     openingHours = "Not Found";
-                    ToastUtils.showToast(getContext(), "Opening hours data not found", Toast.LENGTH_SHORT);
+                    ToastUtils.showToast(getContext(), getString(R.string.data_not_found), Toast.LENGTH_SHORT);
                     new Handler().postDelayed(() -> {
-                        ToastUtils.showToast(getContext(), "Allowing any time to be selected", Toast.LENGTH_SHORT);
+                        ToastUtils.showToast(getContext(), getString(R.string.allowAnyTime), Toast.LENGTH_SHORT);
                         openHours.add(startTime);
                         closeHours.add(endTime);
                     }, 2000);
@@ -541,7 +541,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
     private void showStartTimer() {
         startEt.setText("");
         if (openHours.isEmpty()) {
-            ToastUtils.showToast(getContext(), "Opening hours data is not available", Toast.LENGTH_SHORT);
+            ToastUtils.showToast(getContext(),getString(R.string.data_not_found), Toast.LENGTH_SHORT);
             return;
         }
 
@@ -550,14 +550,14 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
         TextView dialogRealTitle = customView.findViewById(R.id.dialog_title);
         TextView dialogTitle = customView.findViewById(R.id.dialog_subtitle);
         ViewGroup timePickerContainer = customView.findViewById(R.id.time_picker_container);
-        dialogRealTitle.setText("Select start time");
+        dialogRealTitle.setText(R.string.select_start_time_iter);
 
         String dialogTitleText = String.format(Locale.getDefault(), "Opening Hour: %s", openingHours);
         dialogTitle.setText(dialogTitleText);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                 .setView(customView)
-                .setNegativeButton("Cancel", null);
+                .setNegativeButton(R.string.cancel_opt, null);
 
         TimePicker timePicker = new TimePicker(new ContextThemeWrapper(getContext(), R.style.TimePickerStyle));
         timePicker.setIs24HourView(false);
@@ -575,7 +575,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                 String closingTime = closeHours.get(i);
 
                 if (openingTime == null || closingTime == null) {
-                    ToastUtils.showToast(getContext(), "Opening hours data is not available", Toast.LENGTH_SHORT);
+                    ToastUtils.showToast(getContext(), getString(R.string.data_not_found), Toast.LENGTH_SHORT);
                     return;
                 }
 
@@ -619,7 +619,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                 endEt.setEnabled(true);
                 endBtn.setEnabled(true);
             } else {
-                ToastUtils.showToast(getContext(), "Selected time is outside business hours", Toast.LENGTH_SHORT);
+                ToastUtils.showToast(getContext(), getString(R.string.outside_business), Toast.LENGTH_SHORT);
             }
         });
 
@@ -630,7 +630,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
     private void showEndTimer() {
         endEt.setText("");
         if (openHours.isEmpty()) {
-            ToastUtils.showToast(getContext(), "Opening hours data is not available", Toast.LENGTH_SHORT);
+            ToastUtils.showToast(getContext(),getString(R.string.data_not_found), Toast.LENGTH_SHORT);
             return;
         }
 
@@ -639,14 +639,14 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
         TextView dialogRealTitle = customView.findViewById(R.id.dialog_title);
         TextView dialogTitle = customView.findViewById(R.id.dialog_subtitle);
         ViewGroup timePickerContainer = customView.findViewById(R.id.time_picker_container);
-        dialogRealTitle.setText("Select end time");
+        dialogRealTitle.setText(R.string.select_end_time_iter);
 
         String dialogTitleText = String.format(Locale.getDefault(), "Opening Hour: %s", openingHours);
         dialogTitle.setText(dialogTitleText);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                 .setView(customView)
-                .setNegativeButton("Cancel", null);
+                .setNegativeButton(R.string.cancel_opt, null);
 
         TimePicker timePicker = new TimePicker(new ContextThemeWrapper(getContext(), R.style.TimePickerStyle));
         timePicker.setIs24HourView(false);
@@ -664,7 +664,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                 String closingTime = closeHours.get(i);
 
                 if (openingTime == null || closingTime == null) {
-                    ToastUtils.showToast(getContext(), "Opening hours data is not available", Toast.LENGTH_SHORT);
+                    ToastUtils.showToast(getContext(),getString(R.string.data_not_found), Toast.LENGTH_SHORT);
                     return;
                 }
 
@@ -702,8 +702,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                     endEt.setText(String.format(Locale.getDefault(), "%d:%02d PM", endHour - 12, endMinute));
                 }
             } else {
-
-                ToastUtils.showToast(getContext(), "Selected time is outside business hours", Toast.LENGTH_SHORT);
+                ToastUtils.showToast(getContext(),getString(R.string.outside_business), Toast.LENGTH_SHORT);
             }
         });
 
@@ -853,14 +852,14 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                 addIter.setVisibility(View.INVISIBLE);
             } else if (selectedItems.size() == 1) {
                 counter = selectedItems.size();
-                selectTv.setText(counter + " item selected");
-                addIter.setText("Add to itinerary");
+                selectTv.setText(counter + getString(R.string.item_selected));
+                addIter.setText(getString(R.string.add_to_itinerary_btn));
                 addIter.setVisibility(View.VISIBLE);
                 selectLayout.setVisibility(View.VISIBLE);
             } else {
                 counter = selectedItems.size();
-                selectTv.setText(counter + " items selected");
-                addIter.setText("Add to itinerary");
+                selectTv.setText(counter + getString(R.string.items_selected));
+                addIter.setText(getString(R.string.add_to_itinerary_btn));
                 addIter.setVisibility(View.VISIBLE);
                 selectLayout.setVisibility(View.VISIBLE);
             }
@@ -900,7 +899,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
         if (allFieldsFilled) {
             dialog.dismiss();
             uploadToDB(placeDate, startTime, endTime);
-            ToastUtils.showToast(getContext(), "itinerary updated", Toast.LENGTH_SHORT);
+            ToastUtils.showToast(getContext(), getString(R.string.itinerary_updated), Toast.LENGTH_SHORT);
         }
     }
 
@@ -931,10 +930,10 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                         .addOnSuccessListener(aVoid -> {
                             selectedItems.remove(selectedItemIndex);
                             handleSelectedItem(selectedItems);
-                            ToastUtils.showToast(getContext(), "Itinerary uploaded successfully", Toast.LENGTH_LONG);
+                            ToastUtils.showToast(getContext(), getString(R.string.iterUploadSuccess), Toast.LENGTH_LONG);
                         })
                         .addOnFailureListener(e -> {
-                            ToastUtils.showToast(getContext(), "Data upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT);
+                            ToastUtils.showToast(getContext(), getString(R.string.failIterUpload) + e.getMessage(), Toast.LENGTH_SHORT);
                             Log.d(TAG, "on Failure: " + e.getMessage());
                         });
             }

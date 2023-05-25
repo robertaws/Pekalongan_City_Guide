@@ -25,9 +25,12 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
@@ -322,6 +325,12 @@ public class ShowDestinationFragment extends Fragment {
             binding.changeLoc.setText(addressString);
             dialog.dismiss();
             updateDistances();
+            DestinationPager pager = new DestinationPager();
+            AppCompatActivity appCompatActivity = (AppCompatActivity) getContext();
+            FragmentManager fragmentManager = appCompatActivity.getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container,pager);
+            fragmentTransaction.commit();
             if (coordinate != null) {
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString("lastLatitude", String.valueOf(coordinate.latitude));
