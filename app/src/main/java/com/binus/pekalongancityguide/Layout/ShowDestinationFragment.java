@@ -105,6 +105,7 @@ public class ShowDestinationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         geocoder = new Geocoder(getContext(), Locale.getDefault());
         if(getArguments()!=null){
             categoryId = getArguments().getString("categoryId");

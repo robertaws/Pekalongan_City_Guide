@@ -162,4 +162,18 @@
     <string name="geocoderNotAvail">Error: Geocoder service not available</string>
     <string name="somePermissions">Some permissions are not granted</string>
     <string name="errorNews">\"Error fetching news articles: \"</string>
+    <string name="enterCat">Please enter a category!</string>
+    <string name="hasAdded">\" has already been added!\"</string>
+    <string name="addingCat">Adding category...</string>
+    <string name="catSuccess">Category Added Successfully!</string>
+    <string name="cancelPickImage">Cancelled pick image</string>
+    <string name="pickCate">Pick Category</string>
+    <string name="uploadImageSuccess">Image uploaded successfully</string>
+    <string name="uploadingImage">Uploading image info</string>
+    <string name="failedFetch">Failed to fetch image</string>
+    <string name="youWantGallery">Do you want to add an image from the gallery?</string>
+    <string name="uploadingImagedialog">Uploading image</string>
+    <string name="noLocFound">No location found for the given title</string>
+    <string name="alreadyAddedPlace">This place has already been added.</string>
+    <string name="enterDestiTitle">Enter destination title!</string>
 </resources>

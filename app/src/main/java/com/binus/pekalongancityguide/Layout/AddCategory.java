@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityAddCategoryBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -45,7 +46,7 @@ public class AddCategory extends AppCompatActivity {
     private void validateData() {
         category = binding.categoryEt.getText().toString().trim();
         if(TextUtils.isEmpty(category)){
-            Toast.makeText(this, "Please enter a category!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.enterCat, Toast.LENGTH_SHORT).show();
         }else{
             DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Categories");
             Query query = reference.orderByChild("category");
@@ -61,7 +62,7 @@ public class AddCategory extends AppCompatActivity {
                         }
                     }
                     if (categoryExists) {
-                        Toast.makeText(AddCategory.this, category + " has already been added!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddCategory.this, category + getString(R.string.hasAdded), Toast.LENGTH_SHORT).show();
                     } else {
                         addCategoryFirebase();
                     }
@@ -76,7 +77,7 @@ public class AddCategory extends AppCompatActivity {
 
 
     private void addCategoryFirebase() {
-        dialog.setMessage("Adding category...");
+        dialog.setMessage(getString(R.string.addingCat));
         dialog.show();
         long timestamp = System.currentTimeMillis();
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -91,7 +92,7 @@ public class AddCategory extends AppCompatActivity {
                 .addOnSuccessListener(unused -> {
                     dialog.dismiss();
                     onBackPressed();
-                    Toast.makeText(AddCategory.this, "Category Added Successfully!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddCategory.this,R.string.catSuccess, Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
                     dialog.dismiss();

@@ -105,7 +105,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
         holder.unBookmark.setOnClickListener(v ->{
             AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
             builder.setTitle(R.string.remove_bookmark);
-            builder.setMessage(R.string.remove_confirm);
+            builder.setMessage(R.string.delete_item);
             builder.setPositiveButton(R.string.yes_txt, (dialog, which) -> MyApplication.removeFavorite(context, destination.getId(), FirebaseAuth.getInstance().getUid()));
             builder.setNegativeButton(R.string.no_txt, (dialog, which) -> dialog.dismiss());
             AlertDialog dialog = builder.create();

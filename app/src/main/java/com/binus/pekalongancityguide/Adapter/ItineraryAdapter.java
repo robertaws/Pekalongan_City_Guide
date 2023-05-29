@@ -151,7 +151,6 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                                 .addOnSuccessListener(aVoid -> {
                                     ItineraryList itineraryList1 = new ItineraryList();
                                     Toast.makeText(context, R.string.iterUpdateSuccess, Toast.LENGTH_LONG).show();
-//                                    context.startActivity(new Intent(context, Home.class));
                                     AppCompatActivity appCompatActivity = (AppCompatActivity) context;
                                     FragmentManager fragmentManager = appCompatActivity.getSupportFragmentManager();
                                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

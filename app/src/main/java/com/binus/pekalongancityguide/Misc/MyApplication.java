@@ -50,7 +50,7 @@ public class MyApplication extends Application {
     public static void deleteIter(Context context, String destiId, ItineraryAdapter adapter, int position){
         String uid = FirebaseAuth.getInstance().getUid();
         String TAG = "DELETE_ITER_TAG";
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.AlertDialogTheme);
         builder.setTitle(R.string.confirm_delete);
         builder.setMessage(R.string.delete_item);
         builder.setPositiveButton(R.string.yes_myapp, (dialogInterface, i) -> {
@@ -92,7 +92,7 @@ public class MyApplication extends Application {
     }
     public static void deleteDesti(Context context, String destiId, String destiUrl, String destiTitle) {
         String TAG = "DELETE_DESTI_TAG";
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.AlertDialogTheme);
         builder.setTitle("Confirm Delete");
         builder.setMessage("Are you sure you want to delete " + destiTitle + "?");
         builder.setPositiveButton("Yes", (dialogInterface, i) -> {

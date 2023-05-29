@@ -79,7 +79,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.HolderCo
     private String editComment="";
     private void editComment(Comments comments, HolderComment holder){
         DialogEditCommentBinding commentBinding = DialogEditCommentBinding.inflate(LayoutInflater.from(context));
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.AlertDialogTheme);
         builder.setView(commentBinding.getRoot());
         AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
@@ -117,7 +117,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.HolderCo
     }
 
     private void deleteComment(Comments comments, HolderComment holder) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.AlertDialogTheme);
         builder.setTitle(R.string.delete_comment)
                 .setMessage(R.string.delete_confirm)
                 .setPositiveButton(R.string.delete_opt, new DialogInterface.OnClickListener() {

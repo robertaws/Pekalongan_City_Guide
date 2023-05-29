@@ -86,7 +86,7 @@ public class AddDestination extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         loadCategory();
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Please wait");
+        progressDialog.setTitle(R.string.wait);
         progressDialog.setCanceledOnTouchOutside(false);
 
         binding.backtoAdmin.setOnClickListener(v -> onBackPressed());
@@ -106,9 +106,9 @@ public class AddDestination extends AppCompatActivity {
         desc = binding.descEt.getText().toString().trim();
         FindAutocompletePredictionsRequest request;
         if (TextUtils.isEmpty(title)) {
-            binding.titleEt.setError("Enter destination title!");
+            binding.titleEt.setError(getString(R.string.enterDestiTitle));
         } else if (TextUtils.isEmpty(selectedCategoryTitle)) {
-            binding.categoryPick.setError("Pick a category!");
+            binding.categoryPick.setError(getString(R.string.edit_pick_category));
         } else{
             placesClient = Places.createClient(this);
             List<Place.Field> placeFields = Arrays.asList(
@@ -139,7 +139,7 @@ public class AddDestination extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()) {
                                 progressDialog.dismiss();
-                                Toast.makeText(AddDestination.this, "This place has already been added.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddDestination.this,R.string.alreadyAddedPlace, Toast.LENGTH_SHORT).show();
                             } else {
                                 String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" + MAPS_API_KEY;
                                 FetchPlaceRequest placeRequest = FetchPlaceRequest.builder(placeId, placeFields).build();
@@ -199,7 +199,7 @@ public class AddDestination extends AppCompatActivity {
                         }
                     });
                 } else {
-                    Toast.makeText(this, "No location found for the given title", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.noLocFound, Toast.LENGTH_SHORT).show();
                 }
             });
             task.addOnFailureListener(e -> {
@@ -210,7 +210,7 @@ public class AddDestination extends AppCompatActivity {
     }
     private void uploadtoStorage(String placeId, String address, double lat, double lng, double rating, JSONArray reviews, String phoneNumber, List<String> weekday, Place place) {
         Log.d(TAG, "uploadtoStorage : uploading to storage");
-        progressDialog.setMessage("Uploading image");
+        progressDialog.setMessage(getString(R.string.uploadingImagedialog));
         progressDialog.show();
         long timestamp = System.currentTimeMillis();
         String filePathandName = "Destination/" + timestamp;
@@ -255,12 +255,12 @@ public class AddDestination extends AppCompatActivity {
                 }).addOnFailureListener(exception -> {
                     Log.e(TAG, "Failed to fetch image, asking user to add an image from the gallery");
                     new AlertDialog.Builder(AddDestination.this)
-                            .setTitle("Failed to fetch image")
-                            .setMessage("Do you want to add an image from the gallery?")
-                            .setPositiveButton("Yes", (dialog, which) -> {
+                            .setTitle(R.string.failedFetch)
+                            .setMessage(R.string.youWantGallery)
+                            .setPositiveButton(R.string.yes_txt, (dialog, which) -> {
                                 addPhoto();
                             })
-                            .setNegativeButton("No", (dialog, which) -> {
+                            .setNegativeButton(R.string.no_txt, (dialog, which) -> {
                                 this.imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.logo);
                                 Glide.with(AddDestination.this)
                                         .load(this.imageUri)
@@ -279,12 +279,12 @@ public class AddDestination extends AppCompatActivity {
             } else {
                 Log.e(TAG, "Failed to fetch image, asking user to add an image from the gallery");
                 new AlertDialog.Builder(AddDestination.this)
-                        .setTitle("Failed to fetch image")
-                        .setMessage("Do you want to add an image from the gallery?")
-                        .setPositiveButton("Yes", (dialog, which) -> {
+                        .setTitle(R.string.failedFetch)
+                        .setMessage(R.string.youWantGallery)
+                        .setPositiveButton(R.string.yes_txt, (dialog, which) -> {
                             addPhoto();
                         })
-                        .setNegativeButton("No", (dialog, which) -> {
+                        .setNegativeButton(R.string.no_txt, (dialog, which) -> {
                             this.imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.logo);
                             Glide.with(AddDestination.this)
                                     .load(this.imageUri)
@@ -317,7 +317,7 @@ public class AddDestination extends AppCompatActivity {
 
     private void uploadtoDB(String uploadedImageUrl, long timestamp, String placeId, String address, double desLat, double desLong, double rating, JSONArray reviews, String phoneNumber, List<String> weekday) {
         Log.d(TAG, "uploadtoDB : uploading image to firebase DB");
-        progressDialog.setMessage("Uploading image info");
+        progressDialog.setMessage(getString(R.string.uploadingImage));
         String uid = firebaseAuth.getUid();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("uid", "" + uid);
@@ -356,7 +356,7 @@ public class AddDestination extends AppCompatActivity {
                 .setValue(hashMap)
                 .addOnSuccessListener(aVoid -> {
                     progressDialog.dismiss();
-                    Toast.makeText(getApplicationContext(), "Image uploaded successfully", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),R.string.uploadImageSuccess, Toast.LENGTH_LONG).show();
                 })
                 .addOnFailureListener(e -> {
                     progressDialog.dismiss();
@@ -403,8 +403,8 @@ public class AddDestination extends AppCompatActivity {
         for (int i = 0; i < categoriesTitleArrayList.size(); i++) {
             categoryArray[i] = categoriesTitleArrayList.get(i);
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Pick Category")
+        AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
+        builder.setTitle(getString(R.string.pickCate))
                 .setItems(categoryArray, (dialog, which) -> {
                     selectedCategoryTitle = categoriesTitleArrayList.get(which);
                     selectedCategoryId = categoryIdArrayList.get(which);
@@ -436,7 +436,7 @@ public class AddDestination extends AppCompatActivity {
                     .into(binding.addPicture);
         } else {
             Log.d(TAG, "onActivityResult : Cancelled pick image");
-            Toast.makeText(this, "Cancelled pick image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,R.string.cancelPickImage, Toast.LENGTH_SHORT).show();
         }
     }
 

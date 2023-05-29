@@ -224,5 +224,18 @@
     <string name="iterFailUpdate">Gagal merubah rencana perjalanan karena</string>
     <string name="geocoderNotAvail">Servis geocoder tidak tersedia</string>
     <string name="somePermissions">Beberapa akses tidak disetujui</string>
-
+    <string name="enterCat">Masukkan kategori!</string>
+    <string name="hasAdded">" "telah ditambahkan!"</string>
+    <string name="addingCat">Menambah kategori...</string>
+    <string name="catSuccess">Kategori berhasil ditambahkan!</string>
+    <string name="cancelPickImage">Batal memilih gambar</string>
+    <string name="pickCate">Pilih Kategori</string>
+    <string name="uploadImageSuccess">Gambar berhasil diunggah</string>
+    <string name="uploadingImage">Mengunggah info gambar</string>
+    <string name="failedFetch">Gagal mengambil gambar</string>
+    <string name="youWantGallery">Apakah anda ingin mengambil gambar dari galeri?</string>
+    <string name="uploadingImagedialog">Mengunggah gambar</string>
+    <string name="noLocFound">Nama Lokasi tidak ditemukan</string>
+    <string name="alreadyAddedPlace">Lokasi telah ditambahkan</string>
+    <string name="enterDestiTitle">Masukkan nama destinasi!</string>
 </resources>
