@@ -342,6 +342,7 @@ public class AddDestination extends AppCompatActivity {
                 reviewMap.put("authorName", review.getString("author_name"));
                 reviewMap.put("rating", review.getInt("rating"));
                 reviewMap.put("text", review.getString("text"));
+                reviewMap.put("destiId", timestamp);
                 reviewsList.add(reviewMap);
             } catch (JSONException e) {
                 e.printStackTrace();
