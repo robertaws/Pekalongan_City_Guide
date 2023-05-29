@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -177,9 +178,11 @@ public class ItineraryFragment extends Fragment {
     }
 
     private void initializeAddress() {
+        Context context = getContext();
+        Resources resources = getResources();
         if (coordinate != null) {
-            if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (context != null && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
             } else {
                 currentLat = coordinate.latitude;
@@ -194,7 +197,7 @@ public class ItineraryFragment extends Fragment {
                             }
                         } catch (IOException e) {
                             e.printStackTrace();
-                            return "Error: Geocoder service not available";
+                            return resources.getString(R.string.geocoderNotAvail);
                         }
                         return null;
                     }
@@ -207,8 +210,8 @@ public class ItineraryFragment extends Fragment {
                 }.execute();
             }
         } else {
-            if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (context != null && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
             } else {
                 fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
@@ -225,7 +228,7 @@ public class ItineraryFragment extends Fragment {
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();
-                                    return getString(R.string.geocoderNotAvail);
+                                    return resources.getString(R.string.geocoderNotAvail);
                                 }
                                 return null;
                             }

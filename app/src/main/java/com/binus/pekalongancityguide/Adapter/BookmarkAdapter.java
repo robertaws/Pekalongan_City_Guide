@@ -28,6 +28,7 @@ import com.binus.pekalongancityguide.Misc.FilterBookmark;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ListFavoriteBinding;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -105,9 +106,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
             AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
             builder.setTitle(R.string.remove_bookmark);
             builder.setMessage(R.string.remove_confirm);
-            builder.setPositiveButton(R.string.yes_txt, (dialog, which) -> {
-                MyApplication.removeFavorite(context,destination.getId());
-            });
+            builder.setPositiveButton(R.string.yes_txt, (dialog, which) -> MyApplication.removeFavorite(context, destination.getId(), FirebaseAuth.getInstance().getUid()));
             builder.setNegativeButton(R.string.no_txt, (dialog, which) -> dialog.dismiss());
             AlertDialog dialog = builder.create();
             dialog.show();
