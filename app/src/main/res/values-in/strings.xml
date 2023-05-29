@@ -217,10 +217,12 @@
     <string name="justnotAvail">Jam buka tidak tersedia</string>
     <string name="invalidTimeSlot">Slot waktu salah" "</string>
     <string name="invalid_opening_format">Format jam buka salah</string>
-    <string name="itinerary_updated">Itinerari diubah</string>
-    <string name="iterUploadSuccess">Itinerari berhasil diunggah</string>
-    <string name="failIterUpload">Gagal mengunggah itinerari karena</string>
+    <string name="itinerary_updated">rencana perjalanan diubah</string>
+    <string name="iterUploadSuccess">rencana perjalanan berhasil diunggah</string>
+    <string name="failIterUpload">Gagal mengunggah rencana perjalanan karena</string>
     <string name="iterUpdateSuccess">Itinerari berhasil diubah</string>
-    <string name="iterFailUpdate">Gagal merubah itinerari karena</string>
+    <string name="iterFailUpdate">Gagal merubah rencana perjalanan karena</string>
+    <string name="geocoderNotAvail">Servis geocoder tidak tersedia</string>
+    <string name="somePermissions">Beberapa akses tidak disetujui</string>
 
 </resources>

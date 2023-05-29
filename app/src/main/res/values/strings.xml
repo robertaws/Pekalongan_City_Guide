@@ -222,4 +222,6 @@
     <string name="failIterUpload">\"Itinerary upload failed due to \"</string>
     <string name="iterUpdateSuccess">Itinerary updated successfully</string>
     <string name="iterFailUpdate">\"Failed to update itinerary: \"</string>
+    <string name="geocoderNotAvail">Error: Geocoder service not available</string>
+    <string name="somePermissions">Some permissions are not granted</string>
 </resources>

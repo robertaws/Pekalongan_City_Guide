@@ -88,7 +88,7 @@ public class Splash extends AppCompatActivity {
             if (allPermissionsGranted) {
                 new Handler().postDelayed(() -> checkUser(), 3000);
             } else {
-                Toast.makeText(this, "Some permissions are not granted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.somePermissions, Toast.LENGTH_SHORT).show();
                 new Handler().postDelayed(() -> checkUser(), 3000);
             }
         }

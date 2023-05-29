@@ -225,7 +225,7 @@ public class ItineraryFragment extends Fragment {
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();
-                                    return "Error: Geocoder service not available";
+                                    return getString(R.string.geocoderNotAvail);
                                 }
                                 return null;
                             }

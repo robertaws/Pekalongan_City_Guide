@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import com.binus.pekalongancityguide.R;
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 
-public class Home extends AppCompatActivity {
+public class Home extends AppCompatActivity{
     private static final int home = 1;
     HomeFragment homeFragment = new HomeFragment();
     DestinationPager destinationPager = new DestinationPager();

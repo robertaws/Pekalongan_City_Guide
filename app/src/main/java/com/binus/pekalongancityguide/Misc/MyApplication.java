@@ -132,7 +132,7 @@ public class MyApplication extends Application {
         dialog.show();
     }
 
-    public static void addtoFavorite(Context context, String destiId){
+    public static void addtoFavorite(Context context, String destiId, String uid){
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         if(firebaseAuth.getCurrentUser() == null){
             Toast.makeText(context,R.string.notLogin, Toast.LENGTH_SHORT).show();
@@ -141,6 +141,7 @@ public class MyApplication extends Application {
             HashMap<String,Object> hashMap = new HashMap<>();
             hashMap.put("destiId",destiId);
             hashMap.put("timestamp",timestamp);
+            hashMap.put("uid",uid);
             DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Users");
             reference.child(firebaseAuth.getUid()).child("Favorites").child(destiId)
                     .setValue(hashMap)
@@ -148,7 +149,7 @@ public class MyApplication extends Application {
                     .addOnFailureListener(e -> Toast.makeText(context, "Failed to Added favorites due to" + e.getMessage(), Toast.LENGTH_SHORT).show());
         }
     }
-    public static void removeFavorite(Context context, String destiId){
+    public static void removeFavorite(Context context, String destiId,String uid){
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         if(firebaseAuth.getCurrentUser()==null){
             Toast.makeText(context,R.string.notLogin, Toast.LENGTH_SHORT).show();

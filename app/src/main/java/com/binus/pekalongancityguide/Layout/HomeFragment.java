@@ -85,26 +85,26 @@ public class HomeFragment extends Fragment {
         Date dateBefore30Days = cal.getTime();
         String dateString = dateFormat.format(dateBefore30Days);
 
-//        EverythingRequest everythingRequest = new EverythingRequest.Builder()
-//                .q("jawa tengah")
-//                .language("id")
-//                .from(dateString)
-//                .to(String.valueOf(new Date()))
-//                .sortBy("publishedAt")
-//                .build();
-//        newsApiClient.getEverything(everythingRequest, new NewsApiClient.ArticlesResponseCallback() {
-//            @Override
-//            public void onSuccess(ArticleResponse response) {
-//                List<Article> articles = response.getArticles();
-//                NewsAdapter newsAdapter = new NewsAdapter(articles);
-//                newsRV.setAdapter(newsAdapter);
-//            }
-//            @Override
-//            public void onFailure(Throwable throwable){
-//                Toast.makeText(getContext(),getString(R.string.error_news)+throwable.getMessage(), Toast.LENGTH_SHORT).show();
-//                Log.e("NewsAPI", "Error fetching news articles: " + throwable.getMessage());
-//            }
-//        });
+        EverythingRequest everythingRequest = new EverythingRequest.Builder()
+                .q("jawa tengah")
+                .language("id")
+                .from(dateString)
+                .to(String.valueOf(new Date()))
+                .sortBy("publishedAt")
+                .build();
+        newsApiClient.getEverything(everythingRequest, new NewsApiClient.ArticlesResponseCallback() {
+            @Override
+            public void onSuccess(ArticleResponse response) {
+                List<Article> articles = response.getArticles();
+                NewsAdapter newsAdapter = new NewsAdapter(articles);
+                newsRV.setAdapter(newsAdapter);
+            }
+            @Override
+            public void onFailure(Throwable throwable){
+                Toast.makeText(getContext(),getString(R.string.error_news)+throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("NewsAPI",getString(R.string.error_news) + throwable.getMessage());
+            }
+        });
         return view;
     }
 }

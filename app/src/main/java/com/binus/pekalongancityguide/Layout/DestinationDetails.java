@@ -101,9 +101,9 @@ public class DestinationDetails extends AppCompatActivity {
                 Toast.makeText(DestinationDetails.this,R.string.notLogin, Toast.LENGTH_SHORT).show();
             } else {
                 if (inFavorite) {
-                    MyApplication.removeFavorite(DestinationDetails.this, destiId);
+                    MyApplication.removeFavorite(DestinationDetails.this, destiId,firebaseAuth.getUid());
                 } else {
-                    MyApplication.addtoFavorite(DestinationDetails.this, destiId);
+                    MyApplication.addtoFavorite(DestinationDetails.this, destiId,firebaseAuth.getUid());
                 }
             }
         });
@@ -387,7 +387,6 @@ public class DestinationDetails extends AppCompatActivity {
                         .child("itinerary");
 
                 String itineraryId = itineraryRef.push().getKey();
-
                 hashMap.put("itineraryId", itineraryId);
 
                 itineraryRef.child(itineraryId).setValue(hashMap)
