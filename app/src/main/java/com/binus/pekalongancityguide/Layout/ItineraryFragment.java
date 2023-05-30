@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -175,6 +176,14 @@ public class ItineraryFragment extends Fragment {
             fragmentTransaction.commit();
         });
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        loadItinerary(selectedDate);
+        updateUI(itineraryList);
     }
 
     private void initializeAddress() {
@@ -370,7 +379,7 @@ public class ItineraryFragment extends Fragment {
                 }
             });
         }
-        ItineraryAdapter adapter = new ItineraryAdapter(getContext(), itineraryList, getParentFragmentManager());
+        ItineraryAdapter adapter = new ItineraryAdapter(getContext(), itineraryList, getChildFragmentManager());
         binding.itineraryRv.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
