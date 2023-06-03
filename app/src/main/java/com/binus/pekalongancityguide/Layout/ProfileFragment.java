@@ -90,7 +90,7 @@ public class ProfileFragment extends Fragment {
             logoutConfirm();
         });
         binding.editLang.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.CustomAlertDialogTheme);
             builder.setTitle(R.string.select_language)
                     .setItems(new CharSequence[]{getString(R.string.english_opt), getString(R.string.indo_opt)}, (dialog, which) -> {
                         Locale newLocale;

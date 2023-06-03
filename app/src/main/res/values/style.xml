@@ -4,16 +4,26 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">20%</item>
     </style>
+
     <style name="circleImage">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+
     <style name="AlertDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:textColorPrimary">@color/palette_1</item>
     </style>
+
     <style name="CustomAutoCompleteTheme" parent="Theme.AppCompat.Light">
         <item name="android:textColor">@color/palette_1</item>
     </style>
 
-
+    <style name="CustomAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@color/palette_4</item>
+        <item name="android:colorBackground">@color/palette_4</item>
+        <item name="android:colorPrimary">@color/palette_4</item>
+        <item name="android:colorAccent">@color/palette_4</item>
+        <item name="android:textColorPrimary">@color/palette_1</item>
+        <item name="android:textColorSecondary">@color/palette_1</item>
+    </style>
 </resources>
