@@ -175,15 +175,14 @@ public class ItineraryFragment extends Fragment {
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         });
+        updateUI(itineraryList);
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         loadItinerary(selectedDate);
-        updateUI(itineraryList);
     }
 
     private void initializeAddress() {
