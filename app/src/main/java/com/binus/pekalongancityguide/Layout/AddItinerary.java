@@ -483,9 +483,9 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
                     ToastUtils.showToast(getContext(), getString(R.string.data_not_found), Toast.LENGTH_SHORT);
                     new Handler().postDelayed(() -> {
                         ToastUtils.showToast(getContext(), getString(R.string.allowAnyTime), Toast.LENGTH_SHORT);
-                        openHours.add(startTime);
-                        closeHours.add(endTime);
                     }, 2000);
+                    openHours.add(startTime);
+                    closeHours.add(endTime);
                 }
                 Log.d(TAG, destination.getTitle() + " OPENING HOURS: " + openingHours);
                 destination.setOpen(openingHours == null || !openingHours.equals("Closed"));
@@ -658,51 +658,52 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
             int selectedMinute = timePicker.getCurrentMinute();
 
             boolean withinOpeningHours = false;
+            String errorMessage = null;
 
             for (int i = 0; i < openHours.size(); i++) {
                 String openingTime = openHours.get(i);
                 String closingTime = closeHours.get(i);
 
                 if (openingTime == null || closingTime == null) {
-                    ToastUtils.showToast(getContext(),getString(R.string.data_not_found), Toast.LENGTH_SHORT);
-                    return;
+                    errorMessage = getString(R.string.data_not_found);
+                    break;
                 }
 
                 int closingHour = convertTo24HourFormat(closingTime);
                 int closingMinute = Integer.parseInt(closingTime.split(":")[1].split(" ")[0]);
 
-                if (closingHour < startHour || (closingHour == startHour && closingMinute < startMinute)) {
-                    if (selectedHour > startHour || (selectedHour == startHour && selectedMinute >= startMinute)) {
-                        withinOpeningHours = true;
-                        break;
+                if ((closingHour < startHour || (closingHour == startHour && closingMinute < startMinute))
+                        || (selectedHour > closingHour || (selectedHour == closingHour && selectedMinute > closingMinute))
+                        || (selectedHour < startHour || (selectedHour == startHour && selectedMinute < startMinute))) {
+                    withinOpeningHours = false;
+                    if (selectedHour < startHour || (selectedHour == startHour && selectedMinute < startMinute)) {
+                        errorMessage = "End time can't be earlier than the start time.";
+                    } else {
+                        errorMessage = getString(R.string.outside_business);
                     }
-                    if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
-                        withinOpeningHours = true;
-                        break;
-                    }
+                    break;
                 } else {
-                    if (selectedHour > startHour || (selectedHour == startHour && selectedMinute >= startMinute)) {
-                        if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
-                            withinOpeningHours = true;
-                            break;
-                        }
-                    }
+                    withinOpeningHours = true;
                 }
             }
 
-            if (withinOpeningHours) {
-                endHour = selectedHour;
-                endMinute = selectedMinute;
-
-                if (endHour < 12) {
-                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d AM", endHour, endMinute));
-                } else if (endHour == 12) {
-                    endEt.setText(String.format(Locale.getDefault(), "12:%02d PM", endMinute));
-                } else {
-                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d PM", endHour - 12, endMinute));
-                }
+            if (errorMessage != null) {
+                ToastUtils.showToast(getContext(), errorMessage, Toast.LENGTH_SHORT);
             } else {
-                ToastUtils.showToast(getContext(),getString(R.string.outside_business), Toast.LENGTH_SHORT);
+                if (withinOpeningHours) {
+                    endHour = selectedHour;
+                    endMinute = selectedMinute;
+
+                    if (endHour < 12) {
+                        endEt.setText(String.format(Locale.getDefault(), "%d:%02d AM", endHour, endMinute));
+                    } else if (endHour == 12) {
+                        endEt.setText(String.format(Locale.getDefault(), "12:%02d PM", endMinute));
+                    } else {
+                        endEt.setText(String.format(Locale.getDefault(), "%d:%02d PM", endHour - 12, endMinute));
+                    }
+                } else {
+                    ToastUtils.showToast(getContext(), getString(R.string.outside_business), Toast.LENGTH_SHORT);
+                }
             }
         });
 

@@ -5,12 +5,20 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,10 +32,10 @@ import com.binus.pekalongancityguide.ItemTemplate.OpeningHours;
 import com.binus.pekalongancityguide.ItemTemplate.Review;
 import com.binus.pekalongancityguide.Misc.ImageFullscreen;
 import com.binus.pekalongancityguide.Misc.MyApplication;
+import com.binus.pekalongancityguide.Misc.ToastUtils;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityDestinationDetailsBinding;
 import com.binus.pekalongancityguide.databinding.DialogAddCommentBinding;
-import com.binus.pekalongancityguide.databinding.DialogAddToItineraryBinding;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,8 +43,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.timepicker.MaterialTimePicker;
-import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,6 +50,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,33 +63,45 @@ import java.util.Map;
 import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 
 public class DestinationDetails extends AppCompatActivity {
+    private String categoryId, date, startDate, openingHours, startTime, endTime, subtitle;
+    private int startHour, startMinute, endHour, endMinute, startYear, startMonth, startDay;
     String imageUrl;
+    private final List<String> openHours = new ArrayList<>();
+    private final List<String> closeHours = new ArrayList<>();
     private ActivityDestinationDetailsBinding binding;
     String destiId;
+    private LinearLayout containerLayout;
+    private SimpleDateFormat format;
+    private EditText startEt, endEt, dateEt;
+    private ImageButton startBtn, endBtn, dateBtn;
+    private Calendar calendar;
+    private AlertDialog dialog;
     boolean inFavorite = false;
     FirebaseAuth firebaseAuth;
+    private FirebaseDatabase database;
     private ArrayList<Comments> commentsArrayList;
     private CommentAdapter commentAdapter;
     private static final String TAG = "REVIEW_TAG";
     private ProgressDialog progressDialog;
-    private int startHour,startMinute,startHour1,startMinute1
-            ,endHour,endMinute,endHour1,endMinute1
-            ,dayDate,monthDate,yearDate,dayDate1,monthDate1,yearDate1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityDestinationDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         Intent intent = getIntent();
+        calendar = Calendar.getInstance();
+        format = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
         destiId = intent.getStringExtra("destiId");
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle(getString(R.string.please_wait));
         progressDialog.setCanceledOnTouchOutside(false);
+        database = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() != null) {
             checkFavorite();
         }
-        if(firebaseAuth.getCurrentUser()==null) {
+        if (firebaseAuth.getCurrentUser() == null) {
             binding.addCommentBtn.setVisibility(View.INVISIBLE);
         }
         loadDetails();
@@ -179,158 +198,400 @@ public class DestinationDetails extends AppCompatActivity {
     }
     private void showAddItineraryDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        DialogAddToItineraryBinding addToItineraryBinding = DialogAddToItineraryBinding.inflate(getLayoutInflater());
-        builder.setView(addToItineraryBinding.getRoot());
-        EditText dateEt,startEt,endEt;
-        ImageButton dateBtn,startBtn,endBtn;
-        Button addItinerary;
-        dateEt = addToItineraryBinding.dateEt;
-        startEt = addToItineraryBinding.starttimeEt;
-        endEt = addToItineraryBinding.endtimeEt;
-        dateBtn = addToItineraryBinding.datepickerBtn;
-        startBtn = addToItineraryBinding.startpickerBtn;
-        endBtn = addToItineraryBinding.endpickerBtn;
-        addItinerary = addToItineraryBinding.additineraryBtn;
 
-        startBtn.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            startHour = calendar.get(Calendar.HOUR_OF_DAY);
-            startMinute = calendar.get(Calendar.MINUTE);
-            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()
-                    .setTimeFormat(TimeFormat.CLOCK_12H)
-                    .setHour(startHour)
-                    .setMinute(startMinute)
-                    .setTitleText("Select start time")
-                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);
-            MaterialTimePicker dialog = mybuilder.build();
-            dialog.addOnPositiveButtonClickListener(timeview -> {
-                startHour = dialog.getHour();
-                startMinute = dialog.getMinute();
-                if (startHour < 12) {
-                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d am", startHour, startMinute));
-                } else if (startHour == 12) {
-                    startEt.setText(String.format(Locale.getDefault(), "12:%02d pm", startMinute));
-                } else {
-                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", startHour - 12, startMinute));
-                }
-            });
-            dialog.show(getSupportFragmentManager(), "startTimePicker");
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_input_details, null);
+        builder.setView(view);
+
+        containerLayout = view.findViewById(R.id.container_layout);
+        RelativeLayout timePickerLayout = view.findViewById(R.id.time_picker_container);
+        Button addBtn = view.findViewById(R.id.add_iter_button);
+        TextView titleText = view.findViewById(R.id.dialog_title);
+        TextView subtitleText = view.findViewById(R.id.dialog_subtitle);
+
+        containerLayout.setVisibility(View.GONE);
+        timePickerLayout.setVisibility(View.VISIBLE);
+
+        RelativeLayout.LayoutParams pickerLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        pickerLayoutParams.addRule(RelativeLayout.BELOW, subtitleText.getId());
+        timePickerLayout.setLayoutParams(pickerLayoutParams);
+
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.addRule(RelativeLayout.BELOW, timePickerLayout.getId());
+        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        addBtn.setLayoutParams(layoutParams);
+
+        dateEt = view.findViewById(R.id.date_et);
+        startEt = view.findViewById(R.id.starttime_et);
+        endEt = view.findViewById(R.id.endtime_et);
+        dateBtn = view.findViewById(R.id.datepicker_btn);
+        startBtn = view.findViewById(R.id.startpicker_btn);
+        endBtn = view.findViewById(R.id.endpicker_btn);
+
+        startBtn.setEnabled(false);
+        startEt.setEnabled(false);
+        endBtn.setEnabled(false);
+        endEt.setEnabled(false);
+
+        dateBtn.setOnClickListener(v -> showCalendar());
+        dateEt.setOnClickListener(v -> showCalendar());
+        startBtn.setOnClickListener(v -> showStartTimer());
+        startEt.setOnClickListener(v -> showStartTimer());
+        endBtn.setOnClickListener(v -> showEndTimer());
+        endEt.setOnClickListener(v -> showEndTimer());
+
+        if (categoryId.equals("1680077442322")) {
+            subtitle = getString(R.string.thirty2Hour);
+        } else if (categoryId.equals("1680077753090") || categoryId.equals("1681812366209")) {
+            subtitle = getString(R.string.thirty_oneHour);
+        } else if (categoryId.equals("1680166171816") || categoryId.equals("1681807033132")) {
+            subtitle = getString(R.string.depend_onNeeds);
+        } else if (categoryId.equals("1680167384847") || categoryId.equals("1681811119599")) {
+            subtitle = getString(R.string.one_two_hour);
+        } else if (categoryId.equals("1682060935295") || categoryId.equals("1680077486439")) {
+            subtitle = getString(R.string.based_on);
+        } else if (categoryId.equals("1682061580514")) {
+            subtitle = getString(R.string.forty5_minute);
+        } else {
+            subtitle = getString(R.string.not_found);
+        }
+
+        addBtn.setText(getString(R.string.add_to_itinerary_btn));
+        titleText.setText(R.string.pickTheTime);
+        subtitleText.setText(getString(R.string.rekomen_time) + subtitle);
+
+        dialog = builder.create();
+        dialog.setOnDismissListener(dialog1 -> {
+            openHours.clear();
+            closeHours.clear();
         });
-        startEt.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            startHour1 = calendar.get(Calendar.HOUR_OF_DAY);
-            startMinute1 = calendar.get(Calendar.MINUTE);
-            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()
-                    .setTimeFormat(TimeFormat.CLOCK_12H)
-                    .setHour(startHour1)
-                    .setMinute(startMinute1)
-                    .setTitleText("Select start time")
-                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);
-            MaterialTimePicker dialog = mybuilder.build();
-            dialog.addOnPositiveButtonClickListener(timeview -> {
-                startHour1 = dialog.getHour();
-                startMinute1 = dialog.getMinute();
-                if (startHour1 < 12) {
-                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d am", startHour1, startMinute1));
-                } else if (startHour1 == 12) {
-                    startEt.setText(String.format(Locale.getDefault(), "12:%02d pm", startMinute1));
-                } else {
-                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", startHour1 - 12, startMinute1));
-                }
-            });
-            dialog.show(getSupportFragmentManager(), "startTimePicker");
-        });
-        endBtn.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            endHour = calendar.get(Calendar.HOUR_OF_DAY);
-            endMinute = calendar.get(Calendar.MINUTE);
-            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()
-                    .setTimeFormat(TimeFormat.CLOCK_12H)
-                    .setHour(endHour)
-                    .setMinute(endMinute)
-                    .setTitleText("Select start time")
-                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);
-            MaterialTimePicker dialog = mybuilder.build();
-            dialog.addOnPositiveButtonClickListener(timeview -> {
-                endHour = dialog.getHour();
-                endMinute = dialog.getMinute();
-                if (endHour < 12) {
-                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d am", endHour, endMinute));
-                } else if (endHour == 12) {
-                    endEt.setText(String.format(Locale.getDefault(), "12:%02d pm", endMinute));
-                } else {
-                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", endHour - 12, endMinute));
-                }
-            });
-            dialog.show(getSupportFragmentManager(), "startTimePicker");
-        });
-        endEt.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            endHour1 = calendar.get(Calendar.HOUR_OF_DAY);
-            endMinute1 = calendar.get(Calendar.MINUTE);
-            MaterialTimePicker.Builder mybuilder = new MaterialTimePicker.Builder()
-                    .setTimeFormat(TimeFormat.CLOCK_12H)
-                    .setHour(endHour1)
-                    .setMinute(endMinute1)
-                    .setTitleText("Select start time")
-                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK);
-            MaterialTimePicker dialog = mybuilder.build();
-            dialog.addOnPositiveButtonClickListener(timeview -> {
-                endHour1 = dialog.getHour();
-                endMinute1 = dialog.getMinute();
-                if (endHour1 < 12) {
-                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d am", endHour1, endMinute1));
-                } else if (endHour1 == 12) {
-                    endEt.setText(String.format(Locale.getDefault(), "12:%02d pm", endMinute1));
-                } else {
-                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d pm", endHour1 - 12, endMinute1));
-                }
-            });
-            dialog.show(getSupportFragmentManager(), "startTimePicker");
-        });
-        dateBtn.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            yearDate = calendar.get(Calendar.YEAR);
-            monthDate = calendar.get(Calendar.MONTH);
-            dayDate = calendar.get(Calendar.DAY_OF_MONTH);
-            DatePickerDialog dialog;
-            dialog = new DatePickerDialog(this, (dateView, year, month, dayOfMonth) -> {
-                yearDate = year;
-                monthDate = month;
-                dayDate = dayOfMonth;
-                SimpleDateFormat format = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
-                String dateString = format.format(new Date(yearDate - 1900, monthDate, dayDate));
-                dateEt.setText(dateString);
-            }, yearDate, monthDate, dayDate);
-            dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);
-            dialog.show();
-        });
-        dateEt.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            yearDate1 = calendar.get(Calendar.YEAR);
-            monthDate1 = calendar.get(Calendar.MONTH);
-            dayDate1 = calendar.get(Calendar.DAY_OF_MONTH);
-            DatePickerDialog dialog;
-            dialog = new DatePickerDialog(this, (dateView, year, month, dayOfMonth) -> {
-                yearDate1 = year;
-                monthDate1 = month;
-                dayDate1 = dayOfMonth;
-                SimpleDateFormat format = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
-                String dateString = format.format(new Date(yearDate1 - 1900, monthDate1, dayDate1));
-                dateEt.setText(dateString);
-            }, yearDate1, monthDate1, dayDate1);
-            dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);
-            dialog.show();
-        });
-        addItinerary.setOnClickListener(v ->{
-            validateData(dateEt, startEt, endEt);
-        });
-        AlertDialog dialog = builder.create();
-        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
+        addBtn.setOnClickListener(v -> validateData(dateEt, startEt, endEt));
+
         dialog.show();
     }
 
-    private String date = "", startTime = "", endTime = "";
+    private void getDateOfWeek() {
+        try {
+            Date startDateObj = format.parse(date);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(startDateObj);
+            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+            getOpeningHours(dayOfWeek);
+            openHours.clear();
+            closeHours.clear();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getOpeningHours(int dayOfWeek) {
+        DatabaseReference openingHoursRef = database.getReference("Destination");
+        openingHoursRef.child(destiId).child("openingHours").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                openHours.clear();
+                closeHours.clear();
+                int newDoW = dayOfWeek - 2;
+                if (newDoW == -1) {
+                    newDoW = 6;
+                }
+                if (dataSnapshot.exists()) {
+                    openingHours = dataSnapshot.child(String.valueOf(newDoW)).getValue(String.class);
+                    Log.d(TAG, "CHECK DAY: " + (newDoW));
+                    Log.d(TAG, "OPENING HOURS: " + openingHours);
+
+                    if (openingHours != null) {
+                        String[] parts = openingHours.split(": ");
+                        if (parts.length == 2) {
+                            String timeRange = parts[1];
+
+                            if (timeRange.equals("Open 24 hours")) {
+                                startTime = "12:00 AM";
+                                endTime = "11:59 PM";
+                                openHours.add(startTime);
+                                closeHours.add(endTime);
+                            } else if (timeRange.equals("Closed")) {
+                                startTime = "";
+                                endTime = "";
+                                openingHours = "Closed";
+                                ToastUtils.showToast(DestinationDetails.this, getString(R.string.justnotAvail), Toast.LENGTH_SHORT);
+                                openHours.add(startTime);
+                                closeHours.add(endTime);
+                            } else {
+                                String[] timeSlots = timeRange.split(", ");
+
+                                for (String slot : timeSlots) {
+                                    String[] times = slot.split(" – ");
+
+                                    if (times.length == 2) {
+                                        String startTimeSlot = times[0];
+                                        String endTimeSlot = times[1];
+
+                                        openHours.add(startTimeSlot);
+                                        closeHours.add(endTimeSlot);
+                                    } else {
+                                        ToastUtils.showToast(DestinationDetails.this, getString(R.string.invalidTimeSlot) + slot, Toast.LENGTH_SHORT);
+                                    }
+                                }
+                            }
+                        } else {
+                            ToastUtils.showToast(DestinationDetails.this, getString(R.string.invalid_opening_format), Toast.LENGTH_SHORT);
+                        }
+                    } else {
+                        startTime = "";
+                        endTime = "";
+                        openingHours = "Closed";
+                        ToastUtils.showToast(DestinationDetails.this, getString(R.string.justnotAvail), Toast.LENGTH_SHORT);
+                        openHours.add(startTime);
+                        closeHours.add(endTime);
+                    }
+                    Log.d(TAG, "Open hour: " + openHours);
+                    Log.d(TAG, "Close hour: " + closeHours);
+                } else {
+                    startTime = "12:00 AM";
+                    endTime = "11:59 PM";
+                    openingHours = "Not Found";
+                    ToastUtils.showToast(DestinationDetails.this, getString(R.string.data_not_found), Toast.LENGTH_SHORT);
+                    new Handler().postDelayed(() -> {
+                        ToastUtils.showToast(DestinationDetails.this, getString(R.string.allowAnyTime), Toast.LENGTH_SHORT);
+                    }, 2000);
+                    openHours.add(startTime);
+                    closeHours.add(endTime);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void showCalendar() {
+        dateEt.setText("");
+        startYear = calendar.get(Calendar.YEAR);
+        startMonth = calendar.get(Calendar.MONTH);
+        startDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dialog = new DatePickerDialog(DestinationDetails.this, (dateView, year, month, dayOfMonth) -> {
+            startYear = year;
+            startMonth = month;
+            startDay = dayOfMonth;
+            calendar.set(startYear, startMonth, startDay);
+
+            SimpleDateFormat format = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
+            startDate = format.format(calendar.getTime());
+            Log.d(TAG, "showCalendar: " + startDate);
+            dateEt.setText(startDate);
+            startBtn.setEnabled(true);
+            startEt.setEnabled(true);
+
+            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+            getOpeningHours(dayOfWeek);
+        }, startYear, startMonth, startDay);
+
+        dialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+
+        dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);
+        dialog.show();
+    }
+
+    private void showStartTimer() {
+        startEt.setText("");
+        if (openHours.isEmpty()) {
+            ToastUtils.showToast(DestinationDetails.this, getString(R.string.data_not_found), Toast.LENGTH_SHORT);
+            return;
+        }
+
+        LayoutInflater inflater = LayoutInflater.from(DestinationDetails.this);
+        View customView = inflater.inflate(R.layout.dialog_custom_title, null);
+        TextView dialogRealTitle = customView.findViewById(R.id.dialog_title);
+        TextView dialogTitle = customView.findViewById(R.id.dialog_subtitle);
+        ViewGroup timePickerContainer = customView.findViewById(R.id.time_picker_container);
+        dialogRealTitle.setText(R.string.select_start_time_iter);
+
+        String dialogTitleText = String.format(Locale.getDefault(), "Opening Hour: %s", openingHours);
+        dialogTitle.setText(dialogTitleText);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(DestinationDetails.this)
+                .setView(customView)
+                .setNegativeButton(R.string.cancel_opt, null);
+
+        TimePicker timePicker = new TimePicker(new ContextThemeWrapper(DestinationDetails.this, R.style.TimePickerStyle));
+        timePicker.setIs24HourView(false);
+
+        timePickerContainer.addView(timePicker);
+
+        builder.setPositiveButton("OK", (dialogInterface, which) -> {
+            int selectedHour = timePicker.getCurrentHour();
+            int selectedMinute = timePicker.getCurrentMinute();
+
+            boolean withinOpeningHours = false;
+
+            for (int i = 0; i < openHours.size(); i++) {
+                String openingTime = openHours.get(i);
+                String closingTime = closeHours.get(i);
+
+                if (openingTime == null || closingTime == null) {
+                    ToastUtils.showToast(DestinationDetails.this, getString(R.string.data_not_found), Toast.LENGTH_SHORT);
+                    return;
+                }
+
+                int openingHour = convertTo24HourFormat(openingTime);
+                int openingMinute = Integer.parseInt(openingTime.split(":")[1].split(" ")[0]);
+
+                int closingHour = convertTo24HourFormat(closingTime);
+                int closingMinute = Integer.parseInt(closingTime.split(":")[1].split(" ")[0]);
+
+                if (closingHour < openingHour || (closingHour == openingHour && closingMinute < openingMinute)) {
+                    if (selectedHour > openingHour || (selectedHour == openingHour && selectedMinute >= openingMinute)) {
+                        withinOpeningHours = true;
+                        break;
+                    }
+                    if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
+                        withinOpeningHours = true;
+                        break;
+                    }
+                } else {
+                    if (selectedHour > openingHour || (selectedHour == openingHour && selectedMinute >= openingMinute)) {
+                        if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
+                            withinOpeningHours = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (withinOpeningHours) {
+                startHour = selectedHour;
+                startMinute = selectedMinute;
+
+                if (startHour < 12) {
+                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d AM", startHour, startMinute));
+                } else if (startHour == 12) {
+                    startEt.setText(String.format(Locale.getDefault(), "12:%02d PM", startMinute));
+                } else {
+                    startEt.setText(String.format(Locale.getDefault(), "%d:%02d PM", startHour - 12, startMinute));
+                }
+
+                endEt.setEnabled(true);
+                endBtn.setEnabled(true);
+            } else {
+                ToastUtils.showToast(DestinationDetails.this, getString(R.string.outside_business), Toast.LENGTH_SHORT);
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void showEndTimer() {
+        endEt.setText("");
+        if (openHours.isEmpty()) {
+            ToastUtils.showToast(DestinationDetails.this, getString(R.string.data_not_found), Toast.LENGTH_SHORT);
+            return;
+        }
+
+        LayoutInflater inflater = LayoutInflater.from(DestinationDetails.this);
+        View customView = inflater.inflate(R.layout.dialog_custom_title, null);
+        TextView dialogRealTitle = customView.findViewById(R.id.dialog_title);
+        TextView dialogTitle = customView.findViewById(R.id.dialog_subtitle);
+        ViewGroup timePickerContainer = customView.findViewById(R.id.time_picker_container);
+        dialogRealTitle.setText(R.string.select_end_time_iter);
+
+        String dialogTitleText = String.format(Locale.getDefault(), "Opening Hour: %s", openingHours);
+        dialogTitle.setText(dialogTitleText);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(DestinationDetails.this)
+                .setView(customView)
+                .setNegativeButton(R.string.cancel_opt, null);
+
+        TimePicker timePicker = new TimePicker(new ContextThemeWrapper(DestinationDetails.this, R.style.TimePickerStyle));
+        timePicker.setIs24HourView(false);
+
+        timePickerContainer.addView(timePicker);
+
+        builder.setPositiveButton("OK", (dialogInterface, which) -> {
+            int selectedHour = timePicker.getCurrentHour();
+            int selectedMinute = timePicker.getCurrentMinute();
+
+            boolean withinOpeningHours = false;
+            String errorMessage = null;
+
+            for (int i = 0; i < openHours.size(); i++) {
+                String openingTime = openHours.get(i);
+                String closingTime = closeHours.get(i);
+
+                if (openingTime == null || closingTime == null) {
+                    errorMessage = getString(R.string.data_not_found);
+                    break;
+                }
+
+                int closingHour = convertTo24HourFormat(closingTime);
+                int closingMinute = Integer.parseInt(closingTime.split(":")[1].split(" ")[0]);
+
+                if ((closingHour < startHour || (closingHour == startHour && closingMinute < startMinute))
+                        || (selectedHour > closingHour || (selectedHour == closingHour && selectedMinute > closingMinute))
+                        || (selectedHour < startHour || (selectedHour == startHour && selectedMinute < startMinute))) {
+                    withinOpeningHours = false;
+                    if (selectedHour < startHour || (selectedHour == startHour && selectedMinute < startMinute)) {
+                        errorMessage = "End time can't be earlier than the start time.";
+                    } else {
+                        errorMessage = getString(R.string.outside_business);
+                    }
+                    break;
+                } else {
+                    withinOpeningHours = true;
+                }
+            }
+
+            if (errorMessage != null) {
+                ToastUtils.showToast(DestinationDetails.this, errorMessage, Toast.LENGTH_SHORT);
+            } else {
+                if (withinOpeningHours) {
+                    endHour = selectedHour;
+                    endMinute = selectedMinute;
+
+                    if (endHour < 12) {
+                        endEt.setText(String.format(Locale.getDefault(), "%d:%02d AM", endHour, endMinute));
+                    } else if (endHour == 12) {
+                        endEt.setText(String.format(Locale.getDefault(), "12:%02d PM", endMinute));
+                    } else {
+                        endEt.setText(String.format(Locale.getDefault(), "%d:%02d PM", endHour - 12, endMinute));
+                    }
+                } else {
+                    ToastUtils.showToast(DestinationDetails.this, getString(R.string.outside_business), Toast.LENGTH_SHORT);
+                }
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private int convertTo24HourFormat(String time) {
+        if (time == null) {
+            return 0;
+        }
+
+        String[] parts = time.split(":");
+        if (parts.length < 2) {
+            return 0;
+        }
+
+        int hour = Integer.parseInt(parts[0]);
+
+        if (parts[1].contains(" ")) {
+            String amPm = parts[1].split(" ")[1];
+            if (amPm.equalsIgnoreCase("PM") && hour != 12) {
+                hour += 12;
+            } else if (amPm.equalsIgnoreCase("AM") && hour == 12) {
+                hour = 0;
+            }
+        }
+
+        return hour;
+    }
 
     private void validateData(EditText dateEt, EditText startTimeEt, EditText endTimeEt) {
         date = dateEt.getText().toString().trim();
@@ -411,7 +672,6 @@ public class DestinationDetails extends AppCompatActivity {
         });
     }
 
-
     private void loadDetails() {
         DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
         reference.keepSynced(true);
@@ -424,6 +684,7 @@ public class DestinationDetails extends AppCompatActivity {
                         String address = "" + snapshot.child("address").getValue();
                         String url = "" + snapshot.child("url").getValue();
                         String phone = "" + snapshot.child("phoneNumber").getValue();
+                        categoryId = "" + snapshot.child("categoryId").getValue();
                         double latitude = Double.parseDouble(snapshot.child("latitude").getValue().toString());
                         double longitude = Double.parseDouble(snapshot.child("longitude").getValue().toString());
                         binding.destiName.setText(title);

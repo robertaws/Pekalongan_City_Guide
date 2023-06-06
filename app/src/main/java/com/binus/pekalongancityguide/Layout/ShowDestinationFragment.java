@@ -225,7 +225,6 @@ public class ShowDestinationFragment extends Fragment {
 
             @Override
             protected void onPostExecute(String address) {
-                // update the location text view in the UI thread
                 if (address != null) {
                     addressString = address;
                     locBinding.locTv.setText(addressString);

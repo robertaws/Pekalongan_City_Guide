@@ -36,7 +36,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
-import com.binus.pekalongancityguide.Layout.Home;
 import com.binus.pekalongancityguide.Layout.ItineraryList;
 import com.binus.pekalongancityguide.Misc.AlphaTransformation;
 import com.binus.pekalongancityguide.Misc.MyApplication;
@@ -176,7 +175,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         builder.setTitle("Choose Options")
                 .setItems(options, (dialog, which) -> {
                     if (which == 0) {
-                        showEditDialog(fragmentManager);
+                        showEditDialog();
                     } else {
                         MyApplication.deleteIter(
                                 context, "" + DESTIID, this, holder.getAdapterPosition()
@@ -186,8 +185,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                 .show();
     }
 
-
-    private void showEditDialog(FragmentManager fragmentManager){
+    private void showEditDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
         calendar = Calendar.getInstance();
@@ -235,7 +233,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             startYear = year;
             startMonth = month;
             startDay = dayOfMonth;
-            calendar.set(startYear, startMonth, startDay); // Set the selected date to the Calendar object
+            calendar.set(startYear, startMonth, startDay);
 
             SimpleDateFormat format = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
             startDate = format.format(calendar.getTime());
@@ -244,14 +242,11 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             startBtn.setEnabled(true);
             startEt.setEnabled(true);
 
-            // Get the day of the week for the selected date
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-            // Retrieve the opening hours for the selected day
             getOpeningHours(dayOfWeek);
         }, startYear, startMonth, startDay);
 
-        // Set the minimum date to today's date
         dialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
 
         dialog.getWindow().setBackgroundDrawableResource(R.color.palette_4);
@@ -360,7 +355,6 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                 .setView(customView)
                 .setNegativeButton(R.string.cancel_opt, null);
 
-        // Use a single TimePicker
         TimePicker timePicker = new TimePicker(new ContextThemeWrapper(context, R.style.TimePickerStyle));
         timePicker.setIs24HourView(false);
 
@@ -371,7 +365,6 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             int selectedMinute = timePicker.getCurrentMinute();
 
             boolean withinOpeningHours = false;
-            // Check if the selected time is within any of the opening and closing hour/minute ranges
             for (int i = 0; i < openHours.size(); i++) {
                 String openingTime = openHours.get(i);
                 String closingTime = closeHours.get(i);
@@ -388,19 +381,17 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                 int closingMinute = Integer.parseInt(closingTime.split(":")[1].split(" ")[0]);
 
                 if (closingHour < openingHour || (closingHour == openingHour && closingMinute < openingMinute)) {
-                    // The business operates into the next day
+
                     if (selectedHour > openingHour || (selectedHour == openingHour && selectedMinute >= openingMinute)) {
-                        // Selected time is after the opening time on the first day
+
                         withinOpeningHours = true;
                         break;
                     }
                     if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
-                        // Selected time is before the closing time on the second day
                         withinOpeningHours = true;
                         break;
                     }
                 } else {
-                    // The business operates within the same day
                     if (selectedHour > openingHour || (selectedHour == openingHour && selectedMinute >= openingMinute)) {
                         if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
                             withinOpeningHours = true;
@@ -453,7 +444,6 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                 .setView(customView)
                 .setNegativeButton(R.string.cancel_opt, null);
 
-        // Use a single TimePicker
         TimePicker timePicker = new TimePicker(new ContextThemeWrapper(context, R.style.TimePickerStyle));
         timePicker.setIs24HourView(false);
 
@@ -464,57 +454,52 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             int selectedMinute = timePicker.getCurrentMinute();
 
             boolean withinOpeningHours = false;
+            String errorMessage = null;
 
-            // Check if the selected time is within any of the opening and closing hour/minute ranges
             for (int i = 0; i < openHours.size(); i++) {
                 String openingTime = openHours.get(i);
                 String closingTime = closeHours.get(i);
 
                 if (openingTime == null || closingTime == null) {
-                    Toast.makeText(context,context.getString(R.string.data_not_found), Toast.LENGTH_SHORT).show();
-                    return;
+                    errorMessage = context.getString(R.string.data_not_found);
+                    break;
                 }
 
                 int closingHour = convertTo24HourFormat(closingTime);
                 int closingMinute = Integer.parseInt(closingTime.split(":")[1].split(" ")[0]);
 
-                if (closingHour < startHour || (closingHour == startHour && closingMinute < startMinute)) {
-                    // The business operates into the next day
-                    if (selectedHour > startHour || (selectedHour == startHour && selectedMinute >= startMinute)) {
-                        // Selected time is after the opening time on the first day
-                        withinOpeningHours = true;
-                        break;
+                if ((closingHour < startHour || (closingHour == startHour && closingMinute < startMinute))
+                        || (selectedHour > closingHour || (selectedHour == closingHour && selectedMinute > closingMinute))
+                        || (selectedHour < startHour || (selectedHour == startHour && selectedMinute < startMinute))) {
+                    withinOpeningHours = false;
+                    if (selectedHour < startHour || (selectedHour == startHour && selectedMinute < startMinute)) {
+                        errorMessage = "End time can't be earlier than the start time.";
+                    } else {
+                        errorMessage = context.getString(R.string.outside_business);
                     }
-                    if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
-                        // Selected time is before the closing time on the second day
-                        withinOpeningHours = true;
-                        break;
-                    }
+                    break;
                 } else {
-                    // The business operates within the same day
-                    if (selectedHour > startHour || (selectedHour == startHour && selectedMinute >= startMinute)) {
-                        if (selectedHour < closingHour || (selectedHour == closingHour && selectedMinute <= closingMinute)) {
-                            withinOpeningHours = true;
-                            break;
-                        }
-                    }
+                    withinOpeningHours = true;
                 }
             }
 
-            if (withinOpeningHours) {
-                endHour = selectedHour;
-                endMinute = selectedMinute;
-
-                if (endHour < 12) {
-                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d AM", endHour, endMinute));
-                } else if (endHour == 12) {
-                    endEt.setText(String.format(Locale.getDefault(), "12:%02d PM", endMinute));
-                } else {
-                    endEt.setText(String.format(Locale.getDefault(), "%d:%02d PM", endHour - 12, endMinute));
-                }
+            if (errorMessage != null) {
+                ToastUtils.showToast(this.context, errorMessage, Toast.LENGTH_SHORT);
             } else {
-                // If the selected time is outside all opening and closing hour/minute ranges, show an error message
-                Toast.makeText(context,context.getString(R.string.outside_business), Toast.LENGTH_SHORT).show();
+                if (withinOpeningHours) {
+                    endHour = selectedHour;
+                    endMinute = selectedMinute;
+
+                    if (endHour < 12) {
+                        endEt.setText(String.format(Locale.getDefault(), "%d:%02d AM", endHour, endMinute));
+                    } else if (endHour == 12) {
+                        endEt.setText(String.format(Locale.getDefault(), "12:%02d PM", endMinute));
+                    } else {
+                        endEt.setText(String.format(Locale.getDefault(), "%d:%02d PM", endHour - 12, endMinute));
+                    }
+                } else {
+                    ToastUtils.showToast(this.context, context.getString(R.string.outside_business), Toast.LENGTH_SHORT);
+                }
             }
         });
 
@@ -528,7 +513,6 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         }
         String[] parts = time.split(":");
         if (parts.length < 2) {
-            // Handle the case when the time doesn't have the expected format
             return 0;
         }
 
@@ -577,8 +561,6 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             Toast.makeText(context, R.string.itinerary_updated, Toast.LENGTH_SHORT).show();
         }
     }
-
-
 
     private String getMyLocation(){
     LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
