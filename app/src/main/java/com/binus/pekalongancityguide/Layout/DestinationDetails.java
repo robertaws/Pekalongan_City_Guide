@@ -50,11 +50,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -268,20 +266,6 @@ public class DestinationDetails extends AppCompatActivity {
         addBtn.setOnClickListener(v -> validateData(dateEt, startEt, endEt));
 
         dialog.show();
-    }
-
-    private void getDateOfWeek() {
-        try {
-            Date startDateObj = format.parse(date);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(startDateObj);
-            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-            getOpeningHours(dayOfWeek);
-            openHours.clear();
-            closeHours.clear();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
     }
 
     private void getOpeningHours(int dayOfWeek) {
@@ -535,7 +519,7 @@ public class DestinationDetails extends AppCompatActivity {
                         || (selectedHour < startHour || (selectedHour == startHour && selectedMinute < startMinute))) {
                     withinOpeningHours = false;
                     if (selectedHour < startHour || (selectedHour == startHour && selectedMinute < startMinute)) {
-                        errorMessage = "End time can't be earlier than the start time.";
+                        errorMessage = getString(R.string.end_time_earlier);
                     } else {
                         errorMessage = getString(R.string.outside_business);
                     }

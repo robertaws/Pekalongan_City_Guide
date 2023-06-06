@@ -238,4 +238,5 @@
     <string name="noLocFound">Nama Lokasi tidak ditemukan</string>
     <string name="alreadyAddedPlace">Lokasi telah ditambahkan</string>
     <string name="enterDestiTitle">Masukkan nama destinasi!</string>
+    <string name="end_time_earlier">Waktu selesai tidak boleh lebih awal dari waktu mulai</string>
 </resources>

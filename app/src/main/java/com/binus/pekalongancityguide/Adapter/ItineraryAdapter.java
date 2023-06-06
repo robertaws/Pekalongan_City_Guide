@@ -473,7 +473,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
                         || (selectedHour < startHour || (selectedHour == startHour && selectedMinute < startMinute))) {
                     withinOpeningHours = false;
                     if (selectedHour < startHour || (selectedHour == startHour && selectedMinute < startMinute)) {
-                        errorMessage = "End time can't be earlier than the start time.";
+                        errorMessage = context.getString(R.string.end_time_earlier);
                     } else {
                         errorMessage = context.getString(R.string.outside_business);
                     }
