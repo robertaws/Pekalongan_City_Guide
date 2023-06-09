@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -157,18 +158,22 @@ public class DestinationDetails extends AppCompatActivity {
     }
 
     private String comment = "";
-    private void showAddCommentDialog(){
+    private void showAddCommentDialog() {
         DialogAddCommentBinding commentBinding = DialogAddCommentBinding.inflate(getLayoutInflater());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        commentBinding.dialogTitle.setText(R.string.add_comment);
+        commentBinding.commentEt.setHint(R.string.comment_text);
+        Drawable drawableLeft = getResources().getDrawable(R.drawable.comment_icon);
+        commentBinding.commentEt.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
         builder.setView(commentBinding.getRoot());
         AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
         dialog.show();
         commentBinding.addcommentBtn.setOnClickListener(v -> {
             comment = commentBinding.commentEt.getText().toString().trim();
-            if(TextUtils.isEmpty(comment)){
+            if (TextUtils.isEmpty(comment)) {
                 commentBinding.commentTil.setError(getString(R.string.comment_empty));
-            }else{
+            } else {
                 progressDialog.setMessage(getString(R.string.adding_comment));
                 progressDialog.show();
                 String timestamp = ""+System.currentTimeMillis();

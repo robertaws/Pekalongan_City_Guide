@@ -3,6 +3,7 @@ package com.binus.pekalongancityguide.Layout;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -43,6 +44,7 @@ public class AdminHome extends AppCompatActivity {
     private ArrayList<Categories> categoriesArrayList;
     private CategoryAdapter categoryAdapter;
     private ProgressDialog dialog;
+    private AlertDialog aDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +97,14 @@ public class AdminHome extends AppCompatActivity {
 
         titleText.setText(R.string.addCategory);
         categoryField.setHint(R.string.cat);
-        categoryField.setCompoundDrawables(getDrawable(R.drawable.category), null, null, null);
+
+        Drawable drawableLeft = getResources().getDrawable(R.drawable.category);
+        categoryField.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
+
         submitBtn.setOnClickListener(v -> validateCategory());
+        aDialog = builder.create();
+        aDialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
+        aDialog.show();
     }
 
     private void validateCategory() {
@@ -147,12 +155,13 @@ public class AdminHome extends AppCompatActivity {
                 .setValue(hashMap)
                 .addOnSuccessListener(unused -> {
                     dialog.dismiss();
-                    onBackPressed();
-                    Toast.makeText(AdminHome.this, R.string.catSuccess, Toast.LENGTH_SHORT).show();
+                    aDialog.dismiss();
+                    Toast.makeText(this, R.string.catSuccess, Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
                     dialog.dismiss();
-                    Toast.makeText(AdminHome.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    aDialog.dismiss();
+                    Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 

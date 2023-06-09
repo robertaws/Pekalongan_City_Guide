@@ -52,8 +52,7 @@
                     android:fontFamily="@font/poppins_regular"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textMultiLine"
-                    android:hint="@string/comment_text" />
+                    android:inputType="textMultiLine" />
             </com.google.android.material.textfield.TextInputLayout>
             <Button
                 android:id="@+id/addcomment_btn"
