@@ -57,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference().keepSynced(true);
 
-        DatabaseReference myRef = database.getReference("path/to/data");
-
         init();
 
         binding.noLogin.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, Home.class)));

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -79,10 +80,13 @@ public class BookmarkFragment extends Fragment {
 
                         if (destinationArrayList.isEmpty()) {
                             EmptyBookmark emptyBookmarkFragment = new EmptyBookmark();
-                            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            fragmentTransaction.replace(R.id.container, emptyBookmarkFragment);
-                            fragmentTransaction.commit();
+                            FragmentActivity activity = getActivity();
+                            if (activity != null) {
+                                FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.replace(R.id.container, emptyBookmarkFragment);
+                                fragmentTransaction.commit();
+                            }
                         } else {
                             bookmarkAdapter = new BookmarkAdapter(getContext(), destinationArrayList);
                             binding.destiRV.setAdapter(bookmarkAdapter);
@@ -95,5 +99,4 @@ public class BookmarkFragment extends Fragment {
                     }
                 });
     }
-
 }

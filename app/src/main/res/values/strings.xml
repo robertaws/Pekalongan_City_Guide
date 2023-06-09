@@ -239,4 +239,6 @@
     <string name="alreadyAddedPlace">This place has already been added.</string>
     <string name="enterDestiTitle">Enter destination title!</string>
     <string name="end_time_earlier">End time can\'t be earlier than the start time.</string>
+    <string name="addCategory">Add Category</string>
+    <string name="cat">Category</string>
 </resources>

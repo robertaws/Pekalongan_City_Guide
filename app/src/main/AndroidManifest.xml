@@ -40,9 +40,6 @@
             android:name=".Layout.AddDestination"
             android:exported="false" />
         <activity
-            android:name=".Layout.AddCategory"
-            android:exported="false" />
-        <activity
             android:name=".Layout.AdminHome"
             android:exported="false" />
         <activity

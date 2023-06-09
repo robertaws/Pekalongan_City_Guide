@@ -16,6 +16,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -378,9 +379,13 @@ public class ItineraryFragment extends Fragment {
                 }
             });
         }
-        ItineraryAdapter adapter = new ItineraryAdapter(getContext(), itineraryList, getChildFragmentManager());
-        binding.itineraryRv.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        new Handler().postDelayed(() -> {
+            if (isAdded()) {
+                ItineraryAdapter adapter = new ItineraryAdapter(getContext(), itineraryList, getChildFragmentManager());
+                binding.itineraryRv.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+            }
+        }, 500);
     }
 
     private void getLastKnownLocation(OnLocationReceivedListener listener) {

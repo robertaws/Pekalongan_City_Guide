@@ -167,9 +167,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
         } else {
             loadCategoriedDestination();
         }
-        addIter.setOnClickListener(v -> {
-            showInputDialog();
-        });
+        addIter.setOnClickListener(v -> showInputDialog());
         selectCancel.setOnClickListener(v -> iterAdapter.exitSelectMode());
         return view;
     }
