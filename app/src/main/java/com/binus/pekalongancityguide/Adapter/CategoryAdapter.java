@@ -55,7 +55,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Holder
         String category = model.getCategory();
         holder.title.setText(category);
         holder.delete.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
             builder.setTitle(R.string.delete_opt)
 
                     .setMessage(context.getString(R.string.remove_confirm) + " " + category + "?")
