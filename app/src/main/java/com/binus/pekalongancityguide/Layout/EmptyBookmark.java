@@ -1,16 +1,13 @@
 package com.binus.pekalongancityguide.Layout;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.binus.pekalongancityguide.R;
+import androidx.fragment.app.Fragment;
+
 import com.binus.pekalongancityguide.databinding.FragmentEmptyBookmark2Binding;
-import com.binus.pekalongancityguide.databinding.FragmentItineraryListBinding;
 
 public class EmptyBookmark extends Fragment {
     private FragmentEmptyBookmark2Binding binding;

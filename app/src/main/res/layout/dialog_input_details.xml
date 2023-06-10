@@ -55,7 +55,6 @@
 
             <EditText
                 android:id="@+id/date_et"
-                android:layout_below="@id/dialog_title"
                 android:layout_width="match_parent"
                 android:textColorHint="@color/palette_2"
                 android:layout_height="wrap_content"
@@ -69,7 +68,6 @@
 
             <ImageButton
                 android:id="@+id/datepicker_btn"
-                android:layout_below="@id/dialog_title"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_alignParentEnd="true"

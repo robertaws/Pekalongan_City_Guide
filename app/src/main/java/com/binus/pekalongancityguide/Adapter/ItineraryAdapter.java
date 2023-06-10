@@ -67,8 +67,8 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
     private static final int MAPS_PERMIT = 1;
     private final Context context;
     private final List<Itinerary> itineraryList;
-    private List<String> openHours = new ArrayList<>();
-    private List<String> closeHours = new ArrayList<>();
+    private final List<String> openHours = new ArrayList<>();
+    private final List<String> closeHours = new ArrayList<>();
     private final FragmentManager fragmentManager;
     private FirebaseDatabase database;
     private EditText startEt, endEt, dateEt;

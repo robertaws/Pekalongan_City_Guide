@@ -555,7 +555,8 @@ public class ShowDestinationFragment extends Fragment {
 
             }
         });
-    };
+    }
+
     private float calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         float[] results = new float[1];
         Location location1 = new Location("");

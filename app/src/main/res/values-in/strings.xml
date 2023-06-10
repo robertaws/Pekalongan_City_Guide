@@ -241,4 +241,5 @@
     <string name="end_time_earlier">Waktu selesai tidak boleh lebih awal dari waktu mulai</string>
     <string name="addCategory">Tambah Kategori</string>
     <string name="cat">Kategori</string>
+    <string name="errorNews">"Gagal mengambil artikel berita: "</string>
 </resources>

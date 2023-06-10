@@ -21,7 +21,6 @@
             android:backgroundTint="@color/palette_4"
             android:backgroundTintMode="screen"
             android:orientation="vertical"
-            android:layout_below="@id/loc_layout"
             android:layout_above="@+id/showRoutes">
 
             <androidx.recyclerview.widget.RecyclerView

@@ -3,18 +3,16 @@ package com.binus.pekalongancityguide.Layout;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.binus.pekalongancityguide.R;
-import com.binus.pekalongancityguide.databinding.FragmentEmptyBookmark2Binding;
 import com.binus.pekalongancityguide.databinding.FragmentEmptyItinerary2Binding;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
