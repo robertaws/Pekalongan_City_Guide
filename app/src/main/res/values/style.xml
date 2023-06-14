@@ -9,6 +9,12 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+    <style name="CustomHelperText" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">#ED2A15</item>
+        <item name="android:textSize">13dp</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:fontFamily">@font/poppins_semibold</item>
+    </style>
 
     <style name="AlertDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:textColorPrimary">@color/palette_1</item>

@@ -403,7 +403,7 @@ public class AddDestination extends AppCompatActivity {
         for (int i = 0; i < categoriesTitleArrayList.size(); i++) {
             categoryArray[i] = categoriesTitleArrayList.get(i);
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.CustomAlertDialogTheme);
         builder.setTitle(getString(R.string.pickCate))
                 .setItems(categoryArray, (dialog, which) -> {
                     selectedCategoryTitle = categoriesTitleArrayList.get(which);

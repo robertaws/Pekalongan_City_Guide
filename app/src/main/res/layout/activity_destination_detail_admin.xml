@@ -87,10 +87,10 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:textSize="18dp"
+                            android:textSize="24dp"
                             android:id="@+id/desti_admin_name"
+                            android:fontFamily="@font/poppins_semibold"
                             android:layout_width="match_parent"
-                            android:fontFamily="@font/poppins_regular"
                             android:layout_height="wrap_content"
                             android:text="Destination Name"
                             android:textColor="@color/palette_1"
@@ -104,12 +104,13 @@
                         <TextView
                             android:layout_marginTop="10dp"
                             android:id="@+id/desti_admin_desc"
+                            android:fontFamily="@font/poppins_regular"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_regular"
+                            android:textSize="16dp"
                             android:justificationMode="inter_word"
                             android:text="Destination Description"
-                            android:textColor="@color/palette_1" />
+                            android:textColor="@color/palette_1"/>
 
                         <com.google.android.material.divider.MaterialDivider
                             android:layout_marginTop="5dp"
@@ -117,30 +118,30 @@
                             android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
 
                         <TextView
-                            android:textStyle="bold"
                             android:id="@+id/desti_admin_address"
                             android:layout_width="match_parent"
+                            android:fontFamily="@font/poppins_regular"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_semibold"
                             android:layout_marginTop="10dp"
+                            android:textSize="16dp"
                             android:justificationMode="inter_word"
                             android:text="Destination Address"
-                            android:textColor="@color/palette_1" />
+                            android:textColor="@color/palette_1"/>
 
                         <com.google.android.material.divider.MaterialDivider
                             android:layout_marginTop="5dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
                         <TextView
-                            android:textStyle="bold"
                             android:id="@+id/desti_admin_phone"
-                            android:fontFamily="@font/poppins_semibold"
+                            android:textSize="16dp"
+                            android:fontFamily="@font/poppins_regular"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:justificationMode="inter_word"
                             android:text="Destination Phone"
-                            android:textColor="@color/palette_1" />
+                            android:textColor="@color/palette_1"/>
 
                         <com.google.android.material.divider.MaterialDivider
                             android:layout_marginTop="5dp"

@@ -3,9 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Layout.ProfileFragment">
-
     <data>
-
     </data>
     <ScrollView
         android:layout_width="match_parent"
@@ -38,7 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/user_icon"
-                    app:strokeColor="@color/palette_2"
+                    app:strokeColor="@color/palette_1"
                     app:strokeWidth="5dp"
                     android:padding="2.5dp"
                     app:shapeAppearance="@style/circleImage"/>
@@ -49,10 +47,11 @@
                 android:layout_marginTop="20dp"
                 android:gravity="center_vertical"
                 android:drawablePadding="5dp"
-                android:drawableTint="#ACA2A2"
+                android:drawableTint="#979292"
+                android:textColor="#979292"
+                android:includeFontPadding="false"
                 android:fontFamily="@font/poppins_regular"
                 android:drawableLeft="@drawable/user_icon"
-                android:textColor="#ACA2A2"
                 android:layout_marginStart="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -66,7 +65,7 @@
                 <TextView
                     android:id="@+id/profile_user"
                     android:layout_marginTop="10dp"
-                    android:textColor="#55545A"
+                    android:textColor="@color/palette_3"
                     android:layout_marginStart="20dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -99,11 +98,12 @@
             <TextView
                 android:gravity="center_vertical"
                 android:drawablePadding="5dp"
-                android:drawableTint="#ACA2A2"
+                android:drawableTint="#979292"
+                android:textColor="#979292"
                 android:fontFamily="@font/poppins_regular"
+                android:includeFontPadding="false"
                 android:drawableLeft="@drawable/mail_icon"
                 android:layout_marginTop="10dp"
-                android:textColor="#ACA2A2"
                 android:layout_marginStart="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -113,7 +113,7 @@
             <TextView
                 android:id="@+id/profile_email"
                 android:layout_marginTop="10dp"
-                android:textColor="#55545A"
+                android:textColor="@color/palette_3"
                 android:layout_marginStart="20dp"
                 android:fontFamily="@font/poppins_semibold"
                 android:layout_width="wrap_content"
@@ -133,11 +133,12 @@
             <TextView
                 android:gravity="center_vertical"
                 android:drawablePadding="5dp"
-                android:drawableTint="#ACA2A2"
+                android:drawableTint="#979292"
+                android:includeFontPadding="false"
                 android:fontFamily="@font/poppins_regular"
                 android:drawableLeft="@drawable/date_icon"
                 android:layout_marginTop="10dp"
-                android:textColor="#ACA2A2"
+                android:textColor="#979292"
                 android:layout_marginStart="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -151,7 +152,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:text="-"
-                android:textColor="#55545A"
+                android:textColor="@color/palette_3"
                 android:textSize="18dp"
                 android:textStyle="bold" />
 

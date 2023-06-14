@@ -171,7 +171,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
         String DESTIID = itinerary.getDestiId();
         destiID = DESTIID;
         String[] options = {"Edit", "Delete"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.CustomAlertDialogTheme);
         builder.setTitle("Choose Options")
                 .setItems(options, (dialog, which) -> {
                     if (which == 0) {

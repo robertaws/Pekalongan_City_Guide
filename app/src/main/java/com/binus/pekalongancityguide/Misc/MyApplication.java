@@ -4,13 +4,19 @@ import android.app.AlertDialog;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.binus.pekalongancityguide.Adapter.ItineraryAdapter;
+import com.binus.pekalongancityguide.Layout.ItineraryList;
 import com.binus.pekalongancityguide.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -47,10 +53,11 @@ public class MyApplication extends Application {
         String date = DateFormat.format("dd/MMMM/yyyy",calendar).toString();
         return date;
     }
-    public static void deleteIter(Context context, String destiId, ItineraryAdapter adapter, int position){
+    public static void deleteIter(Context context, String destiId, ItineraryAdapter adapter, int position) {
         String uid = FirebaseAuth.getInstance().getUid();
         String TAG = "DELETE_ITER_TAG";
-        AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.AlertDialogTheme);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
         builder.setTitle(R.string.confirm_delete);
         builder.setMessage(R.string.delete_item);
         builder.setPositiveButton(R.string.yes_myapp, (dialogInterface, i) -> {
@@ -58,6 +65,7 @@ public class MyApplication extends Application {
             dialog.setTitle(R.string.wait);
             dialog.setMessage(context.getString(R.string.deleting));
             dialog.show();
+
             DatabaseReference itineraryRef = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL)
                     .getReference("Users")
                     .child(uid)
@@ -70,26 +78,39 @@ public class MyApplication extends Application {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         snapshot.getRef().removeValue();
                     }
+
                     adapter.notifyItemRemoved(position);
-                    dialog.dismiss();
-                    Toast.makeText(context,R.string.delete_iter, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context.getApplicationContext(), R.string.iterUpdateSuccess, Toast.LENGTH_LONG).show();
+
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.container, new ItineraryList());
+                        fragmentTransaction.commit();
+
+                        dialog.dismiss();
+                        Toast.makeText(context, R.string.delete_iter, Toast.LENGTH_LONG).show();
+                    });
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     dialog.dismiss();
-                    Toast.makeText(context,context.getString(R.string.fail_deteltIter) + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context.getApplicationContext(), context.getString(R.string.fail_deteltIter) + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "onCancelled: " + databaseError.getMessage());
                 }
             });
         });
+
         builder.setNegativeButton(R.string.noMyapp, (dialogInterface, i) -> {
             dialogInterface.dismiss();
-            Toast.makeText(context,R.string.iter_notdeleted, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context.getApplicationContext(), R.string.iter_notdeleted, Toast.LENGTH_SHORT).show();
         });
+
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
     public static void deleteDesti(Context context, String destiId, String destiUrl, String destiTitle) {
         String TAG = "DELETE_DESTI_TAG";
         AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.AlertDialogTheme);

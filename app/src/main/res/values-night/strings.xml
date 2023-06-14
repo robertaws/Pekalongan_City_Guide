@@ -179,4 +179,7 @@
     <string name="end_time_earlier">End time can\'t be earlier than the start time.</string>
     <string name="addCategory">Add Category</string>
     <string name="cat">Category</string>
+    <string name="email_helper">The email address should be in the following format: username@domain.com</string>
+    <string name="pass_helper"><![CDATA[Password must be > 8 characters, contains 1 symbol & 1 number]]></string>
+    <string name="user_helper">username must be between 3 - 12 characters</string>
 </resources>
