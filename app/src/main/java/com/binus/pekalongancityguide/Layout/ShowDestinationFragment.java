@@ -25,9 +25,12 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
 import com.binus.pekalongancityguide.ItemTemplate.Destination;
@@ -102,6 +105,7 @@ public class ShowDestinationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         geocoder = new Geocoder(getContext(), Locale.getDefault());
         if(getArguments()!=null){
             categoryId = getArguments().getString("categoryId");
@@ -119,7 +123,7 @@ public class ShowDestinationFragment extends Fragment {
             double longitude = Double.parseDouble(lastLongitude);
             coordinate = new LatLng(latitude, longitude);
         }
-//        Log.d(TAG, "ON START COORDINATES: " + coordinate);
+        Log.d(TAG, "ON START COORDINATES: " + coordinate);
         binding = FragmentShowDestinationBinding.inflate(LayoutInflater.from(getContext()), container, false);
         if (category.equals("All")) {
             loadDestinations();
@@ -221,7 +225,6 @@ public class ShowDestinationFragment extends Fragment {
 
             @Override
             protected void onPostExecute(String address) {
-                // update the location text view in the UI thread
                 if (address != null) {
                     addressString = address;
                     locBinding.locTv.setText(addressString);
@@ -280,7 +283,6 @@ public class ShowDestinationFragment extends Fragment {
                         currentLat = location.getLatitude();
                         currentLng = location.getLongitude();
                         coordinate = new LatLng(currentLat, currentLng);
-
                         new AsyncTask<Void, Void, String>() {
                             @Override
                             protected String doInBackground(Void... voids) {
@@ -323,6 +325,12 @@ public class ShowDestinationFragment extends Fragment {
             binding.changeLoc.setText(addressString);
             dialog.dismiss();
             updateDistances();
+            DestinationPager pager = new DestinationPager();
+            AppCompatActivity appCompatActivity = (AppCompatActivity) getContext();
+            FragmentManager fragmentManager = appCompatActivity.getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container,pager);
+            fragmentTransaction.commit();
             if (coordinate != null) {
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString("lastLatitude", String.valueOf(coordinate.latitude));
@@ -330,10 +338,20 @@ public class ShowDestinationFragment extends Fragment {
                 editor.apply();
             }
             Log.d(TAG, "COORDINATES: " + coordinate);
+            openDestinationPager();
         });
     }
 
-    public void showSortDialog(){
+    private void openDestinationPager() {
+        AppCompatActivity appCompatActivity = (AppCompatActivity) getContext();
+        FragmentManager fragmentManager = appCompatActivity.getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.container, new DestinationPager());
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    public void showSortDialog() {
         DialogSortDestiBinding binding1 = DialogSortDestiBinding.inflate(LayoutInflater.from(getContext()));
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         CheckBox ratingCheck = binding1.ratingSort;
@@ -537,7 +555,8 @@ public class ShowDestinationFragment extends Fragment {
 
             }
         });
-    };
+    }
+
     private float calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         float[] results = new float[1];
         Location location1 = new Location("");

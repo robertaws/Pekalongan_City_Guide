@@ -4,21 +4,35 @@ import android.app.AlertDialog;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.binus.pekalongancityguide.Adapter.ItineraryAdapter;
+import com.binus.pekalongancityguide.Layout.ItineraryList;
 import com.binus.pekalongancityguide.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 
 public class MyApplication extends Application {
     @Override
@@ -39,9 +53,67 @@ public class MyApplication extends Application {
         String date = DateFormat.format("dd/MMMM/yyyy",calendar).toString();
         return date;
     }
+    public static void deleteIter(Context context, String destiId, ItineraryAdapter adapter, int position) {
+        String uid = FirebaseAuth.getInstance().getUid();
+        String TAG = "DELETE_ITER_TAG";
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
+        builder.setTitle(R.string.confirm_delete);
+        builder.setMessage(R.string.delete_item);
+        builder.setPositiveButton(R.string.yes_myapp, (dialogInterface, i) -> {
+            ProgressDialog dialog = new ProgressDialog(context);
+            dialog.setTitle(R.string.wait);
+            dialog.setMessage(context.getString(R.string.deleting));
+            dialog.show();
+
+            DatabaseReference itineraryRef = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL)
+                    .getReference("Users")
+                    .child(uid)
+                    .child("itinerary");
+
+            Query query = itineraryRef.orderByChild("destiId").equalTo(destiId);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        snapshot.getRef().removeValue();
+                    }
+
+                    adapter.notifyItemRemoved(position);
+                    Toast.makeText(context.getApplicationContext(), R.string.iterUpdateSuccess, Toast.LENGTH_LONG).show();
+
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.container, new ItineraryList());
+                        fragmentTransaction.commit();
+
+                        dialog.dismiss();
+                        Toast.makeText(context, R.string.delete_iter, Toast.LENGTH_LONG).show();
+                    });
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    dialog.dismiss();
+                    Toast.makeText(context.getApplicationContext(), context.getString(R.string.fail_deteltIter) + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onCancelled: " + databaseError.getMessage());
+                }
+            });
+        });
+
+        builder.setNegativeButton(R.string.noMyapp, (dialogInterface, i) -> {
+            dialogInterface.dismiss();
+            Toast.makeText(context.getApplicationContext(), R.string.iter_notdeleted, Toast.LENGTH_SHORT).show();
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     public static void deleteDesti(Context context, String destiId, String destiUrl, String destiTitle) {
         String TAG = "DELETE_DESTI_TAG";
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.AlertDialogTheme);
         builder.setTitle("Confirm Delete");
         builder.setMessage("Are you sure you want to delete " + destiTitle + "?");
         builder.setPositiveButton("Yes", (dialogInterface, i) -> {
@@ -54,7 +126,7 @@ public class MyApplication extends Application {
             reference.delete()
                     .addOnSuccessListener(unused -> {
                         Log.d(TAG, "onSuccess : Succesfully deleted data");
-                        DatabaseReference reference1 = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+                        DatabaseReference reference1 = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
                         reference1.child(destiId)
                                 .removeValue()
                                 .addOnSuccessListener(unused1 -> {
@@ -81,7 +153,7 @@ public class MyApplication extends Application {
         dialog.show();
     }
 
-    public static void addtoFavorite(Context context, String destiId){
+    public static void addtoFavorite(Context context, String destiId, String uid){
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         if(firebaseAuth.getCurrentUser() == null){
             Toast.makeText(context,R.string.notLogin, Toast.LENGTH_SHORT).show();
@@ -90,19 +162,20 @@ public class MyApplication extends Application {
             HashMap<String,Object> hashMap = new HashMap<>();
             hashMap.put("destiId",destiId);
             hashMap.put("timestamp",timestamp);
-            DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
+            hashMap.put("uid",uid);
+            DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Users");
             reference.child(firebaseAuth.getUid()).child("Favorites").child(destiId)
                     .setValue(hashMap)
                     .addOnSuccessListener(unused -> Toast.makeText(context,R.string.added_bookmark, Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> Toast.makeText(context, "Failed to Added favorites due to" + e.getMessage(), Toast.LENGTH_SHORT).show());
         }
     }
-    public static void removeFavorite(Context context, String destiId){
+    public static void removeFavorite(Context context, String destiId,String uid){
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         if(firebaseAuth.getCurrentUser()==null){
             Toast.makeText(context,R.string.notLogin, Toast.LENGTH_SHORT).show();
         }else{
-            DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
+            DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Users");
             reference.child(firebaseAuth.getUid()).child("Favorites").child(destiId)
                     .removeValue()
                     .addOnSuccessListener(unused -> Toast.makeText(context,R.string.removed_bookmark, Toast.LENGTH_SHORT).show())

@@ -5,20 +5,28 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -35,6 +43,7 @@ import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.FragmentItineraryBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,6 +58,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,7 +67,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static android.view.View.GONE;
 import static com.binus.pekalongancityguide.BuildConfig.MAPS_API_KEY;
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 
 public class ItineraryFragment extends Fragment {
     private FragmentItineraryBinding binding;
@@ -71,12 +83,19 @@ public class ItineraryFragment extends Fragment {
     PlacesClient placesClient;
     private String selectedDate;
     private FirebaseAuth firebaseAuth;
+    private Geocoder geocoder;
+    private LatLng coordinate;
+    private double currentLat, currentLng;
     private FusedLocationProviderClient fusedLocationClient;
-    public ItineraryFragment() {}
+    private static SharedPreferences prefs;
+
+    public ItineraryFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        geocoder = new Geocoder(getContext(), Locale.getDefault());
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
@@ -84,6 +103,23 @@ public class ItineraryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentItineraryBinding.inflate(LayoutInflater.from(getContext()), container, false);
+        binding.showRoutes.setVisibility(GONE);
+        RelativeLayout.LayoutParams layoutGoneParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.
+                WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutGoneParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        layoutGoneParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+        layoutGoneParams.setMargins(15, 15, 15, 15);
+        binding.addIterBtn.setLayoutParams(layoutGoneParams);
+
+        prefs = getActivity().getSharedPreferences("coordinate", Context.MODE_PRIVATE);
+        String lastLatitude = prefs.getString("lastLatitude", "0");
+        String lastLongitude = prefs.getString("lastLongitude", "0");
+        if (!lastLatitude.equals("0") && !lastLongitude.equals("0")) {
+            double latitude = Double.parseDouble(lastLatitude);
+            double longitude = Double.parseDouble(lastLongitude);
+            coordinate = new LatLng(latitude, longitude);
+        }
+        Log.d(TAG, "ON START COORD: " + coordinate);
         Places.initialize(getContext().getApplicationContext(), apiKey);
         placesClient = Places.createClient(getContext());
         firebaseAuth = FirebaseAuth.getInstance();
@@ -92,7 +128,6 @@ public class ItineraryFragment extends Fragment {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                // Do something with the new location
                 Log.d("Location", "Latitude: " + location.getLatitude() + ", Longitude: " + location.getLongitude());
             }
 
@@ -115,28 +150,116 @@ public class ItineraryFragment extends Fragment {
             startLocationUpdates();
         }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+        initializeAddress();
+
         Bundle args = getArguments();
         if (args != null) {
             selectedDate = args.getString("selectedDate", selectedDate);
             Log.d(TAG, "selected date: " + selectedDate);
         }
         loadItinerary(selectedDate);
+        adapter.setOnDataChangedListener(() -> {
+            if (getParentFragment() instanceof ItineraryList) {
+                ((ItineraryList) getParentFragment()).onDataChanged();
+            }
+        });
         binding.itineraryRv.setAdapter(adapter);
         binding.addIterBtn.setOnClickListener(v -> {
             ItineraryPager itineraryPager = new ItineraryPager();
+            Bundle bundle = new Bundle();
+            bundle.putDouble("currentLatitude", currentLat);
+            bundle.putDouble("currentLongitude", currentLng);
+            itineraryPager.setArguments(bundle);
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container, itineraryPager);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         });
+        updateUI(itineraryList);
         return binding.getRoot();
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        loadItinerary(selectedDate);
+    }
+
+    private void initializeAddress() {
+        Context context = getContext();
+        Resources resources = getResources();
+        if (coordinate != null) {
+            if (context != null && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
+            } else {
+                currentLat = coordinate.latitude;
+                currentLng = coordinate.longitude;
+                new AsyncTask<Void, Void, String>() {
+                    @Override
+                    protected String doInBackground(Void... voids) {
+                        try {
+                            List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
+                            if (addresses.size() > 0) {
+                                return addresses.get(0).getAddressLine(0);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            return resources.getString(R.string.geocoderNotAvail);
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(String address) {
+                        if (address != null) {
+                        }
+                    }
+                }.execute();
+            }
+        } else {
+            if (context != null && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
+            } else {
+                fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                    if (location != null) {
+                        currentLat = location.getLatitude();
+                        currentLng = location.getLongitude();
+                        new AsyncTask<Void, Void, String>() {
+                            @Override
+                            protected String doInBackground(Void... voids) {
+                                try {
+                                    List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
+                                    if (addresses.size() > 0) {
+                                        return addresses.get(0).getAddressLine(0);
+                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    return resources.getString(R.string.geocoderNotAvail);
+                                }
+                                return null;
+                            }
+
+                            @Override
+                            protected void onPostExecute(String address) {
+                                if (address != null) {
+                                }
+                            }
+                        }.execute();
+                    }
+                });
+            }
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         locationManager.removeUpdates(locationListener);
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -150,7 +273,7 @@ public class ItineraryFragment extends Fragment {
     }
 
     private void loadItinerary(String date) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        FirebaseDatabase database = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         DatabaseReference userRef = database.getReference("Users").child(firebaseAuth.getUid());
         userRef.keepSynced(true);
         Query itineraryQuery = userRef.child("itinerary").orderByChild("date").equalTo(date);
@@ -168,7 +291,8 @@ public class ItineraryFragment extends Fragment {
                     Log.d(TAG, "End Time: " + endTime);
                     String destiId = itinerarySnapshot.child("destiId").getValue(String.class);
                     Log.d(TAG, "Desti ID: " + destiId);
-
+                    String iterId = itinerarySnapshot.child("iterId").getValue(String.class);
+                    Log.d(TAG, "iter ID: " + iterId);
                     database.getReference("Destination").child(destiId).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -179,62 +303,27 @@ public class ItineraryFragment extends Fragment {
                             String placeName = snapshot.child("title").getValue(String.class);
                             Log.d(TAG, "Place Name: " + placeName);
                             String url = "" + snapshot.child("url").getValue();
-
-                            if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                                    ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
-                            } else {
-                                fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-                                    if (location != null) {
-                                        double currentLat = location.getLatitude();
-                                        double currentLng = location.getLongitude();
-                                        // Calculate distance  current location and itinerary location
-                                        float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
-                                        Log.d(TAG, "Distance: " + distance);
-                                        calculateDuration(currentLat, currentLng, placeLat, placeLng, durationText -> {
-                                            itineraryList.add(new Itinerary(date, startTime, endTime, placeName, destiId, url, durationText, placeLat, placeLng, distance));
-                                            sortItineraryList(itineraryList);
-                                            binding.showRoutes.setOnClickListener(v -> {
-                                                if (itineraryList.size() > 0) {
-                                                    String origin = "current location";
-                                                    Itinerary firstItinerary = itineraryList.get(0);
-                                                    double latitude = firstItinerary.getLatitude();
-                                                    double longitude = firstItinerary.getLongitude();
-                                                    StringBuilder waypoints = new StringBuilder();
-                                                    for (int i = 1; i < itineraryList.size(); i++) {
-                                                        Itinerary itinerary = itineraryList.get(i);
-                                                        waypoints.append(itinerary.getLatitude()).append(",").append(itinerary.getLongitude()).append("|");
-                                                    }
-                                                    waypoints.setLength(waypoints.length() - 1); // Remove the last "|"
-                                                    String routeUrl = "https://www.google.com/maps/dir/?api=1&origin=" + origin + "&destination=" + latitude + "," + longitude + "&waypoints=" + waypoints + "&travelmode=driving";
-                                                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(routeUrl));
-                                                    mapIntent.setPackage("com.google.android.apps.maps");
-                                                    if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                                                        startActivity(mapIntent);
-                                                    } else {
-                                                        Toast.makeText(getContext(),R.string.no_map_app, Toast.LENGTH_SHORT).show();
-                                                        String websiteUrl = "https://www.google.com/maps/dir/?api=1&origin=" + origin + "&destination=" + latitude + "," + longitude + "&waypoints=" + waypoints + "&travelmode=driving";
-                                                        Intent websiteIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl));
-                                                        startActivity(websiteIntent);
-                                                    }
-                                                } else {
-                                                    Toast.makeText(getContext(),R.string.no_desttination_iter, Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-
-                                            ItineraryAdapter adapter = new ItineraryAdapter(getContext(), itineraryList, getParentFragmentManager());
-                                            binding.itineraryRv.setAdapter(adapter);
-                                        });
-                                    }
-                                }).addOnFailureListener(e -> {
-                                    Log.e(TAG, "Error getting last known location: " + e.getMessage());
+                            getLastKnownLocation(location -> {
+                                if (coordinate != null) {
+                                    currentLat = coordinate.latitude;
+                                    currentLng = coordinate.longitude;
+                                } else {
+                                    currentLat = location.getLatitude();
+                                    currentLng = location.getLongitude();
+                                }
+                                float distance = calculateDistance(currentLat, currentLng, placeLat, placeLng);
+                                Log.d(TAG, "Distance: " + distance);
+                                calculateDuration(currentLat, currentLng, placeLat, placeLng, (durationText) -> {
+                                    itineraryList.add(new Itinerary(date, startTime, endTime, placeName, destiId, url, durationText, iterId, placeLat, placeLng, distance));
+                                    sortItineraryList(itineraryList);
+                                    updateUI(itineraryList);
                                 });
-                            }
+                            });
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-
+                            Log.e(TAG, "Error fetching destination data: " + error.getMessage());
                         }
                     });
                 }
@@ -245,6 +334,79 @@ public class ItineraryFragment extends Fragment {
                 Log.e(TAG, "Error fetching itinerary data: " + databaseError.getMessage());
             }
         });
+    }
+
+    private void updateUI(List<Itinerary> itineraryList) {
+        if (itineraryList.size() < 2) {
+            binding.showRoutes.setVisibility(View.GONE);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(15, 15, 15, 15);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+            binding.addIterBtn.setLayoutParams(layoutParams);
+        } else {
+            binding.showRoutes.setVisibility(View.VISIBLE);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.addRule(RelativeLayout.ABOVE, binding.showRoutes.getId());
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+            layoutParams.setMarginEnd(15);
+            binding.addIterBtn.setLayoutParams(layoutParams);
+            binding.showRoutes.setOnClickListener(v -> {
+                if (itineraryList.size() > 0) {
+                    String origin = "current location";
+                    Itinerary firstItinerary = itineraryList.get(0);
+                    double latitude = firstItinerary.getLatitude();
+                    double longitude = firstItinerary.getLongitude();
+                    StringBuilder waypoints = new StringBuilder();
+                    for (int i = 1; i < itineraryList.size(); i++) {
+                        Itinerary itinerary = itineraryList.get(i);
+                        waypoints.append(itinerary.getLatitude()).append(",").append(itinerary.getLongitude()).append("|");
+                    }
+                    waypoints.setLength(waypoints.length() - 1);
+                    String routeUrl = "https://www.google.com/maps/dir/?api=1&origin=" + origin + "&destination=" + latitude + "," + longitude + "&waypoints=" + waypoints + "&travelmode=driving";
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(routeUrl));
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                        startActivity(mapIntent);
+                    } else {
+                        Toast.makeText(getContext(), R.string.no_map_app, Toast.LENGTH_SHORT).show();
+                        String websiteUrl = "https://www.google.com/maps/dir/?api=1&origin=" + origin + "&destination=" + latitude + "," + longitude + "&waypoints=" + waypoints + "&travelmode=driving";
+                        Intent websiteIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl));
+                        startActivity(websiteIntent);
+                    }
+                } else {
+                    Toast.makeText(getContext(), R.string.no_desttination_iter, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        new Handler().postDelayed(() -> {
+            if (isAdded()) {
+                ItineraryAdapter adapter = new ItineraryAdapter(getContext(), itineraryList, getChildFragmentManager());
+                binding.itineraryRv.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+            }
+        }, 500);
+    }
+
+    private void getLastKnownLocation(OnLocationReceivedListener listener) {
+        if (getContext() != null && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
+        } else {
+            fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                if (location != null) {
+                    listener.onLocationReceived(location);
+                } else {
+                    Log.e(TAG, "Last known location is null");
+                }
+            }).addOnFailureListener(e -> {
+                Log.e(TAG, "Error getting last known location: " + e.getMessage());
+            });
+        }
+    }
+
+    private interface OnLocationReceivedListener {
+        void onLocationReceived(Location location);
     }
 
     private void sortItineraryList(List<Itinerary> itineraryList) {
@@ -265,6 +427,7 @@ public class ItineraryFragment extends Fragment {
             }
         });
     }
+
     private float calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         float[] results = new float[1];
         Location location1 = new Location("");
@@ -287,11 +450,8 @@ public class ItineraryFragment extends Fragment {
                     JSONArray routes = response.getJSONArray("routes");
                     if (routes.length() > 0) {
                         JSONObject route = routes.getJSONObject(0);
-                        Log.d(TAG, "route: " + route);
                         JSONArray legs = route.getJSONArray("legs");
-                        Log.d(TAG, "legs: " + legs);
                         JSONObject leg = legs.getJSONObject(0);
-                        Log.d(TAG, "leg: " + leg);
                         JSONObject duration = leg.getJSONObject("duration");
                         String durationText = duration.getString("text");
                         Log.d(TAG, "Duration: " + durationText);

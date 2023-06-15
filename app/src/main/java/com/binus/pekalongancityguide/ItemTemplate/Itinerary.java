@@ -3,12 +3,12 @@ package com.binus.pekalongancityguide.ItemTemplate;
 import java.io.Serializable;
 
 public class Itinerary implements Serializable {
-    private final String date,startTime,endTime,placeName,destiId,url,durationText;
+    private final String date,startTime,endTime,placeName,destiId,url,durationText,iterId;
     private final double latitude;
     private final double longitude;
     private final float distance;
 
-    public Itinerary(String date, String startTime, String endTime, String placeName, String destiId, String url, String durationText, double latitude, double longitude, float distance) {
+    public Itinerary(String date, String startTime, String endTime, String placeName, String destiId, String url, String durationText, String iterId, double latitude, double longitude, float distance) {
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -16,6 +16,7 @@ public class Itinerary implements Serializable {
         this.destiId = destiId;
         this.url = url;
         this.durationText = durationText;
+        this.iterId = iterId;
         this.latitude = latitude;
         this.longitude = longitude;
         this.distance = distance;
@@ -59,5 +60,8 @@ public class Itinerary implements Serializable {
 
     public float getDistance() {
         return distance;
+    }
+    public String getIterId() {
+        return iterId;
     }
 }

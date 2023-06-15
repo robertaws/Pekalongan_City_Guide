@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
+
 public class Splash extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private boolean doubleTap = false;
@@ -86,7 +88,7 @@ public class Splash extends AppCompatActivity {
             if (allPermissionsGranted) {
                 new Handler().postDelayed(() -> checkUser(), 3000);
             } else {
-                Toast.makeText(this, "Some permissions are not granted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.somePermissions, Toast.LENGTH_SHORT).show();
                 new Handler().postDelayed(() -> checkUser(), 3000);
             }
         }
@@ -112,7 +114,7 @@ public class Splash extends AppCompatActivity {
             startActivity(new Intent(Splash.this, MainActivity.class));
             finish();
         } else {
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Users");
             ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
             if (networkInfo != null && networkInfo.isConnected()) {

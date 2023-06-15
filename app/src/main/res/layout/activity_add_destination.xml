@@ -6,12 +6,11 @@
 
     </data>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/addDesti">
+
+
 
         <LinearLayout
+            android:id="@+id/addDesti"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/background_batik"
@@ -23,30 +22,30 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
                 <ImageButton
                     android:id="@+id/backtoAdmin"
                     android:contentDescription="Back to Admin Home"
-                    android:layout_gravity="start"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="15dp"
                     android:background="#0000"
                     android:src="@drawable/back_icon" />
-
+                <ImageView
+                    android:id="@+id/add_picture"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/insert_photo"
+                    android:layout_marginHorizontal="40dp" />
             </RelativeLayout>
-
-            <ImageView
-                android:id="@+id/add_picture"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:src="@drawable/insert_photo"
-                android:layout_marginHorizontal="40dp" />
-
             <EditText
                 android:id="@+id/title_et"
                 android:layout_marginTop="20dp"
-                android:padding="15dp"
+                android:padding="10dp"
+                android:textSize="19dp"
+                android:textColor="@color/palette_1"
+                android:textColorHint="@color/palette_2"
                 android:background="@drawable/et_style"
                 android:layout_marginHorizontal="30dp"
                 android:layout_width="match_parent"
@@ -57,11 +56,14 @@
             <EditText
                 android:id="@+id/desc_et"
                 android:layout_marginTop="20dp"
-                android:padding="15dp"
+                android:padding="10dp"
+                android:textColor="@color/palette_1"
                 android:background="@drawable/et_style"
                 android:layout_marginHorizontal="30dp"
                 android:fontFamily="@font/poppins_regular"
                 android:layout_width="match_parent"
+                android:textSize="19dp"
+                android:textColorHint="@color/palette_2"
                 android:layout_height="wrap_content"
                 android:hint="@string/destination_description" />
 
@@ -73,6 +75,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/et_style"
                 android:hint="Pick Category"
+                android:textColor="@color/palette_1"
+                android:textColorHint="@color/palette_2"
                 android:drawableStart="@drawable/category"
                 android:padding="10dp"
                 android:fontFamily="@font/poppins_semibold"
@@ -93,7 +97,4 @@
                 android:layout_marginHorizontal="30dp" />
 
         </LinearLayout>
-
-    </ScrollView>
-
 </layout>

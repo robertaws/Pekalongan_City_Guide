@@ -1,9 +1,10 @@
 package com.binus.pekalongancityguide.Adapter;
 
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.ItemTemplate.Comments;
-import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.R;
-import com.binus.pekalongancityguide.databinding.DialogEditCommentBinding;
 import com.binus.pekalongancityguide.databinding.ListCommentBinding;
 import com.bumptech.glide.Glide;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -29,13 +28,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.HolderComment>{
-    private Context context;
-    private ArrayList<Comments> commentsArrayList;
+public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.HolderComment> {
+    private final Context context;
+    private final ArrayList<Comments> commentsArrayList;
     private ListCommentBinding binding;
-    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
     public CommentAdapter(Context context, ArrayList<Comments> commentsArrayList) {
         this.context = context;
         this.commentsArrayList = commentsArrayList;
@@ -43,7 +42,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.HolderCo
 
     @NonNull
     @Override
-    public HolderComment onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
+    public HolderComment onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         binding = ListCommentBinding.inflate(LayoutInflater.from(context),parent,false);
         return new HolderComment(binding.getRoot());
     }
@@ -53,13 +52,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.HolderCo
         Comments comments = commentsArrayList.get(position);
         String comment = comments.getComment();
         String uid = comments.getUid();
-        String timestamp = comments.getTimestamp();
-        String date = MyApplication.formatTimeStamp(Long.parseLong(timestamp));
         if(firebaseAuth.getCurrentUser()!=null && uid.equals(firebaseAuth.getUid())){
             holder.deleteBtn.setVisibility(View.VISIBLE);
-            holder.editBtn.setVisibility(View.VISIBLE);
         }
-            holder.dateTv.setText(date);
             holder.commentTv.setText(comment);
             loadCommentDetails(comments,holder);
             holder.deleteBtn.setOnClickListener(v -> {
@@ -67,60 +62,17 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.HolderCo
                 deleteComment(comments,holder);
             }
         });
-            holder.editBtn.setOnClickListener(v -> {
-                if(firebaseAuth.getCurrentUser()!=null && uid.equals(firebaseAuth.getUid())){
-                    editComment(comments,holder);
-                }
-            });
     }
     private String editComment="";
-    private void editComment(Comments comments, HolderComment holder){
-        DialogEditCommentBinding commentBinding = DialogEditCommentBinding.inflate(LayoutInflater.from(context));
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setView(commentBinding.getRoot());
-        AlertDialog dialog = builder.create();
-        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
-        dialog.show();
-        commentBinding.editcommentBtn.setOnClickListener(v -> {
-            editComment = commentBinding.editCommentEt.getText().toString().trim();
-            if(TextUtils.isEmpty(editComment)){
-                commentBinding.editCommentTil.setError(commentBinding.getRoot().getContext().getString(R.string.comment_empty));
-            }else{
-                DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
-                String timestamp = ""+System.currentTimeMillis();
-                HashMap<String, Object> hashMap = new HashMap<>();
-                hashMap.put("id",comments.getId());
-                hashMap.put("destiId",comments.getDestiId());
-                hashMap.put("timestamp",comments.getTimestamp());
-                hashMap.put("comment",editComment);
-                hashMap.put("uid",firebaseAuth.getUid());
-                reference.child(comments.getDestiId())
-                        .child("Comments")
-                        .child(comments.getId())
-                        .updateChildren(hashMap)
-                        .addOnSuccessListener(unused -> {
-                            Toast.makeText(holder.itemView.getContext(),R.string.edit_success, Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                        })
-                        .addOnFailureListener(e -> {
-                            Toast.makeText(holder.itemView.getContext(),(R.string.failed_edit_comment)+e.getMessage(), Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                        });
-            }
-        });
-        commentBinding.cancelBtn.setOnClickListener(v -> {
-            dialog.dismiss();
-        });
-    }
 
     private void deleteComment(Comments comments, HolderComment holder) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context,R.style.AlertDialogTheme);
         builder.setTitle(R.string.delete_comment)
                 .setMessage(R.string.delete_confirm)
                 .setPositiveButton(R.string.delete_opt, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+                        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
                         reference.child(comments.getDestiId())
                                 .child("Comments")
                                 .child(comments.getId())
@@ -135,7 +87,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.HolderCo
 
     private void loadCommentDetails(Comments comments, HolderComment holder) {
         String uid = comments.getUid();
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Users");
         reference.child(uid)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -166,16 +118,14 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.HolderCo
 
     class HolderComment extends RecyclerView.ViewHolder{
         ShapeableImageView profileImg;
-        ImageButton deleteBtn,editBtn;
-        TextView nameTv,dateTv,commentTv;
+        ImageButton deleteBtn;
+        TextView nameTv,commentTv;
         public HolderComment(@NonNull View itemView) {
             super(itemView);
             profileImg = binding.userProfile;
             nameTv = binding.userName;
-            dateTv = binding.commentDate;
             commentTv =  binding.userComment;
             deleteBtn = binding.deleteCommentBtn;
-            editBtn = binding.editCommentBtn;
         }
     }
 }

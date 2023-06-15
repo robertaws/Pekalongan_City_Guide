@@ -10,19 +10,22 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/background_batik"
+        android:backgroundTint="@color/palette_4"
+        android:backgroundTintMode="screen"
         tools:context=".Layout.ShowDestinationAdmin">
 
         <RelativeLayout
             android:id="@+id/toolbar"
-            android:gravity="center_vertical"
             android:background="@color/palette_4"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize">
+            android:layout_height="wrap_content">
 
             <ImageButton
                 android:id="@+id/backCategory"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="50dp"
+                android:foregroundGravity="center"
+                android:layout_height="50dp"
                 android:background="#0000"
                 android:src="@drawable/back_icon" />
 
@@ -44,18 +47,23 @@
                 android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
                 android:text="@string/category_admin"
                 android:textColor="@color/palette_1" />
         </RelativeLayout>
 
         <EditText
-            android:layout_marginTop="5dp"
+            android:layout_marginVertical="10dp"
             android:id="@+id/search_destiadmin"
             android:drawableStart="@drawable/search_icon"
             android:drawablePadding="5dp"
             android:padding="5dp"
+            android:includeFontPadding="false"
             android:fontFamily="@font/poppins_regular"
-            android:background="@color/bg"
+            android:textColor="@color/palette_1"
+            android:textColorHint="@color/palette_2"
+            android:textSize="19dp"
+            android:background="@drawable/et_style"
             android:layout_marginHorizontal="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

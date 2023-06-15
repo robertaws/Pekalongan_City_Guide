@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFEEE2CC" /> <!-- Set the desired background color for the unselected item -->
+    <corners android:radius="8dp" /> <!-- Set the desired corner radius -->
+    <stroke
+        android:width="2dp"
+        android:color="#00000000" /> <!-- Set the desired stroke color for the unselected item (transparent) -->
+</shape>

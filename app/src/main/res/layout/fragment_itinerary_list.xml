@@ -8,6 +8,7 @@
     </data>
 
     <LinearLayout
+        android:id="@+id/fragment_iter_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background_batik"
@@ -31,6 +32,7 @@
                 android:textSize="20dp"
                 android:textColor="@color/palette_1" />
         </LinearLayout>
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/itinerary_tab"
             android:layout_width="match_parent"
@@ -43,9 +45,10 @@
             app:tabTextColor="@color/palette_2"
             app:tabSelectedTextColor="@color/palette_4"
             app:tabIndicatorFullWidth="false" />
+
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
     </LinearLayout>
 </layout>

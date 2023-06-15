@@ -6,9 +6,7 @@
     <data>
 
     </data>
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,27 +15,39 @@
         android:backgroundTint="@color/palette_4"
         android:backgroundTintMode="screen"
         tools:context=".Layout.Register">
-
-        <ImageButton
-            android:background="#0000"
-            android:id="@+id/backtoLogin"
-            android:layout_margin="5dp"
-            android:padding="20dp"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/back_icon"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <ImageView
-            android:padding="5dp"
-            android:layout_gravity="center"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@drawable/logo" />
+            <ImageButton
+                android:id="@+id/backtoLogin"
+                android:background="#0000"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_margin="5dp"
+                android:padding="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/back_icon"/>
+
+            <ImageView
+                android:padding="5dp"
+                android:layout_centerInParent="true"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/logo" />
+        </RelativeLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/regisuser_til"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:helperTextTextColor="#C83838"
+            app:helperText=""
+            app:helperTextTextAppearance="@style/CustomHelperText"
+            android:textColorHint="@color/palette_2"
             app:errorEnabled="true"
             app:boxBackgroundMode="none">
             <EditText
@@ -50,18 +60,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="10dp"
                 android:background="@drawable/et_style"
                 android:hint="@string/regisuser_text"
+                android:textSize="18dp"
+                android:textColor="@color/palette_1"
                 android:inputType="textPersonName"
-                android:padding="14dp" />
+                android:padding="7dp"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/regisemail_til"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColorHint="@color/palette_2"
             app:errorEnabled="true"
+            app:helperTextTextColor="#C83838"
+            app:helperText=""
+            app:helperTextTextAppearance="@style/CustomHelperText"
             app:boxBackgroundMode="none">
             <EditText
                 android:drawableTint="@color/palette_1"
@@ -70,12 +85,13 @@
                 android:drawableLeft="@drawable/mail_icon"
                 android:id="@+id/regis_email"
                 android:fontFamily="@font/poppins_regular"
-                android:padding="14dp"
-                android:layout_marginVertical="10dp"
+                android:padding="7dp"
+                android:textSize="18dp"
                 android:layout_marginHorizontal="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/regisemail_text"
+                android:textColor="@color/palette_1"
                 android:inputType="textEmailAddress"
                 android:background="@drawable/et_style" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -85,7 +101,12 @@
             android:id="@+id/regispass_til"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColorHint="@color/palette_2"
+            app:helperTextTextColor="#C83838"
+            app:helperText=""
+            app:helperTextTextAppearance="@style/CustomHelperText"
             app:boxBackgroundMode="none"
+            app:passwordToggleTint="@color/palette_1"
             app:errorEnabled="true"
             app:passwordToggleEnabled="true">
 
@@ -96,12 +117,13 @@
                 android:drawableStart="@drawable/pass_icon"
                 android:id="@+id/regis_pass"
                 android:fontFamily="@font/poppins_regular"
-                android:layout_marginVertical="10dp"
                 android:layout_marginHorizontal="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/regispass_text"
-                android:padding="14dp"
+                android:textSize="18dp"
+                android:textColor="@color/palette_1"
+                android:padding="7dp"
                 android:inputType="textPassword"
                 android:background="@drawable/et_style" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -110,7 +132,9 @@
             android:id="@+id/regiscpass_til"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColorHint="@color/palette_2"
             app:boxBackgroundMode="none"
+            app:passwordToggleTint="@color/palette_1"
             app:errorEnabled="true"
             app:passwordToggleEnabled="true">
 
@@ -121,12 +145,13 @@
                 android:drawableStart="@drawable/pass_icon"
                 android:id="@+id/regis_cpass"
                 android:fontFamily="@font/poppins_regular"
-                android:layout_marginVertical="10dp"
                 android:layout_marginHorizontal="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/regiscfmpass_text"
-                android:padding="14dp"
+                android:textColor="@color/palette_1"
+                android:padding="7dp"
+                android:textSize="18dp"
                 android:inputType="textPassword"
                 android:background="@drawable/et_style" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -140,10 +165,8 @@
             android:background="@drawable/et_style"
             android:text="@string/regisbtn_text"
             android:fontFamily="@font/poppins_semibold"
-            android:textSize="16dp"
-            android:padding="10dp"
+            android:textSize="18dp"
+            android:padding="5dp"
             android:textColor="@color/palette_4" />
     </LinearLayout>
-</ScrollView>
-
 </layout>

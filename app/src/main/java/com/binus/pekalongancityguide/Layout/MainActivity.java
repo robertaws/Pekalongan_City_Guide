@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import static android.content.ContentValues.TAG;
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -51,12 +52,10 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.setTitle(R.string.please_wait);
         progressDialog.setCanceledOnTouchOutside(false);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        FirebaseDatabase database = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         FirebaseApp.initializeApp(this);
 
-        FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference().keepSynced(true);
-
-        DatabaseReference myRef = database.getReference("path/to/data");
+        FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference().keepSynced(true);
 
         init();
 
@@ -99,11 +98,13 @@ public class MainActivity extends AppCompatActivity {
 
         boolean hasError = false;
 
-        if (Email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
+        if (Email.isEmpty()){
             hasError = true;
             email.setError(getString(R.string.empty_email));
+        }else if(!Patterns.EMAIL_ADDRESS.matcher(Email).matches()){
+            hasError = true;
+            email.setError(getString(R.string.wrongFormatEmail));
         }
-
         if (Password.isEmpty()) {
             hasError = true;
             pass.setError(getString(R.string.empty_pass));
@@ -143,8 +144,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkUser() {
         progressDialog.setMessage(getString(R.string.check_user));
-        FirebaseUser firebaseUser =firebaseAuth.getCurrentUser();
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        FirebaseDatabase database = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         DatabaseReference databaseReference = database.getReference("Users");
         databaseReference.child(firebaseUser.getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {

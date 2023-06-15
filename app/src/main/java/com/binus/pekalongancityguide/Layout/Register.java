@@ -3,7 +3,9 @@ package com.binus.pekalongancityguide.Layout;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityRegisterBinding;
@@ -20,6 +23,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
+
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 
 public class Register extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
@@ -42,11 +47,10 @@ public class Register extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         USERNAME_EMPTY_ERROR = getString(R.string.empty_username);
         USERNAME_LENGTH_ERROR = getString(R.string.user_length);
         EMAIL_EMPTY_ERROR = getString(R.string.empty_email);
-        EMAIL_FORMAT_ERROR = getString(R.string.wrong_email);
+        EMAIL_FORMAT_ERROR = getString(R.string.wrongFormatEmail);
         PASSWORD_EMPTY_ERROR = getString(R.string.empty_pass);
         PASSWORD_LENGTH_ERROR = getString(R.string.pass_length);
         PASSWORD_NUMBER_ERROR = getString(R.string.pass_1num);
@@ -61,7 +65,7 @@ public class Register extends AppCompatActivity {
         progressDialog.setCanceledOnTouchOutside(false);
 
         init();
-
+        setHelper();
         back.setOnClickListener(v -> onBackPressed());
 
         binding.regisBtn.setOnClickListener(v -> validate());
@@ -81,7 +85,7 @@ public class Register extends AppCompatActivity {
 
     }
     String Username, Email, Password, Cfmpass;
-    void init(){
+    private void init(){
         back = findViewById(R.id.backtoLogin);
         user = findViewById(R.id.regis_user);
         email = findViewById(R.id.regis_email);
@@ -95,8 +99,51 @@ public class Register extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         setupListeners();
     }
-
-    void validate() {
+    private void setHelper(){
+        user.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    util.setHelperText(getString(R.string.user_helper));
+                } else {
+                    util.setHelperText(null);
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+        email.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    etil.setHelperText(getString(R.string.email_helper));
+                } else {
+                    etil.setHelperText(null);
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+        pass.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    til.setHelperText(getString(R.string.pass_helper));
+                } else {
+                    til.setHelperText(null);
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+    private void validate() {
         String USERNAME_EMPTY_ERROR = getString(R.string.empty_username);
         String USERNAME_LENGTH_ERROR = getString(R.string.user_length);
         String EMAIL_EMPTY_ERROR = getString(R.string.empty_email);
@@ -166,7 +213,7 @@ public class Register extends AppCompatActivity {
             cpass.setError(null);
         }
 
-        if (allFieldsValid) {
+        if (allFieldsValid){
             createUser();
         }
     }
@@ -239,7 +286,7 @@ public class Register extends AppCompatActivity {
         hashMap.put("profileImage","");
         hashMap.put("userType","user");
         hashMap.put("timestamp", timestamp);
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        FirebaseDatabase database = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         DatabaseReference databaseReference = database.getReference("Users");
         databaseReference.child(uid)
                 .setValue(hashMap)

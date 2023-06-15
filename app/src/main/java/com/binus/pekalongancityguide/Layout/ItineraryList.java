@@ -1,24 +1,24 @@
 package com.binus.pekalongancityguide.Layout;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.FragmentItineraryListBinding;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,14 +38,23 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
+
+import static android.content.ContentValues.TAG;
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 
 public class ItineraryList extends Fragment {
     private FragmentItineraryListBinding binding;
     private FirebaseAuth firebaseAuth;
+    private FirebaseDatabase database;
+    ItineraryPagerAdapter vpAdapter;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private List<Fragment> fragments;
+
     public ItineraryList() {
 
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,10 +66,29 @@ public class ItineraryList extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentItineraryListBinding.inflate(inflater, container, false);
+        init();
+        database = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
+        updateItineraryView();
+        return binding.getRoot();
+    }
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        DatabaseReference userRef = database.getReference("Users").child(Objects.requireNonNull(firebaseAuth.getUid()));
-        userRef.keepSynced(true);
+    public void init() {
+        viewPager = binding.viewPager;
+        tabLayout = binding.itineraryTab;
+    }
+
+    public void setAdapter(ItineraryPagerAdapter adapter) {
+        this.vpAdapter = adapter;
+    }
+
+    public void onDataChanged() {
+        if (viewPager != null && viewPager.getAdapter() != null) {
+            viewPager.getAdapter().notifyDataSetChanged();
+        }
+    }
+
+    public void updateItineraryView() {
+        DatabaseReference userRef = database.getReference("Users").child(firebaseAuth.getUid());
         Query itineraryQuery = userRef.child("itinerary");
         itineraryQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -77,7 +105,8 @@ public class ItineraryList extends Fragment {
 
                 List<String> dates = new ArrayList<>(uniqueDates);
                 Collections.sort(dates, new Comparator<String>() {
-                    DateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
+                    final DateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
+
                     @Override
                     public int compare(String date1, String date2) {
                         try {
@@ -91,35 +120,58 @@ public class ItineraryList extends Fragment {
                     }
                 });
 
-                List<Fragment> fragments = createFragmentsList(dates);
+                fragments = createFragmentsList(dates);
+                vpAdapter = new ItineraryPagerAdapter(getContext(), getChildFragmentManager(), fragments, dates);
+                viewPager.setAdapter(vpAdapter);
+                viewPager.setOffscreenPageLimit(10);
 
-                ItineraryPagerAdapter vpAdapter = new ItineraryList.ItineraryPagerAdapter(getContext(), getChildFragmentManager(), fragments, dates);
-                binding.viewPager.setAdapter(vpAdapter);
-                binding.viewPager.setOffscreenPageLimit(10);
-                binding.itineraryTab.setupWithViewPager(binding.viewPager);
-                binding.itineraryTab.setSelectedTabIndicatorColor(ContextCompat.getColor(getContext(), R.color.white));
+                if (!fragments.isEmpty()) {
+                    tabLayout.setupWithViewPager(viewPager);
+                    tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(getContext(), R.color.white));
+                } else {
+                    tabLayout.setVisibility(View.GONE);
+                }
+
+                vpAdapter.notifyDataSetChanged();
+
+                if (fragments.isEmpty() && dates.isEmpty()) {
+                    EmptyItinerary emptyFragment = new EmptyItinerary();
+                    fragments.add(emptyFragment);
+                    vpAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-        return binding.getRoot();
     }
-    public class ItineraryPagerAdapter extends FragmentPagerAdapter {
+
+    public class ItineraryPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> fragments;
         private final List<String> dates;
         private String selectedDate;
+
         public ItineraryPagerAdapter(Context context, FragmentManager fm, List<Fragment> fragments, List<String> dates) {
             super(fm);
             this.fragments = fragments;
             this.dates = dates;
         }
+
+        @Override
+        public int getItemPosition(@NonNull Object object) {
+            return POSITION_NONE;
+        }
+
+        public long getItemId(int position) {
+            return fragments.get(position).hashCode();
+        }
+
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = fragments.get(position);
-            return fragment;
+            return fragments.get(position);
         }
+
         @Override
         public int getCount() {
             return fragments.size();
@@ -127,19 +179,32 @@ public class ItineraryList extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return dates.get(position);
+            if (position >= 0 && position < dates.size()) {
+                return dates.get(position);
+            } else {
+                return "";
+            }
         }
 
         public void setSelectedDate(String date) {
             this.selectedDate = date;
             notifyDataSetChanged();
         }
+
+        @Override
+        public void restoreState(Parcelable state, ClassLoader loader) {
+            try {
+                super.restoreState(state, loader);
+            } catch (IllegalStateException e) {
+                updateItineraryView();
+            }
+        }
     }
 
     private List<Fragment> createFragmentsList(List<String> dates) {
         List<Fragment> fragments = new ArrayList<>();
         Collections.sort(dates, new Comparator<String>() {
-            DateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
+            final DateFormat dateFormat = new SimpleDateFormat("dd MMMM", Locale.getDefault());
             @Override
             public int compare(String date1, String date2) {
                 try {

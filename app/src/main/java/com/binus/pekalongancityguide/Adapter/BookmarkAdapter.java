@@ -28,6 +28,7 @@ import com.binus.pekalongancityguide.Misc.FilterBookmark;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ListFavoriteBinding;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +43,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 import static com.binus.pekalongancityguide.Misc.Constants.MAX_BYTES_IMAGE;
 
 public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.HolderBookmark> implements Filterable{
@@ -103,10 +105,8 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
         holder.unBookmark.setOnClickListener(v ->{
             AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
             builder.setTitle(R.string.remove_bookmark);
-            builder.setMessage(R.string.remove_confirm);
-            builder.setPositiveButton(R.string.yes_txt, (dialog, which) -> {
-                MyApplication.removeFavorite(context,destination.getId());
-            });
+            builder.setMessage(R.string.delete_item);
+            builder.setPositiveButton(R.string.yes_txt, (dialog, which) -> MyApplication.removeFavorite(context, destination.getId(), FirebaseAuth.getInstance().getUid()));
             builder.setNegativeButton(R.string.no_txt, (dialog, which) -> dialog.dismiss());
             AlertDialog dialog = builder.create();
             dialog.show();
@@ -115,7 +115,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
     private void loadDestination(Destination destination, HolderBookmark holder) {
         String destiId = destination.getId();
         Log.d(TAG,"loadDesti : Destination details of  desti ID : "+destiId);
-        DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination");
+        DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
         reference.child(destiId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -127,16 +127,16 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
                             String categoryId = "" + snapshot.child("categoryId").getValue();
                             String url = "" + snapshot.child("url").getValue();
                             String desRating = "" + snapshot.child("rating").getValue();
-                            double latitude = Double.parseDouble(snapshot.child("latitude").getValue().toString());
-                            double longitude = Double.parseDouble(snapshot.child("longitude").getValue().toString());
+                            String latitude = snapshot.child("latitude").getValue().toString();
+                            String longitude = snapshot.child("longitude").getValue().toString();
                             destination.setFavorite(true);
                             destination.setTitle(title);
                             destination.setDescription(description);
                             destination.setAddress(address);
                             destination.setCategoryId(categoryId);
                             destination.setUrl(url);
-                            destination.setDesLat(latitude);
-                            destination.setDesLong(longitude);
+                            destination.setLatitude(latitude);
+                            destination.setLongitude(longitude);
                             destination.setRating(desRating);
                             StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(url);
                             reference.getBytes(MAX_BYTES_IMAGE)

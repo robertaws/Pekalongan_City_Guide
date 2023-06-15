@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/palette_4">
+
+    <!-- Custom dialog title -->
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textColor="@color/palette_1"
+        android:paddingTop="16dp"
+        android:paddingHorizontal="16dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/dialog_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/palette_2"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="16dp"
+        android:textStyle="bold|italic" />
+
+    <!-- Container for the time picker -->
+    <LinearLayout
+        android:id="@+id/time_picker_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" />
+
+</LinearLayout>

@@ -15,8 +15,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.binus.pekalongancityguide.Misc.ImageFullscreen;
 import com.binus.pekalongancityguide.Misc.MyApplication;
@@ -34,13 +32,16 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Locale;
 import java.util.Objects;
 
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
+
 public class ProfileFragment extends Fragment {
     private FragmentProfileBinding binding;
-    private Locale currentLocale = Locale.getDefault();
+    private final Locale currentLocale = Locale.getDefault();
     private FirebaseAuth firebaseAuth;
     private static final String TAG = "PROFILE_TAG";
     private String mProfileImgUrl;
     private SharedPreferences prefs;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,16 +89,8 @@ public class ProfileFragment extends Fragment {
         binding.logoutBtn.setOnClickListener(v -> {
             logoutConfirm();
         });
-        binding.showItineraryBtn.setOnClickListener(v -> {
-            ItineraryList itineraryDetails = new ItineraryList();
-            FragmentManager fragmentManager = getParentFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container, itineraryDetails);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-        });
         binding.editLang.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.CustomAlertDialogTheme);
             builder.setTitle(R.string.select_language)
                     .setItems(new CharSequence[]{getString(R.string.english_opt), getString(R.string.indo_opt)}, (dialog, which) -> {
                         Locale newLocale;
@@ -144,7 +137,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getInfo(){
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        FirebaseDatabase database = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         Log.e(TAG,"Loading User Info..."+firebaseAuth.getUid());
         if (firebaseAuth.getUid() != null) {
             DatabaseReference r = database.getReference("Users");

@@ -41,6 +41,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
+
 public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.HolderDestination> implements Filterable {
     private final Context context;
     public ArrayList<Destination> destinations, filterList;
@@ -68,7 +70,7 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
         String title = destination.getTitle();
         holder.title.setText(title);
         loadImage(destination, holder);
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Destination")
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination")
                 .child(destiId);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -114,7 +116,6 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
             }
         });
         float distance = destination.getDistance();
-//        Log.d(TAG, "DISTANCE: " + distance);
         String distanceString;
         if (distance < 1) {
             int distanceInMeters = (int) (distance * 1000);
@@ -141,12 +142,23 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
                         holder.layoutImage.setBackground(drawable);
                         holder.progressBar.setVisibility(View.GONE);
                     }
+
                     @Override
                     public void onLoadFailed(@Nullable Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
                         Log.d(TAG, "on Failure: failed to getting file from url due to");
                     }
                 });
+    }
+
+    public interface OnDataChangedListener {
+        void onDataChanged();
+    }
+
+    private ItineraryAdapter.OnDataChangedListener mListener;
+
+    public void setOnDataChangedListener(ItineraryAdapter.OnDataChangedListener listener) {
+        mListener = listener;
     }
 
     @Override

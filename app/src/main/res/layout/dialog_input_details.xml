@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardElevation="4dp"
+    android:layout_marginHorizontal="5dp"
+    android:layout_marginVertical="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/palette_4"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="@color/palette_2"
+            android:text="Add to Itinerary"
+            android:textStyle="bold"
+            android:fontFamily="@font/poppins_semibold"
+            android:layout_alignParentTop="true" />
+
+        <TextView
+            android:id="@+id/dialog_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12dp"
+            android:textColor="@color/palette_3"
+            android:text="aaa"
+            android:textStyle="bold"
+            android:fontFamily="@font/poppins_semibold"
+            android:layout_below="@id/dialog_title" />
+
+        <LinearLayout
+            android:id="@+id/container_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginVertical="10dp"
+            android:layout_below="@id/dialog_subtitle">
+
+            <!-- The dynamically added item layouts will go here -->
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/time_picker_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/date_et"
+                android:layout_width="match_parent"
+                android:textColorHint="@color/palette_2"
+                android:layout_height="wrap_content"
+                android:textColor="@color/palette_1"
+                android:hint="@string/select_date_iter"
+                android:fontFamily="@font/poppins_regular"
+                android:focusable="false"
+                android:layout_toStartOf="@id/datepicker_btn"
+                android:inputType="none"
+                android:clickable="true" />
+
+            <ImageButton
+                android:id="@+id/datepicker_btn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/date_icon"
+                android:background="#0000"
+                app:tint="@color/palette_1" />
+
+            <EditText
+                android:id="@+id/starttime_et"
+                android:layout_below="@id/date_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/palette_2"
+                android:textColor="@color/palette_1"
+                android:hint="@string/select_start_time_iter"
+                android:fontFamily="@font/poppins_regular"
+                android:layout_toStartOf="@id/startpicker_btn"
+                android:focusable="false"
+                android:inputType="none"
+                android:clickable="true" />
+
+            <ImageButton
+                android:id="@+id/startpicker_btn"
+                android:layout_below="@id/date_et"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="#0000"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/baseline_access_time_24"
+                app:tint="@color/palette_1" />
+
+            <EditText
+                android:id="@+id/endtime_et"
+                android:layout_width="match_parent"
+                android:layout_below="@id/starttime_et"
+                android:textColorHint="@color/palette_2"
+                android:layout_height="wrap_content"
+                android:hint="@string/select_end_time_iter"
+                android:fontFamily="@font/poppins_regular"
+                android:focusable="false"
+                android:textColor="@color/palette_1"
+                android:layout_toStartOf="@id/endpicker_btn"
+                android:inputType="none"
+                android:clickable="true" />
+
+            <ImageButton
+                android:id="@+id/endpicker_btn"
+                android:layout_below="@id/starttime_et"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentEnd="true"
+                android:background="#0000"
+                android:src="@drawable/baseline_access_time_24"
+                app:tint="@color/palette_1" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/add_iter_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add"
+            android:textColor="@color/palette_4" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
