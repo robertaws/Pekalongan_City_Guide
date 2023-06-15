@@ -244,4 +244,5 @@
     <string name="email_helper">The email address should be in the following format: username@domain.com</string>
     <string name="pass_helper"><![CDATA[Password must be > 8 characters, contains 1 symbol & 1 number]]></string>
     <string name="user_helper">username must be between 3 - 12 characters</string>
+    <string name="wrongFormatEmail">Wrong Email Format</string>
 </resources>

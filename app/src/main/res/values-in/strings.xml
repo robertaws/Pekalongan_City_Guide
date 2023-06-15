@@ -245,4 +245,5 @@
     <string name="email_helper">alamat email harus memiliki format berikut : username@domain.com</string>
     <string name="pass_helper"><![CDATA[kata sandi harus > 8 karakter, terdapat 1 simbol & 1 nomor]]></string>
     <string name="user_helper">nama pengguna harus memiliki 3 - 12 karakter</string>
+    <string name="wrongFormatEmail">format email salah</string>
 </resources>

@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -45,6 +46,7 @@ public class AdminHome extends AppCompatActivity {
     private CategoryAdapter categoryAdapter;
     private ProgressDialog dialog;
     private AlertDialog aDialog;
+    private boolean doubleTap = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +141,21 @@ public class AdminHome extends AppCompatActivity {
             });
         }
     }
-
+    @Override
+    public void onBackPressed() {
+        if (doubleTap) {
+            super.onBackPressed();
+            return;
+        }
+        this.doubleTap = true;
+        Toast.makeText(this,R.string.press_back, Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doubleTap = false;
+            }
+        }, 2000);
+    }
     private void addCategoryFirebase() {
         dialog.setMessage(getString(R.string.addingCat));
         dialog.show();

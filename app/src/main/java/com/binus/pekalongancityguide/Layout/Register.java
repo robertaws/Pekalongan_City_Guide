@@ -50,7 +50,7 @@ public class Register extends AppCompatActivity {
         USERNAME_EMPTY_ERROR = getString(R.string.empty_username);
         USERNAME_LENGTH_ERROR = getString(R.string.user_length);
         EMAIL_EMPTY_ERROR = getString(R.string.empty_email);
-        EMAIL_FORMAT_ERROR = getString(R.string.wrong_email);
+        EMAIL_FORMAT_ERROR = getString(R.string.wrongFormatEmail);
         PASSWORD_EMPTY_ERROR = getString(R.string.empty_pass);
         PASSWORD_LENGTH_ERROR = getString(R.string.pass_length);
         PASSWORD_NUMBER_ERROR = getString(R.string.pass_1num);
@@ -85,7 +85,7 @@ public class Register extends AppCompatActivity {
 
     }
     String Username, Email, Password, Cfmpass;
-    void init(){
+    private void init(){
         back = findViewById(R.id.backtoLogin);
         user = findViewById(R.id.regis_user);
         email = findViewById(R.id.regis_email);
@@ -99,7 +99,7 @@ public class Register extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         setupListeners();
     }
-    void setHelper(){
+    private void setHelper(){
         user.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -143,7 +143,7 @@ public class Register extends AppCompatActivity {
             public void afterTextChanged(Editable s) {}
         });
     }
-    void validate() {
+    private void validate() {
         String USERNAME_EMPTY_ERROR = getString(R.string.empty_username);
         String USERNAME_LENGTH_ERROR = getString(R.string.user_length);
         String EMAIL_EMPTY_ERROR = getString(R.string.empty_email);
@@ -213,7 +213,7 @@ public class Register extends AppCompatActivity {
             cpass.setError(null);
         }
 
-        if (allFieldsValid) {
+        if (allFieldsValid){
             createUser();
         }
     }

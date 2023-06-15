@@ -98,11 +98,13 @@ public class MainActivity extends AppCompatActivity {
 
         boolean hasError = false;
 
-        if (Email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
+        if (Email.isEmpty()){
             hasError = true;
             email.setError(getString(R.string.empty_email));
+        }else if(!Patterns.EMAIL_ADDRESS.matcher(Email).matches()){
+            hasError = true;
+            email.setError(getString(R.string.wrongFormatEmail));
         }
-
         if (Password.isEmpty()) {
             hasError = true;
             pass.setError(getString(R.string.empty_pass));
