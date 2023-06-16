@@ -1,4 +1,4 @@
-package com.binus.pekalongancityguide.ItemList;
+package com.binus.pekalongancityguide.ItemValues;
 
 public class ConvoItem {
 

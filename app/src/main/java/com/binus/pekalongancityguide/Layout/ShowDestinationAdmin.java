@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.binus.pekalongancityguide.Adapter.AdminDestinationAdapter;
-import com.binus.pekalongancityguide.ItemTemplate.Destination;
+import com.binus.pekalongancityguide.Model.Destination;
 import com.binus.pekalongancityguide.databinding.ActivityShowDestinationAdminBinding;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

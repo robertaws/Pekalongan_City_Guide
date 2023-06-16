@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.binus.pekalongancityguide.ItemTemplate.Categories;
+import com.binus.pekalongancityguide.Model.Categories;
 import com.binus.pekalongancityguide.databinding.FragmentDestinationBinding;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

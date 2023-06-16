@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.Adapter.FoodAdapter;
 import com.binus.pekalongancityguide.Adapter.NewsAdapter;
-import com.binus.pekalongancityguide.ItemList.FoodItem;
-import com.binus.pekalongancityguide.ItemTemplate.Food;
+import com.binus.pekalongancityguide.ItemValues.FoodItem;
+import com.binus.pekalongancityguide.Model.Food;
 import com.binus.pekalongancityguide.R;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;

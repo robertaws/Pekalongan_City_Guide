@@ -12,8 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.binus.pekalongancityguide.ItemTemplate.Food;
 import com.binus.pekalongancityguide.Layout.FoodDetails;
+import com.binus.pekalongancityguide.Model.Food;
 import com.binus.pekalongancityguide.R;
 
 import java.util.List;

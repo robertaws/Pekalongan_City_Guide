@@ -28,12 +28,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.binus.pekalongancityguide.Adapter.CommentAdapter;
 import com.binus.pekalongancityguide.Adapter.OpeningHoursAdapter;
 import com.binus.pekalongancityguide.Adapter.ReviewAdapter;
-import com.binus.pekalongancityguide.ItemTemplate.Comments;
-import com.binus.pekalongancityguide.ItemTemplate.OpeningHours;
-import com.binus.pekalongancityguide.ItemTemplate.Review;
 import com.binus.pekalongancityguide.Misc.ImageFullscreen;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.Misc.ToastUtils;
+import com.binus.pekalongancityguide.Model.Bookmark;
+import com.binus.pekalongancityguide.Model.Comments;
+import com.binus.pekalongancityguide.Model.OpeningHours;
+import com.binus.pekalongancityguide.Model.Review;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityDestinationDetailsBinding;
 import com.binus.pekalongancityguide.databinding.DialogAddCommentBinding;
@@ -75,7 +76,7 @@ public class DestinationDetails extends AppCompatActivity {
     private ImageButton startBtn, endBtn, dateBtn;
     private Calendar calendar;
     private AlertDialog dialog;
-    boolean inFavorite = false;
+    boolean inBookmark = false;
     FirebaseAuth firebaseAuth;
     private FirebaseDatabase database;
     private ArrayList<Comments> commentsArrayList;
@@ -98,7 +99,7 @@ public class DestinationDetails extends AppCompatActivity {
         database = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() != null) {
-            checkFavorite();
+            checkBookmark();
         }
         if (firebaseAuth.getCurrentUser() == null) {
             binding.addCommentBtn.setVisibility(View.INVISIBLE);
@@ -118,10 +119,10 @@ public class DestinationDetails extends AppCompatActivity {
             if (firebaseAuth.getCurrentUser() == null) {
                 Toast.makeText(DestinationDetails.this,R.string.notLogin, Toast.LENGTH_SHORT).show();
             } else {
-                if (inFavorite) {
-                    MyApplication.removeFavorite(DestinationDetails.this, destiId,firebaseAuth.getUid());
+                if (inBookmark) {
+                    inBookmark = MyApplication.removeBookmark(DestinationDetails.this, destiId, firebaseAuth.getUid());
                 } else {
-                    MyApplication.addtoFavorite(DestinationDetails.this, destiId,firebaseAuth.getUid());
+                    inBookmark = MyApplication.addtoBookmark(DestinationDetails.this, destiId, firebaseAuth.getUid());
                 }
             }
         });
@@ -741,25 +742,26 @@ public class DestinationDetails extends AppCompatActivity {
                 });
     }
 
-    private void checkFavorite(){
+    private void checkBookmark() {
         DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Users");
         reference.child(firebaseAuth.getUid()).child("Favorites").child(destiId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        inFavorite = snapshot.exists();
-                        if(inFavorite){
-                            binding.saveItem.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.bookmark,0,0);
-                            binding.saveItem.setText(R.string.unbookmark_text);
-                        }else{
-                            binding.saveItem.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.remove_bookmark,0,0);
+                        if (snapshot.exists()) {
+                            Bookmark bookmarkModel = snapshot.getValue(Bookmark.class);
+                            if (bookmarkModel != null) {
+                                binding.saveItem.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.bookmark, 0, 0);
+                                binding.saveItem.setText(R.string.unbookmark_text);
+                            }
+                        } else {
+                            binding.saveItem.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.remove_bookmark, 0, 0);
                             binding.saveItem.setText(R.string.bookmark_text);
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-
                     }
                 });
     }

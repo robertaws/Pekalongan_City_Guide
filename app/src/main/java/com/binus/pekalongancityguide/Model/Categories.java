@@ -1,4 +1,4 @@
-package com.binus.pekalongancityguide.ItemTemplate;
+package com.binus.pekalongancityguide.Model;
 
 public class Categories {
     String id,category,uid;

@@ -20,7 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.binus.pekalongancityguide.Adapter.CategoryAdapter;
-import com.binus.pekalongancityguide.ItemTemplate.Categories;
+import com.binus.pekalongancityguide.Model.Categories;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityAdminHomeBinding;
 import com.google.firebase.auth.FirebaseAuth;

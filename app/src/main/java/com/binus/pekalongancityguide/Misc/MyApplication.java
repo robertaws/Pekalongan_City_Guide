@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.binus.pekalongancityguide.Adapter.ItineraryAdapter;
 import com.binus.pekalongancityguide.Layout.ItineraryList;
+import com.binus.pekalongancityguide.Model.Bookmark;
 import com.binus.pekalongancityguide.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -29,12 +30,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Locale;
 
 import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 
 public class MyApplication extends Application {
+    public static boolean inBookmark = false;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -153,33 +154,36 @@ public class MyApplication extends Application {
         dialog.show();
     }
 
-    public static void addtoFavorite(Context context, String destiId, String uid){
+    public static boolean addtoBookmark(Context context, String destiId, String uid) {
+        inBookmark = true;
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        if(firebaseAuth.getCurrentUser() == null){
-            Toast.makeText(context,R.string.notLogin, Toast.LENGTH_SHORT).show();
-        }else{
+        if (firebaseAuth.getCurrentUser() == null) {
+            Toast.makeText(context, R.string.notLogin, Toast.LENGTH_SHORT).show();
+        } else {
             long timestamp = System.currentTimeMillis();
-            HashMap<String,Object> hashMap = new HashMap<>();
-            hashMap.put("destiId",destiId);
-            hashMap.put("timestamp",timestamp);
-            hashMap.put("uid",uid);
+            Bookmark bookmark = new Bookmark(destiId, timestamp, uid);
+
             DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Users");
             reference.child(firebaseAuth.getUid()).child("Favorites").child(destiId)
-                    .setValue(hashMap)
-                    .addOnSuccessListener(unused -> Toast.makeText(context,R.string.added_bookmark, Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e -> Toast.makeText(context, "Failed to Added favorites due to" + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    .setValue(bookmark)
+                    .addOnSuccessListener(unused -> Toast.makeText(context, R.string.added_bookmark, Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> Toast.makeText(context, "Failed to add to favorites due to " + e.getMessage(), Toast.LENGTH_SHORT).show());
         }
+        return inBookmark;
     }
-    public static void removeFavorite(Context context, String destiId,String uid){
+
+    public static boolean removeBookmark(Context context, String destiId, String uid) {
+        inBookmark = false;
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        if(firebaseAuth.getCurrentUser()==null){
-            Toast.makeText(context,R.string.notLogin, Toast.LENGTH_SHORT).show();
-        }else{
+        if (firebaseAuth.getCurrentUser() == null) {
+            Toast.makeText(context, R.string.notLogin, Toast.LENGTH_SHORT).show();
+        } else {
             DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Users");
             reference.child(firebaseAuth.getUid()).child("Favorites").child(destiId)
                     .removeValue()
-                    .addOnSuccessListener(unused -> Toast.makeText(context,R.string.removed_bookmark, Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e -> Toast.makeText(context, "Failed to remove favorites due to" + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    .addOnSuccessListener(unused -> Toast.makeText(context, R.string.removed_bookmark, Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> Toast.makeText(context, "Failed to remove favorites due to " + e.getMessage(), Toast.LENGTH_SHORT).show());
         }
+        return inBookmark;
     }
 }

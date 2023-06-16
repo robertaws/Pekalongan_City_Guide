@@ -15,9 +15,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.binus.pekalongancityguide.ItemTemplate.Categories;
 import com.binus.pekalongancityguide.Layout.ShowDestinationAdmin;
 import com.binus.pekalongancityguide.Misc.FilterCategory;
+import com.binus.pekalongancityguide.Model.Categories;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ListCategoryBinding;
 import com.google.firebase.database.DataSnapshot;

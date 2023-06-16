@@ -15,7 +15,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.binus.pekalongancityguide.Adapter.BookmarkAdapter;
-import com.binus.pekalongancityguide.ItemTemplate.Destination;
+import com.binus.pekalongancityguide.Model.Bookmark;
+import com.binus.pekalongancityguide.Model.Destination;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.FragmentBookmarkBinding;
 import com.google.firebase.auth.FirebaseAuth;
@@ -73,8 +74,10 @@ public class BookmarkFragment extends Fragment {
                         destinationArrayList.clear();
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             String destiId = "" + dataSnapshot.child("destiId").getValue();
+                            Bookmark bookmark = new Bookmark(destiId, System.currentTimeMillis(), firebaseAuth.getUid());
                             Destination destination = new Destination();
                             destination.setId(destiId);
+                            destination.setBookmark(bookmark);
                             destinationArrayList.add(destination);
                         }
 

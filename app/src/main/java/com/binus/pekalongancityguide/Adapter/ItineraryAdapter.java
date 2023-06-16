@@ -35,11 +35,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
 import com.binus.pekalongancityguide.Layout.ItineraryList;
 import com.binus.pekalongancityguide.Misc.AlphaTransformation;
 import com.binus.pekalongancityguide.Misc.MyApplication;
 import com.binus.pekalongancityguide.Misc.ToastUtils;
+import com.binus.pekalongancityguide.Model.Itinerary;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.DialogAddToItineraryBinding;
 import com.bumptech.glide.Glide;

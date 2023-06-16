@@ -1,4 +1,4 @@
-package com.binus.pekalongancityguide.ItemTemplate;
+package com.binus.pekalongancityguide.Model;
 public class Review {
     private String reviewAuthor;
     private int reviewRating;

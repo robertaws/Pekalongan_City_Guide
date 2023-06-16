@@ -23,12 +23,12 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.Layout.AddItinerary;
 import com.binus.pekalongancityguide.Layout.DestinationDetails;
 import com.binus.pekalongancityguide.Layout.ItineraryPager;
 import com.binus.pekalongancityguide.Misc.FilterIterUser;
 import com.binus.pekalongancityguide.Misc.ToastUtils;
+import com.binus.pekalongancityguide.Model.Destination;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ListIterBinding;
 import com.bumptech.glide.Glide;

@@ -13,8 +13,8 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
+import com.binus.pekalongancityguide.Model.User;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityRegisterBinding;
 import com.google.android.material.textfield.TextInputLayout;
@@ -33,6 +33,7 @@ public class Register extends AppCompatActivity {
     TextInputLayout til, ctil, etil, util;
     Button register;
     ProgressDialog progressDialog;
+    User userModel;
     private ActivityRegisterBinding binding;
     private String USERNAME_EMPTY_ERROR;
     private String USERNAME_LENGTH_ERROR;
@@ -44,6 +45,7 @@ public class Register extends AppCompatActivity {
     private String PASSWORD_SYMBOL_ERROR;
     private String PASSWORD_MATCH_ERROR;
     private String EMAIL_ALREADY_USED_ERROR;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,8 +86,10 @@ public class Register extends AppCompatActivity {
         });
 
     }
+
     String Username, Email, Password, Cfmpass;
-    private void init(){
+
+    private void init() {
         back = findViewById(R.id.backtoLogin);
         user = findViewById(R.id.regis_user);
         email = findViewById(R.id.regis_email);
@@ -99,60 +103,89 @@ public class Register extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         setupListeners();
     }
-    private void setHelper(){
+
+    private void setHelper() {
         user.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0) {
+                if (s.length() > 0 && s.length() < 3 || s.length() > 12) {
                     util.setHelperText(getString(R.string.user_helper));
                 } else {
                     util.setHelperText(null);
                 }
             }
+
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
         email.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0) {
+                if (s.length() > 0 && !Patterns.EMAIL_ADDRESS.matcher(s).matches()) {
                     etil.setHelperText(getString(R.string.email_helper));
                 } else {
                     etil.setHelperText(null);
                 }
             }
+
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
         pass.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0) {
+                Password = binding.regisPass.getText().toString().trim();
+                boolean isValidPassword = s.length() >= 8 && containsNumber(Password) && containsSymbol(Password);
+                if (s.length() > 0 && !isValidPassword) {
                     til.setHelperText(getString(R.string.pass_helper));
                 } else {
                     til.setHelperText(null);
                 }
             }
+
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        cpass.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Password = binding.regisPass.getText().toString().trim();
+                String confirmPassword = s.toString().trim();
+                boolean isValidPassword = confirmPassword.equals(Password);
+
+                if (confirmPassword.length() > 0 && !isValidPassword) {
+                    ctil.setHelperText(PASSWORD_MATCH_ERROR);
+                } else {
+                    ctil.setHelperText(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
         });
     }
+
     private void validate() {
-        String USERNAME_EMPTY_ERROR = getString(R.string.empty_username);
-        String USERNAME_LENGTH_ERROR = getString(R.string.user_length);
-        String EMAIL_EMPTY_ERROR = getString(R.string.empty_email);
-        String EMAIL_FORMAT_ERROR = getString(R.string.wrong_email);
-        String PASSWORD_EMPTY_ERROR = getString(R.string.empty_pass);
-        String PASSWORD_LENGTH_ERROR = getString(R.string.pass_length);
-        String PASSWORD_NUMBER_ERROR = getString(R.string.pass_1num);
-        String PASSWORD_SYMBOL_ERROR = getString(R.string.pass1Symbol);
-        String PASSWORD_MATCH_ERROR = getString(R.string.passnotMatch);
         Username = binding.regisUser.getText().toString().trim();
         Email = binding.regisEmail.getText().toString().trim();
         Password = binding.regisPass.getText().toString().trim();
@@ -213,8 +246,9 @@ public class Register extends AppCompatActivity {
             cpass.setError(null);
         }
 
-        if (allFieldsValid){
-            createUser();
+        if (allFieldsValid) {
+            userModel = new User(Username, Email, Password);
+            createUser(userModel);
         }
     }
 
@@ -247,10 +281,11 @@ public class Register extends AppCompatActivity {
         });
 
     }
-    private void createUser() {
+
+    private void createUser(User userModel) {
         progressDialog.setMessage(getString(R.string.create_account));
         progressDialog.show();
-        
+
         firebaseAuth.fetchSignInMethodsForEmail(Email)
                 .addOnSuccessListener(signInMethodsResult -> {
                     boolean isNewUser = signInMethodsResult.getSignInMethods().isEmpty();
@@ -258,8 +293,8 @@ public class Register extends AppCompatActivity {
                         firebaseAuth.createUserWithEmailAndPassword(Email, Password)
                                 .addOnSuccessListener(authResult -> {
                                     progressDialog.dismiss();
-                                    addUser();
-                                    Toast.makeText(this,R.string.suces_register, Toast.LENGTH_SHORT).show();
+                                    addUser(userModel);
+                                    Toast.makeText(this, R.string.suces_register, Toast.LENGTH_SHORT).show();
                                 })
                                 .addOnFailureListener(e -> {
                                     progressDialog.dismiss();
@@ -275,16 +310,17 @@ public class Register extends AppCompatActivity {
                     Toast.makeText(Register.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
-    private void addUser() {
+
+    private void addUser(User userModel) {
         progressDialog.setMessage(getString(R.string.saving_user_info));
         long timestamp = System.currentTimeMillis();
         String uid = firebaseAuth.getUid();
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("uid",uid);
-        hashMap.put("Email",Email);
-        hashMap.put("Username",Username);
-        hashMap.put("profileImage","");
-        hashMap.put("userType","user");
+        hashMap.put("uid", uid);
+        hashMap.put("Email", userModel.getEmail());
+        hashMap.put("Username", userModel.getUsername());
+        hashMap.put("profileImage", "");
+        hashMap.put("userType", "user");
         hashMap.put("timestamp", timestamp);
         FirebaseDatabase database = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         DatabaseReference databaseReference = database.getReference("Users");
@@ -293,9 +329,9 @@ public class Register extends AppCompatActivity {
                 .addOnSuccessListener(unused -> {
                     progressDialog.dismiss();
                     Toast.makeText(Register.this, R.string.acount_created, Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(Register.this,MainActivity.class));
+                    startActivity(new Intent(Register.this, MainActivity.class));
                     finish();
                 })
-                .addOnFailureListener(e -> Toast.makeText(Register.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> Toast.makeText(Register.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 }

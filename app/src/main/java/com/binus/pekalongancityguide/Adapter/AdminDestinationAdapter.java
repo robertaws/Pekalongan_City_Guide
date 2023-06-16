@@ -22,11 +22,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.Layout.DestinationDetailAdmin;
 import com.binus.pekalongancityguide.Layout.EditDestination;
 import com.binus.pekalongancityguide.Misc.FilterDestiAdmin;
 import com.binus.pekalongancityguide.Misc.MyApplication;
+import com.binus.pekalongancityguide.Model.Destination;
 import com.binus.pekalongancityguide.databinding.ListDestiAdminBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;

@@ -38,7 +38,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.binus.pekalongancityguide.Adapter.ItineraryAdapter;
-import com.binus.pekalongancityguide.ItemTemplate.Itinerary;
+import com.binus.pekalongancityguide.Model.Itinerary;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.FragmentItineraryBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;

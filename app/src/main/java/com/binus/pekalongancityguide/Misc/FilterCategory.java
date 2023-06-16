@@ -3,7 +3,7 @@ package com.binus.pekalongancityguide.Misc;
 import android.widget.Filter;
 
 import com.binus.pekalongancityguide.Adapter.CategoryAdapter;
-import com.binus.pekalongancityguide.ItemTemplate.Categories;
+import com.binus.pekalongancityguide.Model.Categories;
 
 import java.util.ArrayList;
 

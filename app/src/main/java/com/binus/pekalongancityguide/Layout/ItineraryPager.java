@@ -20,7 +20,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.binus.pekalongancityguide.ItemTemplate.Categories;
+import com.binus.pekalongancityguide.Model.Categories;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.DialogChooseDateBinding;
 import com.binus.pekalongancityguide.databinding.FragmentItineraryPagerBinding;

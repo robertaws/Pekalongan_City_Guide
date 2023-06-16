@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.binus.pekalongancityguide.Adapter.ConvoAdapter;
 import com.binus.pekalongancityguide.Adapter.PhrasesAdapter;
-import com.binus.pekalongancityguide.ItemList.ConvoItem;
-import com.binus.pekalongancityguide.ItemList.PhrasesItem;
-import com.binus.pekalongancityguide.ItemTemplate.Conversations;
-import com.binus.pekalongancityguide.ItemTemplate.Phrases;
+import com.binus.pekalongancityguide.ItemValues.ConvoItem;
+import com.binus.pekalongancityguide.ItemValues.PhrasesItem;
+import com.binus.pekalongancityguide.Model.Conversations;
+import com.binus.pekalongancityguide.Model.Phrases;
 import com.binus.pekalongancityguide.R;
 
 import java.util.ArrayList;

@@ -1,7 +1,5 @@
 package com.binus.pekalongancityguide.Adapter;
 
-import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,7 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.binus.pekalongancityguide.ItemTemplate.Comments;
+import com.binus.pekalongancityguide.Model.Comments;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ListCommentBinding;
 import com.bumptech.glide.Glide;
@@ -28,6 +26,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.HolderComment> {
     private final Context context;

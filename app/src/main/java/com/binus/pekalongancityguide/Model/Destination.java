@@ -1,4 +1,4 @@
-package com.binus.pekalongancityguide.ItemTemplate;
+package com.binus.pekalongancityguide.Model;
 
 import java.io.Serializable;
 
@@ -10,6 +10,7 @@ public class Destination implements Serializable {
     private float distance;
     private boolean isSelected;
     private boolean isOpen;
+    private Bookmark bookmark;
 
     public Destination() {
 
@@ -160,5 +161,13 @@ public class Destination implements Serializable {
 
     public void setOpen(boolean open) {
         isOpen = open;
+    }
+
+    public Bookmark getBookmark() {
+        return bookmark;
+    }
+
+    public void setBookmark(Bookmark bookmark) {
+        this.bookmark = bookmark;
     }
 }

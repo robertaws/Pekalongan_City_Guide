@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.binus.pekalongancityguide.Model.User;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ActivityMainBinding;
 import com.google.android.material.snackbar.Snackbar;
@@ -111,7 +112,8 @@ public class MainActivity extends AppCompatActivity {
             til.setPasswordVisibilityToggleEnabled(false);
         }
         if (!hasError) {
-            tryLogin();
+            User userModel = new User(null, Email, Password);
+            tryLogin(userModel);
         }
     }
     @Override
@@ -130,11 +132,11 @@ public class MainActivity extends AppCompatActivity {
         }, 2000);
     }
 
-    private void tryLogin() {
+    private void tryLogin(User userModel) {
         progressDialog.setMessage(getString(R.string.login_try));
         progressDialog.show();
 
-        firebaseAuth.signInWithEmailAndPassword(Email,Password)
+        firebaseAuth.signInWithEmailAndPassword(userModel.getEmail(), userModel.getPassword())
                 .addOnSuccessListener(authResult -> checkUser())
                 .addOnFailureListener(e -> {
                     progressDialog.dismiss();

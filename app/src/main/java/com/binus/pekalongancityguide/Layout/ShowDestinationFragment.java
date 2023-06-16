@@ -33,7 +33,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
-import com.binus.pekalongancityguide.ItemTemplate.Destination;
+import com.binus.pekalongancityguide.Model.Destination;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.DialogChangeLocBinding;
 import com.binus.pekalongancityguide.databinding.DialogSortDestiBinding;

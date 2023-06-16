@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.binus.pekalongancityguide.ItemTemplate.Phrases;
+import com.binus.pekalongancityguide.Model.Phrases;
 import com.binus.pekalongancityguide.R;
 
 import java.util.List;

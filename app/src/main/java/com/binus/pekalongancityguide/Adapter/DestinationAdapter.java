@@ -20,9 +20,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.binus.pekalongancityguide.ItemTemplate.Destination;
 import com.binus.pekalongancityguide.Layout.DestinationDetails;
 import com.binus.pekalongancityguide.Misc.FilterDestiUser;
+import com.binus.pekalongancityguide.Model.Destination;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ListDestinationBinding;
 import com.bumptech.glide.Glide;

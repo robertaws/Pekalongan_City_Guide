@@ -3,7 +3,7 @@ package com.binus.pekalongancityguide.Misc;
 import android.widget.Filter;
 
 import com.binus.pekalongancityguide.Adapter.DestinationAdapter;
-import com.binus.pekalongancityguide.ItemTemplate.Destination;
+import com.binus.pekalongancityguide.Model.Destination;
 
 import java.util.ArrayList;
 
