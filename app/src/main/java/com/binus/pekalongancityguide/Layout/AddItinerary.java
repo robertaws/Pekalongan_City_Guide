@@ -176,8 +176,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
         ToastUtils.setToastEnabled(true);
         selectedItems = iterAdapter.getSelectedItems();
         selectedItemsInitialSize = selectedItems.size();
-        dialogCount++;
-        if (dialogCount == 1) {
+        if (dialogCount == 0) {
             title = getString(R.string.pick_start);
             subtitle = getString(R.string.below_are);
         } else {
@@ -233,6 +232,7 @@ public class AddItinerary extends Fragment implements IterAdapter.OnItemLongClic
             if (cardViewSelected) {
                 dialog.dismiss();
                 showTimePickerDialog();
+                dialogCount++;
             } else {
                 ToastUtils.showToast(getContext(), getString(R.string.pick_aPlace), Toast.LENGTH_SHORT);
             }

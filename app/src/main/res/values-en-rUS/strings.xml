@@ -200,7 +200,7 @@
     <string name="pick_start">Pick starting location</string>
     <string name="below_are">Below are the places nearest to your current location</string>
     <string name="pick_next">Pick the next location</string>
-    <string name="place_near_to">Below are the places nearest to</string>
+    <string name="place_near_to">Below are the places nearest to" "</string>
     <string name="next_txt">next</string>
     <string name="pick_aPlace">Please pick a place</string>
     <string name="not_found">Not Found</string>

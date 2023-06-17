@@ -50,13 +50,6 @@ public class Splash extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
-        SharedPreferences locPrefs = this.getApplicationContext().getSharedPreferences("coordinate", Context.MODE_PRIVATE);
-        getMyLocation();
-        SharedPreferences.Editor editor = locPrefs.edit();
-        editor.clear();
-        editor.putString("lastLatitude", String.valueOf(coordinate.latitude));
-        editor.putString("lastLongitude", String.valueOf(coordinate.longitude));
-        editor.apply();
         SharedPreferences langPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         String language = langPrefs.getString("language", "");
         if (!TextUtils.isEmpty(language)) {
@@ -79,7 +72,7 @@ public class Splash extends AppCompatActivity {
         if (!permissionsToRequest.isEmpty()) {
             ActivityCompat.requestPermissions(this, permissionsToRequest.toArray(new String[0]), 1);
         } else {
-            checkUser();
+            getMyLocation();
         }
     }
 
@@ -168,7 +161,19 @@ public class Splash extends AppCompatActivity {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
                 coordinate = new LatLng(latitude, longitude);
+            } else {
+                double defaultLatitude = -6.8869;
+                double defaultLongitude = 109.6744;
+                coordinate = new LatLng(defaultLatitude, defaultLongitude);
             }
+            SharedPreferences locPrefs = this.getApplicationContext().getSharedPreferences("coordinate", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = locPrefs.edit();
+            editor.clear();
+            editor.putString("lastLatitude", String.valueOf(coordinate.latitude));
+            editor.putString("lastLongitude", String.valueOf(coordinate.longitude));
+            editor.apply();
+            checkUser();
         }
     }
+
 }

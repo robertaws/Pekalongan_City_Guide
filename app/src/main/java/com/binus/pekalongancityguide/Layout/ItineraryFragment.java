@@ -7,14 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -58,7 +55,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -188,7 +184,6 @@ public class ItineraryFragment extends Fragment {
 
     private void initializeAddress() {
         Context context = getContext();
-        Resources resources = getResources();
         if (coordinate != null) {
             if (context != null && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -196,27 +191,6 @@ public class ItineraryFragment extends Fragment {
             } else {
                 currentLat = coordinate.latitude;
                 currentLng = coordinate.longitude;
-                new AsyncTask<Void, Void, String>() {
-                    @Override
-                    protected String doInBackground(Void... voids) {
-                        try {
-                            List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
-                            if (addresses.size() > 0) {
-                                return addresses.get(0).getAddressLine(0);
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            return resources.getString(R.string.geocoderNotAvail);
-                        }
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(String address) {
-                        if (address != null) {
-                        }
-                    }
-                }.execute();
             }
         } else {
             if (context != null && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -227,27 +201,6 @@ public class ItineraryFragment extends Fragment {
                     if (location != null) {
                         currentLat = location.getLatitude();
                         currentLng = location.getLongitude();
-                        new AsyncTask<Void, Void, String>() {
-                            @Override
-                            protected String doInBackground(Void... voids) {
-                                try {
-                                    List<Address> addresses = geocoder.getFromLocation(currentLat, currentLng, 1);
-                                    if (addresses.size() > 0) {
-                                        return addresses.get(0).getAddressLine(0);
-                                    }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                    return resources.getString(R.string.geocoderNotAvail);
-                                }
-                                return null;
-                            }
-
-                            @Override
-                            protected void onPostExecute(String address) {
-                                if (address != null) {
-                                }
-                            }
-                        }.execute();
                     }
                 });
             }
