@@ -65,7 +65,7 @@
                 android:textColor="@color/palette_2" />
 
             <TextView
-                android:id="@+id/use_cur_loc"
+                android:id="@+id/usecurloc"
                 android:layout_below="@id/locTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -81,14 +81,15 @@
                 android:paddingVertical="5dp"
                 android:fontFamily="@font/poppins_regular"
                 android:textColor="@color/palette_2" />
+
             <Button
-                android:id="@+id/set_loc_btn"
-                android:layout_below="@id/use_cur_loc"
+                android:id="@+id/setlocbtn"
+                android:layout_below="@id/usecurloc"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="0dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/palette_4"
-                android:text="@string/set_location"/>
+                android:text="@string/set_location" />
         </RelativeLayout>
 </layout>
