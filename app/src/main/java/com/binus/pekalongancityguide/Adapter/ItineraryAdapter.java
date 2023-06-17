@@ -110,8 +110,11 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             if (holder.isImageLoaded) {
                 double latitude = itinerary.getLatitude();
                 double longitude = itinerary.getLongitude();
+                Log.d(TAG, "onBindViewHolder: ");
                 String origin = getOriginLocation(holder.itemView.getContext());
-                String url = "https://www.google.com/maps/dir/?api=1&origin=" + origin + "&itinerary=" + latitude + "," + longitude + "&travelmode=driving";
+                Log.d(TAG, "onBindViewHolder: " + origin);
+                String url = "https://www.google.com/maps/dir/?api=1&origin=" + origin + "&destination=" + latitude + "," + longitude + "&travelmode=driving";
+                Log.d(TAG, "onBindViewHolder: " + url);
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 mapIntent.setPackage("com.google.android.apps.maps");
                 if (mapIntent.resolveActivity(context.getPackageManager()) != null) {

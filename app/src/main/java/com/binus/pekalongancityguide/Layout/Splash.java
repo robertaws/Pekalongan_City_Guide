@@ -1,7 +1,6 @@
 package com.binus.pekalongancityguide.Layout;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +22,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.binus.pekalongancityguide.R;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,6 +41,7 @@ public class Splash extends AppCompatActivity {
     private static final int MAPS_PERMIT = 1;
     private FirebaseAuth firebaseAuth;
     private boolean doubleTap = false;
+    private LatLng coordinate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +51,11 @@ public class Splash extends AppCompatActivity {
             getSupportActionBar().hide();
         }
         SharedPreferences locPrefs = this.getApplicationContext().getSharedPreferences("coordinate", Context.MODE_PRIVATE);
-        String origin = getMyLocation();
+        getMyLocation();
         SharedPreferences.Editor editor = locPrefs.edit();
         editor.clear();
-        editor.putString("coordinate", origin);
+        editor.putString("lastLatitude", String.valueOf(coordinate.latitude));
+        editor.putString("lastLongitude", String.valueOf(coordinate.longitude));
         editor.apply();
         SharedPreferences langPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         String language = langPrefs.getString("language", "");
@@ -84,7 +86,7 @@ public class Splash extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
+        if (requestCode == MAPS_PERMIT) {
             boolean allPermissionsGranted = true;
             for (int grantResult : grantResults) {
                 if (grantResult != PackageManager.PERMISSION_GRANTED) {
@@ -153,22 +155,19 @@ public class Splash extends AppCompatActivity {
         }
     }
 
-    private String getMyLocation() {
+    private void getMyLocation() {
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((Activity) this,
+            ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MAPS_PERMIT);
-            return null;
         } else {
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (location != null) {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
-                return latitude + "," + longitude;
-            } else {
-                return null;
+                coordinate = new LatLng(latitude, longitude);
             }
         }
     }
