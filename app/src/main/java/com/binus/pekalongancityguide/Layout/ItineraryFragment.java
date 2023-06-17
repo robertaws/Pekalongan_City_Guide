@@ -353,7 +353,7 @@ public class ItineraryFragment extends Fragment {
             binding.addIterBtn.setLayoutParams(layoutParams);
             binding.showRoutes.setOnClickListener(v -> {
                 if (itineraryList.size() > 0) {
-                    String origin = "current location";
+                    String origin = coordinate.latitude + "," + coordinate.longitude;
                     Itinerary firstItinerary = itineraryList.get(0);
                     double latitude = firstItinerary.getLatitude();
                     double longitude = firstItinerary.getLongitude();

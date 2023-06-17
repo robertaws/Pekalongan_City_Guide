@@ -1,11 +1,14 @@
 package com.binus.pekalongancityguide.Layout;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -35,6 +38,7 @@ import java.util.Locale;
 import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 
 public class Splash extends AppCompatActivity {
+    private static final int MAPS_PERMIT = 1;
     private FirebaseAuth firebaseAuth;
     private boolean doubleTap = false;
 
@@ -46,8 +50,11 @@ public class Splash extends AppCompatActivity {
             getSupportActionBar().hide();
         }
         SharedPreferences locPrefs = this.getApplicationContext().getSharedPreferences("coordinate", Context.MODE_PRIVATE);
+        String origin = getMyLocation();
         SharedPreferences.Editor editor = locPrefs.edit();
-        editor.clear().apply();
+        editor.clear();
+        editor.putString("coordinate", origin);
+        editor.apply();
         SharedPreferences langPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         String language = langPrefs.getString("language", "");
         if (!TextUtils.isEmpty(language)) {
@@ -142,6 +149,26 @@ public class Splash extends AppCompatActivity {
                 Toast.makeText(this, R.string.no_internet, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(Splash.this, Home.class));
                 finish();
+            }
+        }
+    }
+
+    private String getMyLocation() {
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MAPS_PERMIT);
+            return null;
+        } else {
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location != null) {
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                return latitude + "," + longitude;
+            } else {
+                return null;
             }
         }
     }

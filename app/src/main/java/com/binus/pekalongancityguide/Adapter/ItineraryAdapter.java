@@ -1,15 +1,11 @@
 package com.binus.pekalongancityguide.Adapter;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -29,8 +25,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
@@ -64,7 +58,6 @@ import java.util.Locale;
 import static android.content.ContentValues.TAG;
 
 public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.ItineraryViewHolder> {
-    private static final int MAPS_PERMIT = 1;
     private final Context context;
     private final List<Itinerary> itineraryList;
     private final List<String> openHours = new ArrayList<>();
@@ -117,7 +110,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             if (holder.isImageLoaded) {
                 double latitude = itinerary.getLatitude();
                 double longitude = itinerary.getLongitude();
-                String origin = getMyLocation();
+                String origin = getOriginLocation(holder.itemView.getContext());
                 String url = "https://www.google.com/maps/dir/?api=1&origin=" + origin + "&itinerary=" + latitude + "," + longitude + "&travelmode=driving";
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 mapIntent.setPackage("com.google.android.apps.maps");
@@ -130,12 +123,25 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             }
         });
     }
+
+    private String getOriginLocation(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("coordinate", Context.MODE_PRIVATE);
+        String lastLatitude = prefs.getString("lastLatitude", "0");
+        String lastLongitude = prefs.getString("lastLongitude", "0");
+        if (!lastLatitude.equals("0") && !lastLongitude.equals("0")) {
+            double latitude = Double.parseDouble(lastLatitude);
+            double longitude = Double.parseDouble(lastLongitude);
+            return latitude + "," + longitude;
+        }
+        return "";
+    }
+
     private void updateItinerary(String date, String startTime, String endTime) {
         String uid = FirebaseAuth.getInstance().getUid();
-        HashMap<String,Object> hashMap =new HashMap<>();
-        hashMap.put("date",""+date);
-        hashMap.put("startTime",""+startTime);
-        hashMap.put("endTime",""+endTime);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("date", "" + date);
+        hashMap.put("startTime", "" + startTime);
+        hashMap.put("endTime", "" + endTime);
         DatabaseReference reference = FirebaseDatabase.getInstance("https://pekalongan-city-guide-5bf2e-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users");
         reference.child(uid).child("itinerary").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -560,26 +566,6 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.Itin
             updateItinerary(date, startTime, endTime);
             Toast.makeText(context, R.string.itinerary_updated, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private String getMyLocation(){
-    LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-    if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
-        ActivityCompat.requestPermissions((Activity) context,
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                MAPS_PERMIT);
-        return null;
-    } else {
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (location != null) {
-            double latitude = location.getLatitude();
-            double longitude = location.getLongitude();
-            return latitude + "," + longitude;
-        } else {
-            return null;
-        }
-    }
     }
 
     public interface OnDataChangedListener {
