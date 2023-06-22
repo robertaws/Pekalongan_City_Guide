@@ -25,7 +25,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.binus.pekalongancityguide.Layout.DestinationDetails;
 import com.binus.pekalongancityguide.Misc.FilterBookmark;
 import com.binus.pekalongancityguide.Misc.MyApplication;
-import com.binus.pekalongancityguide.Model.Bookmark;
 import com.binus.pekalongancityguide.Model.Destination;
 import com.binus.pekalongancityguide.R;
 import com.binus.pekalongancityguide.databinding.ListFavoriteBinding;
@@ -70,7 +69,6 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
     @Override
     public void onBindViewHolder(@NonNull HolderBookmark holder, int position){
         Destination destination = destiArray.get(position);
-        Bookmark bookmark = destination.getBookmark();
         loadDestination(destination,holder);
         holder.itemView.setOnClickListener(v ->{
             if (holder.isImageLoaded) {
@@ -116,7 +114,6 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Holder
     }
     private void loadDestination(Destination destination, HolderBookmark holder) {
         String destiId = destination.getId();
-        Bookmark bookmark = destination.getBookmark();
         Log.d(TAG,"loadDesti : Destination details of  desti ID : "+destiId);
         DatabaseReference reference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Destination");
         reference.child(destiId)

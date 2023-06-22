@@ -66,7 +66,6 @@ import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL
 public class AddDestination extends AppCompatActivity {
     public static final String TAG = "ADD_IMAGE_TAG";
     private static final int PICK_IMAGE_REQUEST = 1;
-    private static final String SEARCH_ENGINE_ID = "b0bfb36873e2d440d";
     PlacesClient placesClient;
     ArrayList<String> categoriesTitleArrayList, categoryIdArrayList;
     private ActivityAddDestinationBinding binding;

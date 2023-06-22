@@ -148,13 +148,8 @@ public class AdminHome extends AppCompatActivity {
             return;
         }
         this.doubleTap = true;
-        Toast.makeText(this,R.string.press_back, Toast.LENGTH_SHORT).show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                doubleTap = false;
-            }
-        }, 2000);
+        Toast.makeText(this, R.string.press_back, Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(() -> doubleTap = false, 2000);
     }
     private void addCategoryFirebase() {
         dialog.setMessage(getString(R.string.addingCat));
@@ -205,7 +200,7 @@ public class AdminHome extends AppCompatActivity {
     private void checkUser() {
         FirebaseUser firebaseUser =firebaseAuth.getCurrentUser();
         if(firebaseUser==null){
-            startActivity(new Intent(AdminHome.this,MainActivity.class));
+            startActivity(new Intent(AdminHome.this, Login.class));
         }else{
             String email = firebaseUser.getEmail();
             binding.adminInfo.setText(email);

@@ -32,11 +32,11 @@ import com.google.firebase.database.ValueEventListener;
 import static android.content.ContentValues.TAG;
 import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL;
 
-public class MainActivity extends AppCompatActivity {
+public class Login extends AppCompatActivity {
     private ActivityMainBinding binding;
     Button login, noLogin;
     EditText email, pass;
-    TextInputLayout til,etil;
+    TextInputLayout til, etil;
     FirebaseAuth firebaseAuth;
     ProgressDialog progressDialog;
     TextView register;
@@ -53,14 +53,13 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.setTitle(R.string.please_wait);
         progressDialog.setCanceledOnTouchOutside(false);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL);
         FirebaseApp.initializeApp(this);
 
         FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference().keepSynced(true);
 
         init();
 
-        binding.noLogin.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, Home.class)));
+        binding.noLogin.setOnClickListener(v -> startActivity(new Intent(Login.this, Home.class)));
         binding.loginBtn.setOnClickListener(v -> {
             validate();
             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -69,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding.mainRegis.setOnClickListener(view -> {
             Log.d(TAG, "mainRegis is not null: " + (binding.mainRegis != null));
-            Intent regisIntent = new Intent(MainActivity.this, Register.class);
+            Intent regisIntent = new Intent(Login.this, Register.class);
             startActivity(regisIntent);
         });
 
@@ -123,13 +122,8 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         this.doubleTap = true;
-        Toast.makeText(this,R.string.press_back, Toast.LENGTH_SHORT).show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                doubleTap = false;
-            }
-        }, 2000);
+        Toast.makeText(this, R.string.press_back, Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(() -> doubleTap = false, 2000);
     }
 
     private void tryLogin(User userModel) {
@@ -156,10 +150,10 @@ public class MainActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         String userType = "" + snapshot.child("userType").getValue();
                         if (userType.equals("user")) {
-                            startActivity(new Intent(MainActivity.this, Home.class));
+                            startActivity(new Intent(Login.this, Home.class));
                             finish();
                         } else if (userType.equals("admin")) {
-                            startActivity(new Intent(MainActivity.this, AdminHome.class));
+                            startActivity(new Intent(Login.this, AdminHome.class));
                             finish();
                         } else {
                             Snackbar.make(binding.getRoot(), R.string.wrong_pass, Snackbar.LENGTH_SHORT).show();

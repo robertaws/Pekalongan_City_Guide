@@ -27,7 +27,6 @@ public class DestinationPager extends Fragment {
     public ArrayList<Categories> categoriesArrayList;
     public ViewPagerAdapter viewPagerAdapter;
     private FragmentDestinationBinding binding;
-    private static final String TAG = "DESTI_USER_TAG";
 
     public DestinationPager() {
 

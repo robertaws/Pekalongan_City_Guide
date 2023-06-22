@@ -61,7 +61,7 @@
             android:name=".Layout.Home"
             android:exported="false" />
         <activity
-            android:name=".Layout.MainActivity"
+            android:name=".Layout.Login"
             android:exported="false" />
         <activity
             android:name=".Layout.Splash"

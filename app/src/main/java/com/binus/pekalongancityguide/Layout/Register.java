@@ -329,7 +329,7 @@ public class Register extends AppCompatActivity {
                 .addOnSuccessListener(unused -> {
                     progressDialog.dismiss();
                     Toast.makeText(Register.this, R.string.acount_created, Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(Register.this, MainActivity.class));
+                    startActivity(new Intent(Register.this, Login.class));
                     finish();
                 })
                 .addOnFailureListener(e -> Toast.makeText(Register.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show());

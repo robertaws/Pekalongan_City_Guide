@@ -113,7 +113,7 @@ public class Splash extends AppCompatActivity {
     private void checkUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null) {
-            startActivity(new Intent(Splash.this, MainActivity.class));
+            startActivity(new Intent(Splash.this, Login.class));
             finish();
         } else {
             DatabaseReference databaseReference = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL).getReference("Users");
@@ -135,8 +135,8 @@ public class Splash extends AppCompatActivity {
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-                                Toast.makeText(Splash.this,R.string.error_connect_database,Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(Splash.this, MainActivity.class));
+                                Toast.makeText(Splash.this, R.string.error_connect_database, Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(Splash.this, Login.class));
                                 finish();
                             }
                         });

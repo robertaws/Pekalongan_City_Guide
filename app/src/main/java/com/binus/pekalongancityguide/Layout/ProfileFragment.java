@@ -36,7 +36,6 @@ import static com.binus.pekalongancityguide.Misc.Constants.FIREBASE_DATABASE_URL
 
 public class ProfileFragment extends Fragment {
     private FragmentProfileBinding binding;
-    private final Locale currentLocale = Locale.getDefault();
     private FirebaseAuth firebaseAuth;
     private static final String TAG = "PROFILE_TAG";
     private String mProfileImgUrl;
@@ -86,9 +85,7 @@ public class ProfileFragment extends Fragment {
                 startActivity(new Intent(getActivity(), EditProfile.class));
             }
         });
-        binding.logoutBtn.setOnClickListener(v -> {
-            logoutConfirm();
-        });
+        binding.logoutBtn.setOnClickListener(v -> logoutConfirm());
         binding.editLang.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.CustomAlertDialogTheme);
             builder.setTitle(R.string.select_language)
@@ -131,8 +128,8 @@ public class ProfileFragment extends Fragment {
     private void checkUser(){
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if(firebaseUser==null){
-            startActivity(new Intent(getActivity(),MainActivity.class));
-            Toast.makeText(getContext(),R.string.notLogin, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getActivity(), Login.class));
+            Toast.makeText(getContext(), R.string.notLogin, Toast.LENGTH_SHORT).show();
         }
     }
 
