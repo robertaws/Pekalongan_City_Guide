@@ -151,15 +151,7 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
                 });
     }
 
-    public interface OnDataChangedListener {
-        void onDataChanged();
-    }
-
     private ItineraryAdapter.OnDataChangedListener mListener;
-
-    public void setOnDataChangedListener(ItineraryAdapter.OnDataChangedListener listener) {
-        mListener = listener;
-    }
 
     @Override
     public int getItemCount() {

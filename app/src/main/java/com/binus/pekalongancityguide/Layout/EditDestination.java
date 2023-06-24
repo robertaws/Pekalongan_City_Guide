@@ -58,7 +58,6 @@ public class EditDestination extends AppCompatActivity {
         fiStoRef = FirebaseStorage.getInstance("gs://pekalongan-city-guide-5bf2e.appspot.com");
         ref = refDes.getReference("Destination");
         catRef = refDes.getReference("Categories");
-
         loadCategory();
         loadDestiInfo();
         binding.categoryTV.setOnClickListener(v -> categoryDialog());
@@ -130,7 +129,6 @@ public class EditDestination extends AppCompatActivity {
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         String category = ""+snapshot.child("category").getValue();
                                         binding.categoryTV.setText(category);
-
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
@@ -138,7 +136,6 @@ public class EditDestination extends AppCompatActivity {
                                     }
                                 });
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 

@@ -31,8 +31,7 @@ public class Home extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        firebaseAuth = FirebaseAuth.getInstance();
-        bottomNavigationView = findViewById(R.id.bottom_navi);
+        init();
         getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
         bottomNavigationView.add(new MeowBottomNavigation.Model(home, R.drawable.ic_home));
         bottomNavigationView.add(new MeowBottomNavigation.Model(desti, R.drawable.destination));
@@ -86,6 +85,10 @@ public class Home extends AppCompatActivity{
             }
         });
         bottomNavigationView.show(home, true);
+    }
+    private void init(){
+        firebaseAuth = FirebaseAuth.getInstance();
+        bottomNavigationView = findViewById(R.id.bottom_navi);
     }
     @Override
     public void onBackPressed() {

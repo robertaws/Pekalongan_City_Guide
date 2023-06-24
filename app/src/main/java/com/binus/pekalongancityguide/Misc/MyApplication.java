@@ -88,7 +88,6 @@ public class MyApplication extends Application {
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.container, new ItineraryList());
                         fragmentTransaction.commit();
-
                         dialog.dismiss();
                         Toast.makeText(context, R.string.delete_iter, Toast.LENGTH_LONG).show();
                     });

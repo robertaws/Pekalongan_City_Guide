@@ -66,7 +66,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Holder
                     })
                     .setNegativeButton(R.string.no_txt, (dialog, which) -> dialog.dismiss())
                     .show();
-
         });
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ShowDestinationAdmin.class);
